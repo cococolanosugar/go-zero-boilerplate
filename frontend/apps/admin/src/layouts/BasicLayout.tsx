@@ -53,7 +53,7 @@ export const BasicLayout: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    getUserInfo({ id: 1 })
+    getUserInfo()
       .then((user) => setCurrentUser(user))
       .catch((err) => {
         console.error("加载用户信息失败:", err);

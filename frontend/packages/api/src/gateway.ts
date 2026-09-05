@@ -35,9 +35,9 @@ export function register(req: components.RegisterReq) {
 }
 
 /**
- * @description "获取用户信息（受保护路由）"
+ * @description "获取当前登录用户信息（受保护路由，强制由 JWT 解析身份，杜绝水平越权）"
  * @param params
  */
-export function getUserInfo(params: components.UserInfoReqParams) {
-	return webapi.get<components.UserInfoResp>(`/api/v1/user/info`, params)
+export function getUserInfo(params?: components.UserInfoReqParams) {
+	return webapi.get<components.UserInfoResp>(`/api/v1/user/info`, params || {})
 }

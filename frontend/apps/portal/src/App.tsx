@@ -36,7 +36,7 @@ export default function App() {
           const loginRes = await login({ mobile: "13800000000", password: "123456" });
           setToken(loginRes.accessToken);
         }
-        const u = await getUserInfo({ id: 1 });
+        const u = await getUserInfo();
         setUser(u);
       } catch (err) {
         console.error("加载用户失败", err);

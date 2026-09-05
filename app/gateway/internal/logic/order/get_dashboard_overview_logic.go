@@ -1,4 +1,4 @@
-﻿package order
+package order
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"go-zero-boilerplate/app/gateway/internal/types"
 	orderClient "go-zero-boilerplate/app/order/rpc/client/order"
 	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/mr"
@@ -30,8 +31,8 @@ func NewGetDashboardOverviewLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *GetDashboardOverviewLogic) GetDashboardOverview(req *types.DashboardReq) (resp *types.DashboardResp, err error) {
-	// 1. 获取当前用户 ID（从 JWT 提取）
-	var userId int64 = 1
+	// 1. 获取当前用户 ID（从 JWT 强制提取，杜绝默认假定与越权）
+	var userId int64
 	if uidVal := l.ctx.Value("userId"); uidVal != nil {
 		if uidJson, ok := uidVal.(json.Number); ok {
 			if uidInt, err := uidJson.Int64(); err == nil {
@@ -40,6 +41,9 @@ func (l *GetDashboardOverviewLogic) GetDashboardOverview(req *types.DashboardReq
 		} else if uidInt, ok := uidVal.(int64); ok {
 			userId = uidInt
 		}
+	}
+	if userId <= 0 {
+		return nil, xerr.NewErrCode(xerr.TokenExpireError)
 	}
 
 	orderId := req.OrderId

@@ -86,6 +86,17 @@ export function getToken(): string | null {
     return null;
 }
 
+export function handleUnauthorized() {
+    setToken(null);
+    if (typeof window !== 'undefined') {
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes('/login')) {
+            const redirectUrl = `/login?from=${encodeURIComponent(currentPath + window.location.search)}`;
+            window.location.href = redirectUrl;
+        }
+    }
+}
+
 export async function request({
     method,
     url,
@@ -127,6 +138,12 @@ export async function request({
                 errorMsg = errJson.msg || errorMsg;
             }
         } catch (_) {}
+
+        // 核心安全拦截：HTTP 401 或 Token 过期自动清空凭证并重定向登录
+        if (response.status === 401 || errorCode === 100003) {
+            handleUnauthorized();
+        }
+
         throw new ApiError(errorCode, errorMsg);
     }
 
@@ -136,6 +153,9 @@ export async function request({
     if (res && typeof res === 'object' && 'code' in res) {
         if (res.code === 200 || res.code === 0) {
             return res.data;
+        }
+        if (res.code === 100003) {
+            handleUnauthorized();
         }
         throw new ApiError(res.code, res.msg || `Request failed with code ${res.code}`, res.data);
     }

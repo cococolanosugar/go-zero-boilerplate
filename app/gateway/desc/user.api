@@ -51,7 +51,7 @@ service gateway {
 	jwt:    Auth
 )
 service gateway {
-	@doc "获取用户信息（受保护路由）"
+	@doc "获取当前登录用户信息（受保护路由，强制由 JWT Claims 解析身份，杜绝水平越权）"
 	@handler GetUserInfo
-	get /info (UserInfoReq) returns (UserInfoResp)
+	get /info returns (UserInfoResp)
 }

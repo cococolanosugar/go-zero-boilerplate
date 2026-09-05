@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { App as AntdApp, Card, Tag, Avatar, Space, Button } from "antd";
 import { PageContainer, ProDescriptions } from "@ant-design/pro-components";
 import { UserOutlined, SafetyCertificateOutlined, ReloadOutlined } from "@ant-design/icons";
@@ -12,7 +12,7 @@ export const UsersPage: React.FC = () => {
   const fetchUser = async () => {
     setLoading(true);
     try {
-      const res = await getUserInfo({ id: 1 });
+      const res = await getUserInfo();
       setUser(res);
     } catch (err: any) {
       message.error(`拉取用户信息失败: ${err.message || err}`);

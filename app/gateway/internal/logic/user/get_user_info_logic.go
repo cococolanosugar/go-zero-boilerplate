@@ -1,4 +1,4 @@
-﻿package user
+package user
 
 import (
 	"context"
@@ -27,21 +27,19 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 	}
 }
 
-func (l *GetUserInfoLogic) GetUserInfo(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
-	userId := req.Id
-	if userId <= 0 {
-		if uidVal := l.ctx.Value("userId"); uidVal != nil {
-			if uidJson, ok := uidVal.(json.Number); ok {
-				if uidInt, err := uidJson.Int64(); err == nil {
-					userId = uidInt
-				}
-			} else if uidInt, ok := uidVal.(int64); ok {
+func (l *GetUserInfoLogic) GetUserInfo() (resp *types.UserInfoResp, err error) {
+	var userId int64
+	if uidVal := l.ctx.Value("userId"); uidVal != nil {
+		if uidJson, ok := uidVal.(json.Number); ok {
+			if uidInt, err := uidJson.Int64(); err == nil {
 				userId = uidInt
 			}
+		} else if uidInt, ok := uidVal.(int64); ok {
+			userId = uidInt
 		}
 	}
 	if userId <= 0 {
-		return nil, xerr.NewErrCode(xerr.RequestParamError)
+		return nil, xerr.NewErrCode(xerr.TokenExpireError)
 	}
 
 	rpcResp, err := l.svcCtx.UserRpc.GetUserInfo(l.ctx, &userClient.IdRequest{
