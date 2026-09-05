@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { App as AntdApp, Dropdown, Space, Tag, Tooltip } from "antd";
 import {
@@ -18,12 +18,39 @@ import {
   GithubOutlined,
   GlobalOutlined,
   QuestionCircleOutlined,
+  SettingOutlined,
+  SafetyCertificateOutlined,
+  MenuOutlined,
+  ApiOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
-import { getUserInfo, setToken, type UserInfoResp } from "@zero/api";
+import { setToken, type SysMenuItem } from "@zero/api";
 import { APP_NAME } from "@zero/shared";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
+import { useAuth } from "../contexts/AuthContext";
 
-const routeConfig = {
+const getIcon = (iconName?: string) => {
+  switch (iconName) {
+    case "DashboardOutlined":
+      return <DashboardOutlined />;
+    case "ShoppingCartOutlined":
+      return <ShoppingCartOutlined />;
+    case "UserOutlined":
+      return <UserOutlined />;
+    case "SettingOutlined":
+      return <SettingOutlined />;
+    case "SafetyCertificateOutlined":
+      return <SafetyCertificateOutlined />;
+    case "MenuOutlined":
+      return <MenuOutlined />;
+    case "ApiOutlined":
+      return <ApiOutlined />;
+    default:
+      return <AppstoreOutlined />;
+  }
+};
+
+const defaultRouteConfig = {
   path: "/",
   routes: [
     {
@@ -41,7 +68,46 @@ const routeConfig = {
       name: "用户中心",
       icon: <UserOutlined />,
     },
+    {
+      path: "/system",
+      name: "系统与权限",
+      icon: <SettingOutlined />,
+      routes: [
+        {
+          path: "/system/users",
+          name: "员工管理",
+          icon: <UserOutlined />,
+        },
+        {
+          path: "/system/roles",
+          name: "角色管理",
+          icon: <SafetyCertificateOutlined />,
+        },
+        {
+          path: "/system/menus",
+          name: "菜单权限",
+          icon: <MenuOutlined />,
+        },
+        {
+          path: "/system/apis",
+          name: "接口字典",
+          icon: <ApiOutlined />,
+        },
+      ],
+    },
   ],
+};
+
+const formatRoutes = (items: SysMenuItem[]): any[] => {
+  return (items || []).map((item) => ({
+    path: item.path,
+    name: item.title,
+    icon: getIcon(item.icon),
+    routes:
+      item.children && item.children.length > 0
+        ? formatRoutes(item.children)
+        : undefined,
+  }));
 };
 
 export const BasicLayout: React.FC = () => {
@@ -49,15 +115,11 @@ export const BasicLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { settings, setSettings, toggleNavTheme, isDark } = useLayoutSettings();
-  const [currentUser, setCurrentUser] = useState<UserInfoResp | null>(null);
+  const { profile, menus, isSuperAdmin, refreshProfile } = useAuth();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    getUserInfo()
-      .then((user) => setCurrentUser(user))
-      .catch((err) => {
-        console.error("加载用户信息失败:", err);
-      });
+    refreshProfile();
 
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -66,7 +128,7 @@ export const BasicLayout: React.FC = () => {
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
-  }, []);
+  }, [refreshProfile]);
 
   const handleLogout = () => {
     setToken(null);
@@ -82,16 +144,29 @@ export const BasicLayout: React.FC = () => {
     }
   };
 
+  // 动态构建路由结构（优先使用后端根据角色权限下发的菜单树）
+  const routeData = useMemo(() => {
+    if (menus && menus.length > 0) {
+      return {
+        path: "/",
+        routes: formatRoutes(menus),
+      };
+    }
+    return defaultRouteConfig;
+  }, [menus]);
+
+  const displayName = profile?.realName || profile?.username || "管理员";
+
   return (
     <div style={{ height: "100vh" }}>
       <ProLayout
         {...settings}
         title={APP_NAME}
         logo="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-        route={routeConfig}
+        route={routeData}
         location={{ pathname: location.pathname }}
         waterMarkProps={{
-          content: currentUser?.name ? `${currentUser.name} (${APP_NAME})` : APP_NAME,
+          content: `${displayName} (${APP_NAME})`,
         }}
         menuItemRender={(item, dom) => (
           <div
@@ -147,8 +222,8 @@ export const BasicLayout: React.FC = () => {
           </Tooltip>,
         ]}
         avatarProps={{
-          src: currentUser?.avatar || "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
-          title: currentUser?.name || "管理员",
+          src: profile?.avatar || "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+          title: displayName,
           render: (_props, dom) => (
             <Dropdown
               menu={{
@@ -158,8 +233,16 @@ export const BasicLayout: React.FC = () => {
                     label: (
                       <Space>
                         <UserOutlined />
-                        <span>{currentUser?.name || "管理员"}</span>
-                        <Tag color="blue">Admin</Tag>
+                        <span>{displayName}</span>
+                        {isSuperAdmin ? (
+                          <Tag color="gold">超级管理员</Tag>
+                        ) : (
+                          (profile?.roles || []).map((r, i) => (
+                            <Tag key={i} color="blue">
+                              {r}
+                            </Tag>
+                          ))
+                        )}
                       </Space>
                     ),
                     disabled: true,

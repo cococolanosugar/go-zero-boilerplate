@@ -21,6 +21,78 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type EmptyRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EmptyRequest) Reset() {
+	*x = EmptyRequest{}
+	mi := &file_user_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EmptyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EmptyRequest) ProtoMessage() {}
+
+func (x *EmptyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EmptyRequest.ProtoReflect.Descriptor instead.
+func (*EmptyRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{0}
+}
+
+type EmptyResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EmptyResponse) Reset() {
+	*x = EmptyResponse{}
+	mi := &file_user_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EmptyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EmptyResponse) ProtoMessage() {}
+
+func (x *EmptyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EmptyResponse.ProtoReflect.Descriptor instead.
+func (*EmptyResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{1}
+}
+
 type IdRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -30,7 +102,7 @@ type IdRequest struct {
 
 func (x *IdRequest) Reset() {
 	*x = IdRequest{}
-	mi := &file_user_proto_msgTypes[0]
+	mi := &file_user_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -42,7 +114,7 @@ func (x *IdRequest) String() string {
 func (*IdRequest) ProtoMessage() {}
 
 func (x *IdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[0]
+	mi := &file_user_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -55,7 +127,7 @@ func (x *IdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdRequest.ProtoReflect.Descriptor instead.
 func (*IdRequest) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{0}
+	return file_user_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *IdRequest) GetId() int64 {
@@ -77,7 +149,7 @@ type UserInfoResponse struct {
 
 func (x *UserInfoResponse) Reset() {
 	*x = UserInfoResponse{}
-	mi := &file_user_proto_msgTypes[1]
+	mi := &file_user_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -89,7 +161,7 @@ func (x *UserInfoResponse) String() string {
 func (*UserInfoResponse) ProtoMessage() {}
 
 func (x *UserInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[1]
+	mi := &file_user_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -102,7 +174,7 @@ func (x *UserInfoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserInfoResponse.ProtoReflect.Descriptor instead.
 func (*UserInfoResponse) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{1}
+	return file_user_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UserInfoResponse) GetId() int64 {
@@ -144,7 +216,7 @@ type RegisterRequest struct {
 
 func (x *RegisterRequest) Reset() {
 	*x = RegisterRequest{}
-	mi := &file_user_proto_msgTypes[2]
+	mi := &file_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -156,7 +228,7 @@ func (x *RegisterRequest) String() string {
 func (*RegisterRequest) ProtoMessage() {}
 
 func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[2]
+	mi := &file_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -169,7 +241,7 @@ func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{2}
+	return file_user_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RegisterRequest) GetUsername() string {
@@ -202,7 +274,7 @@ type RegisterResponse struct {
 
 func (x *RegisterResponse) Reset() {
 	*x = RegisterResponse{}
-	mi := &file_user_proto_msgTypes[3]
+	mi := &file_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -214,7 +286,7 @@ func (x *RegisterResponse) String() string {
 func (*RegisterResponse) ProtoMessage() {}
 
 func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[3]
+	mi := &file_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -227,7 +299,7 @@ func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{3}
+	return file_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *RegisterResponse) GetId() int64 {
@@ -247,7 +319,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_user_proto_msgTypes[4]
+	mi := &file_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -259,7 +331,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[4]
+	mi := &file_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -272,7 +344,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{4}
+	return file_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LoginRequest) GetMobile() string {
@@ -300,7 +372,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_user_proto_msgTypes[5]
+	mi := &file_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -312,7 +384,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[5]
+	mi := &file_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -325,7 +397,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{5}
+	return file_user_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *LoginResponse) GetId() int64 {
@@ -349,12 +421,1422 @@ func (x *LoginResponse) GetExpire() int64 {
 	return 0
 }
 
+type AdminLoginRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Account       string                 `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"` // 允许使用用户名或手机号
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdminLoginRequest) Reset() {
+	*x = AdminLoginRequest{}
+	mi := &file_user_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdminLoginRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdminLoginRequest) ProtoMessage() {}
+
+func (x *AdminLoginRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdminLoginRequest.ProtoReflect.Descriptor instead.
+func (*AdminLoginRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *AdminLoginRequest) GetAccount() string {
+	if x != nil {
+		return x.Account
+	}
+	return ""
+}
+
+func (x *AdminLoginRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type AdminLoginResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	RealName      string                 `protobuf:"bytes,3,opt,name=realName,proto3" json:"realName,omitempty"`
+	Avatar        string                 `protobuf:"bytes,4,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Roles         []string               `protobuf:"bytes,5,rep,name=roles,proto3" json:"roles,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdminLoginResponse) Reset() {
+	*x = AdminLoginResponse{}
+	mi := &file_user_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdminLoginResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdminLoginResponse) ProtoMessage() {}
+
+func (x *AdminLoginResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdminLoginResponse.ProtoReflect.Descriptor instead.
+func (*AdminLoginResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *AdminLoginResponse) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *AdminLoginResponse) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *AdminLoginResponse) GetRealName() string {
+	if x != nil {
+		return x.RealName
+	}
+	return ""
+}
+
+func (x *AdminLoginResponse) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
+func (x *AdminLoginResponse) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
+type AdminProfileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	RealName      string                 `protobuf:"bytes,3,opt,name=realName,proto3" json:"realName,omitempty"`
+	Mobile        string                 `protobuf:"bytes,4,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	Avatar        string                 `protobuf:"bytes,6,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	DeptName      string                 `protobuf:"bytes,7,opt,name=deptName,proto3" json:"deptName,omitempty"`
+	Roles         []string               `protobuf:"bytes,8,rep,name=roles,proto3" json:"roles,omitempty"`
+	Permissions   []string               `protobuf:"bytes,9,rep,name=permissions,proto3" json:"permissions,omitempty"` // 按钮权限编码列表 (如 system:user:add)
+	Menus         []*MenuItem            `protobuf:"bytes,10,rep,name=menus,proto3" json:"menus,omitempty"`            // 动态菜单树 (仅包含目录与页面菜单)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdminProfileResponse) Reset() {
+	*x = AdminProfileResponse{}
+	mi := &file_user_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdminProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdminProfileResponse) ProtoMessage() {}
+
+func (x *AdminProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdminProfileResponse.ProtoReflect.Descriptor instead.
+func (*AdminProfileResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *AdminProfileResponse) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *AdminProfileResponse) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *AdminProfileResponse) GetRealName() string {
+	if x != nil {
+		return x.RealName
+	}
+	return ""
+}
+
+func (x *AdminProfileResponse) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *AdminProfileResponse) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *AdminProfileResponse) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
+func (x *AdminProfileResponse) GetDeptName() string {
+	if x != nil {
+		return x.DeptName
+	}
+	return ""
+}
+
+func (x *AdminProfileResponse) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
+func (x *AdminProfileResponse) GetPermissions() []string {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+func (x *AdminProfileResponse) GetMenus() []*MenuItem {
+	if x != nil {
+		return x.Menus
+	}
+	return nil
+}
+
+type MenuItem struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ParentId       int64                  `protobuf:"varint,2,opt,name=parentId,proto3" json:"parentId,omitempty"`
+	Title          string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Type           int32                  `protobuf:"varint,4,opt,name=type,proto3" json:"type,omitempty"` // 1:目录 2:菜单 3:按钮
+	Path           string                 `protobuf:"bytes,5,opt,name=path,proto3" json:"path,omitempty"`
+	Component      string                 `protobuf:"bytes,6,opt,name=component,proto3" json:"component,omitempty"`
+	PermissionCode string                 `protobuf:"bytes,7,opt,name=permissionCode,proto3" json:"permissionCode,omitempty"`
+	Icon           string                 `protobuf:"bytes,8,opt,name=icon,proto3" json:"icon,omitempty"`
+	Sort           int32                  `protobuf:"varint,9,opt,name=sort,proto3" json:"sort,omitempty"`
+	Children       []*MenuItem            `protobuf:"bytes,10,rep,name=children,proto3" json:"children,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *MenuItem) Reset() {
+	*x = MenuItem{}
+	mi := &file_user_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MenuItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MenuItem) ProtoMessage() {}
+
+func (x *MenuItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MenuItem.ProtoReflect.Descriptor instead.
+func (*MenuItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *MenuItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *MenuItem) GetParentId() int64 {
+	if x != nil {
+		return x.ParentId
+	}
+	return 0
+}
+
+func (x *MenuItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *MenuItem) GetType() int32 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
+func (x *MenuItem) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *MenuItem) GetComponent() string {
+	if x != nil {
+		return x.Component
+	}
+	return ""
+}
+
+func (x *MenuItem) GetPermissionCode() string {
+	if x != nil {
+		return x.PermissionCode
+	}
+	return ""
+}
+
+func (x *MenuItem) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
+func (x *MenuItem) GetSort() int32 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *MenuItem) GetChildren() []*MenuItem {
+	if x != nil {
+		return x.Children
+	}
+	return nil
+}
+
+type SysUserItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	DeptId        int64                  `protobuf:"varint,2,opt,name=deptId,proto3" json:"deptId,omitempty"`
+	DeptName      string                 `protobuf:"bytes,3,opt,name=deptName,proto3" json:"deptName,omitempty"`
+	Username      string                 `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
+	RealName      string                 `protobuf:"bytes,5,opt,name=realName,proto3" json:"realName,omitempty"`
+	Mobile        string                 `protobuf:"bytes,6,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Email         string                 `protobuf:"bytes,7,opt,name=email,proto3" json:"email,omitempty"`
+	Avatar        string                 `protobuf:"bytes,8,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Status        int32                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
+	RoleNames     []string               `protobuf:"bytes,10,rep,name=roleNames,proto3" json:"roleNames,omitempty"`
+	RoleIds       []int64                `protobuf:"varint,11,rep,packed,name=roleIds,proto3" json:"roleIds,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,12,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SysUserItem) Reset() {
+	*x = SysUserItem{}
+	mi := &file_user_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SysUserItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SysUserItem) ProtoMessage() {}
+
+func (x *SysUserItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SysUserItem.ProtoReflect.Descriptor instead.
+func (*SysUserItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SysUserItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SysUserItem) GetDeptId() int64 {
+	if x != nil {
+		return x.DeptId
+	}
+	return 0
+}
+
+func (x *SysUserItem) GetDeptName() string {
+	if x != nil {
+		return x.DeptName
+	}
+	return ""
+}
+
+func (x *SysUserItem) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *SysUserItem) GetRealName() string {
+	if x != nil {
+		return x.RealName
+	}
+	return ""
+}
+
+func (x *SysUserItem) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *SysUserItem) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *SysUserItem) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
+func (x *SysUserItem) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *SysUserItem) GetRoleNames() []string {
+	if x != nil {
+		return x.RoleNames
+	}
+	return nil
+}
+
+func (x *SysUserItem) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
+func (x *SysUserItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+type ListSysUsersRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Keyword       string                 `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	DeptId        int64                  `protobuf:"varint,4,opt,name=deptId,proto3" json:"deptId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysUsersRequest) Reset() {
+	*x = ListSysUsersRequest{}
+	mi := &file_user_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysUsersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysUsersRequest) ProtoMessage() {}
+
+func (x *ListSysUsersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysUsersRequest.ProtoReflect.Descriptor instead.
+func (*ListSysUsersRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ListSysUsersRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListSysUsersRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSysUsersRequest) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
+func (x *ListSysUsersRequest) GetDeptId() int64 {
+	if x != nil {
+		return x.DeptId
+	}
+	return 0
+}
+
+type ListSysUsersResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*SysUserItem         `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysUsersResponse) Reset() {
+	*x = ListSysUsersResponse{}
+	mi := &file_user_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysUsersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysUsersResponse) ProtoMessage() {}
+
+func (x *ListSysUsersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysUsersResponse.ProtoReflect.Descriptor instead.
+func (*ListSysUsersResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ListSysUsersResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListSysUsersResponse) GetList() []*SysUserItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type CreateSysUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DeptId        int64                  `protobuf:"varint,1,opt,name=deptId,proto3" json:"deptId,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	RealName      string                 `protobuf:"bytes,4,opt,name=realName,proto3" json:"realName,omitempty"`
+	Mobile        string                 `protobuf:"bytes,5,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Email         string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
+	RoleIds       []int64                `protobuf:"varint,7,rep,packed,name=roleIds,proto3" json:"roleIds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSysUserRequest) Reset() {
+	*x = CreateSysUserRequest{}
+	mi := &file_user_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSysUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSysUserRequest) ProtoMessage() {}
+
+func (x *CreateSysUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSysUserRequest.ProtoReflect.Descriptor instead.
+func (*CreateSysUserRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *CreateSysUserRequest) GetDeptId() int64 {
+	if x != nil {
+		return x.DeptId
+	}
+	return 0
+}
+
+func (x *CreateSysUserRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *CreateSysUserRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *CreateSysUserRequest) GetRealName() string {
+	if x != nil {
+		return x.RealName
+	}
+	return ""
+}
+
+func (x *CreateSysUserRequest) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *CreateSysUserRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *CreateSysUserRequest) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
+type UpdateSysUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	DeptId        int64                  `protobuf:"varint,2,opt,name=deptId,proto3" json:"deptId,omitempty"`
+	RealName      string                 `protobuf:"bytes,3,opt,name=realName,proto3" json:"realName,omitempty"`
+	Mobile        string                 `protobuf:"bytes,4,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	RoleIds       []int64                `protobuf:"varint,7,rep,packed,name=roleIds,proto3" json:"roleIds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateSysUserRequest) Reset() {
+	*x = UpdateSysUserRequest{}
+	mi := &file_user_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateSysUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateSysUserRequest) ProtoMessage() {}
+
+func (x *UpdateSysUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateSysUserRequest.ProtoReflect.Descriptor instead.
+func (*UpdateSysUserRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *UpdateSysUserRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateSysUserRequest) GetDeptId() int64 {
+	if x != nil {
+		return x.DeptId
+	}
+	return 0
+}
+
+func (x *UpdateSysUserRequest) GetRealName() string {
+	if x != nil {
+		return x.RealName
+	}
+	return ""
+}
+
+func (x *UpdateSysUserRequest) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *UpdateSysUserRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *UpdateSysUserRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *UpdateSysUserRequest) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
+type SysRoleItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Sort          int32                  `protobuf:"varint,4,opt,name=sort,proto3" json:"sort,omitempty"`
+	DataScope     int32                  `protobuf:"varint,5,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	Description   string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
+	MenuIds       []int64                `protobuf:"varint,8,rep,packed,name=menuIds,proto3" json:"menuIds,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,9,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SysRoleItem) Reset() {
+	*x = SysRoleItem{}
+	mi := &file_user_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SysRoleItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SysRoleItem) ProtoMessage() {}
+
+func (x *SysRoleItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SysRoleItem.ProtoReflect.Descriptor instead.
+func (*SysRoleItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *SysRoleItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SysRoleItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *SysRoleItem) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *SysRoleItem) GetSort() int32 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *SysRoleItem) GetDataScope() int32 {
+	if x != nil {
+		return x.DataScope
+	}
+	return 0
+}
+
+func (x *SysRoleItem) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *SysRoleItem) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *SysRoleItem) GetMenuIds() []int64 {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
+}
+
+func (x *SysRoleItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+type ListSysRolesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Keyword       string                 `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysRolesRequest) Reset() {
+	*x = ListSysRolesRequest{}
+	mi := &file_user_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysRolesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysRolesRequest) ProtoMessage() {}
+
+func (x *ListSysRolesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysRolesRequest.ProtoReflect.Descriptor instead.
+func (*ListSysRolesRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListSysRolesRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListSysRolesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSysRolesRequest) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
+type ListSysRolesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*SysRoleItem         `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysRolesResponse) Reset() {
+	*x = ListSysRolesResponse{}
+	mi := &file_user_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysRolesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysRolesResponse) ProtoMessage() {}
+
+func (x *ListSysRolesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysRolesResponse.ProtoReflect.Descriptor instead.
+func (*ListSysRolesResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *ListSysRolesResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListSysRolesResponse) GetList() []*SysRoleItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type CreateSysRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+	Sort          int32                  `protobuf:"varint,3,opt,name=sort,proto3" json:"sort,omitempty"`
+	DataScope     int32                  `protobuf:"varint,4,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
+	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSysRoleRequest) Reset() {
+	*x = CreateSysRoleRequest{}
+	mi := &file_user_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSysRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSysRoleRequest) ProtoMessage() {}
+
+func (x *CreateSysRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSysRoleRequest.ProtoReflect.Descriptor instead.
+func (*CreateSysRoleRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *CreateSysRoleRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateSysRoleRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *CreateSysRoleRequest) GetSort() int32 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *CreateSysRoleRequest) GetDataScope() int32 {
+	if x != nil {
+		return x.DataScope
+	}
+	return 0
+}
+
+func (x *CreateSysRoleRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+type UpdateSysRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Sort          int32                  `protobuf:"varint,4,opt,name=sort,proto3" json:"sort,omitempty"`
+	DataScope     int32                  `protobuf:"varint,5,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateSysRoleRequest) Reset() {
+	*x = UpdateSysRoleRequest{}
+	mi := &file_user_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateSysRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateSysRoleRequest) ProtoMessage() {}
+
+func (x *UpdateSysRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateSysRoleRequest.ProtoReflect.Descriptor instead.
+func (*UpdateSysRoleRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *UpdateSysRoleRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateSysRoleRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UpdateSysRoleRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *UpdateSysRoleRequest) GetSort() int32 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *UpdateSysRoleRequest) GetDataScope() int32 {
+	if x != nil {
+		return x.DataScope
+	}
+	return 0
+}
+
+func (x *UpdateSysRoleRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *UpdateSysRoleRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type AssignRolePermRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        int64                  `protobuf:"varint,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	MenuIds       []int64                `protobuf:"varint,2,rep,packed,name=menuIds,proto3" json:"menuIds,omitempty"` // 勾选的菜单与按钮ID
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AssignRolePermRequest) Reset() {
+	*x = AssignRolePermRequest{}
+	mi := &file_user_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AssignRolePermRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AssignRolePermRequest) ProtoMessage() {}
+
+func (x *AssignRolePermRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AssignRolePermRequest.ProtoReflect.Descriptor instead.
+func (*AssignRolePermRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *AssignRolePermRequest) GetRoleId() int64 {
+	if x != nil {
+		return x.RoleId
+	}
+	return 0
+}
+
+func (x *AssignRolePermRequest) GetMenuIds() []int64 {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
+}
+
+type GetSysMenuTreeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*MenuItem            `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSysMenuTreeResponse) Reset() {
+	*x = GetSysMenuTreeResponse{}
+	mi := &file_user_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSysMenuTreeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSysMenuTreeResponse) ProtoMessage() {}
+
+func (x *GetSysMenuTreeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSysMenuTreeResponse.ProtoReflect.Descriptor instead.
+func (*GetSysMenuTreeResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *GetSysMenuTreeResponse) GetList() []*MenuItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type SysApiItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ApiGroup      string                 `protobuf:"bytes,2,opt,name=apiGroup,proto3" json:"apiGroup,omitempty"`
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Path          string                 `protobuf:"bytes,4,opt,name=path,proto3" json:"path,omitempty"`
+	Method        string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`
+	IsAutoSync    int32                  `protobuf:"varint,6,opt,name=isAutoSync,proto3" json:"isAutoSync,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SysApiItem) Reset() {
+	*x = SysApiItem{}
+	mi := &file_user_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SysApiItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SysApiItem) ProtoMessage() {}
+
+func (x *SysApiItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SysApiItem.ProtoReflect.Descriptor instead.
+func (*SysApiItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *SysApiItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SysApiItem) GetApiGroup() string {
+	if x != nil {
+		return x.ApiGroup
+	}
+	return ""
+}
+
+func (x *SysApiItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SysApiItem) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *SysApiItem) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *SysApiItem) GetIsAutoSync() int32 {
+	if x != nil {
+		return x.IsAutoSync
+	}
+	return 0
+}
+
+type ListSysApisResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*SysApiItem          `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysApisResponse) Reset() {
+	*x = ListSysApisResponse{}
+	mi := &file_user_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysApisResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysApisResponse) ProtoMessage() {}
+
+func (x *ListSysApisResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysApisResponse.ProtoReflect.Descriptor instead.
+func (*ListSysApisResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *ListSysApisResponse) GetList() []*SysApiItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"user.proto\x12\x04user\"\x1b\n" +
+	"user.proto\x12\x04user\"\x0e\n" +
+	"\fEmptyRequest\"\x0f\n" +
+	"\rEmptyResponse\"\x1b\n" +
 	"\tIdRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"f\n" +
 	"\x10UserInfoResponse\x12\x0e\n" +
@@ -374,11 +1856,148 @@ const file_user_proto_rawDesc = "" +
 	"\rLoginResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\x12\x16\n" +
-	"\x06expire\x18\x03 \x01(\x03R\x06expire2\xab\x01\n" +
+	"\x06expire\x18\x03 \x01(\x03R\x06expire\"I\n" +
+	"\x11AdminLoginRequest\x12\x18\n" +
+	"\aaccount\x18\x01 \x01(\tR\aaccount\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x8a\x01\n" +
+	"\x12AdminLoginResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
+	"\brealName\x18\x03 \x01(\tR\brealName\x12\x16\n" +
+	"\x06avatar\x18\x04 \x01(\tR\x06avatar\x12\x14\n" +
+	"\x05roles\x18\x05 \x03(\tR\x05roles\"\x9e\x02\n" +
+	"\x14AdminProfileResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
+	"\brealName\x18\x03 \x01(\tR\brealName\x12\x16\n" +
+	"\x06mobile\x18\x04 \x01(\tR\x06mobile\x12\x14\n" +
+	"\x05email\x18\x05 \x01(\tR\x05email\x12\x16\n" +
+	"\x06avatar\x18\x06 \x01(\tR\x06avatar\x12\x1a\n" +
+	"\bdeptName\x18\a \x01(\tR\bdeptName\x12\x14\n" +
+	"\x05roles\x18\b \x03(\tR\x05roles\x12 \n" +
+	"\vpermissions\x18\t \x03(\tR\vpermissions\x12$\n" +
+	"\x05menus\x18\n" +
+	" \x03(\v2\x0e.user.MenuItemR\x05menus\"\x8e\x02\n" +
+	"\bMenuItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\bparentId\x18\x02 \x01(\x03R\bparentId\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\x12\x12\n" +
+	"\x04type\x18\x04 \x01(\x05R\x04type\x12\x12\n" +
+	"\x04path\x18\x05 \x01(\tR\x04path\x12\x1c\n" +
+	"\tcomponent\x18\x06 \x01(\tR\tcomponent\x12&\n" +
+	"\x0epermissionCode\x18\a \x01(\tR\x0epermissionCode\x12\x12\n" +
+	"\x04icon\x18\b \x01(\tR\x04icon\x12\x12\n" +
+	"\x04sort\x18\t \x01(\x05R\x04sort\x12*\n" +
+	"\bchildren\x18\n" +
+	" \x03(\v2\x0e.user.MenuItemR\bchildren\"\xbf\x02\n" +
+	"\vSysUserItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
+	"\x06deptId\x18\x02 \x01(\x03R\x06deptId\x12\x1a\n" +
+	"\bdeptName\x18\x03 \x01(\tR\bdeptName\x12\x1a\n" +
+	"\busername\x18\x04 \x01(\tR\busername\x12\x1a\n" +
+	"\brealName\x18\x05 \x01(\tR\brealName\x12\x16\n" +
+	"\x06mobile\x18\x06 \x01(\tR\x06mobile\x12\x14\n" +
+	"\x05email\x18\a \x01(\tR\x05email\x12\x16\n" +
+	"\x06avatar\x18\b \x01(\tR\x06avatar\x12\x16\n" +
+	"\x06status\x18\t \x01(\x05R\x06status\x12\x1c\n" +
+	"\troleNames\x18\n" +
+	" \x03(\tR\troleNames\x12\x18\n" +
+	"\aroleIds\x18\v \x03(\x03R\aroleIds\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\f \x01(\tR\n" +
+	"createTime\"w\n" +
+	"\x13ListSysUsersRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\x12\x18\n" +
+	"\akeyword\x18\x03 \x01(\tR\akeyword\x12\x16\n" +
+	"\x06deptId\x18\x04 \x01(\x03R\x06deptId\"S\n" +
+	"\x14ListSysUsersResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12%\n" +
+	"\x04list\x18\x02 \x03(\v2\x11.user.SysUserItemR\x04list\"\xca\x01\n" +
+	"\x14CreateSysUserRequest\x12\x16\n" +
+	"\x06deptId\x18\x01 \x01(\x03R\x06deptId\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
+	"\bpassword\x18\x03 \x01(\tR\bpassword\x12\x1a\n" +
+	"\brealName\x18\x04 \x01(\tR\brealName\x12\x16\n" +
+	"\x06mobile\x18\x05 \x01(\tR\x06mobile\x12\x14\n" +
+	"\x05email\x18\x06 \x01(\tR\x05email\x12\x18\n" +
+	"\aroleIds\x18\a \x03(\x03R\aroleIds\"\xba\x01\n" +
+	"\x14UpdateSysUserRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
+	"\x06deptId\x18\x02 \x01(\x03R\x06deptId\x12\x1a\n" +
+	"\brealName\x18\x03 \x01(\tR\brealName\x12\x16\n" +
+	"\x06mobile\x18\x04 \x01(\tR\x06mobile\x12\x14\n" +
+	"\x05email\x18\x05 \x01(\tR\x05email\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x18\n" +
+	"\aroleIds\x18\a \x03(\x03R\aroleIds\"\xeb\x01\n" +
+	"\vSysRoleItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04code\x18\x03 \x01(\tR\x04code\x12\x12\n" +
+	"\x04sort\x18\x04 \x01(\x05R\x04sort\x12\x1c\n" +
+	"\tdataScope\x18\x05 \x01(\x05R\tdataScope\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12 \n" +
+	"\vdescription\x18\a \x01(\tR\vdescription\x12\x18\n" +
+	"\amenuIds\x18\b \x03(\x03R\amenuIds\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\t \x01(\tR\n" +
+	"createTime\"_\n" +
+	"\x13ListSysRolesRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\x12\x18\n" +
+	"\akeyword\x18\x03 \x01(\tR\akeyword\"S\n" +
+	"\x14ListSysRolesResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12%\n" +
+	"\x04list\x18\x02 \x03(\v2\x11.user.SysRoleItemR\x04list\"\x92\x01\n" +
+	"\x14CreateSysRoleRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\x12\x12\n" +
+	"\x04sort\x18\x03 \x01(\x05R\x04sort\x12\x1c\n" +
+	"\tdataScope\x18\x04 \x01(\x05R\tdataScope\x12 \n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\"\xba\x01\n" +
+	"\x14UpdateSysRoleRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04code\x18\x03 \x01(\tR\x04code\x12\x12\n" +
+	"\x04sort\x18\x04 \x01(\x05R\x04sort\x12\x1c\n" +
+	"\tdataScope\x18\x05 \x01(\x05R\tdataScope\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x16\n" +
+	"\x06status\x18\a \x01(\x05R\x06status\"I\n" +
+	"\x15AssignRolePermRequest\x12\x16\n" +
+	"\x06roleId\x18\x01 \x01(\x03R\x06roleId\x12\x18\n" +
+	"\amenuIds\x18\x02 \x03(\x03R\amenuIds\"<\n" +
+	"\x16GetSysMenuTreeResponse\x12\"\n" +
+	"\x04list\x18\x01 \x03(\v2\x0e.user.MenuItemR\x04list\"\x9a\x01\n" +
+	"\n" +
+	"SysApiItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\bapiGroup\x18\x02 \x01(\tR\bapiGroup\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\x12\x12\n" +
+	"\x04path\x18\x04 \x01(\tR\x04path\x12\x16\n" +
+	"\x06method\x18\x05 \x01(\tR\x06method\x12\x1e\n" +
+	"\n" +
+	"isAutoSync\x18\x06 \x01(\x05R\n" +
+	"isAutoSync\";\n" +
+	"\x13ListSysApisResponse\x12$\n" +
+	"\x04list\x18\x01 \x03(\v2\x10.user.SysApiItemR\x04list2\xf5\a\n" +
 	"\x04User\x126\n" +
 	"\vGetUserInfo\x12\x0f.user.IdRequest\x1a\x16.user.UserInfoResponse\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x120\n" +
-	"\x05Login\x12\x12.user.LoginRequest\x1a\x13.user.LoginResponseB\x06Z\x04./pbb\x06proto3"
+	"\x05Login\x12\x12.user.LoginRequest\x1a\x13.user.LoginResponse\x12?\n" +
+	"\n" +
+	"AdminLogin\x12\x17.user.AdminLoginRequest\x1a\x18.user.AdminLoginResponse\x12>\n" +
+	"\x0fGetAdminProfile\x12\x0f.user.IdRequest\x1a\x1a.user.AdminProfileResponse\x12E\n" +
+	"\fListSysUsers\x12\x19.user.ListSysUsersRequest\x1a\x1a.user.ListSysUsersResponse\x12<\n" +
+	"\rCreateSysUser\x12\x1a.user.CreateSysUserRequest\x1a\x0f.user.IdRequest\x12@\n" +
+	"\rUpdateSysUser\x12\x1a.user.UpdateSysUserRequest\x1a\x13.user.EmptyResponse\x125\n" +
+	"\rDeleteSysUser\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponse\x12E\n" +
+	"\fListSysRoles\x12\x19.user.ListSysRolesRequest\x1a\x1a.user.ListSysRolesResponse\x12<\n" +
+	"\rCreateSysRole\x12\x1a.user.CreateSysRoleRequest\x1a\x0f.user.IdRequest\x12@\n" +
+	"\rUpdateSysRole\x12\x1a.user.UpdateSysRoleRequest\x1a\x13.user.EmptyResponse\x125\n" +
+	"\rDeleteSysRole\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponse\x12I\n" +
+	"\x15AssignRolePermissions\x12\x1b.user.AssignRolePermRequest\x1a\x13.user.EmptyResponse\x12B\n" +
+	"\x0eGetSysMenuTree\x12\x12.user.EmptyRequest\x1a\x1c.user.GetSysMenuTreeResponse\x12<\n" +
+	"\vListSysApis\x12\x12.user.EmptyRequest\x1a\x19.user.ListSysApisResponseB\x06Z\x04./pbb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -392,27 +2011,79 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_user_proto_goTypes = []any{
-	(*IdRequest)(nil),        // 0: user.IdRequest
-	(*UserInfoResponse)(nil), // 1: user.UserInfoResponse
-	(*RegisterRequest)(nil),  // 2: user.RegisterRequest
-	(*RegisterResponse)(nil), // 3: user.RegisterResponse
-	(*LoginRequest)(nil),     // 4: user.LoginRequest
-	(*LoginResponse)(nil),    // 5: user.LoginResponse
+	(*EmptyRequest)(nil),           // 0: user.EmptyRequest
+	(*EmptyResponse)(nil),          // 1: user.EmptyResponse
+	(*IdRequest)(nil),              // 2: user.IdRequest
+	(*UserInfoResponse)(nil),       // 3: user.UserInfoResponse
+	(*RegisterRequest)(nil),        // 4: user.RegisterRequest
+	(*RegisterResponse)(nil),       // 5: user.RegisterResponse
+	(*LoginRequest)(nil),           // 6: user.LoginRequest
+	(*LoginResponse)(nil),          // 7: user.LoginResponse
+	(*AdminLoginRequest)(nil),      // 8: user.AdminLoginRequest
+	(*AdminLoginResponse)(nil),     // 9: user.AdminLoginResponse
+	(*AdminProfileResponse)(nil),   // 10: user.AdminProfileResponse
+	(*MenuItem)(nil),               // 11: user.MenuItem
+	(*SysUserItem)(nil),            // 12: user.SysUserItem
+	(*ListSysUsersRequest)(nil),    // 13: user.ListSysUsersRequest
+	(*ListSysUsersResponse)(nil),   // 14: user.ListSysUsersResponse
+	(*CreateSysUserRequest)(nil),   // 15: user.CreateSysUserRequest
+	(*UpdateSysUserRequest)(nil),   // 16: user.UpdateSysUserRequest
+	(*SysRoleItem)(nil),            // 17: user.SysRoleItem
+	(*ListSysRolesRequest)(nil),    // 18: user.ListSysRolesRequest
+	(*ListSysRolesResponse)(nil),   // 19: user.ListSysRolesResponse
+	(*CreateSysRoleRequest)(nil),   // 20: user.CreateSysRoleRequest
+	(*UpdateSysRoleRequest)(nil),   // 21: user.UpdateSysRoleRequest
+	(*AssignRolePermRequest)(nil),  // 22: user.AssignRolePermRequest
+	(*GetSysMenuTreeResponse)(nil), // 23: user.GetSysMenuTreeResponse
+	(*SysApiItem)(nil),             // 24: user.SysApiItem
+	(*ListSysApisResponse)(nil),    // 25: user.ListSysApisResponse
 }
 var file_user_proto_depIdxs = []int32{
-	0, // 0: user.User.GetUserInfo:input_type -> user.IdRequest
-	2, // 1: user.User.Register:input_type -> user.RegisterRequest
-	4, // 2: user.User.Login:input_type -> user.LoginRequest
-	1, // 3: user.User.GetUserInfo:output_type -> user.UserInfoResponse
-	3, // 4: user.User.Register:output_type -> user.RegisterResponse
-	5, // 5: user.User.Login:output_type -> user.LoginResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	11, // 0: user.AdminProfileResponse.menus:type_name -> user.MenuItem
+	11, // 1: user.MenuItem.children:type_name -> user.MenuItem
+	12, // 2: user.ListSysUsersResponse.list:type_name -> user.SysUserItem
+	17, // 3: user.ListSysRolesResponse.list:type_name -> user.SysRoleItem
+	11, // 4: user.GetSysMenuTreeResponse.list:type_name -> user.MenuItem
+	24, // 5: user.ListSysApisResponse.list:type_name -> user.SysApiItem
+	2,  // 6: user.User.GetUserInfo:input_type -> user.IdRequest
+	4,  // 7: user.User.Register:input_type -> user.RegisterRequest
+	6,  // 8: user.User.Login:input_type -> user.LoginRequest
+	8,  // 9: user.User.AdminLogin:input_type -> user.AdminLoginRequest
+	2,  // 10: user.User.GetAdminProfile:input_type -> user.IdRequest
+	13, // 11: user.User.ListSysUsers:input_type -> user.ListSysUsersRequest
+	15, // 12: user.User.CreateSysUser:input_type -> user.CreateSysUserRequest
+	16, // 13: user.User.UpdateSysUser:input_type -> user.UpdateSysUserRequest
+	2,  // 14: user.User.DeleteSysUser:input_type -> user.IdRequest
+	18, // 15: user.User.ListSysRoles:input_type -> user.ListSysRolesRequest
+	20, // 16: user.User.CreateSysRole:input_type -> user.CreateSysRoleRequest
+	21, // 17: user.User.UpdateSysRole:input_type -> user.UpdateSysRoleRequest
+	2,  // 18: user.User.DeleteSysRole:input_type -> user.IdRequest
+	22, // 19: user.User.AssignRolePermissions:input_type -> user.AssignRolePermRequest
+	0,  // 20: user.User.GetSysMenuTree:input_type -> user.EmptyRequest
+	0,  // 21: user.User.ListSysApis:input_type -> user.EmptyRequest
+	3,  // 22: user.User.GetUserInfo:output_type -> user.UserInfoResponse
+	5,  // 23: user.User.Register:output_type -> user.RegisterResponse
+	7,  // 24: user.User.Login:output_type -> user.LoginResponse
+	9,  // 25: user.User.AdminLogin:output_type -> user.AdminLoginResponse
+	10, // 26: user.User.GetAdminProfile:output_type -> user.AdminProfileResponse
+	14, // 27: user.User.ListSysUsers:output_type -> user.ListSysUsersResponse
+	2,  // 28: user.User.CreateSysUser:output_type -> user.IdRequest
+	1,  // 29: user.User.UpdateSysUser:output_type -> user.EmptyResponse
+	1,  // 30: user.User.DeleteSysUser:output_type -> user.EmptyResponse
+	19, // 31: user.User.ListSysRoles:output_type -> user.ListSysRolesResponse
+	2,  // 32: user.User.CreateSysRole:output_type -> user.IdRequest
+	1,  // 33: user.User.UpdateSysRole:output_type -> user.EmptyResponse
+	1,  // 34: user.User.DeleteSysRole:output_type -> user.EmptyResponse
+	1,  // 35: user.User.AssignRolePermissions:output_type -> user.EmptyResponse
+	23, // 36: user.User.GetSysMenuTree:output_type -> user.GetSysMenuTreeResponse
+	25, // 37: user.User.ListSysApis:output_type -> user.ListSysApisResponse
+	22, // [22:38] is the sub-list for method output_type
+	6,  // [6:22] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_user_proto_init() }
@@ -426,7 +2097,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

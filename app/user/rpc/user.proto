@@ -3,6 +3,9 @@ syntax = "proto3";
 package user;
 option go_package = "./pb";
 
+message EmptyRequest {}
+message EmptyResponse {}
+
 message IdRequest {
   int64 id = 1;
 }
@@ -35,8 +38,183 @@ message LoginResponse {
   int64 expire = 3;
 }
 
+// -------------------------------------------------------------
+// 系统与权限管理协议 (RBAC & Permissions)
+// -------------------------------------------------------------
+
+message AdminLoginRequest {
+  string account = 1; // 允许使用用户名或手机号
+  string password = 2;
+}
+
+message AdminLoginResponse {
+  int64 id = 1;
+  string username = 2;
+  string realName = 3;
+  string avatar = 4;
+  repeated string roles = 5;
+}
+
+message AdminProfileResponse {
+  int64 id = 1;
+  string username = 2;
+  string realName = 3;
+  string mobile = 4;
+  string email = 5;
+  string avatar = 6;
+  string deptName = 7;
+  repeated string roles = 8;
+  repeated string permissions = 9; // 按钮权限编码列表 (如 system:user:add)
+  repeated MenuItem menus = 10;     // 动态菜单树 (仅包含目录与页面菜单)
+}
+
+message MenuItem {
+  int64 id = 1;
+  int64 parentId = 2;
+  string title = 3;
+  int32 type = 4; // 1:目录 2:菜单 3:按钮
+  string path = 5;
+  string component = 6;
+  string permissionCode = 7;
+  string icon = 8;
+  int32 sort = 9;
+  repeated MenuItem children = 10;
+}
+
+message SysUserItem {
+  int64 id = 1;
+  int64 deptId = 2;
+  string deptName = 3;
+  string username = 4;
+  string realName = 5;
+  string mobile = 6;
+  string email = 7;
+  string avatar = 8;
+  int32 status = 9;
+  repeated string roleNames = 10;
+  repeated int64 roleIds = 11;
+  string createTime = 12;
+}
+
+message ListSysUsersRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string keyword = 3;
+  int64 deptId = 4;
+}
+
+message ListSysUsersResponse {
+  int64 total = 1;
+  repeated SysUserItem list = 2;
+}
+
+message CreateSysUserRequest {
+  int64 deptId = 1;
+  string username = 2;
+  string password = 3;
+  string realName = 4;
+  string mobile = 5;
+  string email = 6;
+  repeated int64 roleIds = 7;
+}
+
+message UpdateSysUserRequest {
+  int64 id = 1;
+  int64 deptId = 2;
+  string realName = 3;
+  string mobile = 4;
+  string email = 5;
+  int32 status = 6;
+  repeated int64 roleIds = 7;
+}
+
+message SysRoleItem {
+  int64 id = 1;
+  string name = 2;
+  string code = 3;
+  int32 sort = 4;
+  int32 dataScope = 5;
+  int32 status = 6;
+  string description = 7;
+  repeated int64 menuIds = 8;
+  string createTime = 9;
+}
+
+message ListSysRolesRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string keyword = 3;
+}
+
+message ListSysRolesResponse {
+  int64 total = 1;
+  repeated SysRoleItem list = 2;
+}
+
+message CreateSysRoleRequest {
+  string name = 1;
+  string code = 2;
+  int32 sort = 3;
+  int32 dataScope = 4;
+  string description = 5;
+}
+
+message UpdateSysRoleRequest {
+  int64 id = 1;
+  string name = 2;
+  string code = 3;
+  int32 sort = 4;
+  int32 dataScope = 5;
+  string description = 6;
+  int32 status = 7;
+}
+
+message AssignRolePermRequest {
+  int64 roleId = 1;
+  repeated int64 menuIds = 2; // 勾选的菜单与按钮ID
+}
+
+message GetSysMenuTreeResponse {
+  repeated MenuItem list = 1;
+}
+
+message SysApiItem {
+  int64 id = 1;
+  string apiGroup = 2;
+  string title = 3;
+  string path = 4;
+  string method = 5;
+  int32 isAutoSync = 6;
+}
+
+message ListSysApisResponse {
+  repeated SysApiItem list = 1;
+}
+
 service User {
+  // 原有业务接口
   rpc GetUserInfo(IdRequest) returns (UserInfoResponse);
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
+
+  // 系统管理与 RBAC 权限接口
+  rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse);
+  rpc GetAdminProfile(IdRequest) returns (AdminProfileResponse);
+  
+  // 员工管理
+  rpc ListSysUsers(ListSysUsersRequest) returns (ListSysUsersResponse);
+  rpc CreateSysUser(CreateSysUserRequest) returns (IdRequest);
+  rpc UpdateSysUser(UpdateSysUserRequest) returns (EmptyResponse);
+  rpc DeleteSysUser(IdRequest) returns (EmptyResponse);
+
+  // 角色管理
+  rpc ListSysRoles(ListSysRolesRequest) returns (ListSysRolesResponse);
+  rpc CreateSysRole(CreateSysRoleRequest) returns (IdRequest);
+  rpc UpdateSysRole(UpdateSysRoleRequest) returns (EmptyResponse);
+  rpc DeleteSysRole(IdRequest) returns (EmptyResponse);
+  rpc AssignRolePermissions(AssignRolePermRequest) returns (EmptyResponse);
+
+  // 菜单与接口字典
+  rpc GetSysMenuTree(EmptyRequest) returns (GetSysMenuTreeResponse);
+  rpc ListSysApis(EmptyRequest) returns (ListSysApisResponse);
 }

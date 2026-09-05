@@ -3,6 +3,58 @@
 
 package types
 
+type AdminLoginReq struct {
+	Account  string `json:"account"`
+	Password string `json:"password"`
+}
+
+type AdminLoginResp struct {
+	AccessToken  string   `json:"accessToken"`
+	AccessExpire int64    `json:"accessExpire"`
+	RefreshAfter int64    `json:"refreshAfter"`
+	UserId       int64    `json:"userId"`
+	Username     string   `json:"username"`
+	RealName     string   `json:"realName"`
+	Avatar       string   `json:"avatar"`
+	Roles        []string `json:"roles"`
+}
+
+type AdminProfileResp struct {
+	Id          int64          `json:"id"`
+	Username    string         `json:"username"`
+	RealName    string         `json:"realName"`
+	Mobile      string         `json:"mobile"`
+	Email       string         `json:"email"`
+	Avatar      string         `json:"avatar"`
+	DeptName    string         `json:"deptName"`
+	Roles       []string       `json:"roles"`
+	Permissions []string       `json:"permissions"`
+	Menus       []*SysMenuItem `json:"menus"`
+}
+
+type AssignRolePermReq struct {
+	RoleId  int64   `json:"roleId"`
+	MenuIds []int64 `json:"menuIds"`
+}
+
+type CreateSysRoleReq struct {
+	Name        string `json:"name"`
+	Code        string `json:"code"`
+	Sort        int32  `json:"sort,optional"`
+	DataScope   int32  `json:"dataScope,optional"`
+	Description string `json:"description,optional"`
+}
+
+type CreateSysUserReq struct {
+	DeptId   int64   `json:"deptId,optional"`
+	Username string  `json:"username"`
+	Password string  `json:"password"`
+	RealName string  `json:"realName"`
+	Mobile   string  `json:"mobile,optional"`
+	Email    string  `json:"email,optional"`
+	RoleIds  []int64 `json:"roleIds,optional"`
+}
+
 type DashboardReq struct {
 	OrderId int64 `form:"orderId,optional"`
 }
@@ -11,6 +63,37 @@ type DashboardResp struct {
 	UserInfo UserInfoResp    `json:"userInfo"`
 	Order    OrderDetailResp `json:"order"`
 	SysTime  int64           `json:"sysTime"`
+}
+
+type GetSysMenuTreeResp struct {
+	List []*SysMenuItem `json:"list"`
+}
+
+type ListSysApisResp struct {
+	List []*SysApiItem `json:"list"`
+}
+
+type ListSysRolesReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Keyword  string `form:"keyword,optional"`
+}
+
+type ListSysRolesResp struct {
+	Total int64          `json:"total"`
+	List  []*SysRoleItem `json:"list"`
+}
+
+type ListSysUsersReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Keyword  string `form:"keyword,optional"`
+	DeptId   int64  `form:"deptId,optional"`
+}
+
+type ListSysUsersResp struct {
+	Total int64          `json:"total"`
+	List  []*SysUserItem `json:"list"`
 }
 
 type LoginReq struct {
@@ -48,6 +131,87 @@ type RegisterReq struct {
 
 type RegisterResp struct {
 	Id int64 `json:"id"`
+}
+
+type SysApiItem struct {
+	Id         int64  `json:"id"`
+	ApiGroup   string `json:"apiGroup"`
+	Title      string `json:"title"`
+	Path       string `json:"path"`
+	Method     string `json:"method"`
+	IsAutoSync int32  `json:"isAutoSync"`
+}
+
+type SysEmptyResp struct {
+	Success bool `json:"success"`
+}
+
+type SysIdReq struct {
+	Id int64 `path:"id"`
+}
+
+type SysIdResp struct {
+	Id int64 `json:"id"`
+}
+
+type SysMenuItem struct {
+	Id             int64          `json:"id"`
+	ParentId       int64          `json:"parentId"`
+	Title          string         `json:"title"`
+	Type           int32          `json:"type"` // 1:目录 2:菜单 3:按钮
+	Path           string         `json:"path"`
+	Component      string         `json:"component"`
+	PermissionCode string         `json:"permissionCode"`
+	Icon           string         `json:"icon"`
+	Sort           int32          `json:"sort"`
+	Children       []*SysMenuItem `json:"children,omitempty"`
+}
+
+type SysRoleItem struct {
+	Id          int64   `json:"id"`
+	Name        string  `json:"name"`
+	Code        string  `json:"code"`
+	Sort        int32   `json:"sort,optional"`
+	DataScope   int32   `json:"dataScope,optional"`
+	Status      int32   `json:"status"`
+	Description string  `json:"description,optional"`
+	MenuIds     []int64 `json:"menuIds,optional"`
+	CreateTime  string  `json:"createTime"`
+}
+
+type SysUserItem struct {
+	Id         int64    `json:"id"`
+	DeptId     int64    `json:"deptId"`
+	DeptName   string   `json:"deptName"`
+	Username   string   `json:"username"`
+	RealName   string   `json:"realName"`
+	Mobile     string   `json:"mobile"`
+	Email      string   `json:"email"`
+	Avatar     string   `json:"avatar"`
+	Status     int32    `json:"status"`
+	RoleNames  []string `json:"roleNames"`
+	RoleIds    []int64  `json:"roleIds"`
+	CreateTime string   `json:"createTime"`
+}
+
+type UpdateSysRoleReq struct {
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Code        string `json:"code"`
+	Sort        int32  `json:"sort,optional"`
+	DataScope   int32  `json:"dataScope,optional"`
+	Description string `json:"description,optional"`
+	Status      int32  `json:"status"`
+}
+
+type UpdateSysUserReq struct {
+	Id       int64   `json:"id"`
+	DeptId   int64   `json:"deptId,optional"`
+	RealName string  `json:"realName"`
+	Mobile   string  `json:"mobile,optional"`
+	Email    string  `json:"email,optional"`
+	Status   int32   `json:"status"`
+	RoleIds  []int64 `json:"roleIds,optional"`
 }
 
 type UserInfoReq struct {

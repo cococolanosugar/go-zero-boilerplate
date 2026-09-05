@@ -1,9 +1,9 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { App as AntdApp } from "antd";
 import { LoginForm, ProFormText } from "@ant-design/pro-components";
-import { LockOutlined, MobileOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
-import { login, setToken } from "@zero/api";
+import { adminLogin, setToken } from "@zero/api";
 import { APP_NAME } from "@zero/shared";
 
 export const LoginPage: React.FC = () => {
@@ -12,15 +12,15 @@ export const LoginPage: React.FC = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (values: { mobile: string; password: string }) => {
+  const handleSubmit = async (values: { account: string; password: string }) => {
     setLoading(true);
     try {
-      const res = await login({
-        mobile: values.mobile,
+      const res = await adminLogin({
+        account: values.account,
         password: values.password,
       });
       setToken(res.accessToken);
-      message.success(`欢迎回来，${res.username || "管理员"}！`);
+      message.success(`欢迎回来，${res.realName || res.username || "管理员"}！`);
       
       const from = (location.state as any)?.from?.pathname || "/dashboard";
       navigate(from, { replace: true });
@@ -48,7 +48,7 @@ export const LoginPage: React.FC = () => {
         logo="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
         loading={loading}
         initialValues={{
-          mobile: "13800000000",
+          account: "admin",
           password: "123456",
         }}
         onFinish={handleSubmit}
@@ -59,16 +59,13 @@ export const LoginPage: React.FC = () => {
         }}
       >
         <ProFormText
-          name="mobile"
+          name="account"
           fieldProps={{
             size: "large",
-            prefix: <MobileOutlined style={{ color: "#1677ff" }} />,
+            prefix: <UserOutlined style={{ color: "#1677ff" }} />,
           }}
-          placeholder="手机号（演示默认: 13800000000）"
-          rules={[
-            { required: true, message: "请输入手机号" },
-            { pattern: /^1\d{10}$/, message: "手机号格式不正确" },
-          ]}
+          placeholder="管理员账号 / 手机号（默认: admin）"
+          rules={[{ required: true, message: "请输入账号或手机号" }]}
         />
         <ProFormText.Password
           name="password"
@@ -76,7 +73,7 @@ export const LoginPage: React.FC = () => {
             size: "large",
             prefix: <LockOutlined style={{ color: "#1677ff" }} />,
           }}
-          placeholder="密码（演示默认: 123456）"
+          placeholder="密码（默认: 123456）"
           rules={[{ required: true, message: "请输入密码" }]}
         />
       </LoginForm>

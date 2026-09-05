@@ -19,18 +19,49 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_GetUserInfo_FullMethodName = "/user.User/GetUserInfo"
-	User_Register_FullMethodName    = "/user.User/Register"
-	User_Login_FullMethodName       = "/user.User/Login"
+	User_GetUserInfo_FullMethodName           = "/user.User/GetUserInfo"
+	User_Register_FullMethodName              = "/user.User/Register"
+	User_Login_FullMethodName                 = "/user.User/Login"
+	User_AdminLogin_FullMethodName            = "/user.User/AdminLogin"
+	User_GetAdminProfile_FullMethodName       = "/user.User/GetAdminProfile"
+	User_ListSysUsers_FullMethodName          = "/user.User/ListSysUsers"
+	User_CreateSysUser_FullMethodName         = "/user.User/CreateSysUser"
+	User_UpdateSysUser_FullMethodName         = "/user.User/UpdateSysUser"
+	User_DeleteSysUser_FullMethodName         = "/user.User/DeleteSysUser"
+	User_ListSysRoles_FullMethodName          = "/user.User/ListSysRoles"
+	User_CreateSysRole_FullMethodName         = "/user.User/CreateSysRole"
+	User_UpdateSysRole_FullMethodName         = "/user.User/UpdateSysRole"
+	User_DeleteSysRole_FullMethodName         = "/user.User/DeleteSysRole"
+	User_AssignRolePermissions_FullMethodName = "/user.User/AssignRolePermissions"
+	User_GetSysMenuTree_FullMethodName        = "/user.User/GetSysMenuTree"
+	User_ListSysApis_FullMethodName           = "/user.User/ListSysApis"
 )
 
 // UserClient is the client API for User service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
+	// 原有业务接口
 	GetUserInfo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	// 系统管理与 RBAC 权限接口
+	AdminLogin(ctx context.Context, in *AdminLoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error)
+	GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error)
+	// 员工管理
+	ListSysUsers(ctx context.Context, in *ListSysUsersRequest, opts ...grpc.CallOption) (*ListSysUsersResponse, error)
+	CreateSysUser(ctx context.Context, in *CreateSysUserRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysUser(ctx context.Context, in *UpdateSysUserRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysUser(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	// 角色管理
+	ListSysRoles(ctx context.Context, in *ListSysRolesRequest, opts ...grpc.CallOption) (*ListSysRolesResponse, error)
+	CreateSysRole(ctx context.Context, in *CreateSysRoleRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysRole(ctx context.Context, in *UpdateSysRoleRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysRole(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	AssignRolePermissions(ctx context.Context, in *AssignRolePermRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	// 菜单与接口字典
+	GetSysMenuTree(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetSysMenuTreeResponse, error)
+	ListSysApis(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ListSysApisResponse, error)
 }
 
 type userClient struct {
@@ -71,13 +102,161 @@ func (c *userClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.C
 	return out, nil
 }
 
+func (c *userClient) AdminLogin(ctx context.Context, in *AdminLoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminLoginResponse)
+	err := c.cc.Invoke(ctx, User_AdminLogin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminProfileResponse)
+	err := c.cc.Invoke(ctx, User_GetAdminProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListSysUsers(ctx context.Context, in *ListSysUsersRequest, opts ...grpc.CallOption) (*ListSysUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysUsersResponse)
+	err := c.cc.Invoke(ctx, User_ListSysUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysUser(ctx context.Context, in *CreateSysUserRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysUser(ctx context.Context, in *UpdateSysUserRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysUser(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListSysRoles(ctx context.Context, in *ListSysRolesRequest, opts ...grpc.CallOption) (*ListSysRolesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysRolesResponse)
+	err := c.cc.Invoke(ctx, User_ListSysRoles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysRole(ctx context.Context, in *CreateSysRoleRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysRole(ctx context.Context, in *UpdateSysRoleRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysRole(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) AssignRolePermissions(ctx context.Context, in *AssignRolePermRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_AssignRolePermissions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetSysMenuTree(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetSysMenuTreeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSysMenuTreeResponse)
+	err := c.cc.Invoke(ctx, User_GetSysMenuTree_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListSysApis(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ListSysApisResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysApisResponse)
+	err := c.cc.Invoke(ctx, User_ListSysApis_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
 type UserServer interface {
+	// 原有业务接口
 	GetUserInfo(context.Context, *IdRequest) (*UserInfoResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	// 系统管理与 RBAC 权限接口
+	AdminLogin(context.Context, *AdminLoginRequest) (*AdminLoginResponse, error)
+	GetAdminProfile(context.Context, *IdRequest) (*AdminProfileResponse, error)
+	// 员工管理
+	ListSysUsers(context.Context, *ListSysUsersRequest) (*ListSysUsersResponse, error)
+	CreateSysUser(context.Context, *CreateSysUserRequest) (*IdRequest, error)
+	UpdateSysUser(context.Context, *UpdateSysUserRequest) (*EmptyResponse, error)
+	DeleteSysUser(context.Context, *IdRequest) (*EmptyResponse, error)
+	// 角色管理
+	ListSysRoles(context.Context, *ListSysRolesRequest) (*ListSysRolesResponse, error)
+	CreateSysRole(context.Context, *CreateSysRoleRequest) (*IdRequest, error)
+	UpdateSysRole(context.Context, *UpdateSysRoleRequest) (*EmptyResponse, error)
+	DeleteSysRole(context.Context, *IdRequest) (*EmptyResponse, error)
+	AssignRolePermissions(context.Context, *AssignRolePermRequest) (*EmptyResponse, error)
+	// 菜单与接口字典
+	GetSysMenuTree(context.Context, *EmptyRequest) (*GetSysMenuTreeResponse, error)
+	ListSysApis(context.Context, *EmptyRequest) (*ListSysApisResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -96,6 +275,45 @@ func (UnimplementedUserServer) Register(context.Context, *RegisterRequest) (*Reg
 }
 func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUserServer) AdminLogin(context.Context, *AdminLoginRequest) (*AdminLoginResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminLogin not implemented")
+}
+func (UnimplementedUserServer) GetAdminProfile(context.Context, *IdRequest) (*AdminProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAdminProfile not implemented")
+}
+func (UnimplementedUserServer) ListSysUsers(context.Context, *ListSysUsersRequest) (*ListSysUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysUsers not implemented")
+}
+func (UnimplementedUserServer) CreateSysUser(context.Context, *CreateSysUserRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysUser not implemented")
+}
+func (UnimplementedUserServer) UpdateSysUser(context.Context, *UpdateSysUserRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysUser not implemented")
+}
+func (UnimplementedUserServer) DeleteSysUser(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysUser not implemented")
+}
+func (UnimplementedUserServer) ListSysRoles(context.Context, *ListSysRolesRequest) (*ListSysRolesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysRoles not implemented")
+}
+func (UnimplementedUserServer) CreateSysRole(context.Context, *CreateSysRoleRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysRole not implemented")
+}
+func (UnimplementedUserServer) UpdateSysRole(context.Context, *UpdateSysRoleRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysRole not implemented")
+}
+func (UnimplementedUserServer) DeleteSysRole(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysRole not implemented")
+}
+func (UnimplementedUserServer) AssignRolePermissions(context.Context, *AssignRolePermRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AssignRolePermissions not implemented")
+}
+func (UnimplementedUserServer) GetSysMenuTree(context.Context, *EmptyRequest) (*GetSysMenuTreeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSysMenuTree not implemented")
+}
+func (UnimplementedUserServer) ListSysApis(context.Context, *EmptyRequest) (*ListSysApisResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysApis not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -172,6 +390,240 @@ func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_AdminLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).AdminLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_AdminLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).AdminLogin(ctx, req.(*AdminLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetAdminProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetAdminProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetAdminProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetAdminProfile(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListSysUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysUsers(ctx, req.(*ListSysUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysUser(ctx, req.(*CreateSysUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysUser(ctx, req.(*UpdateSysUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysUser(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListSysRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysRolesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysRoles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysRoles(ctx, req.(*ListSysRolesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysRole(ctx, req.(*CreateSysRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysRole(ctx, req.(*UpdateSysRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysRole(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_AssignRolePermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignRolePermRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).AssignRolePermissions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_AssignRolePermissions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).AssignRolePermissions(ctx, req.(*AssignRolePermRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetSysMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetSysMenuTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetSysMenuTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetSysMenuTree(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListSysApis_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysApis(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysApis_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysApis(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +642,58 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _User_Login_Handler,
+		},
+		{
+			MethodName: "AdminLogin",
+			Handler:    _User_AdminLogin_Handler,
+		},
+		{
+			MethodName: "GetAdminProfile",
+			Handler:    _User_GetAdminProfile_Handler,
+		},
+		{
+			MethodName: "ListSysUsers",
+			Handler:    _User_ListSysUsers_Handler,
+		},
+		{
+			MethodName: "CreateSysUser",
+			Handler:    _User_CreateSysUser_Handler,
+		},
+		{
+			MethodName: "UpdateSysUser",
+			Handler:    _User_UpdateSysUser_Handler,
+		},
+		{
+			MethodName: "DeleteSysUser",
+			Handler:    _User_DeleteSysUser_Handler,
+		},
+		{
+			MethodName: "ListSysRoles",
+			Handler:    _User_ListSysRoles_Handler,
+		},
+		{
+			MethodName: "CreateSysRole",
+			Handler:    _User_CreateSysRole_Handler,
+		},
+		{
+			MethodName: "UpdateSysRole",
+			Handler:    _User_UpdateSysRole_Handler,
+		},
+		{
+			MethodName: "DeleteSysRole",
+			Handler:    _User_DeleteSysRole_Handler,
+		},
+		{
+			MethodName: "AssignRolePermissions",
+			Handler:    _User_AssignRolePermissions_Handler,
+		},
+		{
+			MethodName: "GetSysMenuTree",
+			Handler:    _User_GetSysMenuTree_Handler,
+		},
+		{
+			MethodName: "ListSysApis",
+			Handler:    _User_ListSysApis_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

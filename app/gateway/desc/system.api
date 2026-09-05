@@ -1,0 +1,232 @@
+syntax = "v1"
+
+info (
+	title:   "System & RBAC API"
+	desc:    "企业级权限与系统管理契约"
+	author:  "antigravity"
+	version: "v1"
+)
+
+type (
+	// 管理员登录
+	AdminLoginReq {
+		Account  string `json:"account"`
+		Password string `json:"password"`
+	}
+	AdminLoginResp {
+		AccessToken  string   `json:"accessToken"`
+		AccessExpire int64    `json:"accessExpire"`
+		RefreshAfter int64    `json:"refreshAfter"`
+		UserId       int64    `json:"userId"`
+		Username     string   `json:"username"`
+		RealName     string   `json:"realName"`
+		Avatar       string   `json:"avatar"`
+		Roles        []string `json:"roles"`
+	}
+
+	// 菜单树节点
+	SysMenuItem {
+		Id             int64          `json:"id"`
+		ParentId       int64          `json:"parentId"`
+		Title          string         `json:"title"`
+		Type           int32          `json:"type"` // 1:目录 2:菜单 3:按钮
+		Path           string         `json:"path"`
+		Component      string         `json:"component"`
+		PermissionCode string         `json:"permissionCode"`
+		Icon           string         `json:"icon"`
+		Sort           int32          `json:"sort"`
+		Children       []*SysMenuItem `json:"children,omitempty"`
+	}
+
+	// 当前员工画像与权限集
+	AdminProfileResp {
+		Id          int64          `json:"id"`
+		Username    string         `json:"username"`
+		RealName    string         `json:"realName"`
+		Mobile      string         `json:"mobile"`
+		Email       string         `json:"email"`
+		Avatar      string         `json:"avatar"`
+		DeptName    string         `json:"deptName"`
+		Roles       []string       `json:"roles"`
+		Permissions []string       `json:"permissions"`
+		Menus       []*SysMenuItem `json:"menus"`
+	}
+
+	// 通用 ID 响应与请求
+	SysIdReq {
+		Id int64 `path:"id"`
+	}
+	SysIdResp {
+		Id int64 `json:"id"`
+	}
+	SysEmptyResp {
+		Success bool `json:"success"`
+	}
+
+	// 员工管理
+	SysUserItem {
+		Id         int64    `json:"id"`
+		DeptId     int64    `json:"deptId"`
+		DeptName   string   `json:"deptName"`
+		Username   string   `json:"username"`
+		RealName   string   `json:"realName"`
+		Mobile     string   `json:"mobile"`
+		Email      string   `json:"email"`
+		Avatar     string   `json:"avatar"`
+		Status     int32    `json:"status"`
+		RoleNames  []string `json:"roleNames"`
+		RoleIds    []int64  `json:"roleIds"`
+		CreateTime string   `json:"createTime"`
+	}
+	ListSysUsersReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Keyword  string `form:"keyword,optional"`
+		DeptId   int64  `form:"deptId,optional"`
+	}
+	ListSysUsersResp {
+		Total int64          `json:"total"`
+		List  []*SysUserItem `json:"list"`
+	}
+	CreateSysUserReq {
+		DeptId   int64   `json:"deptId,optional"`
+		Username string  `json:"username"`
+		Password string  `json:"password"`
+		RealName string  `json:"realName"`
+		Mobile   string  `json:"mobile,optional"`
+		Email    string  `json:"email,optional"`
+		RoleIds  []int64 `json:"roleIds,optional"`
+	}
+	UpdateSysUserReq {
+		Id       int64   `json:"id"`
+		DeptId   int64   `json:"deptId,optional"`
+		RealName string  `json:"realName"`
+		Mobile   string  `json:"mobile,optional"`
+		Email    string  `json:"email,optional"`
+		Status   int32   `json:"status"`
+		RoleIds  []int64 `json:"roleIds,optional"`
+	}
+
+	// 角色管理
+	SysRoleItem {
+		Id          int64   `json:"id"`
+		Name        string  `json:"name"`
+		Code        string  `json:"code"`
+		Sort        int32   `json:"sort,optional"`
+		DataScope   int32   `json:"dataScope,optional"`
+		Status      int32   `json:"status"`
+		Description string  `json:"description,optional"`
+		MenuIds     []int64 `json:"menuIds,optional"`
+		CreateTime  string  `json:"createTime"`
+	}
+	ListSysRolesReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Keyword  string `form:"keyword,optional"`
+	}
+	ListSysRolesResp {
+		Total int64          `json:"total"`
+		List  []*SysRoleItem `json:"list"`
+	}
+	CreateSysRoleReq {
+		Name        string `json:"name"`
+		Code        string `json:"code"`
+		Sort        int32  `json:"sort,optional"`
+		DataScope   int32  `json:"dataScope,optional"`
+		Description string `json:"description,optional"`
+	}
+	UpdateSysRoleReq {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		Code        string `json:"code"`
+		Sort        int32  `json:"sort,optional"`
+		DataScope   int32  `json:"dataScope,optional"`
+		Description string `json:"description,optional"`
+		Status      int32  `json:"status"`
+	}
+	AssignRolePermReq {
+		RoleId  int64   `json:"roleId"`
+		MenuIds []int64 `json:"menuIds"`
+	}
+
+	// 菜单与 API
+	GetSysMenuTreeResp {
+		List []*SysMenuItem `json:"list"`
+	}
+	SysApiItem {
+		Id         int64  `json:"id"`
+		ApiGroup   string `json:"apiGroup"`
+		Title      string `json:"title"`
+		Path       string `json:"path"`
+		Method     string `json:"method"`
+		IsAutoSync int32  `json:"isAutoSync"`
+	}
+	ListSysApisResp {
+		List []*SysApiItem `json:"list"`
+	}
+)
+
+@server (
+	prefix: /api/v1/system
+	group:  system
+)
+service gateway {
+	@doc "管理员账号登录"
+	@handler AdminLogin
+	post /auth/login (AdminLoginReq) returns (AdminLoginResp)
+}
+
+@server (
+	prefix: /api/v1/system
+	group:  system
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取当前登录员工画像与权限"
+	@handler GetAdminProfile
+	get /personal/profile returns (AdminProfileResp)
+
+	@doc "获取员工列表"
+	@handler ListSysUsers
+	get /users (ListSysUsersReq) returns (ListSysUsersResp)
+
+	@doc "创建新员工"
+	@handler CreateSysUser
+	post /users (CreateSysUserReq) returns (SysIdResp)
+
+	@doc "更新员工信息"
+	@handler UpdateSysUser
+	put /users (UpdateSysUserReq) returns (SysEmptyResp)
+
+	@doc "删除员工"
+	@handler DeleteSysUser
+	delete /users/:id (SysIdReq) returns (SysEmptyResp)
+
+	@doc "获取角色列表"
+	@handler ListSysRoles
+	get /roles (ListSysRolesReq) returns (ListSysRolesResp)
+
+	@doc "创建角色"
+	@handler CreateSysRole
+	post /roles (CreateSysRoleReq) returns (SysIdResp)
+
+	@doc "更新角色"
+	@handler UpdateSysRole
+	put /roles (UpdateSysRoleReq) returns (SysEmptyResp)
+
+	@doc "删除角色"
+	@handler DeleteSysRole
+	delete /roles/:id (SysIdReq) returns (SysEmptyResp)
+
+	@doc "分配角色菜单与按钮权限"
+	@handler AssignRolePermissions
+	post /roles/permissions (AssignRolePermReq) returns (SysEmptyResp)
+
+	@doc "获取全量菜单与按钮树"
+	@handler GetSysMenuTree
+	get /menus/tree returns (GetSysMenuTreeResp)
+
+	@doc "获取系统 API 字典列表"
+	@handler ListSysApis
+	get /apis returns (ListSysApisResp)
+}

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	order "go-zero-boilerplate/app/gateway/internal/handler/order"
+	system "go-zero-boilerplate/app/gateway/internal/handler/system"
 	user "go-zero-boilerplate/app/gateway/internal/handler/user"
 	"go-zero-boilerplate/app/gateway/internal/svc"
 
@@ -36,6 +37,97 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 管理员账号登录
+				Method:  http.MethodPost,
+				Path:    "/auth/login",
+				Handler: system.AdminLoginHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/system"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取系统 API 字典列表
+				Method:  http.MethodGet,
+				Path:    "/apis",
+				Handler: system.ListSysApisHandler(serverCtx),
+			},
+			{
+				// 获取全量菜单与按钮树
+				Method:  http.MethodGet,
+				Path:    "/menus/tree",
+				Handler: system.GetSysMenuTreeHandler(serverCtx),
+			},
+			{
+				// 获取当前登录员工画像与权限
+				Method:  http.MethodGet,
+				Path:    "/personal/profile",
+				Handler: system.GetAdminProfileHandler(serverCtx),
+			},
+			{
+				// 获取角色列表
+				Method:  http.MethodGet,
+				Path:    "/roles",
+				Handler: system.ListSysRolesHandler(serverCtx),
+			},
+			{
+				// 创建角色
+				Method:  http.MethodPost,
+				Path:    "/roles",
+				Handler: system.CreateSysRoleHandler(serverCtx),
+			},
+			{
+				// 更新角色
+				Method:  http.MethodPut,
+				Path:    "/roles",
+				Handler: system.UpdateSysRoleHandler(serverCtx),
+			},
+			{
+				// 删除角色
+				Method:  http.MethodDelete,
+				Path:    "/roles/:id",
+				Handler: system.DeleteSysRoleHandler(serverCtx),
+			},
+			{
+				// 分配角色菜单与按钮权限
+				Method:  http.MethodPost,
+				Path:    "/roles/permissions",
+				Handler: system.AssignRolePermissionsHandler(serverCtx),
+			},
+			{
+				// 获取员工列表
+				Method:  http.MethodGet,
+				Path:    "/users",
+				Handler: system.ListSysUsersHandler(serverCtx),
+			},
+			{
+				// 创建新员工
+				Method:  http.MethodPost,
+				Path:    "/users",
+				Handler: system.CreateSysUserHandler(serverCtx),
+			},
+			{
+				// 更新员工信息
+				Method:  http.MethodPut,
+				Path:    "/users",
+				Handler: system.UpdateSysUserHandler(serverCtx),
+			},
+			{
+				// 删除员工
+				Method:  http.MethodDelete,
+				Path:    "/users/:id",
+				Handler: system.DeleteSysUserHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/system"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
 				// 用户登录
 				Method:  http.MethodPost,
 				Path:    "/login",
@@ -54,7 +146,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 获取用户信息（受保护路由）
+				// 获取当前登录用户信息（受保护路由，强制由 JWT Claims 解析身份，杜绝水平越权）
 				Method:  http.MethodGet,
 				Path:    "/info",
 				Handler: user.GetUserInfoHandler(serverCtx),

@@ -19,6 +19,107 @@ export function getOrderDetail(params: components.OrderDetailReqParams) {
 }
 
 /**
+ * @description "管理员账号登录"
+ * @param req
+ */
+export function adminLogin(req: components.AdminLoginReq) {
+	return webapi.post<components.AdminLoginResp>(`/api/v1/system/auth/login`, req)
+}
+
+/**
+ * @description "获取系统 API 字典列表"
+ */
+export function listSysApis() {
+	return webapi.get<components.ListSysApisResp>(`/api/v1/system/apis`)
+}
+
+/**
+ * @description "获取全量菜单与按钮树"
+ */
+export function getSysMenuTree() {
+	return webapi.get<components.GetSysMenuTreeResp>(`/api/v1/system/menus/tree`)
+}
+
+/**
+ * @description "获取当前登录员工画像与权限"
+ */
+export function getAdminProfile() {
+	return webapi.get<components.AdminProfileResp>(`/api/v1/system/personal/profile`)
+}
+
+/**
+ * @description "获取角色列表"
+ * @param params
+ */
+export function listSysRoles(params: components.ListSysRolesReqParams) {
+	return webapi.get<components.ListSysRolesResp>(`/api/v1/system/roles`, params)
+}
+
+/**
+ * @description "创建角色"
+ * @param req
+ */
+export function createSysRole(req: components.CreateSysRoleReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/system/roles`, req)
+}
+
+/**
+ * @description "更新角色"
+ * @param req
+ */
+export function updateSysRole(req: components.UpdateSysRoleReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/system/roles`, req)
+}
+
+/**
+ * @description "删除角色"
+ * @param params
+ */
+export function deleteSysRole(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/system/roles/${id}`, params)
+}
+
+/**
+ * @description "分配角色菜单与按钮权限"
+ * @param req
+ */
+export function assignRolePermissions(req: components.AssignRolePermReq) {
+	return webapi.post<components.SysEmptyResp>(`/api/v1/system/roles/permissions`, req)
+}
+
+/**
+ * @description "获取员工列表"
+ * @param params
+ */
+export function listSysUsers(params: components.ListSysUsersReqParams) {
+	return webapi.get<components.ListSysUsersResp>(`/api/v1/system/users`, params)
+}
+
+/**
+ * @description "创建新员工"
+ * @param req
+ */
+export function createSysUser(req: components.CreateSysUserReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/system/users`, req)
+}
+
+/**
+ * @description "更新员工信息"
+ * @param req
+ */
+export function updateSysUser(req: components.UpdateSysUserReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/system/users`, req)
+}
+
+/**
+ * @description "删除员工"
+ * @param params
+ */
+export function deleteSysUser(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/system/users/${id}`, params)
+}
+
+/**
  * @description "用户登录"
  * @param req
  */
@@ -35,9 +136,8 @@ export function register(req: components.RegisterReq) {
 }
 
 /**
- * @description "获取当前登录用户信息（受保护路由，强制由 JWT 解析身份，杜绝水平越权）"
- * @param params
+ * @description "获取当前登录用户信息（受保护路由，强制由 JWT Claims 解析身份，杜绝水平越权）"
  */
-export function getUserInfo(params?: components.UserInfoReqParams) {
-	return webapi.get<components.UserInfoResp>(`/api/v1/user/info`, params || {})
+export function getUserInfo() {
+	return webapi.get<components.UserInfoResp>(`/api/v1/user/info`)
 }
