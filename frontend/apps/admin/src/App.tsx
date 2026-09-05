@@ -1,13 +1,17 @@
 ﻿import React from "react";
-import { ConfigProvider, App as AntdApp } from "antd";
+import { ConfigProvider, App as AntdApp, theme } from "antd";
+import { LayoutSettingsProvider, useLayoutSettings } from "./contexts/LayoutSettingsContext";
 import { AppRouter } from "./router";
 
-export default function App() {
+const ThemedApp: React.FC = () => {
+  const { settings, isDark } = useLayoutSettings();
+
   return (
     <ConfigProvider
       theme={{
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: "#1677ff",
+          colorPrimary: settings.colorPrimary || "#1677ff",
           borderRadius: 8,
         },
       }}
@@ -16,5 +20,13 @@ export default function App() {
         <AppRouter />
       </AntdApp>
     </ConfigProvider>
+  );
+};
+
+export default function App() {
+  return (
+    <LayoutSettingsProvider>
+      <ThemedApp />
+    </LayoutSettingsProvider>
   );
 }
