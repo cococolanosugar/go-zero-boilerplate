@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "go-zero": {
+      "command": "mcp-zero"
+    },
+    "antd": {
+      "command": "antd",
+      "args": ["mcp"]
+    },
+    "codegraph": {
+      "command": "codegraph",
+      "args": ["serve", "--mcp"]
+    },
+    "gitnexus": {
+      "command": "gitnexus",
+      "args": ["mcp"]
+    }
+  }
+}

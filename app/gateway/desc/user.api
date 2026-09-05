@@ -1,0 +1,57 @@
+syntax = "v1"
+
+type (
+	UserInfoReq {
+		Id int64 `form:"id,optional"`
+	}
+	UserInfoResp {
+		Id     int64  `json:"id"`
+		Name   string `json:"name"`
+		Mobile string `json:"mobile"`
+		Avatar string `json:"avatar"`
+	}
+	RegisterReq {
+		Username string `json:"username,optional"`
+		Mobile   string `json:"mobile"`
+		Password string `json:"password"`
+	}
+	RegisterResp {
+		Id int64 `json:"id"`
+	}
+	LoginReq {
+		Mobile   string `json:"mobile"`
+		Password string `json:"password"`
+	}
+	LoginResp {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+		UserId       int64  `json:"userId"`
+		Username     string `json:"username"`
+	}
+)
+
+@server (
+	prefix: /api/v1/user
+	group:  user
+)
+service gateway {
+	@doc "用户注册"
+	@handler Register
+	post /register (RegisterReq) returns (RegisterResp)
+
+	@doc "用户登录"
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+}
+
+@server (
+	prefix: /api/v1/user
+	group:  user
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取用户信息（受保护路由）"
+	@handler GetUserInfo
+	get /info (UserInfoReq) returns (UserInfoResp)
+}

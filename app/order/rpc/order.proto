@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package order;
+option go_package = "./pb";
+
+message OrderReq {
+  int64 orderId = 1;
+}
+
+message OrderResp {
+  int64 orderId = 1;
+  int64 userId = 2;
+  string item = 3;
+  double amount = 4;
+  string status = 5;
+}
+
+service Order {
+  rpc GetOrder(OrderReq) returns (OrderResp);
+}

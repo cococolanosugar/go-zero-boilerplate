@@ -1,0 +1,13 @@
+.git
+.gitignore
+.vscode
+.cursor
+.agents
+.ai-context
+**/node_modules
+**/dist
+bin
+*.exe
+*.test
+*.out
+*.log

@@ -1,0 +1,174 @@
+# go-zero-boilerplate: 工业级全栈 Monorepo 脚手架模版
+
+基于 [go-zero](https://github.com/zeromicro/go-zero) 与 **pnpm workspace** 搭建的工业级 **全栈 Monorepo（单仓多微服务 + 多端前端）** 架构。
+
+* **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`order`）收缩为纯 gRPC 通信。
+* **前端**：采用 `pnpm workspace` 统一管理后台（`admin`，基于 Ant Design 6.6.2 + Pro Components 2.8.10）与前台门户（`portal`，基于 Ant Design 6.6.2），通过 `goctl api ts` 自动生成统一的 `@zero/api` TypeScript SDK，契约一键直通！
+
+---
+
+## 目录结构
+
+```text
+go-zero-boilerplate/
+├── app/                           # 【后端 Go 微服务体系】
+│   ├── gateway/                   # 【统一对外 HTTP 网关 / BFF 层】(端口 8888)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, order.api)
+│   │   ├── etc/gateway.yaml       # 网关配置
+│   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
+│   │   └── gateway.go             # 网关 main 入口
+│   │
+│   ├── user/                      # 【用户微服务】纯 gRPC (端口 8080)
+│   │   ├── rpc/                   # gRPC 核心服务及对外 client/user/
+│   │   └── model/                 # 数据持久层
+│   │
+│   └── order/                     # 【订单微服务】纯 gRPC (端口 8081)
+│       ├── rpc/                   # gRPC 核心服务及对外 client/order/
+│       └── model/                 # 数据持久层
+│
+├── frontend/                      # 【前端多端工程体系】pnpm workspace
+│   ├── apps/
+│   │   ├── admin/                 # 管理后台系统 (Vite + TS，端口 3001)
+│   │   └── portal/                # 官方门户系统 (Vite + TS，端口 3000)
+│   ├── packages/
+│   │   ├── api/                   # 【共享 API SDK】通过 goctl api ts 自动从网关契约生成 (@zero/api)
+│   │   └── shared/                # 跨前端应用共享的工具与常量 (@zero/shared)
+│   ├── package.json               # 根 package.json
+│   ├── pnpm-workspace.yaml        # 工作区配置
+│   └── tsconfig.base.json         # 共享 TypeScript 配置
+│
+├── pkg/                           # 跨服务共享的 Go 通用库 (result, xerr)
+├── manifest/                      # 【交付与部署清单】
+│   └── deploy/                    # 本地开发与容器部署 (docker-compose)
+├── hack/                          # 【开发与运维辅助工具集】
+│   └── scripts/                   # 代码生成跨平台脚本
+├── mise.toml                      # 全栈工具链与版本锁 (Go, Node, pnpm, goctl, protoc, just, atlas, skeema)
+├── justfile / Makefile            # 快速命令入口
+├── go.mod / go.sum                # 根目录统一 Go 依赖
+├── AGENTS.md                      # AI 与开发者项目全局规范
+└── CLAUDE.md                      # Claude 助手开发执行指南
+```
+
+---
+
+## 本地极速启动与验证
+
+### 0. 工具链一键就绪 (Mise)
+```bash
+mise trust
+mise install
+```
+
+### 1. 启动微服务与网关
+```bash
+# 启动用户微服务 (gRPC :8080)
+just run-user-rpc
+
+# 启动订单微服务 (gRPC :8081)
+just run-order-rpc
+
+# 启动统一网关 (HTTP :8888)
+just run-gateway
+```
+
+### 2. 启动前端多端应用
+```bash
+# 启动管理后台 (http://localhost:3001)
+just run-admin
+
+# 启动官方门户 (http://localhost:3000)
+just run-portal
+```
+
+### 3. 全栈契约一键同步 (IDL First)
+当后端在 `app/gateway/desc/*.api` 中新增或修改接口后，只需运行：
+```bash
+just gen-ts
+```
+前端的 `frontend/packages/api/src` 会**自动生成强类型 TypeScript 函数与接口定义**，前端无需手写任何 Axios 请求！
+
+---
+
+## 常用命令速查
+
+| 操作 | Just 命令 | Make 命令 |
+| :--- | :--- | :--- |
+| 生成网关后端代码 | `just gen-gateway` | `make gen-gateway` |
+| 生成 user RPC | `just gen-rpc user` | `make gen-user-rpc` |
+| 生成 order RPC | `just gen-rpc order` | `make gen-order-rpc` |
+| **生成持久层 Model 代码** | `just gen-model` | `make gen-model` |
+| **同步生成前端 TS SDK** | `just gen-ts` | `make gen-ts` |
+| 启动网关 | `just run-gateway` | `make run-gateway` |
+| 启动 user-rpc | `just run-user-rpc` | `make run-user-rpc` |
+| 启动 order-rpc | `just run-order-rpc` | `make run-order-rpc` |
+| 启动前端 Admin | `just run-admin` | `make run-admin` |
+| 启动前端 Portal | `just run-portal` | `make run-portal` |
+| 构建前端全部产物 | `just build-frontend` | `make build-frontend` |
+| **前端 Ant Design 规范诊断** | `just lint-antd` | `make lint-antd` |
+| **构建 AI 知识图谱与全景索引** | `just ai-index` | `make ai-index` |
+| 整理 Go 依赖 | `just tidy` | `make tidy` |
+| **一键启动全栈容器 (All-in-One)** | `just docker-up` | `make docker-up` |
+| 停止全栈容器 | `just docker-down` | `make docker-down` |
+| 启动开发基础设施 (MySQL/Redis/Etcd/Nacos) | `just docker-infra-up` | `make docker-infra-up` |
+| 构建所有 Docker 镜像 | `just docker-build` | `make docker-build` |
+
+---
+
+## 服务注册与发现使用与切换指南 (Nacos / Etcd / 直连)
+
+本项目已实现 **Nacos（当前默认）**、**Etcd** 与 **直连（Endpoints）** 三种模式的即插即用切换，完全无需改动业务逻辑代码。
+
+### 1. 默认模式：Nacos 服务注册与发现
+* **服务端**：`app/user/rpc/etc/user.yaml` 与 `app/order/rpc/etc/order.yaml` 默认开启 `Nacos` 配置，服务启动后自动通过 `pkg/nacosx` 注册到 Nacos，退出时优雅反注册。
+  ```yaml
+  Nacos:
+    Host: ${NACOS_HOST:127.0.0.1}
+    Port: ${NACOS_PORT:8848}
+    NamespaceId: ${NACOS_NAMESPACE:public}
+  ```
+* **网关端**：`app/gateway/etc/gateway.yaml` 默认使用 `Target` 寻址：
+  ```yaml
+  UserRpc:
+    Target: nacos://${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}/user.rpc?namespaceid=${NACOS_NAMESPACE:public}&timeout=5000s
+    NonBlock: true
+  ```
+* **一键启动中间件**：
+  ```bash
+  just docker-infra-up   # 包含 MySQL 8.0, Redis 7, Nacos 2.4.3, Etcd 3.5
+  ```
+  Nacos 控制台可访问：`http://localhost:8848/nacos`（默认账号密码：nacos / nacos）。
+
+### 2. 切换模式：Etcd 服务注册与发现
+若团队采用 Etcd 作为基础设施，只需修改配置文件：
+* **服务端 YAML**：
+  1. 将 `Nacos:` 块注释掉。
+  2. 解开 `Etcd:` 块注释：
+     ```yaml
+     Etcd:
+       Hosts:
+         - ${ETCD_HOST:127.0.0.1:2379}
+       Key: user.rpc
+     ```
+* **网关端 YAML (`gateway.yaml`)**：
+  1. 将 `Target:` 行注释掉。
+  2. 解开对应服务的 `Etcd:` 块注释：
+     ```yaml
+     UserRpc:
+       Etcd:
+         Hosts:
+           - ${ETCD_HOST:127.0.0.1:2379}
+         Key: user.rpc
+       NonBlock: true
+     ```
+
+### 3. 本地轻量调试：直连模式 (Endpoints)
+若本地仅想极速调试单一接口且不想运行任何注册中心容器：
+* **服务端 YAML**：将 `Nacos` 与 `Etcd` 配置均注释掉。
+* **网关端 YAML**：将 `Target` 与 `Etcd` 注释，开启 `Endpoints`：
+  ```yaml
+  UserRpc:
+    Endpoints:
+      - ${USER_RPC_HOST:127.0.0.1:8080}
+    NonBlock: true
+  ```
+

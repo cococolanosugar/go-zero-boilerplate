@@ -1,0 +1,32 @@
+# mise.toml - 开发环境与工具链版本管理配置
+# 使用说明：
+# 1. 团队新成员拉取代码后，在项目根目录下执行 `mise install` 即可一键自动安装所有依赖工具及指定版本。
+# 2. 官方文档：https://mise.jdx.dev/
+
+[tools]
+# 后端核心运行时与工具链
+go = "1.26.5"
+just = "1.57.0"
+protoc = "35.1"
+"go:github.com/zeromicro/go-zero/tools/goctl" = "1.10.2"
+"go:google.golang.org/protobuf/cmd/protoc-gen-go" = "1.36.12"
+"go:google.golang.org/grpc/cmd/protoc-gen-go-grpc" = "1.6.2"
+"go:github.com/zeromicro/mcp-zero" = "1.0.0"
+
+# 数据库 Schema 声明式管理与 DDL Diff 工具
+# Atlas：Go 社区主流声明式迁移与 DDL Diff 工具，全平台（Windows / Linux / macOS）原生支持
+atlas = "1.3.0"
+
+# Skeema：官方仅支持 Linux / macOS，通过 os 条件限定仅在 Linux 与 macOS 平台自动安装
+skeema = { version = "1.14.1", os = ["linux", "macos"] }
+
+# 前端多端工作区工具链与 AI 辅助分析工具
+node = "24.18.0"
+pnpm = "11.17.0"
+"npm:@ant-design/cli" = "6.6.2"
+"npm:@colbymchenry/codegraph" = "1.6.0"
+"npm:gitnexus" = "1.6.11"
+
+[env]
+# 设置 Go 代理以保证国内网络环境顺畅下载依赖（按需配置）
+GOPROXY = "https://goproxy.cn,direct"

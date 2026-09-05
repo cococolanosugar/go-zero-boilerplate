@@ -1,0 +1,11 @@
+syntax = "v1"
+
+info (
+	title:   "API Gateway"
+	desc:    "统一对外 HTTP 接入网关"
+	author:  "antigravity"
+	version: "v1"
+)
+
+import "user.api"
+import "order.api"

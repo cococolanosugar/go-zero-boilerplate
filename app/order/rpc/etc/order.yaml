@@ -1,0 +1,25 @@
+Name: order.rpc
+ListenOn: ${ORDER_RPC_LISTEN_ON:0.0.0.0:8081}
+
+# 数据库持久层配置（支持环境变量注入）
+DataSource: ${MYSQL_DSN:root:root@tcp(127.0.0.1:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai}
+
+# Redis 缓存集群配置
+Cache:
+  - Host: ${REDIS_HOST:127.0.0.1:6379}
+
+# ================= 服务注册与发现配置 =================
+# 模式一：Nacos 注册发现（当前默认启用）
+Nacos:
+  Host: ${NACOS_HOST:127.0.0.1}
+  Port: ${NACOS_PORT:8848}
+  NamespaceId: ${NACOS_NAMESPACE:public}
+
+# 模式二：Etcd 注册发现（若需切换至 Etcd，请注释上方 Nacos，并解开下方注释）
+# Etcd:
+#   Hosts:
+#     - ${ETCD_HOST:127.0.0.1:2379}
+#   Key: order.rpc
+
+# 模式三：直连模式（本地单机调试无需注册中心，将上方 Nacos 和 Etcd 均注释即可）
+

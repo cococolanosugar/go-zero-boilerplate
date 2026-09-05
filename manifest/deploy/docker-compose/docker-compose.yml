@@ -1,0 +1,51 @@
+services:
+  nacos:
+    image: nacos/nacos-server:v2.4.3
+    container_name: go-zero-nacos
+    environment:
+      - MODE=standalone
+      - PREFER_HOST_MODE=hostname
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    networks:
+      - go-zero-net
+
+  etcd:
+    image: bitnami/etcd:3.5
+    container_name: go-zero-etcd
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    networks:
+      - go-zero-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: go-zero-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    networks:
+      - go-zero-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: go-zero-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: go_zero_boilerplate
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../../sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - go-zero-net
+
+networks:
+  go-zero-net:
+    driver: bridge
