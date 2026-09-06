@@ -1,12 +1,14 @@
-﻿import React, { useRef } from "react";
+import React, { useRef } from "react";
 import { Tag, Space, Avatar, Button, App as AntdApp } from "antd";
 import { ProTable, PageContainer, type ProColumns, type ActionType } from "@ant-design/pro-components";
 import { UserOutlined, CheckCircleOutlined, EyeOutlined } from "@ant-design/icons";
 import { getOrderDetail, type OrderDetailResp } from "@zero/api";
 import { formatPrice } from "@zero/shared";
+import { useIntl } from "../../contexts/LocaleContext";
 
 export const OrdersPage: React.FC = () => {
   const { message } = AntdApp.useApp();
+  const { formatMessage } = useIntl();
   const actionRef = useRef<ActionType>();
 
   const columns: ProColumns<OrderDetailResp>[] = [
@@ -92,8 +94,8 @@ export const OrdersPage: React.FC = () => {
   return (
     <PageContainer
       header={{
-        title: "订单聚合管理",
-        subTitle: "基于 ProTable 驱动，自动集成条件搜索、列筛选、导出与微服务 RPC 数据透传",
+        title: formatMessage({ id: "pages.orders.title", defaultMessage: "订单聚合管理" }),
+        subTitle: formatMessage({ id: "pages.orders.subTitle", defaultMessage: "基于 ProTable 驱动，自动集成条件搜索、列筛选、导出与微服务 RPC 数据透传" }),
       }}
     >
       <ProTable<OrderDetailResp>

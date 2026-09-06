@@ -59,75 +59,111 @@ const getIcon = (iconName?: string) => {
   }
 };
 
-const defaultRouteConfig = {
+const getMenuLocaleKey = (path: string) => {
+  const map: Record<string, string> = {
+    "/dashboard": "menu.dashboard",
+    "/orders": "menu.orders",
+    "/users": "menu.users",
+    "/system": "menu.system",
+    "/system/users": "menu.system.users",
+    "/system/roles": "menu.system.roles",
+    "/system/menus": "menu.system.menus",
+    "/system/apis": "menu.system.apis",
+    "/system/dicts": "menu.system.dicts",
+    "/system/logs": "menu.system.logs",
+  };
+  return map[path] || `menu.${path.replace(/^\//, "").replace(/\//g, ".")}`;
+};
+
+const formatRoutes = (
+  items: SysMenuItem[],
+  formatMessage: (d: { id: string; defaultMessage?: string }) => string
+): any[] => {
+  return (items || []).map((item) => {
+    const localeKey = getMenuLocaleKey(item.path);
+    const localizedName = formatMessage({ id: localeKey, defaultMessage: item.title });
+    return {
+      path: item.path,
+      name: localizedName,
+      locale: localeKey,
+      icon: getIcon(item.icon),
+      routes:
+        item.children && item.children.length > 0
+          ? formatRoutes(item.children, formatMessage)
+          : undefined,
+    };
+  });
+};
+
+const getDefaultRouteConfig = (
+  formatMessage: (d: { id: string; defaultMessage?: string }) => string
+) => ({
   path: "/",
   routes: [
     {
       path: "/dashboard",
-      name: "监控大盘",
+      name: formatMessage({ id: "menu.dashboard", defaultMessage: "监控大盘" }),
+      locale: "menu.dashboard",
       icon: <DashboardOutlined />,
     },
     {
       path: "/orders",
-      name: "订单管理",
+      name: formatMessage({ id: "menu.orders", defaultMessage: "订单管理" }),
+      locale: "menu.orders",
       icon: <ShoppingCartOutlined />,
     },
     {
       path: "/users",
-      name: "用户中心",
+      name: formatMessage({ id: "menu.users", defaultMessage: "用户中心" }),
+      locale: "menu.users",
       icon: <UserOutlined />,
     },
     {
       path: "/system",
-      name: "系统与权限",
+      name: formatMessage({ id: "menu.system", defaultMessage: "系统与权限" }),
+      locale: "menu.system",
       icon: <SettingOutlined />,
       routes: [
         {
           path: "/system/users",
-          name: "员工管理",
+          name: formatMessage({ id: "menu.system.users", defaultMessage: "员工管理" }),
+          locale: "menu.system.users",
           icon: <UserOutlined />,
         },
         {
           path: "/system/roles",
-          name: "角色管理",
+          name: formatMessage({ id: "menu.system.roles", defaultMessage: "角色管理" }),
+          locale: "menu.system.roles",
           icon: <SafetyCertificateOutlined />,
         },
         {
           path: "/system/menus",
-          name: "菜单权限",
+          name: formatMessage({ id: "menu.system.menus", defaultMessage: "菜单权限" }),
+          locale: "menu.system.menus",
           icon: <MenuOutlined />,
         },
         {
           path: "/system/apis",
-          name: "接口字典",
+          name: formatMessage({ id: "menu.system.apis", defaultMessage: "接口字典" }),
+          locale: "menu.system.apis",
           icon: <ApiOutlined />,
         },
         {
           path: "/system/dicts",
-          name: "数据字典",
+          name: formatMessage({ id: "menu.system.dicts", defaultMessage: "数据字典" }),
+          locale: "menu.system.dicts",
           icon: <BookOutlined />,
         },
         {
           path: "/system/logs",
-          name: "审计日志",
+          name: formatMessage({ id: "menu.system.logs", defaultMessage: "审计日志" }),
+          locale: "menu.system.logs",
           icon: <HistoryOutlined />,
         },
       ],
     },
   ],
-};
-
-const formatRoutes = (items: SysMenuItem[]): any[] => {
-  return (items || []).map((item) => ({
-    path: item.path,
-    name: item.title,
-    icon: getIcon(item.icon),
-    routes:
-      item.children && item.children.length > 0
-        ? formatRoutes(item.children)
-        : undefined,
-  }));
-};
+});
 
 export const BasicLayout: React.FC = () => {
   const { message } = AntdApp.useApp();
@@ -165,23 +201,25 @@ export const BasicLayout: React.FC = () => {
     }
   };
 
-  // 动态构建路由结构（优先使用后端根据角色权限下发的菜单树）
+  // 动态构建路由结构（优先使用后端根据角色权限下发的菜单树，同时深度注入国际化多语言热更新）
   const routeData = useMemo(() => {
     if (menus && menus.length > 0) {
       return {
         path: "/",
-        routes: formatRoutes(menus),
+        routes: formatRoutes(menus, formatMessage),
       };
     }
-    return defaultRouteConfig;
-  }, [menus]);
+    return getDefaultRouteConfig(formatMessage);
+  }, [menus, locale, formatMessage]);
 
-  const displayName = profile?.realName || profile?.username || "管理员";
+  const displayName = profile?.realName || profile?.username || formatMessage({ id: "common.admin", defaultMessage: "管理员" });
 
   return (
     <div style={{ height: "100vh" }}>
       <ProLayout
+        key={locale}
         {...settings}
+        formatMessage={formatMessage}
         title={APP_NAME}
         logo="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
         route={routeData}
@@ -278,7 +316,7 @@ export const BasicLayout: React.FC = () => {
                         <UserOutlined />
                         <span>{displayName}</span>
                         {isSuperAdmin ? (
-                          <Tag color="gold">超级管理员</Tag>
+                          <Tag color="gold">{formatMessage({ id: "role.superAdmin", defaultMessage: "超级管理员" })}</Tag>
                         ) : (
                           (profile?.roles || []).map((r, i) => (
                             <Tag key={i} color="blue">
@@ -296,7 +334,7 @@ export const BasicLayout: React.FC = () => {
                   {
                     key: "logout",
                     icon: <LogoutOutlined />,
-                    label: "退出登录",
+                    label: formatMessage({ id: "navBar.logout", defaultMessage: "退出登录" }),
                     danger: true,
                     onClick: handleLogout,
                   },

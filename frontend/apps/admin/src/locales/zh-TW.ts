@@ -54,7 +54,13 @@ export default {
   'pages.system.logs.title': '企業審計日誌中心',
   'pages.system.logs.subTitle': '實時記錄全量寫操作審計與系統員工登錄認證日誌',
 
-  // 公共操作
+  // 業務頁面標題
+  'pages.orders.title': '訂單聚合管理',
+  'pages.orders.subTitle': '基於 ProTable 驅動，自動集成條件搜索、列篩選、導出與微服務 RPC 數據透傳',
+  'pages.users.title': '微服務用戶中心',
+  'pages.users.subTitle': '展示當前通過 JWT 鑒權向 User RPC 微服務拉取的安全用戶信息',
+
+  // 公共操作與角色
   'common.search': '查詢',
   'common.reset': '重設',
   'common.add': '新建',
@@ -67,4 +73,6 @@ export default {
   'common.fail': '操作失敗',
   'common.confirm': '確認',
   'common.cancel': '取消',
+  'common.admin': '管理員',
+  'role.superAdmin': '超級管理員',
 };

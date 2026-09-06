@@ -54,7 +54,13 @@ export default {
   'pages.system.logs.title': 'Audit Log Center',
   'pages.system.logs.subTitle': 'Real-time audit log of all write mutations and employee login activity',
 
-  // Common Actions
+  // Page Titles
+  'pages.orders.title': 'Order Management',
+  'pages.orders.subTitle': 'Driven by ProTable with search filtering, column export, and microservice RPC passthrough',
+  'pages.users.title': 'User Profile Center',
+  'pages.users.subTitle': 'Display secure user information fetched from User RPC via JWT authentication',
+
+  // Common Actions & Roles
   'common.search': 'Search',
   'common.reset': 'Reset',
   'common.add': 'New',
@@ -67,4 +73,6 @@ export default {
   'common.fail': 'Operation failed',
   'common.confirm': 'OK',
   'common.cancel': 'Cancel',
+  'common.admin': 'Administrator',
+  'role.superAdmin': 'Super Administrator',
 };

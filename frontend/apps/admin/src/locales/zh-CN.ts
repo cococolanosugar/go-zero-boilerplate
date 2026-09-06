@@ -54,7 +54,13 @@ export default {
   'pages.system.logs.title': '企业审计日志中心',
   'pages.system.logs.subTitle': '实时记录全量写操作审计与系统员工登录认证日志',
 
-  // 公共操作
+  // 业务页面标题
+  'pages.orders.title': '订单聚合管理',
+  'pages.orders.subTitle': '基于 ProTable 驱动，自动集成条件搜索、列筛选、导出与微服务 RPC 数据透传',
+  'pages.users.title': '微服务用户中心',
+  'pages.users.subTitle': '展示当前通过 JWT 鉴权向 User RPC 微服务拉取的安全用户信息',
+
+  // 公共操作与角色
   'common.search': '查询',
   'common.reset': '重置',
   'common.add': '新建',
@@ -67,4 +73,6 @@ export default {
   'common.fail': '操作失败',
   'common.confirm': '确定',
   'common.cancel': '取消',
+  'common.admin': '管理员',
+  'role.superAdmin': '超级管理员',
 };

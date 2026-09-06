@@ -3,9 +3,11 @@ import { App as AntdApp, Card, Tag, Avatar, Space, Button } from "antd";
 import { PageContainer, ProDescriptions } from "@ant-design/pro-components";
 import { UserOutlined, SafetyCertificateOutlined, ReloadOutlined } from "@ant-design/icons";
 import { getUserInfo, type UserInfoResp } from "@zero/api";
+import { useIntl } from "../../contexts/LocaleContext";
 
 export const UsersPage: React.FC = () => {
   const { message } = AntdApp.useApp();
+  const { formatMessage } = useIntl();
   const [user, setUser] = useState<UserInfoResp | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -28,8 +30,8 @@ export const UsersPage: React.FC = () => {
   return (
     <PageContainer
       header={{
-        title: "微服务用户中心",
-        subTitle: "展示当前通过 JWT 鉴权向 User RPC 微服务拉取的安全用户信息",
+        title: formatMessage({ id: "pages.users.title", defaultMessage: "微服务用户中心" }),
+        subTitle: formatMessage({ id: "pages.users.subTitle", defaultMessage: "展示当前通过 JWT 鉴权向 User RPC 微服务拉取的安全用户信息" }),
         extra: [
           <Button
             key="refresh"
