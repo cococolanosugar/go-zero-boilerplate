@@ -28,7 +28,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
+logs/
 *.local
+
+# Environment & Local Secrets
+.env
+.env.*
+!.env.example
 
 # IDE / Editor
 .idea/
