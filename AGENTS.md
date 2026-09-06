@@ -231,6 +231,8 @@ go-zero-boilerplate/
 * **RESTful 动态正则路径匹配**：
   * 下游微服务 `CheckApiPermission` RPC 实现智能正则路由匹配（如将 `/api/v1/orders/:id` 自动转为 `^/api/v1/orders/[^/]+$`），支持路径变量接口的权限判定。
   * 鉴权失败由网关统一返回标准 HTTP 403 异常（`xerr.NewErrCode(xerr.Forbidden)`）。
+* **完整架构设计与三表分工哲学**：
+  * 详见设计专篇文档：[企业级全栈 RBAC 与数据权限体系设计方案](file:///D:/work/go-zero-boilerplate/doc/design/2026-09-06-permission/README.md)（含 `sys_menu_api` 与 `sys_role_api` 分工辨析、时序图与前后端联动源码剖析）。
 
 ### 3.9 企业级双日志审计机制 (Audit Logging: OperLog & LoginLog)
 * **操作日志 (`sys_oper_log`)**：

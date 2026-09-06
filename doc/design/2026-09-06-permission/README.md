@@ -1,4 +1,4 @@
-﻿# 企业级全栈 RBAC 与数据权限体系设计方案
+# 企业级全栈 RBAC 与数据权限体系设计方案
 
 > **文档版本**：v1.1.0  
 > **更新日期**：2026-09-06  
@@ -181,6 +181,67 @@ export const PERMISSIONS = {
 
 export type PermissionCode = typeof PERMISSIONS[keyof typeof PERMISSIONS][keyof typeof PERMISSIONS[keyof typeof PERMISSIONS]];
 ```
+
+### 3.5 核心设计辨析：为什么同时存在 sys_role_menu、sys_role_api 与 sys_menu_api？sys_menu_api 是否多余？
+
+在设计 RBAC 权限系统时，常有开发者提出疑问：
+> *“既然已经有了角色-菜单关联表 `sys_role_menu`，也有了角色-接口关联表 `sys_role_api`，那为什么还要冗余一张 `sys_menu_api`？它是不是多余的？”*
+
+**直接结论：`sys_menu_api` 绝不仅不多余，恰恰相反，它是整个权限体系能够实现“自动化联动”和“业务与技术解耦”的核心发动机！** 如果从数据库纯三范式角度做减法，**能被省略的反而是 `sys_role_api`，而绝不能是 `sys_menu_api`**。
+
+#### 1. 根本矛盾：业务视角 vs 技术视角的认知鸿沟
+权限管理在企业中存在天然的“认知断层”：
+* **业务视角（管理员/HR/业务主管）**：只理解**菜单与按钮**（如：“员工管理”、“新增员工”按钮）。他们只关心员工在屏幕上能看到什么、能点什么，**不懂也不关心底层 HTTP URL 和方法**。
+* **技术视角（API 网关/微服务拦截切面）**：只理解 **HTTP Method + Path**（如：`POST /api/v1/system/users`）。网关只关心这次 HTTP 请求是否合法，**根本不知道也不在乎前端对应哪个按钮**。
+
+👉 **`sys_menu_api` 正是填平“业务按钮”与“技术接口”这道鸿沟的唯一映射契约（Contract）！**
+
+#### 2. 假设没有 sys_menu_api，系统会发生的灾难
+如果删除了 `sys_menu_api`，只保留 `sys_role_menu` 和 `sys_role_api`：
+* **噩梦般的双重人肉配置**：管理员在后台新建一个角色时，不仅要在“菜单权限”树里勾选【确认退款】按钮，还必须切换到“接口权限”Tab，在成百上千个技术 URL 中人肉搜索勾选 `POST /api/v1/order/refund/approve`。
+* **极高的失误率（权限穿帮与越权漏洞）**：
+  * **漏配接口**：勾了按钮却漏勾底层 API，用户在界面看到按钮，一点就报错 403 Forbidden；
+  * **漏配按钮**：勾了 API 却漏勾按钮，懂技术的用户直接用 Postman 绕过前端界面越权调用。
+
+> **有了 `sys_menu_api`**：
+> “【确认退款】按钮（`menu_id: 101`）天然对应 `POST /api/v1/order/refund/approve`（`api_id: 55`）”这一技术契约在系统开发/初始化时就固化在 `sys_menu_api` 中。管理员在界面上勾选【确认退款】的瞬间，后端自动去查 `sys_menu_api`，秒级级联写入 `sys_role_api`。**管理员只需做业务勾选，底层防火墙自动打通！**
+
+#### 3. 三张表的真实生命周期与分工矩阵
+
+```text
+               【系统设计 / 开发期】
+              定义业务动作对应的技术资源
+                     │
+           ┌─────────▼─────────┐
+           │   sys_menu_api    │ ◀───【元数据契约定义表 (Blueprint)】
+           │  (按钮 ──> API)   │      低频维护，由开发者在建表初始化时确定
+           └─────────┬─────────┘
+                     │
+         管理员在后台勾选角色权限（一石二鸟）
+                     │
+        ┌────────────┴────────────┐
+        ▼                         ▼
+┌───────────────┐         ┌───────────────┐
+│ sys_role_menu │         │ sys_role_api  │
+│ (角色 ──> 菜单)│         │ (角色 ──> API) │
+└───────┬───────┘         └───────┬───────┘
+        │                         │
+【前端渲染时读取】          【网关运行时读取】
+控制页面菜单树与按钮显隐    每次请求毫秒级判定 403 (物化投影)
+```
+
+| 数据表 | 本质定位 | 维护时机与频率 | 核心回答的问题 | 消费方 |
+| :--- | :--- | :--- | :--- | :--- |
+| **`sys_menu_api`** | **元数据契约表 (Blueprint)** | 开发期 / 系统初始化（极低频） | *“这个按钮在技术上对应哪个后端接口？”* | 角色授权事务级联引擎 |
+| **`sys_role_menu`** | **业务展示视图 (Presentation Scope)** | 角色授权时由管理员勾选（中频） | *“这个角色在前端界面能看到哪些菜单和按钮？”* | 前端登录画像与菜单树 |
+| **`sys_role_api`** | **安全物化投影 (Security Materialized View)** | 由后端事务根据 `sys_menu_api` 自动计算写入 | *“这个角色到底能不能调用这个具体的 HTTP 路径？”* | 网关切面运行时毫秒级鉴权 |
+
+#### 4. 为什么不直接用 sys_menu_api 动态 4 表 JOIN，而要保留 sys_role_api？
+既然关系链是 `Role -> Menu -> Api`，为什么网关鉴权时不直接实时联表查询，而要持久化 `sys_role_api`？
+* **空间换时间（网关极致高吞吐要求）**：网关每收到一次非 GET 请求，都要执行一次鉴权。
+  * 若没有 `sys_role_api`，网关必须执行 4~5 张大表 JOIN（`sys_user_role -> sys_role -> sys_role_menu -> sys_menu_api -> sys_api`），在高并发下消耗大量 DB 连接池与 CPU；
+  * 有了 `sys_role_api`，只查一张扁平表，连表极简，甚至可以整表直接放入 Redis Set（`SISMEMBER role:1:apis "POST:/api/v1/..."`）实现 **O(1) 毫秒级命中**。
+* **支持“无前端界面”的纯后端 API 独立授权**：现实业务中，有些纯技术接口（如 Open API、Webhook 回调、批量同步管道）是没有前端界面按钮对应的。`sys_role_api` 既支持由按钮“一石二鸟”自动生成，又保留了未来直接为角色分配独立 API 权限的高级扩展通道。
 
 ---
 
@@ -366,41 +427,96 @@ func (l *AssignRolePermissionsLogic) AssignRolePermissions(in *pb.AssignRolePerm
 }
 ```
 
-### 5.3 网关鉴权中间件与 Redis 权限缓存
+### 5.3 网关鉴权中间件与微服务动态正则匹配
 
-在 `app/gateway/gateway.go` 中注入授权中间件：
-
+#### 1. 网关切面统一拦截：`RbacMiddleware` (`app/gateway/internal/middleware/rbac_middleware.go`)
+统一网关全局挂载 `RbacMiddleware`，实现粗粒度 HTTP 路由防火墙：
 ```go
-func AuthorityMiddleware(userRpc userClient.User, redisConn *redis.Redis) rest.Middleware {
-    return func(next http.HandlerFunc) http.HandlerFunc {
-        return func(w http.ResponseWriter, r *http.Request) {
-            // 1. 获取当前用户 ID
-            userId := extractUserId(r.Context())
-            if userId <= 0 {
-                httpx.WriteJsonCtx(r.Context(), w, http.StatusUnauthorized, result.Error(xerr.TokenExpireError, "未授权"))
-                return
-            }
+func (m *RbacMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodOptions || isPublicRoute(r.URL.Path) {
+			next(w, r)
+			return
+		}
+		if !strings.HasPrefix(r.URL.Path, "/api/v1/system") {
+			next(w, r)
+			return
+		}
 
-            // 2. 超管直接放行
-            if isSuperAdmin(r.Context()) {
-                next(w, r)
-                return
-            }
+		// 解析 Bearer JWT 提取 userId
+		userId := m.extractUserId(r)
+		if userId <= 0 {
+			next(w, r)
+			return
+		}
 
-            // 3. 从 Redis 获取该用户允许调用的 API 签名集合 Set ("POST:/api/v1/user/info")
-            cacheKey := fmt.Sprintf("cache:auth:apis:%d", userId)
-            currentSign := fmt.Sprintf("%s:%s", r.Method, r.URL.Path)
-            
-            allowed, err := redisConn.Sismember(cacheKey, currentSign)
-            if err == nil && allowed {
-                next(w, r)
-                return
-            }
+		// 个人中心与基础认证接口放行
+		if strings.HasPrefix(r.URL.Path, "/api/v1/system/personal") || strings.HasPrefix(r.URL.Path, "/api/v1/system/auth") {
+			next(w, r)
+			return
+		}
 
-            // 4. 无权限返回 HTTP 403 Forbidden
-            httpx.WriteJsonCtx(r.Context(), w, http.StatusForbidden, result.Error(xerr.AccessForbidden, "无接口访问权限"))
-        }
-    }
+		// 调用下游 UserRpc 微服务判定权限
+		checkResp, err := m.svcCtx.UserRpc.CheckApiPermission(r.Context(), &userClient.CheckApiPermissionRequest{
+			UserId: userId,
+			Path:   r.URL.Path,
+			Method: r.Method,
+		})
+		if err != nil || checkResp == nil || !checkResp.Allowed {
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
+			w.WriteHeader(http.StatusForbidden)
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
+				"code": 403,
+				"msg":  "权限不足，当前角色未被授予访问该接口的权限",
+				"data": nil,
+			})
+			return
+		}
+
+		next(w, r)
+	}
+}
+```
+
+#### 2. 微服务智能正则匹配：`CheckApiPermissionLogic` (`app/user/rpc/internal/logic/user/checkapipermissionlogic.go`)
+下游微服务不仅支持静态路径比对，更支持 RESTful 路径参数智能正则编译：
+```go
+var pathParamRegex = regexp.MustCompile(`:[a-zA-Z0-9_]+`)
+
+func (l *CheckApiPermissionLogic) CheckApiPermission(in *pb.CheckApiPermissionRequest) (*pb.CheckApiPermissionResponse, error) {
+	userId := in.UserId
+	// 1. 超级管理员拥有全权通行证 (ID 为 1 或拥有 ROLE_ADMIN 角色)
+	if userId == 1 || l.isSuperAdmin(userId) {
+		return &pb.CheckApiPermissionResponse{Allowed: true}, nil
+	}
+
+	// 2. 查询当前员工名下所有启用的角色在 sys_role_api 中绑定的 API 列表
+	apis, err := l.queryUserRoleApis(userId)
+	if err != nil {
+		return &pb.CheckApiPermissionResponse{Allowed: false}, nil
+	}
+
+	reqMethod := strings.ToUpper(strings.TrimSpace(in.Method))
+	reqPath := strings.TrimSpace(in.Path)
+
+	for _, api := range apis {
+		if !strings.EqualFold(api.Method, reqMethod) {
+			continue
+		}
+		// 精确匹配
+		if api.Path == reqPath {
+			return &pb.CheckApiPermissionResponse{Allowed: true}, nil
+		}
+		// RESTful 动态参数模糊匹配 (如将 /api/v1/system/dict/types/:id 自动转为 ^/api/v1/system/dict/types/[^/]+$)
+		if strings.Contains(api.Path, ":") {
+			pattern := "^" + pathParamRegex.ReplaceAllString(api.Path, `[^/]+`) + "$"
+			if matched, _ := regexp.MatchString(pattern, reqPath); matched {
+				return &pb.CheckApiPermissionResponse{Allowed: true}, nil
+			}
+		}
+	}
+
+	return &pb.CheckApiPermissionResponse{Allowed: false}, nil
 }
 ```
 
@@ -529,20 +645,21 @@ export const Access: React.FC<AccessProps> = ({
 
 ---
 
-## 7. 分阶段落地路线图 (Implementation Roadmap)
+## 7. 落地实施状态与验证 (Implementation Status)
 
-本方案作为大仓权限演进的标准指南，建议按以下里程碑实施：
+本方案已 **100% 完整落地并合并至工程代码库**：
 
-* [ ] **Phase 1: 数据库与持久层就绪**
-  * 在 `manifest/sql/rbac.sql` 中提交上述 DDL（包含 `sys_menu_api`）；
-  * 执行 `just gen-model` 生成各实体带 Redis 缓存的 Go Model。
-* [ ] **Phase 2: 微服务与契约生成**
-  * 扩展 `app/user/rpc/user.proto`，提供角色、菜单按钮、部门的 RPC 方法（使用 `m.Trans` 级联维护角色-菜单-接口关联）；
-  * 编写 `app/gateway/desc/sys_*.api` 契约，执行 `just gen-gateway` 和 `just gen-ts`。
-* [ ] **Phase 3: 契约扫描与网关鉴权**
-  * 编写网关 API 自动逆向扫描脚本（`hack/scripts/sync-apis.go`）；
-  * 在网关挂载 RBAC 校验中间件；在业务微服务接入 `DataScope` 过滤。
-* [ ] **Phase 4: 前端 ProTable 与动态权限拼装**
-  * 编写前端动态路由拦截与 `<Access />`（支持 hide/disabled 模式）；
+* [x] **Phase 1: 数据库与持久层就绪 (Completed)**
+  * 在 `manifest/sql/init.sql` 与 `manifest/sql/rbac_schema.sql` 中固化 DDL（含 `sys_menu_api` 与全量索引）；
+  * 执行 `just gen-model all` 生成带 Redis Cache-Aside 的 Go Model 代码（`app/user/model/`）。
+* [x] **Phase 2: 微服务与契约生成 (Completed)**
+  * 扩展 `app/user/rpc/user.proto`，提供角色分配、菜单树、API 校验等 RPC 方法（使用 `m.Trans` 级联维护角色-菜单-接口关联）；
+  * 编写 `app/gateway/desc/system.api` 契约，执行 `just gen-gateway` 和 `just gen-ts` 生成 `@zero/api`。
+* [x] **Phase 3: 网关鉴权切面与微服务校验 (Completed)**
+  * 在统一网关挂载 `RbacMiddleware` (`app/gateway/internal/middleware/rbac_middleware.go`)；
+  * 下游微服务 `CheckApiPermissionLogic` 实现智能 RESTful 路径参数正则匹配。
+* [x] **Phase 4: 前端 ProTable 与动态权限组件 (Completed)**
   * 在 `@zero/shared` 中固化强类型 `PERMISSIONS` 字典；
-  * 完成用户、角色、菜单按钮、接口四大 ProTable 页面。
+  * `AuthContext` 注入 `permissions` 与 `menus`，`BasicLayout` 动态装载侧边栏；
+  * 全局封装 `<Access />` 按钮权限组件（支持 hide 与 disabled 悬浮气泡模式）；
+  * 完成用户管理、角色管理、菜单管理、接口字典四大 ProTable 模块，100% 遵循 Ant Design 6.x 规范。

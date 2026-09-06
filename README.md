@@ -182,6 +182,7 @@ just gen-ts
 * **智能正则路径匹配**：自动将动态 RESTful 路由（如 `/api/v1/orders/:id`）映射并匹配数据库 API 白名单与角色权限树。
 * **白名单与超管豁免**：登录与公开接口自动放行；超级管理员（`UserId == 1` 或 `ROLE_ADMIN`）全局豁免。
 * **统一 403 异常拦截**：未授权访问直接熔断返回标准 HTTP 403 结构体。
+* **设计专篇与三表分工哲学**：详见 [企业级全栈 RBAC 与数据权限体系设计方案](doc/design/2026-09-06-permission/README.md)（含 `sys_menu_api` 与 `sys_role_api` 分工辨析、时序图与前后端一体化联动源码剖析）。
 
 ### 2. 企业级双日志审计闭环 (OperLog & LoginLog)
 * **操作日志 (`sys_oper_log`)**：网关中间件 `OperLogMiddleware` 自动捕获所有写请求（`POST/PUT/DELETE/PATCH`），采集操作人、IP、URL、耗时、状态码等，通过**异步 Goroutine** 写入持久层，零阻塞业务请求。
