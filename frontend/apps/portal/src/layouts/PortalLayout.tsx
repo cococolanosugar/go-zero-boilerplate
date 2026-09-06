@@ -19,9 +19,12 @@ import {
   SunOutlined,
   MoonOutlined,
   IdcardOutlined,
+  TranslationOutlined,
 } from "@ant-design/icons";
 import { APP_NAME } from "@zero/shared";
 import { useAuth } from "../contexts/AuthContext";
+import { useLocale, useIntl } from "../contexts/LocaleContext";
+import { LOCALES } from "../locales";
 import { LoginModal } from "../components/LoginModal";
 import { ProfileDrawer } from "../components/ProfileDrawer";
 
@@ -30,6 +33,8 @@ export const PortalLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, isLoggedIn, logout } = useAuth();
+  const { locale, setLocale } = useLocale();
+  const { formatMessage } = useIntl();
 
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
@@ -40,17 +45,17 @@ export const PortalLayout: React.FC = () => {
     routes: [
       {
         path: "/home",
-        name: "门户首页",
+        name: formatMessage({ id: "menu.home", defaultMessage: "门户首页" }),
         icon: <HomeOutlined />,
       },
       {
         path: "/services",
-        name: "微服务治理",
+        name: formatMessage({ id: "menu.services", defaultMessage: "微服务治理" }),
         icon: <ClusterOutlined />,
       },
       {
         path: "/workbench",
-        name: "联调工作台",
+        name: formatMessage({ id: "menu.workbench", defaultMessage: "联调工作台" }),
         icon: <ApiOutlined />,
       },
     ],
@@ -58,14 +63,22 @@ export const PortalLayout: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    message.success("已安全退出登录");
+    message.success(
+      formatMessage({
+        id: "portal.header.logoutSuccess",
+        defaultMessage: "已安全退出登录",
+      })
+    );
   };
 
   const isSuperAdmin =
     (profile?.roles || []).includes("ROLE_ADMIN") ||
     (profile?.roles || []).includes("admin");
 
-  const displayName = profile?.realName || profile?.username || "企业员工";
+  const displayName =
+    profile?.realName ||
+    profile?.username ||
+    formatMessage({ id: "portal.header.employee", defaultMessage: "企业员工" });
 
   const proSettings: ProSettings = {
     layout: "top",
@@ -80,7 +93,7 @@ export const PortalLayout: React.FC = () => {
     <div style={{ minHeight: "100vh" }}>
       <ProLayout
         {...proSettings}
-        title={`${APP_NAME} 技术门户`}
+        title={`${APP_NAME} ${formatMessage({ id: "home.hero.title", defaultMessage: "官方技术门户" })}`}
         logo={<RocketOutlined style={{ fontSize: 22, color: "#722ed1" }} />}
         route={routeConfig}
         location={{ pathname: location.pathname }}
@@ -99,7 +112,40 @@ export const PortalLayout: React.FC = () => {
           </div>
         )}
         actionsRender={() => [
-          <Tooltip key="theme" title={isDark ? "切换为浅色模式" : "切换为暗黑模式"}>
+          <Dropdown
+            key="lang"
+            menu={{
+              selectedKeys: [locale],
+              onClick: ({ key }) => setLocale(key as any),
+              items: Object.values(LOCALES).map((item) => ({
+                key: item.key,
+                label: (
+                  <Space>
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Space>
+                ),
+              })),
+            }}
+          >
+            <span style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}>
+              <TranslationOutlined />
+            </span>
+          </Dropdown>,
+          <Tooltip
+            key="theme"
+            title={
+              isDark
+                ? formatMessage({
+                    id: "portal.header.theme.light",
+                    defaultMessage: "切换为浅色模式",
+                  })
+                : formatMessage({
+                    id: "portal.header.theme.dark",
+                    defaultMessage: "切换为暗黑模式",
+                  })
+            }
+          >
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={() => setIsDark(!isDark)}
@@ -107,17 +153,32 @@ export const PortalLayout: React.FC = () => {
               {isDark ? <SunOutlined /> : <MoonOutlined />}
             </span>
           </Tooltip>,
-          <Tooltip key="admin" title="前往企业管理后台系统 (:3001)">
+          <Tooltip
+            key="admin"
+            title={formatMessage({
+              id: "portal.header.admin.tooltip",
+              defaultMessage: "前往企业管理后台系统 (:3001)",
+            })}
+          >
             <Button
               type="dashed"
               size="small"
               icon={<ExportOutlined />}
               onClick={() => window.open("http://localhost:3001", "_blank")}
             >
-              管理后台
+              {formatMessage({
+                id: "portal.header.admin",
+                defaultMessage: "管理后台",
+              })}
             </Button>
           </Tooltip>,
-          <Tooltip key="docs" title="查看微服务设计指南">
+          <Tooltip
+            key="docs"
+            title={formatMessage({
+              id: "portal.header.docs",
+              defaultMessage: "查看微服务设计指南",
+            })}
+          >
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={() => window.open("https://go-zero.dev", "_blank")}
@@ -125,7 +186,13 @@ export const PortalLayout: React.FC = () => {
               <QuestionCircleOutlined />
             </span>
           </Tooltip>,
-          <Tooltip key="github" title="访问 GitHub 源码大仓">
+          <Tooltip
+            key="github"
+            title={formatMessage({
+              id: "portal.header.github",
+              defaultMessage: "访问 GitHub 源码大仓",
+            })}
+          >
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={() =>
@@ -145,7 +212,10 @@ export const PortalLayout: React.FC = () => {
               style={{ background: "#722ed1", borderColor: "#722ed1" }}
               onClick={() => setLoginModalOpen(true)}
             >
-              登录账号
+              {formatMessage({
+                id: "portal.header.login",
+                defaultMessage: "登录账号",
+              })}
             </Button>
           ),
         ]}
@@ -167,9 +237,19 @@ export const PortalLayout: React.FC = () => {
                               <UserOutlined />
                               <span>{displayName}</span>
                               {isSuperAdmin ? (
-                                <Tag color="gold">超管</Tag>
+                                <Tag color="gold">
+                                  {formatMessage({
+                                    id: "portal.header.superAdmin",
+                                    defaultMessage: "超管",
+                                  })}
+                                </Tag>
                               ) : (
-                                <Tag color="purple">员工</Tag>
+                                <Tag color="purple">
+                                  {formatMessage({
+                                    id: "portal.header.employee",
+                                    defaultMessage: "员工",
+                                  })}
+                                </Tag>
                               )}
                             </Space>
                           ),
@@ -181,13 +261,19 @@ export const PortalLayout: React.FC = () => {
                         {
                           key: "profile",
                           icon: <IdcardOutlined />,
-                          label: "员工画像与权限",
+                          label: formatMessage({
+                            id: "portal.header.profile",
+                            defaultMessage: "员工画像与权限",
+                          }),
                           onClick: () => setProfileDrawerOpen(true),
                         },
                         {
                           key: "admin",
                           icon: <ExportOutlined />,
-                          label: "进入管理后台 (:3001)",
+                          label: formatMessage({
+                            id: "portal.header.adminLink",
+                            defaultMessage: "进入管理后台 (:3001)",
+                          }),
                           onClick: () =>
                             window.open("http://localhost:3001", "_blank"),
                         },
@@ -197,7 +283,10 @@ export const PortalLayout: React.FC = () => {
                         {
                           key: "logout",
                           icon: <LogoutOutlined />,
-                          label: "退出登录",
+                          label: formatMessage({
+                            id: "portal.header.logout",
+                            defaultMessage: "退出登录",
+                          }),
                           danger: true,
                           onClick: handleLogout,
                         },
@@ -221,7 +310,10 @@ export const PortalLayout: React.FC = () => {
         }
         footerRender={() => (
           <DefaultFooter
-            copyright={`2026 ${APP_NAME} 工业级微服务门户体系`}
+            copyright={`2026 ${APP_NAME} ${formatMessage({
+              id: "portal.footer.copyright",
+              defaultMessage: "工业级微服务门户体系",
+            })}`}
             links={[
               {
                 key: "go-zero",
@@ -251,9 +343,7 @@ export const PortalLayout: React.FC = () => {
           />
         )}
       >
-        <div style={{ padding: "24px 16px" }}>
-          <Outlet context={{ onOpenLogin: () => setLoginModalOpen(true) }} />
-        </div>
+        <Outlet context={{ onOpenLogin: () => setLoginModalOpen(true) }} />
       </ProLayout>
 
       {/* 登录弹窗 */}

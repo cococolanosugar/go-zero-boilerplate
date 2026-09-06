@@ -1,17 +1,19 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider, App as AntdApp } from "antd";
-import zhCN from "antd/locale/zh_CN";
 import { AuthProvider } from "./contexts/AuthContext";
+import { LocaleProvider, useLocale } from "./contexts/LocaleContext";
 import { PortalLayout } from "./layouts/PortalLayout";
 import { HomePage } from "./pages/Home";
 import { ServicesPage } from "./pages/Services";
 import { WorkbenchPage } from "./pages/Workbench";
 
-export default function App() {
+const AppContent: React.FC = () => {
+  const { currentConfig } = useLocale();
+
   return (
     <ConfigProvider
-      locale={zhCN}
+      locale={currentConfig.antdLocale}
       theme={{
         token: {
           colorPrimary: "#722ed1",
@@ -37,5 +39,13 @@ export default function App() {
         </AuthProvider>
       </AntdApp>
     </ConfigProvider>
+  );
+};
+
+export default function App() {
+  return (
+    <LocaleProvider>
+      <AppContent />
+    </LocaleProvider>
   );
 }

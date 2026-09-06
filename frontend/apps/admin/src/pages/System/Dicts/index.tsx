@@ -21,6 +21,7 @@ import {
 } from "@ant-design/icons";
 import {
   ProTable,
+  PageContainer,
   ModalForm,
   ProFormText,
   ProFormRadio,
@@ -45,6 +46,7 @@ import {
 import { PERMISSIONS } from "@zero/shared";
 import { Access } from "../../../components/Access";
 import { clearDictCache } from "../../../hooks/useDict";
+import { useIntl } from "../../../contexts/LocaleContext";
 
 const { Text } = Typography;
 
@@ -63,6 +65,7 @@ const TAG_COLOR_OPTIONS = [
 
 export const DictsPage: React.FC = () => {
   const { message } = AntdApp.useApp();
+  const { formatMessage } = useIntl();
 
   // 左右两个表格的 actionRef
   const typeActionRef = useRef<ActionType>(null);
@@ -353,7 +356,12 @@ export const DictsPage: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: 16 }}>
+    <PageContainer
+      header={{
+        title: formatMessage({ id: "pages.system.dicts.title", defaultMessage: "业务数据字典" }),
+        subTitle: formatMessage({ id: "pages.system.dicts.subTitle", defaultMessage: "动态维护系统全局常量、枚举字典与状态标签" }),
+      }}
+    >
       <Row gutter={16}>
         {/* 左侧：字典分类列表 */}
         <Col xs={24} md={10}>
@@ -604,7 +612,7 @@ export const DictsPage: React.FC = () => {
           placeholder="该枚举值的补充说明"
         />
       </ModalForm>
-    </div>
+    </PageContainer>
   );
 };
 

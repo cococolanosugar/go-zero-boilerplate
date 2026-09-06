@@ -25,11 +25,14 @@ import {
   BookOutlined,
   HistoryOutlined,
   AppstoreOutlined,
+  TranslationOutlined,
 } from "@ant-design/icons";
 import { setToken, type SysMenuItem } from "@zero/api";
 import { APP_NAME } from "@zero/shared";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { useAuth } from "../contexts/AuthContext";
+import { useLocale, useIntl } from "../contexts/LocaleContext";
+import { LOCALES } from "../locales";
 
 const getIcon = (iconName?: string) => {
   switch (iconName) {
@@ -132,6 +135,8 @@ export const BasicLayout: React.FC = () => {
   const navigate = useNavigate();
   const { settings, setSettings, toggleNavTheme, isDark } = useLayoutSettings();
   const { profile, menus, isSuperAdmin, refreshProfile } = useAuth();
+  const { locale, setLocale } = useLocale();
+  const { formatMessage } = useIntl();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -148,7 +153,7 @@ export const BasicLayout: React.FC = () => {
 
   const handleLogout = () => {
     setToken(null);
-    message.success("已安全退出登录");
+    message.success(formatMessage({ id: "navBar.logout.success", defaultMessage: "已安全退出登录" }));
     navigate("/login", { replace: true });
   };
 
@@ -196,7 +201,29 @@ export const BasicLayout: React.FC = () => {
           </div>
         )}
         actionsRender={() => [
-          <Tooltip key="theme" title={isDark ? "切换为浅色模式" : "切换为暗黑模式"}>
+          <Dropdown
+            key="lang"
+            menu={{
+              selectedKeys: [locale],
+              items: Object.values(LOCALES).map((item) => ({
+                key: item.key,
+                label: (
+                  <Space>
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Space>
+                ),
+                onClick: () => setLocale(item.key),
+              })),
+            }}
+          >
+            <span style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}>
+              <Tooltip title={formatMessage({ id: "navBar.lang", defaultMessage: "语言选择" })}>
+                <TranslationOutlined />
+              </Tooltip>
+            </span>
+          </Dropdown>,
+          <Tooltip key="theme" title={isDark ? formatMessage({ id: "navBar.theme.light", defaultMessage: "切换为浅色模式" }) : formatMessage({ id: "navBar.theme.dark", defaultMessage: "切换为暗黑模式" })}>
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={toggleNavTheme}
@@ -204,7 +231,7 @@ export const BasicLayout: React.FC = () => {
               {isDark ? <SunOutlined /> : <MoonOutlined />}
             </span>
           </Tooltip>,
-          <Tooltip key="fullscreen" title={isFullscreen ? "退出全屏" : "全屏模式"}>
+          <Tooltip key="fullscreen" title={isFullscreen ? formatMessage({ id: "navBar.fullscreen.exit", defaultMessage: "退出全屏" }) : formatMessage({ id: "navBar.fullscreen.enter", defaultMessage: "全屏模式" })}>
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={toggleFullscreen}
@@ -212,7 +239,7 @@ export const BasicLayout: React.FC = () => {
               {isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
             </span>
           </Tooltip>,
-          <Tooltip key="portal" title="前往官方前台门户系统 (:3000)">
+          <Tooltip key="portal" title={formatMessage({ id: "navBar.portal", defaultMessage: "前往官方前台门户系统 (:3000)" })}>
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={() => window.open("http://localhost:3000", "_blank")}
@@ -220,7 +247,7 @@ export const BasicLayout: React.FC = () => {
               <GlobalOutlined />
             </span>
           </Tooltip>,
-          <Tooltip key="help" title="查看微服务文档与使用指南">
+          <Tooltip key="help" title={formatMessage({ id: "navBar.help", defaultMessage: "查看微服务文档与使用指南" })}>
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={() => window.open("https://go-zero.dev", "_blank")}
@@ -228,7 +255,7 @@ export const BasicLayout: React.FC = () => {
               <QuestionCircleOutlined />
             </span>
           </Tooltip>,
-          <Tooltip key="github" title="查看 GitHub 仓库">
+          <Tooltip key="github" title={formatMessage({ id: "navBar.github", defaultMessage: "查看 GitHub 仓库" })}>
             <span
               style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
               onClick={() => window.open("https://github.com/zeromicro/go-zero", "_blank")}

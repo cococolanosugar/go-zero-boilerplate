@@ -11,6 +11,7 @@ import {
   SafetyCertificateOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../contexts/AuthContext";
+import { useIntl } from "../contexts/LocaleContext";
 
 interface LoginModalProps {
   open: boolean;
@@ -20,6 +21,7 @@ interface LoginModalProps {
 export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
   const { message } = AntdApp.useApp();
   const { loginAsSysUser, loginAsMobile } = useAuth();
+  const { formatMessage } = useIntl();
   const [loginType, setLoginType] = useState<"sys" | "mobile">("sys");
   const [submitting, setSubmitting] = useState(false);
 
@@ -30,7 +32,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
         account: values.account,
         password: values.password,
       });
-      message.success("系统员工登录成功！已加载权限画像");
+      message.success(
+        formatMessage({
+          id: "login.success.sys",
+          defaultMessage: "系统员工登录成功！已加载权限画像",
+        })
+      );
       onCancel();
     } catch (err: any) {
       message.error(err.message || "系统员工登录失败，请检查账号密码");
@@ -46,7 +53,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
         mobile: values.mobile,
         password: values.password,
       });
-      message.success("业务账号登录成功！");
+      message.success(
+        formatMessage({
+          id: "login.success.mobile",
+          defaultMessage: "业务账号登录成功！",
+        })
+      );
       onCancel();
     } catch (err: any) {
       message.error(err.message || "登录失败，请检查手机号与密码");
@@ -65,7 +77,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
       title={
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <SafetyCertificateOutlined style={{ color: "#722ed1", fontSize: 20 }} />
-          <span>统一身份认证中心</span>
+          <span>
+            {formatMessage({
+              id: "login.title",
+              defaultMessage: "统一身份认证中心",
+            })}
+          </span>
         </div>
       }
     >
@@ -76,11 +93,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
         items={[
           {
             key: "sys",
-            label: "企业员工 / 管理员登录",
+            label: formatMessage({
+              id: "login.tab.sys",
+              defaultMessage: "企业员工 / 管理员登录",
+            }),
           },
           {
             key: "mobile",
-            label: "普通业务用户登录",
+            label: formatMessage({
+              id: "login.tab.mobile",
+              defaultMessage: "普通业务用户登录",
+            }),
           },
         ]}
       />
@@ -88,8 +111,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
       {loginType === "sys" ? (
         <div style={{ marginTop: 8 }}>
           <Alert
-            title="企业员工身份 (Sys User)"
-            description="支持管理员与部门员工账号，登录后自动调取 RBAC 角色与按钮数据权限。"
+            title={formatMessage({
+              id: "login.sys.tip.title",
+              defaultMessage: "企业员工身份 (Sys User)",
+            })}
+            description={formatMessage({
+              id: "login.sys.tip.desc",
+              defaultMessage:
+                "支持管理员与部门员工账号，登录后自动调取 RBAC 角色与按钮数据权限。",
+            })}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -103,7 +133,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
             onFinish={handleSysLogin}
             submitter={{
               searchConfig: {
-                submitText: "以企业员工身份登录",
+                submitText: formatMessage({
+                  id: "login.submit.sys",
+                  defaultMessage: "以企业员工身份登录",
+                }),
               },
             }}
           >
@@ -113,7 +146,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
                 size: "large",
                 prefix: <UserOutlined style={{ color: "#722ed1" }} />,
               }}
-              placeholder="员工账号 / 手机号（默认: admin）"
+              placeholder={formatMessage({
+                id: "login.account.placeholder",
+                defaultMessage: "员工账号 / 手机号（默认: admin）",
+              })}
               rules={[{ required: true, message: "请输入账号或手机号" }]}
             />
             <ProFormText.Password
@@ -122,7 +158,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
                 size: "large",
                 prefix: <LockOutlined style={{ color: "#722ed1" }} />,
               }}
-              placeholder="密码（默认: 123456）"
+              placeholder={formatMessage({
+                id: "login.password.placeholder",
+                defaultMessage: "密码（默认: 123456）",
+              })}
               rules={[{ required: true, message: "请输入密码" }]}
             />
           </LoginForm>
@@ -130,8 +169,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
       ) : (
         <div style={{ marginTop: 8 }}>
           <Alert
-            title="前台消费者身份"
-            description="演示普通端消费者登录，调用 User 微服务 Login 接口。"
+            title={formatMessage({
+              id: "login.mobile.tip.title",
+              defaultMessage: "前台消费者身份",
+            })}
+            description={formatMessage({
+              id: "login.mobile.tip.desc",
+              defaultMessage: "演示普通端消费者登录，调用 User 微服务 Login 接口。",
+            })}
             type="success"
             showIcon
             style={{ marginBottom: 16 }}
@@ -145,7 +190,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
             onFinish={handleMobileLogin}
             submitter={{
               searchConfig: {
-                submitText: "立即登录",
+                submitText: formatMessage({
+                  id: "login.submit.mobile",
+                  defaultMessage: "立即登录",
+                }),
               },
             }}
           >
@@ -155,7 +203,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
                 size: "large",
                 prefix: <MobileOutlined style={{ color: "#722ed1" }} />,
               }}
-              placeholder="手机号（默认: 13800000000）"
+              placeholder={formatMessage({
+                id: "login.mobile.placeholder",
+                defaultMessage: "手机号（默认: 13800000000）",
+              })}
               rules={[
                 { required: true, message: "请输入手机号" },
                 { pattern: /^1\d{10}$/, message: "手机号格式不正确" },
@@ -167,7 +218,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
                 size: "large",
                 prefix: <LockOutlined style={{ color: "#722ed1" }} />,
               }}
-              placeholder="密码（默认: 123456）"
+              placeholder={formatMessage({
+                id: "login.password.placeholder",
+                defaultMessage: "密码（默认: 123456）",
+              })}
               rules={[{ required: true, message: "请输入密码" }]}
             />
           </LoginForm>

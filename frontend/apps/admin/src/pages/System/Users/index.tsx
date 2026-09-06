@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import {
   ProTable,
+  PageContainer,
   ModalForm,
   ProFormText,
   ProFormSelect,
@@ -24,9 +25,11 @@ import {
 } from "@zero/api";
 import { PERMISSIONS } from "@zero/shared";
 import { Access } from "../../../components/Access";
+import { useIntl } from "../../../contexts/LocaleContext";
 
 export const UsersPage: React.FC = () => {
   const { message } = AntdApp.useApp();
+  const { formatMessage } = useIntl();
   const actionRef = useRef<ActionType>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState<SysUserItem | null>(null);
@@ -212,7 +215,12 @@ export const UsersPage: React.FC = () => {
   ];
 
   return (
-    <>
+    <PageContainer
+      header={{
+        title: formatMessage({ id: "pages.system.users.title", defaultMessage: "企业员工管理" }),
+        subTitle: formatMessage({ id: "pages.system.users.subTitle", defaultMessage: "管理内部员工账号、分配所属部门与系统角色" }),
+      }}
+    >
       <ProTable<SysUserItem>
         headerTitle="企业员工与账号列表"
         actionRef={actionRef}
@@ -316,7 +324,7 @@ export const UsersPage: React.FC = () => {
           rules={[{ required: true }]}
         />
       </ModalForm>
-    </>
+    </PageContainer>
   );
 };
 

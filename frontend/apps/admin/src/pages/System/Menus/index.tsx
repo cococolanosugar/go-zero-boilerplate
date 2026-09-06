@@ -7,12 +7,15 @@ import {
 } from "@ant-design/icons";
 import {
   ProTable,
+  PageContainer,
   type ActionType,
   type ProColumns,
 } from "@ant-design/pro-components";
 import { getSysMenuTree, type SysMenuItem } from "@zero/api";
+import { useIntl } from "../../../contexts/LocaleContext";
 
 export const MenusPage: React.FC = () => {
+  const { formatMessage } = useIntl();
   const actionRef = useRef<ActionType>(null);
 
   const columns: ProColumns<SysMenuItem>[] = [
@@ -78,24 +81,31 @@ export const MenusPage: React.FC = () => {
   ];
 
   return (
-    <ProTable<SysMenuItem>
-      headerTitle="系统菜单与按钮权限树"
-      actionRef={actionRef}
-      rowKey="id"
-      search={false}
-      request={async () => {
-        const res = await getSysMenuTree();
-        return {
-          data: res.list || [],
-          success: true,
-        };
+    <PageContainer
+      header={{
+        title: formatMessage({ id: "pages.system.menus.title", defaultMessage: "菜单与权限规则" }),
+        subTitle: formatMessage({ id: "pages.system.menus.subTitle", defaultMessage: "维护前端路由导航菜单与按钮级细粒度权限点" }),
       }}
-      columns={columns}
-      pagination={false}
-      expandable={{
-        defaultExpandAllRows: true,
-      }}
-    />
+    >
+      <ProTable<SysMenuItem>
+        headerTitle="系统菜单与按钮权限树"
+        actionRef={actionRef}
+        rowKey="id"
+        search={false}
+        request={async () => {
+          const res = await getSysMenuTree();
+          return {
+            data: res.list || [],
+            success: true,
+          };
+        }}
+        columns={columns}
+        pagination={false}
+        expandable={{
+          defaultExpandAllRows: true,
+        }}
+      />
+    </PageContainer>
   );
 };
 

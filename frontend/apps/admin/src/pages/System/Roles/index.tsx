@@ -20,6 +20,7 @@ import {
 } from "@ant-design/icons";
 import {
   ProTable,
+  PageContainer,
   ModalForm,
   ProFormText,
   ProFormDigit,
@@ -39,9 +40,11 @@ import {
 } from "@zero/api";
 import { PERMISSIONS } from "@zero/shared";
 import { Access } from "../../../components/Access";
+import { useIntl } from "../../../contexts/LocaleContext";
 
 export const RolesPage: React.FC = () => {
   const { message } = AntdApp.useApp();
+  const { formatMessage } = useIntl();
   const actionRef = useRef<ActionType>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState<SysRoleItem | null>(null);
@@ -294,7 +297,12 @@ export const RolesPage: React.FC = () => {
   ];
 
   return (
-    <>
+    <PageContainer
+      header={{
+        title: formatMessage({ id: "pages.system.roles.title", defaultMessage: "系统角色与权限" }),
+        subTitle: formatMessage({ id: "pages.system.roles.subTitle", defaultMessage: "基于 RBAC 动态分配菜单权限与底层 API 访问权限" }),
+      }}
+    >
       <ProTable<SysRoleItem>
         headerTitle="系统角色列表"
         actionRef={actionRef}
@@ -442,7 +450,7 @@ export const RolesPage: React.FC = () => {
           />
         )}
       </Drawer>
-    </>
+    </PageContainer>
   );
 };
 

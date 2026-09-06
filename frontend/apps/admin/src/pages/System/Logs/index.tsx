@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import {
   ProTable,
+  PageContainer,
   type ActionType,
   type ProColumns,
 } from "@ant-design/pro-components";
@@ -28,6 +29,7 @@ import {
 } from "@zero/api";
 import { PERMISSIONS } from "@zero/shared";
 import { Access } from "../../../components/Access";
+import { useIntl } from "../../../contexts/LocaleContext";
 
 const { Paragraph, Text } = Typography;
 
@@ -40,6 +42,7 @@ const METHOD_COLORS: Record<string, string> = {
 };
 
 export const LogsPage: React.FC = () => {
+  const { formatMessage } = useIntl();
   const operActionRef = useRef<ActionType>(null);
   const loginActionRef = useRef<ActionType>(null);
 
@@ -222,7 +225,13 @@ export const LogsPage: React.FC = () => {
   ];
 
   return (
-    <Card variant="borderless">
+    <PageContainer
+      header={{
+        title: formatMessage({ id: "pages.system.logs.title", defaultMessage: "企业审计日志中心" }),
+        subTitle: formatMessage({ id: "pages.system.logs.subTitle", defaultMessage: "实时记录全量写操作审计与系统员工登录认证日志" }),
+      }}
+    >
+      <Card variant="borderless">
       <Tabs
         defaultActiveKey="oper"
         items={[
@@ -384,5 +393,6 @@ export const LogsPage: React.FC = () => {
         )}
       </Modal>
     </Card>
+    </PageContainer>
   );
 };

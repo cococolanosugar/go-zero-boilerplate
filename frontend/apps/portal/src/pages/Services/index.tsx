@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Row, Col, Card, Tag, Space, Collapse } from "antd";
+import { Typography, Row, Col, Tag, Space, Collapse } from "antd";
 import {
   SafetyCertificateOutlined,
   ApiOutlined,
@@ -8,11 +8,14 @@ import {
   DatabaseOutlined,
   ToolOutlined,
 } from "@ant-design/icons";
-import { ProCard } from "@ant-design/pro-components";
+import { PageContainer, ProCard } from "@ant-design/pro-components";
+import { useIntl } from "../../contexts/LocaleContext";
 
-const { Title, Paragraph, Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 export const ServicesPage: React.FC = () => {
+  const { formatMessage } = useIntl();
+
   const serviceDetails = [
     {
       title: "统一网关 BFF (Gateway)",
@@ -53,76 +56,89 @@ export const ServicesPage: React.FC = () => {
   ];
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-      <div style={{ marginBottom: 28 }}>
-        <Title level={2}>微服务集群与技术治理体系</Title>
-        <Paragraph type="secondary" style={{ fontSize: 16 }}>
-          探索 go-zero-boilerplate 的内部微服务编排、服务注册寻址、数据一致性保障与企业级规范防护。
-        </Paragraph>
-      </div>
-
-      <Row gutter={[20, 20]} style={{ marginBottom: 36 }}>
-        {serviceDetails.map((s, idx) => (
-          <Col xs={24} md={12} key={idx}>
-            <ProCard
-              title={
-                <Space>
-                  {s.icon}
-                  <span style={{ fontWeight: 600 }}>{s.title}</span>
+    <PageContainer
+      header={{
+        title: formatMessage({
+          id: "services.page.title",
+          defaultMessage: "微服务集群与技术治理体系",
+        }),
+        subTitle: formatMessage({
+          id: "services.page.desc",
+          defaultMessage:
+            "探索 go-zero-boilerplate 的内部微服务编排、服务注册寻址、数据一致性保障与企业级规范防护。",
+        }),
+      }}
+    >
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <Row gutter={[20, 20]} style={{ marginBottom: 32 }}>
+          {serviceDetails.map((s, idx) => (
+            <Col xs={24} md={12} key={idx}>
+              <ProCard
+                title={
+                  <Space>
+                    {s.icon}
+                    <span style={{ fontWeight: 600 }}>{s.title}</span>
+                  </Space>
+                }
+                headerBordered
+                style={{ height: "100%" }}
+              >
+                <Paragraph style={{ minHeight: 48, color: "#595959" }}>{s.desc}</Paragraph>
+                <Space wrap size={[4, 8]}>
+                  {s.tags.map((t, i) => (
+                    <Tag key={i} color="purple">
+                      {t}
+                    </Tag>
+                  ))}
                 </Space>
-              }
-              headerBordered
-              style={{ height: "100%" }}
-            >
-              <Paragraph style={{ minHeight: 48, color: "#595959" }}>{s.desc}</Paragraph>
-              <Space wrap size={[4, 8]}>
-                {s.tags.map((t, i) => (
-                  <Tag key={i} color="purple">
-                    {t}
-                  </Tag>
-                ))}
-              </Space>
-            </ProCard>
-          </Col>
-        ))}
-      </Row>
+              </ProCard>
+            </Col>
+          ))}
+        </Row>
 
-      <ProCard title="深度架构规范问答 (Architecture FAQ)" headerBordered>
-        <Collapse
-          ghost
-          defaultActiveKey={["1", "2"]}
-          items={[
-            {
-              key: "1",
-              label: <Text strong>为什么网关 Logic 严禁直连持久层数据库？</Text>,
-              children: (
-                <Paragraph type="secondary">
-                  网关作为 BFF（Backend For Frontend）层，核心职责是路由分发、参数校验、JWT 鉴权与跨微服务调用编排（mr.Finish）。直接持有数据库连接会破坏微服务领域边界，导致业务逻辑与持久层严重耦合，无法独立伸缩与治理。
-                </Paragraph>
-              ),
-            },
-            {
-              key: "2",
-              label: <Text strong>角色分配权限时，如何做到页面按钮与底层 API 的一石二鸟事务联动？</Text>,
-              children: (
-                <Paragraph type="secondary">
-                  在用户微服务中，我们维护了 sys_menu_api 字典。当管理员在界面上为角色勾选菜单与按钮权限点时，后端在原子事务中写入 sys_role_menu 的同时，自动反查已勾选节点绑定的底层 API 资源，级联写入 sys_role_api，避免了前后端权限双重配置的不一致风险。
-                </Paragraph>
-              ),
-            },
-            {
-              key: "3",
-              label: <Text strong>前端如何实现毫秒级强类型调用微服务？</Text>,
-              children: (
-                <Paragraph type="secondary">
-                  通过执行 <code>just gen-ts</code>，goctl 会解析网关的 <code>.api</code> 契约，自动在 <code>@zero/api</code> 共享包中输出完整的 TypeScript 请求函数与参数定义。前端应用引入后即可享有 IDE 的自动补全与类型检查，免去手写 API 接口的繁琐。
-                </Paragraph>
-              ),
-            },
-          ]}
-        />
-      </ProCard>
-    </div>
+        <ProCard
+          title={formatMessage({
+            id: "services.faq.title",
+            defaultMessage: "深度架构规范问答 (Architecture FAQ)",
+          })}
+          headerBordered
+        >
+          <Collapse
+            ghost
+            defaultActiveKey={["1", "2"]}
+            items={[
+              {
+                key: "1",
+                label: <Text strong>为什么网关 Logic 严禁直连持久层数据库？</Text>,
+                children: (
+                  <Paragraph type="secondary">
+                    网关作为 BFF（Backend For Frontend）层，核心职责是路由分发、参数校验、JWT 鉴权与跨微服务调用编排（mr.Finish）。直接持有数据库连接会破坏微服务领域边界，导致业务逻辑与持久层严重耦合，无法独立伸缩与治理。
+                  </Paragraph>
+                ),
+              },
+              {
+                key: "2",
+                label: <Text strong>角色分配权限时，如何做到页面按钮与底层 API 的一石二鸟事务联动？</Text>,
+                children: (
+                  <Paragraph type="secondary">
+                    在用户微服务中，我们维护了 sys_menu_api 字典。当管理员在界面上为角色勾选菜单与按钮权限点时，后端在原子事务中写入 sys_role_menu 的同时，自动反查已勾选节点绑定的底层 API 资源，级联写入 sys_role_api，避免了前后端权限双重配置的不一致风险。
+                  </Paragraph>
+                ),
+              },
+              {
+                key: "3",
+                label: <Text strong>前端如何实现毫秒级强类型调用微服务？</Text>,
+                children: (
+                  <Paragraph type="secondary">
+                    通过执行 <code>just gen-ts</code>，goctl 会解析网关的 <code>.api</code> 契约，自动在 <code>@zero/api</code> 共享包中输出完整的 TypeScript 请求函数与参数定义。前端应用引入后即可享有 IDE 的自动补全与类型检查，免去手写 API 接口的繁琐。
+                  </Paragraph>
+                ),
+              },
+            ]}
+          />
+        </ProCard>
+      </div>
+    </PageContainer>
   );
 };
 
