@@ -43,7 +43,7 @@ export const PERMISSIONS = {
 
   // 审计日志
   LOG_VIEW: 'system:log:view',
-  LOG_OPER_QUERY: 'system:operlog:query',
-  LOG_LOGIN_QUERY: 'system:loginlog:query',
+  LOG_OPER_QUERY: 'system:log:oper:query',
+  LOG_LOGIN_QUERY: 'system:log:login:query',
 } as const;
 
