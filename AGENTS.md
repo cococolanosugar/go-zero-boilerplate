@@ -14,6 +14,9 @@
   * **仅 `app/gateway` 对外暴露 HTTP RESTful API**（端口 8888），作为唯一的流量入口与 BFF 层。
   * **内部所有业务微服务（`user`、`order` 等）仅暴露 gRPC 接口**，不对外提供直接的 HTTP 访问。
   * **前端各端应用（`admin`、`portal`）统一经由 `@zero/api` SDK 调用网关**。
+* **核心参考开源标杆**：
+  * **[Ant Design Pro](https://pro.ant.design)**：提供前端企业级规范（`PageContainer` 页面容器、`useIntl` 多语言国际化体系、ProComponents 组件库与 `@ant-design/charts` 数据可视化）。
+  * **[LinaPro](https://github.com/linaproai/linapro)**：提供后端权限与治理体系灵感（“一石二鸟”按钮-接口联动模型 `sys_menu_api`、双日志审计 `sys_oper_log`/`sys_login_log`、全局数据字典、5 级数据权限范围）。
 
 ---
 

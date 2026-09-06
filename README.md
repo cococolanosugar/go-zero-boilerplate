@@ -200,3 +200,12 @@ make rename-project NEW_MODULE=my-org/shop-system DISPLAY_NAME="Shop System"
 ```
 脚本会自动安全替换：`go.mod`、所有 Go `import` 路径、YAML 配置文件、Docker/Compose 配置、MySQL 数据库名以及前端包配置与 UI 标题。
 
+---
+
+## 致敬与参考开源标杆 (Acknowledgements & References)
+
+本项目在架构演进与前端工程化落地过程中，深度借鉴并融合了业界两大标杆开源项目的精髓：
+
+* **[Ant Design Pro](https://pro.ant.design)**：阿里巴巴开源的企业级中后台最佳实践。本项目深度吸收了其 **统一页面容器 (`PageContainer`)**、**多语言国际化体系 (`useIntl`)**、**ProComponents 生产力套件 (`ProTable`, `ProForm`, `ProCard`)**、**声明式权限受控组件 (`<Access />`)** 与官方图表库 (`@ant-design/charts`)。
+* **[LinaPro](https://github.com/linaproai/linapro)**：吸收 PHP 成熟中后台（FastAdmin、ThinkAdmin、Laravel-Admin）十余年演进经验的现代企业级管理中后台标杆。本项目核心参考了其 **“按钮与底层接口一石二鸟事务联动” (`sys_menu_api`)**、**操作与登录双日志审计机制 (`sys_oper_log` + `sys_login_log`)**、**全局数据字典系统 (`sys_dict_type` + `sys_dict_data`)** 与 **5 级数据权限作用域 (`sys_dept.ancestors`)**，并在 `go-zero` 全栈微服务 Monorepo 体系下实现了高并发与契约驱动的代码生成升维。
+

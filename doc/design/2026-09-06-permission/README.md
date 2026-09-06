@@ -24,6 +24,36 @@
 | **动态对象鉴权** | 无法处理“只能取消自己的未支付订单”等业务约束 | Laravel Gate & Policy 策略闭包 | **粗细粒度解耦**：网关只做粗粒度 403 路由拦截，微服务 Logic 做细粒度 ABAC 闭环 |
 | **前端开发效率** | 复杂的动态路由与权限指令手写样板代码多 | 声明式资源管理 (Resource / Schema) | **ProComponents 生产力**：`ProLayout` 动态挂载后端菜单树 + 强类型 `<Access />` 按钮组件 |
 
+### 1.2 核心参考开源标杆项目 (Reference Benchmark Projects)
+
+本项目在架构设计与前端工程落地过程中，深度借鉴并融合了业界两大优秀开源工程的思想精髓：
+
+#### 1. [LinaPro](https://github.com/linaproai/linapro)（后端权限、数据治理与审计体系标杆）
+* **项目定位**：融合 PHP 生态成熟中后台（FastAdmin、ThinkAdmin、Laravel-Admin）十余年演进经验的现代企业级脚手架。
+* **本项目核心吸收点**：
+  1. **按钮与接口一体化联动模型 (Button-to-API Binding)**：打破“前端菜单一套、后端接口一套”的双重配置割裂，确立以 `sys_menu_api` 为核心枢纽，勾选按钮自动打通底层 API 的设计范式；
+  2. **企业级双日志安全审计机制**：借鉴其操作日志（`sys_oper_log`）与登录日志（`sys_login_log`）的字段定义与追溯标准；
+  3. **全局数据字典系统**：吸收其类型-数据项（`sys_dict_type` + `sys_dict_data`）解耦模型，实现状态标签、枚举与通用配置的全局统一分发；
+  4. **多用户体系物理隔离 (Multi-Guard)**：严格区分管理后台员工（`sys_user`）与前台消费者（`user`），消除越权与串号隐患；
+  5. **5 级数据权限作用域 (Data Scope)**：引入部门树（`sys_dept.ancestors`）祖级链检索机制，支持全部、自定义部门、本部门、本部门及以下、仅本人 5 级行级数据隔离。
+* **本项目在 go-zero 微服务体系下的升维演进**：
+  * 将单体架构升维为 **统一 HTTP 网关 (BFF) + 纯 gRPC 微服务集群**，通过 `mr.Finish` 跨服务并发聚合；
+  * 将操作日志写入升级为 **Goroutine 异步 RPC 派发**，保障业务核心请求零时延阻塞（Zero-Overhead）；
+  * 将 API 字典维护从人肉录入升级为 **IDL 契约逆向扫描与强类型 SDK 自动生成**。
+
+#### 2. [Ant Design Pro](https://pro.ant.design)（前端中后台交互规范与体验设计标杆）
+* **项目定位**：阿里巴巴出品的企业级开箱即用中后台前端全套解决方案。
+* **本项目核心吸收点**：
+  1. **统一页面容器规范 (`PageContainer`)**：全量页面抛弃裸 `div`，统一包裹 `<PageContainer>`，拉齐页头标题、副标题、面包屑导航与内边距排版标准；
+  2. **多语言国际化体系 (i18n)**：对标 Pro 规范提供 `useIntl()` Hook 与 `formatMessage({ id, defaultMessage })` API，采用 `umi_locale` 作为 `localStorage` 持久化 Key，完美协同 Ant Design 6.x 底层 `<ConfigProvider locale={...}>`；
+  3. **ProComponents 生产力套件**：
+     * `ProLayout`：自适应顶部与侧边栏导航，内置深色/浅色主题一键切换；
+     * `ProTable`：高度声明式的查询表单、列配置、密度缩放与全屏工具栏；
+     * `ModalForm` / `DrawerForm`：弹窗表单与画像抽屉；
+     * `StatisticCard` / `ProCard`：企业级指标面板与卡片切片；
+  4. **声明式权限高阶组件 (`<Access />`)**：对标 `@umijs/plugin-access` 设计理念，提供 `hide`（隐藏）与 `disabled`（置灰+气泡提示）双模式权限受控组件；
+  5. **企业级数据可视化集成**：整合 `@ant-design/charts` v2 平滑面积图、环形图与集群流量监控图表。
+
 ---
 
 ## 2. 总体架构设计与时序流转
