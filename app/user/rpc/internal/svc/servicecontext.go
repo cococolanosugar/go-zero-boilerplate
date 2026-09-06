@@ -22,6 +22,8 @@ type ServiceContext struct {
 	SysDeptModel     model.SysDeptModel
 	SysDictTypeModel model.SysDictTypeModel
 	SysDictDataModel model.SysDictDataModel
+	SysOperLogModel  model.SysOperLogModel
+	SysLoginLogModel model.SysLoginLogModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -41,5 +43,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		SysDeptModel:     model.NewSysDeptModel(conn, c.Cache),
 		SysDictTypeModel: model.NewSysDictTypeModel(conn, c.Cache),
 		SysDictDataModel: model.NewSysDictDataModel(conn, c.Cache),
+		SysOperLogModel:  model.NewSysOperLogModel(conn, c.Cache),
+		SysLoginLogModel: model.NewSysLoginLogModel(conn, c.Cache),
 	}
 }

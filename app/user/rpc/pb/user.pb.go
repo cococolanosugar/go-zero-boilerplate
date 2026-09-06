@@ -2717,6 +2717,758 @@ func (x *GetDictDataByTypeResponse) GetList() []*SysDictDataItem {
 	return nil
 }
 
+type CheckApiPermissionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	Method        string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CheckApiPermissionRequest) Reset() {
+	*x = CheckApiPermissionRequest{}
+	mi := &file_user_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CheckApiPermissionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckApiPermissionRequest) ProtoMessage() {}
+
+func (x *CheckApiPermissionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckApiPermissionRequest.ProtoReflect.Descriptor instead.
+func (*CheckApiPermissionRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *CheckApiPermissionRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *CheckApiPermissionRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *CheckApiPermissionRequest) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+type CheckApiPermissionResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Allowed       bool                   `protobuf:"varint,1,opt,name=allowed,proto3" json:"allowed,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CheckApiPermissionResponse) Reset() {
+	*x = CheckApiPermissionResponse{}
+	mi := &file_user_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CheckApiPermissionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckApiPermissionResponse) ProtoMessage() {}
+
+func (x *CheckApiPermissionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckApiPermissionResponse.ProtoReflect.Descriptor instead.
+func (*CheckApiPermissionResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *CheckApiPermissionResponse) GetAllowed() bool {
+	if x != nil {
+		return x.Allowed
+	}
+	return false
+}
+
+type RecordOperLogRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	OperName      string                 `protobuf:"bytes,2,opt,name=operName,proto3" json:"operName,omitempty"`
+	OperUrl       string                 `protobuf:"bytes,3,opt,name=operUrl,proto3" json:"operUrl,omitempty"`
+	OperMethod    string                 `protobuf:"bytes,4,opt,name=operMethod,proto3" json:"operMethod,omitempty"`
+	OperIp        string                 `protobuf:"bytes,5,opt,name=operIp,proto3" json:"operIp,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	ErrorMsg      string                 `protobuf:"bytes,7,opt,name=errorMsg,proto3" json:"errorMsg,omitempty"`
+	CostTime      int64                  `protobuf:"varint,8,opt,name=costTime,proto3" json:"costTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecordOperLogRequest) Reset() {
+	*x = RecordOperLogRequest{}
+	mi := &file_user_proto_msgTypes[40]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecordOperLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecordOperLogRequest) ProtoMessage() {}
+
+func (x *RecordOperLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[40]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecordOperLogRequest.ProtoReflect.Descriptor instead.
+func (*RecordOperLogRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{40}
+}
+
+func (x *RecordOperLogRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *RecordOperLogRequest) GetOperName() string {
+	if x != nil {
+		return x.OperName
+	}
+	return ""
+}
+
+func (x *RecordOperLogRequest) GetOperUrl() string {
+	if x != nil {
+		return x.OperUrl
+	}
+	return ""
+}
+
+func (x *RecordOperLogRequest) GetOperMethod() string {
+	if x != nil {
+		return x.OperMethod
+	}
+	return ""
+}
+
+func (x *RecordOperLogRequest) GetOperIp() string {
+	if x != nil {
+		return x.OperIp
+	}
+	return ""
+}
+
+func (x *RecordOperLogRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *RecordOperLogRequest) GetErrorMsg() string {
+	if x != nil {
+		return x.ErrorMsg
+	}
+	return ""
+}
+
+func (x *RecordOperLogRequest) GetCostTime() int64 {
+	if x != nil {
+		return x.CostTime
+	}
+	return 0
+}
+
+type RecordLoginLogRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	LoginIp       string                 `protobuf:"bytes,2,opt,name=loginIp,proto3" json:"loginIp,omitempty"`
+	Browser       string                 `protobuf:"bytes,3,opt,name=browser,proto3" json:"browser,omitempty"`
+	Os            string                 `protobuf:"bytes,4,opt,name=os,proto3" json:"os,omitempty"`
+	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	Msg           string                 `protobuf:"bytes,6,opt,name=msg,proto3" json:"msg,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecordLoginLogRequest) Reset() {
+	*x = RecordLoginLogRequest{}
+	mi := &file_user_proto_msgTypes[41]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecordLoginLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecordLoginLogRequest) ProtoMessage() {}
+
+func (x *RecordLoginLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[41]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecordLoginLogRequest.ProtoReflect.Descriptor instead.
+func (*RecordLoginLogRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{41}
+}
+
+func (x *RecordLoginLogRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *RecordLoginLogRequest) GetLoginIp() string {
+	if x != nil {
+		return x.LoginIp
+	}
+	return ""
+}
+
+func (x *RecordLoginLogRequest) GetBrowser() string {
+	if x != nil {
+		return x.Browser
+	}
+	return ""
+}
+
+func (x *RecordLoginLogRequest) GetOs() string {
+	if x != nil {
+		return x.Os
+	}
+	return ""
+}
+
+func (x *RecordLoginLogRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *RecordLoginLogRequest) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+type SysOperLogItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	OperName      string                 `protobuf:"bytes,3,opt,name=operName,proto3" json:"operName,omitempty"`
+	OperUrl       string                 `protobuf:"bytes,4,opt,name=operUrl,proto3" json:"operUrl,omitempty"`
+	OperMethod    string                 `protobuf:"bytes,5,opt,name=operMethod,proto3" json:"operMethod,omitempty"`
+	OperIp        string                 `protobuf:"bytes,6,opt,name=operIp,proto3" json:"operIp,omitempty"`
+	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
+	ErrorMsg      string                 `protobuf:"bytes,8,opt,name=errorMsg,proto3" json:"errorMsg,omitempty"`
+	CostTime      int64                  `protobuf:"varint,9,opt,name=costTime,proto3" json:"costTime,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,10,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SysOperLogItem) Reset() {
+	*x = SysOperLogItem{}
+	mi := &file_user_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SysOperLogItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SysOperLogItem) ProtoMessage() {}
+
+func (x *SysOperLogItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SysOperLogItem.ProtoReflect.Descriptor instead.
+func (*SysOperLogItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *SysOperLogItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SysOperLogItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SysOperLogItem) GetOperName() string {
+	if x != nil {
+		return x.OperName
+	}
+	return ""
+}
+
+func (x *SysOperLogItem) GetOperUrl() string {
+	if x != nil {
+		return x.OperUrl
+	}
+	return ""
+}
+
+func (x *SysOperLogItem) GetOperMethod() string {
+	if x != nil {
+		return x.OperMethod
+	}
+	return ""
+}
+
+func (x *SysOperLogItem) GetOperIp() string {
+	if x != nil {
+		return x.OperIp
+	}
+	return ""
+}
+
+func (x *SysOperLogItem) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *SysOperLogItem) GetErrorMsg() string {
+	if x != nil {
+		return x.ErrorMsg
+	}
+	return ""
+}
+
+func (x *SysOperLogItem) GetCostTime() int64 {
+	if x != nil {
+		return x.CostTime
+	}
+	return 0
+}
+
+func (x *SysOperLogItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+type ListSysOperLogsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	OperName      string                 `protobuf:"bytes,3,opt,name=operName,proto3" json:"operName,omitempty"`
+	Title         string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
+	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysOperLogsRequest) Reset() {
+	*x = ListSysOperLogsRequest{}
+	mi := &file_user_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysOperLogsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysOperLogsRequest) ProtoMessage() {}
+
+func (x *ListSysOperLogsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysOperLogsRequest.ProtoReflect.Descriptor instead.
+func (*ListSysOperLogsRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *ListSysOperLogsRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListSysOperLogsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSysOperLogsRequest) GetOperName() string {
+	if x != nil {
+		return x.OperName
+	}
+	return ""
+}
+
+func (x *ListSysOperLogsRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *ListSysOperLogsRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type ListSysOperLogsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*SysOperLogItem      `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysOperLogsResponse) Reset() {
+	*x = ListSysOperLogsResponse{}
+	mi := &file_user_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysOperLogsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysOperLogsResponse) ProtoMessage() {}
+
+func (x *ListSysOperLogsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysOperLogsResponse.ProtoReflect.Descriptor instead.
+func (*ListSysOperLogsResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *ListSysOperLogsResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListSysOperLogsResponse) GetList() []*SysOperLogItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type SysLoginLogItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	LoginIp       string                 `protobuf:"bytes,3,opt,name=loginIp,proto3" json:"loginIp,omitempty"`
+	Browser       string                 `protobuf:"bytes,4,opt,name=browser,proto3" json:"browser,omitempty"`
+	Os            string                 `protobuf:"bytes,5,opt,name=os,proto3" json:"os,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	Msg           string                 `protobuf:"bytes,7,opt,name=msg,proto3" json:"msg,omitempty"`
+	LoginTime     string                 `protobuf:"bytes,8,opt,name=loginTime,proto3" json:"loginTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SysLoginLogItem) Reset() {
+	*x = SysLoginLogItem{}
+	mi := &file_user_proto_msgTypes[45]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SysLoginLogItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SysLoginLogItem) ProtoMessage() {}
+
+func (x *SysLoginLogItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[45]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SysLoginLogItem.ProtoReflect.Descriptor instead.
+func (*SysLoginLogItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{45}
+}
+
+func (x *SysLoginLogItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SysLoginLogItem) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *SysLoginLogItem) GetLoginIp() string {
+	if x != nil {
+		return x.LoginIp
+	}
+	return ""
+}
+
+func (x *SysLoginLogItem) GetBrowser() string {
+	if x != nil {
+		return x.Browser
+	}
+	return ""
+}
+
+func (x *SysLoginLogItem) GetOs() string {
+	if x != nil {
+		return x.Os
+	}
+	return ""
+}
+
+func (x *SysLoginLogItem) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *SysLoginLogItem) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *SysLoginLogItem) GetLoginTime() string {
+	if x != nil {
+		return x.LoginTime
+	}
+	return ""
+}
+
+type ListSysLoginLogsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
+	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysLoginLogsRequest) Reset() {
+	*x = ListSysLoginLogsRequest{}
+	mi := &file_user_proto_msgTypes[46]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysLoginLogsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysLoginLogsRequest) ProtoMessage() {}
+
+func (x *ListSysLoginLogsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[46]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysLoginLogsRequest.ProtoReflect.Descriptor instead.
+func (*ListSysLoginLogsRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{46}
+}
+
+func (x *ListSysLoginLogsRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListSysLoginLogsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSysLoginLogsRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *ListSysLoginLogsRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type ListSysLoginLogsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*SysLoginLogItem     `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysLoginLogsResponse) Reset() {
+	*x = ListSysLoginLogsResponse{}
+	mi := &file_user_proto_msgTypes[47]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysLoginLogsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysLoginLogsResponse) ProtoMessage() {}
+
+func (x *ListSysLoginLogsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[47]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysLoginLogsResponse.ProtoReflect.Descriptor instead.
+func (*ListSysLoginLogsResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{47}
+}
+
+func (x *ListSysLoginLogsResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListSysLoginLogsResponse) GetList() []*SysLoginLogItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
@@ -2941,7 +3693,73 @@ const file_user_proto_rawDesc = "" +
 	"\x18GetDictDataByTypeRequest\x12\x1a\n" +
 	"\bdictType\x18\x01 \x01(\tR\bdictType\"F\n" +
 	"\x19GetDictDataByTypeResponse\x12)\n" +
-	"\x04list\x18\x01 \x03(\v2\x15.user.SysDictDataItemR\x04list2\x84\r\n" +
+	"\x04list\x18\x01 \x03(\v2\x15.user.SysDictDataItemR\x04list\"_\n" +
+	"\x19CheckApiPermissionRequest\x12\x16\n" +
+	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\"6\n" +
+	"\x1aCheckApiPermissionResponse\x12\x18\n" +
+	"\aallowed\x18\x01 \x01(\bR\aallowed\"\xea\x01\n" +
+	"\x14RecordOperLogRequest\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12\x1a\n" +
+	"\boperName\x18\x02 \x01(\tR\boperName\x12\x18\n" +
+	"\aoperUrl\x18\x03 \x01(\tR\aoperUrl\x12\x1e\n" +
+	"\n" +
+	"operMethod\x18\x04 \x01(\tR\n" +
+	"operMethod\x12\x16\n" +
+	"\x06operIp\x18\x05 \x01(\tR\x06operIp\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x1a\n" +
+	"\berrorMsg\x18\a \x01(\tR\berrorMsg\x12\x1a\n" +
+	"\bcostTime\x18\b \x01(\x03R\bcostTime\"\xa1\x01\n" +
+	"\x15RecordLoginLogRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x18\n" +
+	"\aloginIp\x18\x02 \x01(\tR\aloginIp\x12\x18\n" +
+	"\abrowser\x18\x03 \x01(\tR\abrowser\x12\x0e\n" +
+	"\x02os\x18\x04 \x01(\tR\x02os\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x05R\x06status\x12\x10\n" +
+	"\x03msg\x18\x06 \x01(\tR\x03msg\"\x94\x02\n" +
+	"\x0eSysOperLogItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1a\n" +
+	"\boperName\x18\x03 \x01(\tR\boperName\x12\x18\n" +
+	"\aoperUrl\x18\x04 \x01(\tR\aoperUrl\x12\x1e\n" +
+	"\n" +
+	"operMethod\x18\x05 \x01(\tR\n" +
+	"operMethod\x12\x16\n" +
+	"\x06operIp\x18\x06 \x01(\tR\x06operIp\x12\x16\n" +
+	"\x06status\x18\a \x01(\x05R\x06status\x12\x1a\n" +
+	"\berrorMsg\x18\b \x01(\tR\berrorMsg\x12\x1a\n" +
+	"\bcostTime\x18\t \x01(\x03R\bcostTime\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\n" +
+	" \x01(\tR\n" +
+	"createTime\"\x92\x01\n" +
+	"\x16ListSysOperLogsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\x12\x1a\n" +
+	"\boperName\x18\x03 \x01(\tR\boperName\x12\x14\n" +
+	"\x05title\x18\x04 \x01(\tR\x05title\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x05R\x06status\"Y\n" +
+	"\x17ListSysOperLogsResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12(\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.user.SysOperLogItemR\x04list\"\xc9\x01\n" +
+	"\x0fSysLoginLogItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x18\n" +
+	"\aloginIp\x18\x03 \x01(\tR\aloginIp\x12\x18\n" +
+	"\abrowser\x18\x04 \x01(\tR\abrowser\x12\x0e\n" +
+	"\x02os\x18\x05 \x01(\tR\x02os\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x10\n" +
+	"\x03msg\x18\a \x01(\tR\x03msg\x12\x1c\n" +
+	"\tloginTime\x18\b \x01(\tR\tloginTime\"}\n" +
+	"\x17ListSysLoginLogsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\x12\x1a\n" +
+	"\busername\x18\x03 \x01(\tR\busername\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x05R\x06status\"[\n" +
+	"\x18ListSysLoginLogsResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12)\n" +
+	"\x04list\x18\x02 \x03(\v2\x15.user.SysLoginLogItemR\x04list2\x86\x10\n" +
 	"\x04User\x126\n" +
 	"\vGetUserInfo\x12\x0f.user.IdRequest\x1a\x16.user.UserInfoResponse\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x120\n" +
@@ -2968,7 +3786,12 @@ const file_user_proto_rawDesc = "" +
 	"\x11CreateSysDictData\x12\x1e.user.CreateSysDictDataRequest\x1a\x0f.user.IdRequest\x12H\n" +
 	"\x11UpdateSysDictData\x12\x1e.user.UpdateSysDictDataRequest\x1a\x13.user.EmptyResponse\x129\n" +
 	"\x11DeleteSysDictData\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponse\x12T\n" +
-	"\x11GetDictDataByType\x12\x1e.user.GetDictDataByTypeRequest\x1a\x1f.user.GetDictDataByTypeResponseB\x06Z\x04./pbb\x06proto3"
+	"\x11GetDictDataByType\x12\x1e.user.GetDictDataByTypeRequest\x1a\x1f.user.GetDictDataByTypeResponse\x12W\n" +
+	"\x12CheckApiPermission\x12\x1f.user.CheckApiPermissionRequest\x1a .user.CheckApiPermissionResponse\x12@\n" +
+	"\rRecordOperLog\x12\x1a.user.RecordOperLogRequest\x1a\x13.user.EmptyResponse\x12B\n" +
+	"\x0eRecordLoginLog\x12\x1b.user.RecordLoginLogRequest\x1a\x13.user.EmptyResponse\x12N\n" +
+	"\x0fListSysOperLogs\x12\x1c.user.ListSysOperLogsRequest\x1a\x1d.user.ListSysOperLogsResponse\x12Q\n" +
+	"\x10ListSysLoginLogs\x12\x1d.user.ListSysLoginLogsRequest\x1a\x1e.user.ListSysLoginLogsResponseB\x06Z\x04./pbb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -2982,46 +3805,56 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 38)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 48)
 var file_user_proto_goTypes = []any{
-	(*EmptyRequest)(nil),              // 0: user.EmptyRequest
-	(*EmptyResponse)(nil),             // 1: user.EmptyResponse
-	(*IdRequest)(nil),                 // 2: user.IdRequest
-	(*UserInfoResponse)(nil),          // 3: user.UserInfoResponse
-	(*RegisterRequest)(nil),           // 4: user.RegisterRequest
-	(*RegisterResponse)(nil),          // 5: user.RegisterResponse
-	(*LoginRequest)(nil),              // 6: user.LoginRequest
-	(*LoginResponse)(nil),             // 7: user.LoginResponse
-	(*AdminLoginRequest)(nil),         // 8: user.AdminLoginRequest
-	(*AdminLoginResponse)(nil),        // 9: user.AdminLoginResponse
-	(*AdminProfileResponse)(nil),      // 10: user.AdminProfileResponse
-	(*MenuItem)(nil),                  // 11: user.MenuItem
-	(*SysUserItem)(nil),               // 12: user.SysUserItem
-	(*ListSysUsersRequest)(nil),       // 13: user.ListSysUsersRequest
-	(*ListSysUsersResponse)(nil),      // 14: user.ListSysUsersResponse
-	(*CreateSysUserRequest)(nil),      // 15: user.CreateSysUserRequest
-	(*UpdateSysUserRequest)(nil),      // 16: user.UpdateSysUserRequest
-	(*SysRoleItem)(nil),               // 17: user.SysRoleItem
-	(*ListSysRolesRequest)(nil),       // 18: user.ListSysRolesRequest
-	(*ListSysRolesResponse)(nil),      // 19: user.ListSysRolesResponse
-	(*CreateSysRoleRequest)(nil),      // 20: user.CreateSysRoleRequest
-	(*UpdateSysRoleRequest)(nil),      // 21: user.UpdateSysRoleRequest
-	(*AssignRolePermRequest)(nil),     // 22: user.AssignRolePermRequest
-	(*GetSysMenuTreeResponse)(nil),    // 23: user.GetSysMenuTreeResponse
-	(*SysApiItem)(nil),                // 24: user.SysApiItem
-	(*ListSysApisResponse)(nil),       // 25: user.ListSysApisResponse
-	(*SysDictTypeItem)(nil),           // 26: user.SysDictTypeItem
-	(*ListSysDictTypesRequest)(nil),   // 27: user.ListSysDictTypesRequest
-	(*ListSysDictTypesResponse)(nil),  // 28: user.ListSysDictTypesResponse
-	(*CreateSysDictTypeRequest)(nil),  // 29: user.CreateSysDictTypeRequest
-	(*UpdateSysDictTypeRequest)(nil),  // 30: user.UpdateSysDictTypeRequest
-	(*SysDictDataItem)(nil),           // 31: user.SysDictDataItem
-	(*ListSysDictDataRequest)(nil),    // 32: user.ListSysDictDataRequest
-	(*ListSysDictDataResponse)(nil),   // 33: user.ListSysDictDataResponse
-	(*CreateSysDictDataRequest)(nil),  // 34: user.CreateSysDictDataRequest
-	(*UpdateSysDictDataRequest)(nil),  // 35: user.UpdateSysDictDataRequest
-	(*GetDictDataByTypeRequest)(nil),  // 36: user.GetDictDataByTypeRequest
-	(*GetDictDataByTypeResponse)(nil), // 37: user.GetDictDataByTypeResponse
+	(*EmptyRequest)(nil),               // 0: user.EmptyRequest
+	(*EmptyResponse)(nil),              // 1: user.EmptyResponse
+	(*IdRequest)(nil),                  // 2: user.IdRequest
+	(*UserInfoResponse)(nil),           // 3: user.UserInfoResponse
+	(*RegisterRequest)(nil),            // 4: user.RegisterRequest
+	(*RegisterResponse)(nil),           // 5: user.RegisterResponse
+	(*LoginRequest)(nil),               // 6: user.LoginRequest
+	(*LoginResponse)(nil),              // 7: user.LoginResponse
+	(*AdminLoginRequest)(nil),          // 8: user.AdminLoginRequest
+	(*AdminLoginResponse)(nil),         // 9: user.AdminLoginResponse
+	(*AdminProfileResponse)(nil),       // 10: user.AdminProfileResponse
+	(*MenuItem)(nil),                   // 11: user.MenuItem
+	(*SysUserItem)(nil),                // 12: user.SysUserItem
+	(*ListSysUsersRequest)(nil),        // 13: user.ListSysUsersRequest
+	(*ListSysUsersResponse)(nil),       // 14: user.ListSysUsersResponse
+	(*CreateSysUserRequest)(nil),       // 15: user.CreateSysUserRequest
+	(*UpdateSysUserRequest)(nil),       // 16: user.UpdateSysUserRequest
+	(*SysRoleItem)(nil),                // 17: user.SysRoleItem
+	(*ListSysRolesRequest)(nil),        // 18: user.ListSysRolesRequest
+	(*ListSysRolesResponse)(nil),       // 19: user.ListSysRolesResponse
+	(*CreateSysRoleRequest)(nil),       // 20: user.CreateSysRoleRequest
+	(*UpdateSysRoleRequest)(nil),       // 21: user.UpdateSysRoleRequest
+	(*AssignRolePermRequest)(nil),      // 22: user.AssignRolePermRequest
+	(*GetSysMenuTreeResponse)(nil),     // 23: user.GetSysMenuTreeResponse
+	(*SysApiItem)(nil),                 // 24: user.SysApiItem
+	(*ListSysApisResponse)(nil),        // 25: user.ListSysApisResponse
+	(*SysDictTypeItem)(nil),            // 26: user.SysDictTypeItem
+	(*ListSysDictTypesRequest)(nil),    // 27: user.ListSysDictTypesRequest
+	(*ListSysDictTypesResponse)(nil),   // 28: user.ListSysDictTypesResponse
+	(*CreateSysDictTypeRequest)(nil),   // 29: user.CreateSysDictTypeRequest
+	(*UpdateSysDictTypeRequest)(nil),   // 30: user.UpdateSysDictTypeRequest
+	(*SysDictDataItem)(nil),            // 31: user.SysDictDataItem
+	(*ListSysDictDataRequest)(nil),     // 32: user.ListSysDictDataRequest
+	(*ListSysDictDataResponse)(nil),    // 33: user.ListSysDictDataResponse
+	(*CreateSysDictDataRequest)(nil),   // 34: user.CreateSysDictDataRequest
+	(*UpdateSysDictDataRequest)(nil),   // 35: user.UpdateSysDictDataRequest
+	(*GetDictDataByTypeRequest)(nil),   // 36: user.GetDictDataByTypeRequest
+	(*GetDictDataByTypeResponse)(nil),  // 37: user.GetDictDataByTypeResponse
+	(*CheckApiPermissionRequest)(nil),  // 38: user.CheckApiPermissionRequest
+	(*CheckApiPermissionResponse)(nil), // 39: user.CheckApiPermissionResponse
+	(*RecordOperLogRequest)(nil),       // 40: user.RecordOperLogRequest
+	(*RecordLoginLogRequest)(nil),      // 41: user.RecordLoginLogRequest
+	(*SysOperLogItem)(nil),             // 42: user.SysOperLogItem
+	(*ListSysOperLogsRequest)(nil),     // 43: user.ListSysOperLogsRequest
+	(*ListSysOperLogsResponse)(nil),    // 44: user.ListSysOperLogsResponse
+	(*SysLoginLogItem)(nil),            // 45: user.SysLoginLogItem
+	(*ListSysLoginLogsRequest)(nil),    // 46: user.ListSysLoginLogsRequest
+	(*ListSysLoginLogsResponse)(nil),   // 47: user.ListSysLoginLogsResponse
 }
 var file_user_proto_depIdxs = []int32{
 	11, // 0: user.AdminProfileResponse.menus:type_name -> user.MenuItem
@@ -3033,61 +3866,73 @@ var file_user_proto_depIdxs = []int32{
 	26, // 6: user.ListSysDictTypesResponse.list:type_name -> user.SysDictTypeItem
 	31, // 7: user.ListSysDictDataResponse.list:type_name -> user.SysDictDataItem
 	31, // 8: user.GetDictDataByTypeResponse.list:type_name -> user.SysDictDataItem
-	2,  // 9: user.User.GetUserInfo:input_type -> user.IdRequest
-	4,  // 10: user.User.Register:input_type -> user.RegisterRequest
-	6,  // 11: user.User.Login:input_type -> user.LoginRequest
-	8,  // 12: user.User.AdminLogin:input_type -> user.AdminLoginRequest
-	2,  // 13: user.User.GetAdminProfile:input_type -> user.IdRequest
-	13, // 14: user.User.ListSysUsers:input_type -> user.ListSysUsersRequest
-	15, // 15: user.User.CreateSysUser:input_type -> user.CreateSysUserRequest
-	16, // 16: user.User.UpdateSysUser:input_type -> user.UpdateSysUserRequest
-	2,  // 17: user.User.DeleteSysUser:input_type -> user.IdRequest
-	18, // 18: user.User.ListSysRoles:input_type -> user.ListSysRolesRequest
-	20, // 19: user.User.CreateSysRole:input_type -> user.CreateSysRoleRequest
-	21, // 20: user.User.UpdateSysRole:input_type -> user.UpdateSysRoleRequest
-	2,  // 21: user.User.DeleteSysRole:input_type -> user.IdRequest
-	22, // 22: user.User.AssignRolePermissions:input_type -> user.AssignRolePermRequest
-	0,  // 23: user.User.GetSysMenuTree:input_type -> user.EmptyRequest
-	0,  // 24: user.User.ListSysApis:input_type -> user.EmptyRequest
-	27, // 25: user.User.ListSysDictTypes:input_type -> user.ListSysDictTypesRequest
-	29, // 26: user.User.CreateSysDictType:input_type -> user.CreateSysDictTypeRequest
-	30, // 27: user.User.UpdateSysDictType:input_type -> user.UpdateSysDictTypeRequest
-	2,  // 28: user.User.DeleteSysDictType:input_type -> user.IdRequest
-	32, // 29: user.User.ListSysDictData:input_type -> user.ListSysDictDataRequest
-	34, // 30: user.User.CreateSysDictData:input_type -> user.CreateSysDictDataRequest
-	35, // 31: user.User.UpdateSysDictData:input_type -> user.UpdateSysDictDataRequest
-	2,  // 32: user.User.DeleteSysDictData:input_type -> user.IdRequest
-	36, // 33: user.User.GetDictDataByType:input_type -> user.GetDictDataByTypeRequest
-	3,  // 34: user.User.GetUserInfo:output_type -> user.UserInfoResponse
-	5,  // 35: user.User.Register:output_type -> user.RegisterResponse
-	7,  // 36: user.User.Login:output_type -> user.LoginResponse
-	9,  // 37: user.User.AdminLogin:output_type -> user.AdminLoginResponse
-	10, // 38: user.User.GetAdminProfile:output_type -> user.AdminProfileResponse
-	14, // 39: user.User.ListSysUsers:output_type -> user.ListSysUsersResponse
-	2,  // 40: user.User.CreateSysUser:output_type -> user.IdRequest
-	1,  // 41: user.User.UpdateSysUser:output_type -> user.EmptyResponse
-	1,  // 42: user.User.DeleteSysUser:output_type -> user.EmptyResponse
-	19, // 43: user.User.ListSysRoles:output_type -> user.ListSysRolesResponse
-	2,  // 44: user.User.CreateSysRole:output_type -> user.IdRequest
-	1,  // 45: user.User.UpdateSysRole:output_type -> user.EmptyResponse
-	1,  // 46: user.User.DeleteSysRole:output_type -> user.EmptyResponse
-	1,  // 47: user.User.AssignRolePermissions:output_type -> user.EmptyResponse
-	23, // 48: user.User.GetSysMenuTree:output_type -> user.GetSysMenuTreeResponse
-	25, // 49: user.User.ListSysApis:output_type -> user.ListSysApisResponse
-	28, // 50: user.User.ListSysDictTypes:output_type -> user.ListSysDictTypesResponse
-	2,  // 51: user.User.CreateSysDictType:output_type -> user.IdRequest
-	1,  // 52: user.User.UpdateSysDictType:output_type -> user.EmptyResponse
-	1,  // 53: user.User.DeleteSysDictType:output_type -> user.EmptyResponse
-	33, // 54: user.User.ListSysDictData:output_type -> user.ListSysDictDataResponse
-	2,  // 55: user.User.CreateSysDictData:output_type -> user.IdRequest
-	1,  // 56: user.User.UpdateSysDictData:output_type -> user.EmptyResponse
-	1,  // 57: user.User.DeleteSysDictData:output_type -> user.EmptyResponse
-	37, // 58: user.User.GetDictDataByType:output_type -> user.GetDictDataByTypeResponse
-	34, // [34:59] is the sub-list for method output_type
-	9,  // [9:34] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	42, // 9: user.ListSysOperLogsResponse.list:type_name -> user.SysOperLogItem
+	45, // 10: user.ListSysLoginLogsResponse.list:type_name -> user.SysLoginLogItem
+	2,  // 11: user.User.GetUserInfo:input_type -> user.IdRequest
+	4,  // 12: user.User.Register:input_type -> user.RegisterRequest
+	6,  // 13: user.User.Login:input_type -> user.LoginRequest
+	8,  // 14: user.User.AdminLogin:input_type -> user.AdminLoginRequest
+	2,  // 15: user.User.GetAdminProfile:input_type -> user.IdRequest
+	13, // 16: user.User.ListSysUsers:input_type -> user.ListSysUsersRequest
+	15, // 17: user.User.CreateSysUser:input_type -> user.CreateSysUserRequest
+	16, // 18: user.User.UpdateSysUser:input_type -> user.UpdateSysUserRequest
+	2,  // 19: user.User.DeleteSysUser:input_type -> user.IdRequest
+	18, // 20: user.User.ListSysRoles:input_type -> user.ListSysRolesRequest
+	20, // 21: user.User.CreateSysRole:input_type -> user.CreateSysRoleRequest
+	21, // 22: user.User.UpdateSysRole:input_type -> user.UpdateSysRoleRequest
+	2,  // 23: user.User.DeleteSysRole:input_type -> user.IdRequest
+	22, // 24: user.User.AssignRolePermissions:input_type -> user.AssignRolePermRequest
+	0,  // 25: user.User.GetSysMenuTree:input_type -> user.EmptyRequest
+	0,  // 26: user.User.ListSysApis:input_type -> user.EmptyRequest
+	27, // 27: user.User.ListSysDictTypes:input_type -> user.ListSysDictTypesRequest
+	29, // 28: user.User.CreateSysDictType:input_type -> user.CreateSysDictTypeRequest
+	30, // 29: user.User.UpdateSysDictType:input_type -> user.UpdateSysDictTypeRequest
+	2,  // 30: user.User.DeleteSysDictType:input_type -> user.IdRequest
+	32, // 31: user.User.ListSysDictData:input_type -> user.ListSysDictDataRequest
+	34, // 32: user.User.CreateSysDictData:input_type -> user.CreateSysDictDataRequest
+	35, // 33: user.User.UpdateSysDictData:input_type -> user.UpdateSysDictDataRequest
+	2,  // 34: user.User.DeleteSysDictData:input_type -> user.IdRequest
+	36, // 35: user.User.GetDictDataByType:input_type -> user.GetDictDataByTypeRequest
+	38, // 36: user.User.CheckApiPermission:input_type -> user.CheckApiPermissionRequest
+	40, // 37: user.User.RecordOperLog:input_type -> user.RecordOperLogRequest
+	41, // 38: user.User.RecordLoginLog:input_type -> user.RecordLoginLogRequest
+	43, // 39: user.User.ListSysOperLogs:input_type -> user.ListSysOperLogsRequest
+	46, // 40: user.User.ListSysLoginLogs:input_type -> user.ListSysLoginLogsRequest
+	3,  // 41: user.User.GetUserInfo:output_type -> user.UserInfoResponse
+	5,  // 42: user.User.Register:output_type -> user.RegisterResponse
+	7,  // 43: user.User.Login:output_type -> user.LoginResponse
+	9,  // 44: user.User.AdminLogin:output_type -> user.AdminLoginResponse
+	10, // 45: user.User.GetAdminProfile:output_type -> user.AdminProfileResponse
+	14, // 46: user.User.ListSysUsers:output_type -> user.ListSysUsersResponse
+	2,  // 47: user.User.CreateSysUser:output_type -> user.IdRequest
+	1,  // 48: user.User.UpdateSysUser:output_type -> user.EmptyResponse
+	1,  // 49: user.User.DeleteSysUser:output_type -> user.EmptyResponse
+	19, // 50: user.User.ListSysRoles:output_type -> user.ListSysRolesResponse
+	2,  // 51: user.User.CreateSysRole:output_type -> user.IdRequest
+	1,  // 52: user.User.UpdateSysRole:output_type -> user.EmptyResponse
+	1,  // 53: user.User.DeleteSysRole:output_type -> user.EmptyResponse
+	1,  // 54: user.User.AssignRolePermissions:output_type -> user.EmptyResponse
+	23, // 55: user.User.GetSysMenuTree:output_type -> user.GetSysMenuTreeResponse
+	25, // 56: user.User.ListSysApis:output_type -> user.ListSysApisResponse
+	28, // 57: user.User.ListSysDictTypes:output_type -> user.ListSysDictTypesResponse
+	2,  // 58: user.User.CreateSysDictType:output_type -> user.IdRequest
+	1,  // 59: user.User.UpdateSysDictType:output_type -> user.EmptyResponse
+	1,  // 60: user.User.DeleteSysDictType:output_type -> user.EmptyResponse
+	33, // 61: user.User.ListSysDictData:output_type -> user.ListSysDictDataResponse
+	2,  // 62: user.User.CreateSysDictData:output_type -> user.IdRequest
+	1,  // 63: user.User.UpdateSysDictData:output_type -> user.EmptyResponse
+	1,  // 64: user.User.DeleteSysDictData:output_type -> user.EmptyResponse
+	37, // 65: user.User.GetDictDataByType:output_type -> user.GetDictDataByTypeResponse
+	39, // 66: user.User.CheckApiPermission:output_type -> user.CheckApiPermissionResponse
+	1,  // 67: user.User.RecordOperLog:output_type -> user.EmptyResponse
+	1,  // 68: user.User.RecordLoginLog:output_type -> user.EmptyResponse
+	44, // 69: user.User.ListSysOperLogs:output_type -> user.ListSysOperLogsResponse
+	47, // 70: user.User.ListSysLoginLogs:output_type -> user.ListSysLoginLogsResponse
+	41, // [41:71] is the sub-list for method output_type
+	11, // [11:41] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_user_proto_init() }
@@ -3101,7 +3946,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   38,
+			NumMessages:   48,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

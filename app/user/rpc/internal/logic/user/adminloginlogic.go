@@ -59,12 +59,27 @@ func (l *AdminLoginLogic) AdminLogin(in *pb.AdminLoginRequest) (*pb.AdminLoginRe
 		}
 	}
 
+	recordLog := func(status int64, msg string) {
+		go func() {
+			_, _ = l.svcCtx.SysLoginLogModel.Insert(context.Background(), &model.SysLoginLog{
+				Username: account,
+				LoginIp:  "127.0.0.1",
+				Browser:  "Web Admin",
+				Os:       "Desktop",
+				Status:   status,
+				Msg:      msg,
+			})
+		}()
+	}
+
 	if user.Status == 0 {
+		recordLog(0, "管理员账号已被停用")
 		return nil, xerr.NewErrMsg("管理员账号已被停用，请联系超管")
 	}
 
 	// 2. 校验密码哈希
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		recordLog(0, "密码错误")
 		return nil, xerr.NewErrMsg("管理员账号或密码错误")
 	}
 
@@ -79,6 +94,8 @@ func (l *AdminLoginLogic) AdminLogin(in *pb.AdminLoginRequest) (*pb.AdminLoginRe
 			roles = append(roles, r.Code)
 		}
 	}
+
+	recordLog(1, "登录成功")
 
 	return &pb.AdminLoginResponse{
 		Id:       user.Id,

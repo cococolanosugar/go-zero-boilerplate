@@ -40,5 +40,10 @@ export const PERMISSIONS = {
   DICT_DATA_ADD: 'system:dict:data:add',
   DICT_DATA_EDIT: 'system:dict:data:edit',
   DICT_DATA_DELETE: 'system:dict:data:delete',
+
+  // 审计日志
+  LOG_VIEW: 'system:log:view',
+  LOG_OPER_QUERY: 'system:operlog:query',
+  LOG_LOGIN_QUERY: 'system:loginlog:query',
 } as const;
 

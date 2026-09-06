@@ -50,6 +50,10 @@ build-web:
 tidy:
     go mod tidy
 
+# 脚手架一键重命名 (例如: just rename-project my-app "My Awesome App")
+rename-project new_module="my-app" display_name="":
+    pwsh -File ./hack/scripts/rename-project.ps1 -NewModule {{new_module}} -DisplayName "{{display_name}}"
+
 # 对前端应用进行 Ant Design 语法与弃用 API 静态诊断
 lint-antd:
     antd lint ./frontend/apps/admin/src

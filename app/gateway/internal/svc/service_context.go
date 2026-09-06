@@ -1,4 +1,4 @@
-﻿package svc
+package svc
 
 import (
 	"go-zero-boilerplate/app/gateway/internal/config"

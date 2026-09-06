@@ -129,6 +129,35 @@ export interface ListSysDictTypesResp {
 	list: Array<SysDictTypeItem>
 }
 
+export interface ListSysLoginLogsReq {
+}
+export interface ListSysLoginLogsReqParams {
+	page: number
+	pageSize: number
+	username?: string
+	status?: number
+}
+
+export interface ListSysLoginLogsResp {
+	total: number
+	list: Array<SysLoginLogItem>
+}
+
+export interface ListSysOperLogsReq {
+}
+export interface ListSysOperLogsReqParams {
+	page: number
+	pageSize: number
+	operName?: string
+	title?: string
+	status?: number
+}
+
+export interface ListSysOperLogsResp {
+	total: number
+	list: Array<SysOperLogItem>
+}
+
 export interface ListSysRolesReq {
 }
 export interface ListSysRolesReqParams {
@@ -240,6 +269,17 @@ export interface SysIdResp {
 	id: number
 }
 
+export interface SysLoginLogItem {
+	id: number
+	username: string
+	loginIp: string
+	browser: string
+	os: string
+	status: number
+	msg: string
+	loginTime: string
+}
+
 export interface SysMenuItem {
 	id: number
 	parentId: number
@@ -251,6 +291,19 @@ export interface SysMenuItem {
 	icon: string
 	sort: number
 	children?: Array<SysMenuItem>
+}
+
+export interface SysOperLogItem {
+	id: number
+	title: string
+	operName: string
+	operUrl: string
+	operMethod: string
+	operIp: string
+	status: number
+	errorMsg: string
+	costTime: number
+	createTime: string
 }
 
 export interface SysRoleItem {

@@ -124,6 +124,31 @@ type ListSysDictTypesResp struct {
 	List  []*SysDictTypeItem `json:"list"`
 }
 
+type ListSysLoginLogsReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Username string `form:"username,optional"`
+	Status   int32  `form:"status,optional"`
+}
+
+type ListSysLoginLogsResp struct {
+	Total int64              `json:"total"`
+	List  []*SysLoginLogItem `json:"list"`
+}
+
+type ListSysOperLogsReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	OperName string `form:"operName,optional"`
+	Title    string `form:"title,optional"`
+	Status   int32  `form:"status,optional"`
+}
+
+type ListSysOperLogsResp struct {
+	Total int64             `json:"total"`
+	List  []*SysOperLogItem `json:"list"`
+}
+
 type ListSysRolesReq struct {
 	Page     int32  `form:"page,default=1"`
 	PageSize int32  `form:"pageSize,default=10"`
@@ -227,6 +252,17 @@ type SysIdResp struct {
 	Id int64 `json:"id"`
 }
 
+type SysLoginLogItem struct {
+	Id        int64  `json:"id"`
+	Username  string `json:"username"`
+	LoginIp   string `json:"loginIp"`
+	Browser   string `json:"browser"`
+	Os        string `json:"os"`
+	Status    int32  `json:"status"`
+	Msg       string `json:"msg"`
+	LoginTime string `json:"loginTime"`
+}
+
 type SysMenuItem struct {
 	Id             int64          `json:"id"`
 	ParentId       int64          `json:"parentId"`
@@ -238,6 +274,19 @@ type SysMenuItem struct {
 	Icon           string         `json:"icon"`
 	Sort           int32          `json:"sort"`
 	Children       []*SysMenuItem `json:"children,omitempty"`
+}
+
+type SysOperLogItem struct {
+	Id         int64  `json:"id"`
+	Title      string `json:"title"`
+	OperName   string `json:"operName"`
+	OperUrl    string `json:"operUrl"`
+	OperMethod string `json:"operMethod"`
+	OperIp     string `json:"operIp"`
+	Status     int32  `json:"status"`
+	ErrorMsg   string `json:"errorMsg"`
+	CostTime   int64  `json:"costTime"`
+	CreateTime string `json:"createTime"`
 }
 
 type SysRoleItem struct {

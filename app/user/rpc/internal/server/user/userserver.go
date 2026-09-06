@@ -153,3 +153,30 @@ func (s *UserServer) GetDictDataByType(ctx context.Context, in *pb.GetDictDataBy
 	l := userlogic.NewGetDictDataByTypeLogic(ctx, s.svcCtx)
 	return l.GetDictDataByType(in)
 }
+
+// 网关 RBAC 接口动态拦截鉴权
+func (s *UserServer) CheckApiPermission(ctx context.Context, in *pb.CheckApiPermissionRequest) (*pb.CheckApiPermissionResponse, error) {
+	l := userlogic.NewCheckApiPermissionLogic(ctx, s.svcCtx)
+	return l.CheckApiPermission(in)
+}
+
+// 审计日志管理
+func (s *UserServer) RecordOperLog(ctx context.Context, in *pb.RecordOperLogRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewRecordOperLogLogic(ctx, s.svcCtx)
+	return l.RecordOperLog(in)
+}
+
+func (s *UserServer) RecordLoginLog(ctx context.Context, in *pb.RecordLoginLogRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewRecordLoginLogLogic(ctx, s.svcCtx)
+	return l.RecordLoginLog(in)
+}
+
+func (s *UserServer) ListSysOperLogs(ctx context.Context, in *pb.ListSysOperLogsRequest) (*pb.ListSysOperLogsResponse, error) {
+	l := userlogic.NewListSysOperLogsLogic(ctx, s.svcCtx)
+	return l.ListSysOperLogs(in)
+}
+
+func (s *UserServer) ListSysLoginLogs(ctx context.Context, in *pb.ListSysLoginLogsRequest) (*pb.ListSysLoginLogsResponse, error) {
+	l := userlogic.NewListSysLoginLogsLogic(ctx, s.svcCtx)
+	return l.ListSysLoginLogs(in)
+}

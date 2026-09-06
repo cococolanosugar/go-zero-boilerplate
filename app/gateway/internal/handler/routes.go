@@ -117,6 +117,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: system.ListSysApisHandler(serverCtx),
 			},
 			{
+				// 获取登录日志列表
+				Method:  http.MethodGet,
+				Path:    "/logs/login",
+				Handler: system.ListSysLoginLogsHandler(serverCtx),
+			},
+			{
+				// 获取操作日志列表
+				Method:  http.MethodGet,
+				Path:    "/logs/oper",
+				Handler: system.ListSysOperLogsHandler(serverCtx),
+			},
+			{
 				// 获取全量菜单与按钮树
 				Method:  http.MethodGet,
 				Path:    "/menus/tree",

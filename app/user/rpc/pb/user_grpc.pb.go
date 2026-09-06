@@ -44,6 +44,11 @@ const (
 	User_UpdateSysDictData_FullMethodName     = "/user.User/UpdateSysDictData"
 	User_DeleteSysDictData_FullMethodName     = "/user.User/DeleteSysDictData"
 	User_GetDictDataByType_FullMethodName     = "/user.User/GetDictDataByType"
+	User_CheckApiPermission_FullMethodName    = "/user.User/CheckApiPermission"
+	User_RecordOperLog_FullMethodName         = "/user.User/RecordOperLog"
+	User_RecordLoginLog_FullMethodName        = "/user.User/RecordLoginLog"
+	User_ListSysOperLogs_FullMethodName       = "/user.User/ListSysOperLogs"
+	User_ListSysLoginLogs_FullMethodName      = "/user.User/ListSysLoginLogs"
 )
 
 // UserClient is the client API for User service.
@@ -81,6 +86,13 @@ type UserClient interface {
 	UpdateSysDictData(ctx context.Context, in *UpdateSysDictDataRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	DeleteSysDictData(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	GetDictDataByType(ctx context.Context, in *GetDictDataByTypeRequest, opts ...grpc.CallOption) (*GetDictDataByTypeResponse, error)
+	// 网关 RBAC 接口动态拦截鉴权
+	CheckApiPermission(ctx context.Context, in *CheckApiPermissionRequest, opts ...grpc.CallOption) (*CheckApiPermissionResponse, error)
+	// 审计日志管理
+	RecordOperLog(ctx context.Context, in *RecordOperLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	RecordLoginLog(ctx context.Context, in *RecordLoginLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	ListSysOperLogs(ctx context.Context, in *ListSysOperLogsRequest, opts ...grpc.CallOption) (*ListSysOperLogsResponse, error)
+	ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsRequest, opts ...grpc.CallOption) (*ListSysLoginLogsResponse, error)
 }
 
 type userClient struct {
@@ -341,6 +353,56 @@ func (c *userClient) GetDictDataByType(ctx context.Context, in *GetDictDataByTyp
 	return out, nil
 }
 
+func (c *userClient) CheckApiPermission(ctx context.Context, in *CheckApiPermissionRequest, opts ...grpc.CallOption) (*CheckApiPermissionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckApiPermissionResponse)
+	err := c.cc.Invoke(ctx, User_CheckApiPermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) RecordOperLog(ctx context.Context, in *RecordOperLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_RecordOperLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) RecordLoginLog(ctx context.Context, in *RecordLoginLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_RecordLoginLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListSysOperLogs(ctx context.Context, in *ListSysOperLogsRequest, opts ...grpc.CallOption) (*ListSysOperLogsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysOperLogsResponse)
+	err := c.cc.Invoke(ctx, User_ListSysOperLogs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsRequest, opts ...grpc.CallOption) (*ListSysLoginLogsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysLoginLogsResponse)
+	err := c.cc.Invoke(ctx, User_ListSysLoginLogs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -376,6 +438,13 @@ type UserServer interface {
 	UpdateSysDictData(context.Context, *UpdateSysDictDataRequest) (*EmptyResponse, error)
 	DeleteSysDictData(context.Context, *IdRequest) (*EmptyResponse, error)
 	GetDictDataByType(context.Context, *GetDictDataByTypeRequest) (*GetDictDataByTypeResponse, error)
+	// 网关 RBAC 接口动态拦截鉴权
+	CheckApiPermission(context.Context, *CheckApiPermissionRequest) (*CheckApiPermissionResponse, error)
+	// 审计日志管理
+	RecordOperLog(context.Context, *RecordOperLogRequest) (*EmptyResponse, error)
+	RecordLoginLog(context.Context, *RecordLoginLogRequest) (*EmptyResponse, error)
+	ListSysOperLogs(context.Context, *ListSysOperLogsRequest) (*ListSysOperLogsResponse, error)
+	ListSysLoginLogs(context.Context, *ListSysLoginLogsRequest) (*ListSysLoginLogsResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -460,6 +529,21 @@ func (UnimplementedUserServer) DeleteSysDictData(context.Context, *IdRequest) (*
 }
 func (UnimplementedUserServer) GetDictDataByType(context.Context, *GetDictDataByTypeRequest) (*GetDictDataByTypeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDictDataByType not implemented")
+}
+func (UnimplementedUserServer) CheckApiPermission(context.Context, *CheckApiPermissionRequest) (*CheckApiPermissionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CheckApiPermission not implemented")
+}
+func (UnimplementedUserServer) RecordOperLog(context.Context, *RecordOperLogRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RecordOperLog not implemented")
+}
+func (UnimplementedUserServer) RecordLoginLog(context.Context, *RecordLoginLogRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RecordLoginLog not implemented")
+}
+func (UnimplementedUserServer) ListSysOperLogs(context.Context, *ListSysOperLogsRequest) (*ListSysOperLogsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysOperLogs not implemented")
+}
+func (UnimplementedUserServer) ListSysLoginLogs(context.Context, *ListSysLoginLogsRequest) (*ListSysLoginLogsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysLoginLogs not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -932,6 +1016,96 @@ func _User_GetDictDataByType_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_CheckApiPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckApiPermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CheckApiPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CheckApiPermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CheckApiPermission(ctx, req.(*CheckApiPermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_RecordOperLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecordOperLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).RecordOperLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_RecordOperLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).RecordOperLog(ctx, req.(*RecordOperLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_RecordLoginLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecordLoginLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).RecordLoginLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_RecordLoginLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).RecordLoginLog(ctx, req.(*RecordLoginLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListSysOperLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysOperLogsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysOperLogs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysOperLogs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysOperLogs(ctx, req.(*ListSysOperLogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListSysLoginLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysLoginLogsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysLoginLogs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysLoginLogs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysLoginLogs(ctx, req.(*ListSysLoginLogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1038,6 +1212,26 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDictDataByType",
 			Handler:    _User_GetDictDataByType_Handler,
+		},
+		{
+			MethodName: "CheckApiPermission",
+			Handler:    _User_CheckApiPermission_Handler,
+		},
+		{
+			MethodName: "RecordOperLog",
+			Handler:    _User_RecordOperLog_Handler,
+		},
+		{
+			MethodName: "RecordLoginLog",
+			Handler:    _User_RecordLoginLog_Handler,
+		},
+		{
+			MethodName: "ListSysOperLogs",
+			Handler:    _User_ListSysOperLogs_Handler,
+		},
+		{
+			MethodName: "ListSysLoginLogs",
+			Handler:    _User_ListSysLoginLogs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

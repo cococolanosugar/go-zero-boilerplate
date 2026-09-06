@@ -161,6 +161,38 @@ CREATE TABLE IF NOT EXISTS `sys_dict_data` (
     UNIQUE KEY `idx_type_value` (`dict_type`, `dict_value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统数据字典数据项表';
 
+-- 10. 系统操作日志表
+CREATE TABLE IF NOT EXISTS `sys_oper_log` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志主键',
+    `title` varchar(100) NOT NULL DEFAULT '' COMMENT '操作模块/接口描述',
+    `oper_name` varchar(50) NOT NULL DEFAULT '' COMMENT '操作员工账号',
+    `oper_url` varchar(200) NOT NULL DEFAULT '' COMMENT '请求URL',
+    `oper_method` varchar(10) NOT NULL DEFAULT '' COMMENT '请求方法',
+    `oper_ip` varchar(50) NOT NULL DEFAULT '' COMMENT '操作IP地址',
+    `status` tinyint NOT NULL DEFAULT 1 COMMENT '操作状态 (1:正常 0:异常)',
+    `error_msg` varchar(500) NOT NULL DEFAULT '' COMMENT '错误消息',
+    `cost_time` bigint NOT NULL DEFAULT 0 COMMENT '消耗时间(毫秒)',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_oper_name` (`oper_name`),
+    KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统操作日志表';
+
+-- 11. 系统登录日志表
+CREATE TABLE IF NOT EXISTS `sys_login_log` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '访问ID',
+    `username` varchar(50) NOT NULL DEFAULT '' COMMENT '登录账号',
+    `login_ip` varchar(50) NOT NULL DEFAULT '' COMMENT '登录IP地址',
+    `browser` varchar(50) NOT NULL DEFAULT '' COMMENT '浏览器类型',
+    `os` varchar(50) NOT NULL DEFAULT '' COMMENT '操作系统',
+    `status` tinyint NOT NULL DEFAULT 1 COMMENT '登录状态 (1:成功 0:失败)',
+    `msg` varchar(255) NOT NULL DEFAULT '' COMMENT '提示消息',
+    `login_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_username` (`username`),
+    KEY `idx_login_time` (`login_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统登录日志表';
+
 -- ====================================================================
 -- 初始基础数据种子 (Default Seeds)
 -- ====================================================================
@@ -264,6 +296,16 @@ VALUES (351, 35, '新增类型', 3, '', '', 'system:dict:type:add', '', 1),
        (356, 35, '删除数据', 3, '', '', 'system:dict:data:delete', '', 6)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
+-- 3.6 审计日志模块及按钮
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
+VALUES (36, 3, '审计日志', 2, '/system/logs', 'System/Logs', 'system:log:view', 'HistoryOutlined', 6)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
+VALUES (361, 36, '操作日志查询', 3, '', '', 'system:log:oper:query', '', 1),
+       (362, 36, '登录日志查询', 3, '', '', 'system:log:login:query', '', 2)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
 -- 4. 个人中心
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
 VALUES (4, 0, '个人中心', 2, '/users', 'Users', 'user:profile:view', 'UserOutlined', 4)
@@ -289,7 +331,9 @@ VALUES (1, 'user', '获取当前用户信息', '/api/v1/user/info', 'GET'),
        (16, 'dict', '创建字典数据项', '/api/v1/system/dict/data', 'POST'),
        (17, 'dict', '更新字典数据项', '/api/v1/system/dict/data', 'PUT'),
        (18, 'dict', '删除字典数据项', '/api/v1/system/dict/data/:id', 'DELETE'),
-       (19, 'dict', '根据类型查询字典项', '/api/v1/system/dict/data/type/:dictType', 'GET')
+       (19, 'dict', '根据类型查询字典项', '/api/v1/system/dict/data/type/:dictType', 'GET'),
+       (20, 'system', '操作日志列表', '/api/v1/system/logs/oper', 'GET'),
+       (21, 'system', '登录日志列表', '/api/v1/system/logs/login', 'GET')
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 按钮与 API 初始绑定 (一石二鸟联动)
@@ -311,6 +355,10 @@ VALUES (1, 2),   -- 监控大盘 -> /api/v1/order/dashboard
        (354, 16), -- 新增数据 -> /api/v1/system/dict/data POST
        (355, 17), -- 编辑数据 -> /api/v1/system/dict/data PUT
        (356, 18), -- 删除数据 -> /api/v1/system/dict/data/:id DELETE
+       (36, 20),  -- 审计日志 -> /api/v1/system/logs/oper GET
+       (36, 21),  -- 审计日志 -> /api/v1/system/logs/login GET
+       (361, 20), -- 操作日志查询 -> /api/v1/system/logs/oper GET
+       (362, 21), -- 登录日志查询 -> /api/v1/system/logs/login GET
        (4, 1)    -- 个人中心 -> /api/v1/user/info GET
 ON DUPLICATE KEY UPDATE `api_id` = VALUES(`api_id`);
 

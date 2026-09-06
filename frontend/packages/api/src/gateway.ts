@@ -106,6 +106,22 @@ export function listSysApis() {
 }
 
 /**
+ * @description "获取登录日志列表"
+ * @param params
+ */
+export function listSysLoginLogs(params: components.ListSysLoginLogsReqParams) {
+	return webapi.get<components.ListSysLoginLogsResp>(`/api/v1/system/logs/login`, params)
+}
+
+/**
+ * @description "获取操作日志列表"
+ * @param params
+ */
+export function listSysOperLogs(params: components.ListSysOperLogsReqParams) {
+	return webapi.get<components.ListSysOperLogsResp>(`/api/v1/system/logs/oper`, params)
+}
+
+/**
  * @description "获取全量菜单与按钮树"
  */
 export function getSysMenuTree() {

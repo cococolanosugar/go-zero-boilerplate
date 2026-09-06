@@ -164,6 +164,53 @@ type (
 	ListSysApisResp {
 		List []*SysApiItem `json:"list"`
 	}
+
+	// 审计操作日志
+	SysOperLogItem {
+		Id         int64  `json:"id"`
+		Title      string `json:"title"`
+		OperName   string `json:"operName"`
+		OperUrl    string `json:"operUrl"`
+		OperMethod string `json:"operMethod"`
+		OperIp     string `json:"operIp"`
+		Status     int32  `json:"status"`
+		ErrorMsg   string `json:"errorMsg"`
+		CostTime   int64  `json:"costTime"`
+		CreateTime string `json:"createTime"`
+	}
+	ListSysOperLogsReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		OperName string `form:"operName,optional"`
+		Title    string `form:"title,optional"`
+		Status   int32  `form:"status,optional"`
+	}
+	ListSysOperLogsResp {
+		Total int64             `json:"total"`
+		List  []*SysOperLogItem `json:"list"`
+	}
+
+	// 审计登录日志
+	SysLoginLogItem {
+		Id        int64  `json:"id"`
+		Username  string `json:"username"`
+		LoginIp   string `json:"loginIp"`
+		Browser   string `json:"browser"`
+		Os        string `json:"os"`
+		Status    int32  `json:"status"`
+		Msg       string `json:"msg"`
+		LoginTime string `json:"loginTime"`
+	}
+	ListSysLoginLogsReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Username string `form:"username,optional"`
+		Status   int32  `form:"status,optional"`
+	}
+	ListSysLoginLogsResp {
+		Total int64              `json:"total"`
+		List  []*SysLoginLogItem `json:"list"`
+	}
 )
 
 @server (
@@ -229,4 +276,12 @@ service gateway {
 	@doc "获取系统 API 字典列表"
 	@handler ListSysApis
 	get /apis returns (ListSysApisResp)
+
+	@doc "获取操作日志列表"
+	@handler ListSysOperLogs
+	get /logs/oper (ListSysOperLogsReq) returns (ListSysOperLogsResp)
+
+	@doc "获取登录日志列表"
+	@handler ListSysLoginLogs
+	get /logs/login (ListSysLoginLogsReq) returns (ListSysLoginLogsResp)
 }

@@ -1,4 +1,4 @@
-﻿package config
+package config
 
 import (
 	"go-zero-boilerplate/pkg/nacosx"

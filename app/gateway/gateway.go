@@ -9,6 +9,7 @@ import (
 
 	"go-zero-boilerplate/app/gateway/internal/config"
 	"go-zero-boilerplate/app/gateway/internal/handler"
+	"go-zero-boilerplate/app/gateway/internal/middleware"
 	"go-zero-boilerplate/app/gateway/internal/svc"
 
 	"net/http"
@@ -29,6 +30,8 @@ func main() {
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
+
+	ctx := svc.NewServiceContext(c)
 
 	// 启用全局 CORS 跨域支持中间件（严格符合 W3C CORS 规范与凭据安全要求）
 	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
@@ -53,7 +56,12 @@ func main() {
 		}
 	})
 
-	ctx := svc.NewServiceContext(c)
+	// 挂载企业级操作审计日志中间件（异步记录增删改操作）
+	server.Use(middleware.NewOperLogMiddleware(ctx).Handle)
+
+	// 挂载网关动态 RBAC 接口拦截中间件（403 权限拒绝与角色白名单判定）
+	server.Use(middleware.NewRbacMiddleware(ctx).Handle)
+
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

@@ -1,4 +1,4 @@
-﻿package orderlogic
+package orderlogic
 
 import (
 	"context"

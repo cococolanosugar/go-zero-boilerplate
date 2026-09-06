@@ -23,6 +23,7 @@ import {
   MenuOutlined,
   ApiOutlined,
   BookOutlined,
+  HistoryOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
 import { setToken, type SysMenuItem } from "@zero/api";
@@ -48,6 +49,8 @@ const getIcon = (iconName?: string) => {
       return <ApiOutlined />;
     case "BookOutlined":
       return <BookOutlined />;
+    case "HistoryOutlined":
+      return <HistoryOutlined />;
     default:
       return <AppstoreOutlined />;
   }
@@ -100,6 +103,11 @@ const defaultRouteConfig = {
           path: "/system/dicts",
           name: "数据字典",
           icon: <BookOutlined />,
+        },
+        {
+          path: "/system/logs",
+          name: "审计日志",
+          icon: <HistoryOutlined />,
         },
       ],
     },

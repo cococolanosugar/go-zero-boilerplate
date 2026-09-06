@@ -1,4 +1,4 @@
-.PHONY: gen-gateway gen-user-rpc gen-order-rpc gen-ts run-gateway run-user-rpc run-order-rpc run-admin run-portal build-frontend build-web tidy test lint-antd ai-index
+.PHONY: gen-gateway gen-user-rpc gen-order-rpc gen-ts run-gateway run-user-rpc run-order-rpc run-admin run-portal build-frontend build-web tidy test lint-antd ai-index rename-project
 
 # 生成网关 API 代码
 gen-gateway:
@@ -49,6 +49,10 @@ build-web: build-frontend
 # 整理后端依赖
 tidy:
 	go mod tidy
+
+# 脚手架一键重命名 (例如: make rename-project NEW_MODULE=my-app DISPLAY_NAME="My App")
+rename-project:
+	bash ./hack/scripts/rename-project.sh $(NEW_MODULE) "$(DISPLAY_NAME)"
 
 # 运行测试
 test:

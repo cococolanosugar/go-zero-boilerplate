@@ -288,6 +288,89 @@ message GetDictDataByTypeResponse {
   repeated SysDictDataItem list = 1;
 }
 
+// -------------------------------------------------------------
+// 网关 RBAC 鉴权与审计日志 (RBAC Enforcement & Audit Logs)
+// -------------------------------------------------------------
+
+message CheckApiPermissionRequest {
+  int64 userId = 1;
+  string path = 2;
+  string method = 3;
+}
+
+message CheckApiPermissionResponse {
+  bool allowed = 1;
+}
+
+message RecordOperLogRequest {
+  string title = 1;
+  string operName = 2;
+  string operUrl = 3;
+  string operMethod = 4;
+  string operIp = 5;
+  int32 status = 6;
+  string errorMsg = 7;
+  int64 costTime = 8;
+}
+
+message RecordLoginLogRequest {
+  string username = 1;
+  string loginIp = 2;
+  string browser = 3;
+  string os = 4;
+  int32 status = 5;
+  string msg = 6;
+}
+
+message SysOperLogItem {
+  int64 id = 1;
+  string title = 2;
+  string operName = 3;
+  string operUrl = 4;
+  string operMethod = 5;
+  string operIp = 6;
+  int32 status = 7;
+  string errorMsg = 8;
+  int64 costTime = 9;
+  string createTime = 10;
+}
+
+message ListSysOperLogsRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string operName = 3;
+  string title = 4;
+  int32 status = 5;
+}
+
+message ListSysOperLogsResponse {
+  int64 total = 1;
+  repeated SysOperLogItem list = 2;
+}
+
+message SysLoginLogItem {
+  int64 id = 1;
+  string username = 2;
+  string loginIp = 3;
+  string browser = 4;
+  string os = 5;
+  int32 status = 6;
+  string msg = 7;
+  string loginTime = 8;
+}
+
+message ListSysLoginLogsRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string username = 3;
+  int32 status = 4;
+}
+
+message ListSysLoginLogsResponse {
+  int64 total = 1;
+  repeated SysLoginLogItem list = 2;
+}
+
 service User {
   // 原有业务接口
   rpc GetUserInfo(IdRequest) returns (UserInfoResponse);
@@ -326,4 +409,13 @@ service User {
   rpc UpdateSysDictData(UpdateSysDictDataRequest) returns (EmptyResponse);
   rpc DeleteSysDictData(IdRequest) returns (EmptyResponse);
   rpc GetDictDataByType(GetDictDataByTypeRequest) returns (GetDictDataByTypeResponse);
+
+  // 网关 RBAC 接口动态拦截鉴权
+  rpc CheckApiPermission(CheckApiPermissionRequest) returns (CheckApiPermissionResponse);
+
+  // 审计日志管理
+  rpc RecordOperLog(RecordOperLogRequest) returns (EmptyResponse);
+  rpc RecordLoginLog(RecordLoginLogRequest) returns (EmptyResponse);
+  rpc ListSysOperLogs(ListSysOperLogsRequest) returns (ListSysOperLogsResponse);
+  rpc ListSysLoginLogs(ListSysLoginLogsRequest) returns (ListSysLoginLogsResponse);
 }

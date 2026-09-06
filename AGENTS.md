@@ -223,6 +223,24 @@ go-zero-boilerplate/
     NonBlock: true
   ```
 
+### 3.8 网关 RBAC 动态鉴权与切面拦截 (Gateway RBAC Authorization Middleware)
+* **拦截时机与范围**：
+  * 在统一网关 `app/gateway/gateway.go` 全局挂载 `RbacMiddleware`。
+  * **白名单放行**：对公开接口（如 `/api/v1/user/login`、`/api/v1/system/auth/login` 等）以及个人资料/菜单树等公用接口自动放行。
+  * **超管豁免**：超级管理员（`UserId == 1` 或拥有 `ROLE_ADMIN` / `*` 标识）直接通行。
+* **RESTful 动态正则路径匹配**：
+  * 下游微服务 `CheckApiPermission` RPC 实现智能正则路由匹配（如将 `/api/v1/orders/:id` 自动转为 `^/api/v1/orders/[^/]+$`），支持路径变量接口的权限判定。
+  * 鉴权失败由网关统一返回标准 HTTP 403 异常（`xerr.NewErrCode(xerr.Forbidden)`）。
+
+### 3.9 企业级双日志审计机制 (Audit Logging: OperLog & LoginLog)
+* **操作日志 (`sys_oper_log`)**：
+  * 网关切面中间件 `OperLogMiddleware` 自动捕获所有写操作（`POST`、`PUT`、`DELETE`、`PATCH`）。
+  * 自动记录：操作员工、请求方式、请求 URL、客户端真实 IP、响应状态码、执行耗时（毫秒）、错误堆栈。
+  * 采用 `go func()` 异步 Goroutine 派发下游微服务 RPC 写入数据库，**对正常业务吞吐量与接口响应时延实现零阻塞（Zero-Overhead）**。
+* **登录日志 (`sys_login_log`)**：
+  * 员工登录与用户登录逻辑（`adminloginlogic.go` 等）统一记录登录 IP、操作系统、浏览器 User-Agent 及成功/失败提示。
+* **前端审计日志中心**：
+  * 管理后台 `/system/logs` 集成 Ant Design ProTable 双 Tab 标签页，支持按模块、操作人、IP、状态多条件筛选与详情弹窗。
 
 ---
 
@@ -301,6 +319,16 @@ just docker-infra-up
 
 # 4. 构建全栈所有 Docker 镜像
 just docker-build
+```
+
+### 4.6 脚手架一键重命名 (Rebranding)
+用于将脚手架一键迁移并定制为任意业务工程名（自动替换 Go module、import 路径、package.json、Docker、SQL 与前端常量）：
+```bash
+# Windows (PowerShell / Just)
+just rename-project my-org/shop-system "Shop System"
+
+# Linux / macOS (Bash / Make)
+make rename-project NEW_MODULE=my-org/shop-system DISPLAY_NAME="Shop System"
 ```
 
 ---

@@ -111,6 +111,7 @@ just gen-ts
 | 停止全栈容器 | `just docker-down` | `make docker-down` |
 | 启动开发基础设施 (MySQL/Redis/Etcd/Nacos) | `just docker-infra-up` | `make docker-infra-up` |
 | 构建所有 Docker 镜像 | `just docker-build` | `make docker-build` |
+| **脚手架一键重命名** | `just rename-project <name>` | `make rename-project NEW_MODULE=<name>` |
 
 ---
 
@@ -171,4 +172,30 @@ just gen-ts
       - ${USER_RPC_HOST:127.0.0.1:8080}
     NonBlock: true
   ```
+
+---
+
+## 企业级核心能力与三大强化特性
+
+### 1. 网关 RBAC 动态鉴权切面 (RBAC Middleware)
+统一网关挂载 `RbacMiddleware`，与微服务 `CheckApiPermission` RPC 协同：
+* **智能正则路径匹配**：自动将动态 RESTful 路由（如 `/api/v1/orders/:id`）映射并匹配数据库 API 白名单与角色权限树。
+* **白名单与超管豁免**：登录与公开接口自动放行；超级管理员（`UserId == 1` 或 `ROLE_ADMIN`）全局豁免。
+* **统一 403 异常拦截**：未授权访问直接熔断返回标准 HTTP 403 结构体。
+
+### 2. 企业级双日志审计闭环 (OperLog & LoginLog)
+* **操作日志 (`sys_oper_log`)**：网关中间件 `OperLogMiddleware` 自动捕获所有写请求（`POST/PUT/DELETE/PATCH`），采集操作人、IP、URL、耗时、状态码等，通过**异步 Goroutine** 写入持久层，零阻塞业务请求。
+* **登录日志 (`sys_login_log`)**：用户与员工登录成功/失败自动记录客户端 IP、浏览器与操作系统。
+* **前端审计中心**：管理后台 `/system/logs` 采用 Ant Design ProTable 双 Tab 提供多维度筛选、状态指示与详情弹窗。
+
+### 3. 脚手架一键重命名与工程定制 (Rebranding)
+只需一条命令即可将本脚手架一键定制为任意新项目名：
+```bash
+# Windows
+just rename-project my-org/shop-system "Shop System"
+
+# Linux / macOS
+make rename-project NEW_MODULE=my-org/shop-system DISPLAY_NAME="Shop System"
+```
+脚本会自动安全替换：`go.mod`、所有 Go `import` 路径、YAML 配置文件、Docker/Compose 配置、MySQL 数据库名以及前端包配置与 UI 标题。
 

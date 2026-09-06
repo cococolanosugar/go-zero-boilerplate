@@ -14,44 +14,54 @@ import (
 )
 
 type (
-	AdminLoginRequest         = pb.AdminLoginRequest
-	AdminLoginResponse        = pb.AdminLoginResponse
-	AdminProfileResponse      = pb.AdminProfileResponse
-	AssignRolePermRequest     = pb.AssignRolePermRequest
-	CreateSysDictDataRequest  = pb.CreateSysDictDataRequest
-	CreateSysDictTypeRequest  = pb.CreateSysDictTypeRequest
-	CreateSysRoleRequest      = pb.CreateSysRoleRequest
-	CreateSysUserRequest      = pb.CreateSysUserRequest
-	EmptyRequest              = pb.EmptyRequest
-	EmptyResponse             = pb.EmptyResponse
-	GetDictDataByTypeRequest  = pb.GetDictDataByTypeRequest
-	GetDictDataByTypeResponse = pb.GetDictDataByTypeResponse
-	GetSysMenuTreeResponse    = pb.GetSysMenuTreeResponse
-	IdRequest                 = pb.IdRequest
-	ListSysApisResponse       = pb.ListSysApisResponse
-	ListSysDictDataRequest    = pb.ListSysDictDataRequest
-	ListSysDictDataResponse   = pb.ListSysDictDataResponse
-	ListSysDictTypesRequest   = pb.ListSysDictTypesRequest
-	ListSysDictTypesResponse  = pb.ListSysDictTypesResponse
-	ListSysRolesRequest       = pb.ListSysRolesRequest
-	ListSysRolesResponse      = pb.ListSysRolesResponse
-	ListSysUsersRequest       = pb.ListSysUsersRequest
-	ListSysUsersResponse      = pb.ListSysUsersResponse
-	LoginRequest              = pb.LoginRequest
-	LoginResponse             = pb.LoginResponse
-	MenuItem                  = pb.MenuItem
-	RegisterRequest           = pb.RegisterRequest
-	RegisterResponse          = pb.RegisterResponse
-	SysApiItem                = pb.SysApiItem
-	SysDictDataItem           = pb.SysDictDataItem
-	SysDictTypeItem           = pb.SysDictTypeItem
-	SysRoleItem               = pb.SysRoleItem
-	SysUserItem               = pb.SysUserItem
-	UpdateSysDictDataRequest  = pb.UpdateSysDictDataRequest
-	UpdateSysDictTypeRequest  = pb.UpdateSysDictTypeRequest
-	UpdateSysRoleRequest      = pb.UpdateSysRoleRequest
-	UpdateSysUserRequest      = pb.UpdateSysUserRequest
-	UserInfoResponse          = pb.UserInfoResponse
+	AdminLoginRequest          = pb.AdminLoginRequest
+	AdminLoginResponse         = pb.AdminLoginResponse
+	AdminProfileResponse       = pb.AdminProfileResponse
+	AssignRolePermRequest      = pb.AssignRolePermRequest
+	CheckApiPermissionRequest  = pb.CheckApiPermissionRequest
+	CheckApiPermissionResponse = pb.CheckApiPermissionResponse
+	CreateSysDictDataRequest   = pb.CreateSysDictDataRequest
+	CreateSysDictTypeRequest   = pb.CreateSysDictTypeRequest
+	CreateSysRoleRequest       = pb.CreateSysRoleRequest
+	CreateSysUserRequest       = pb.CreateSysUserRequest
+	EmptyRequest               = pb.EmptyRequest
+	EmptyResponse              = pb.EmptyResponse
+	GetDictDataByTypeRequest   = pb.GetDictDataByTypeRequest
+	GetDictDataByTypeResponse  = pb.GetDictDataByTypeResponse
+	GetSysMenuTreeResponse     = pb.GetSysMenuTreeResponse
+	IdRequest                  = pb.IdRequest
+	ListSysApisResponse        = pb.ListSysApisResponse
+	ListSysDictDataRequest     = pb.ListSysDictDataRequest
+	ListSysDictDataResponse    = pb.ListSysDictDataResponse
+	ListSysDictTypesRequest    = pb.ListSysDictTypesRequest
+	ListSysDictTypesResponse   = pb.ListSysDictTypesResponse
+	ListSysLoginLogsRequest    = pb.ListSysLoginLogsRequest
+	ListSysLoginLogsResponse   = pb.ListSysLoginLogsResponse
+	ListSysOperLogsRequest     = pb.ListSysOperLogsRequest
+	ListSysOperLogsResponse    = pb.ListSysOperLogsResponse
+	ListSysRolesRequest        = pb.ListSysRolesRequest
+	ListSysRolesResponse       = pb.ListSysRolesResponse
+	ListSysUsersRequest        = pb.ListSysUsersRequest
+	ListSysUsersResponse       = pb.ListSysUsersResponse
+	LoginRequest               = pb.LoginRequest
+	LoginResponse              = pb.LoginResponse
+	MenuItem                   = pb.MenuItem
+	RecordLoginLogRequest      = pb.RecordLoginLogRequest
+	RecordOperLogRequest       = pb.RecordOperLogRequest
+	RegisterRequest            = pb.RegisterRequest
+	RegisterResponse           = pb.RegisterResponse
+	SysApiItem                 = pb.SysApiItem
+	SysDictDataItem            = pb.SysDictDataItem
+	SysDictTypeItem            = pb.SysDictTypeItem
+	SysLoginLogItem            = pb.SysLoginLogItem
+	SysOperLogItem             = pb.SysOperLogItem
+	SysRoleItem                = pb.SysRoleItem
+	SysUserItem                = pb.SysUserItem
+	UpdateSysDictDataRequest   = pb.UpdateSysDictDataRequest
+	UpdateSysDictTypeRequest   = pb.UpdateSysDictTypeRequest
+	UpdateSysRoleRequest       = pb.UpdateSysRoleRequest
+	UpdateSysUserRequest       = pb.UpdateSysUserRequest
+	UserInfoResponse           = pb.UserInfoResponse
 
 	User interface {
 		// 原有业务接口
@@ -85,6 +95,13 @@ type (
 		UpdateSysDictData(ctx context.Context, in *UpdateSysDictDataRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		DeleteSysDictData(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		GetDictDataByType(ctx context.Context, in *GetDictDataByTypeRequest, opts ...grpc.CallOption) (*GetDictDataByTypeResponse, error)
+		// 网关 RBAC 接口动态拦截鉴权
+		CheckApiPermission(ctx context.Context, in *CheckApiPermissionRequest, opts ...grpc.CallOption) (*CheckApiPermissionResponse, error)
+		// 审计日志管理
+		RecordOperLog(ctx context.Context, in *RecordOperLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		RecordLoginLog(ctx context.Context, in *RecordLoginLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		ListSysOperLogs(ctx context.Context, in *ListSysOperLogsRequest, opts ...grpc.CallOption) (*ListSysOperLogsResponse, error)
+		ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsRequest, opts ...grpc.CallOption) (*ListSysLoginLogsResponse, error)
 	}
 
 	defaultUser struct {
@@ -227,4 +244,31 @@ func (m *defaultUser) DeleteSysDictData(ctx context.Context, in *IdRequest, opts
 func (m *defaultUser) GetDictDataByType(ctx context.Context, in *GetDictDataByTypeRequest, opts ...grpc.CallOption) (*GetDictDataByTypeResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetDictDataByType(ctx, in, opts...)
+}
+
+// 网关 RBAC 接口动态拦截鉴权
+func (m *defaultUser) CheckApiPermission(ctx context.Context, in *CheckApiPermissionRequest, opts ...grpc.CallOption) (*CheckApiPermissionResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CheckApiPermission(ctx, in, opts...)
+}
+
+// 审计日志管理
+func (m *defaultUser) RecordOperLog(ctx context.Context, in *RecordOperLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.RecordOperLog(ctx, in, opts...)
+}
+
+func (m *defaultUser) RecordLoginLog(ctx context.Context, in *RecordLoginLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.RecordLoginLog(ctx, in, opts...)
+}
+
+func (m *defaultUser) ListSysOperLogs(ctx context.Context, in *ListSysOperLogsRequest, opts ...grpc.CallOption) (*ListSysOperLogsResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysOperLogs(ctx, in, opts...)
+}
+
+func (m *defaultUser) ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsRequest, opts ...grpc.CallOption) (*ListSysLoginLogsResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysLoginLogs(ctx, in, opts...)
 }
