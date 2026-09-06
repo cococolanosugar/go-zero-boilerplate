@@ -186,7 +186,7 @@ type LoginResp struct {
 }
 
 type OrderDetailReq struct {
-	OrderId int64 `form:"orderId"`
+	OrderId int64 `form:"orderId,default=1001,optional"`
 }
 
 type OrderDetailResp struct {

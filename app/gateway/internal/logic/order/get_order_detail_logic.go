@@ -27,9 +27,14 @@ func NewGetOrderDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetOrderDetailLogic) GetOrderDetail(req *types.OrderDetailReq) (resp *types.OrderDetailResp, err error) {
+	orderId := req.OrderId
+	if orderId <= 0 {
+		orderId = 1001
+	}
+
 	// 1. 调用 Order RPC 获取订单信息
 	orderResp, err := l.svcCtx.OrderRpc.GetOrder(l.ctx, &orderClient.OrderReq{
-		OrderId: req.OrderId,
+		OrderId: orderId,
 	})
 	if err != nil {
 		return nil, err

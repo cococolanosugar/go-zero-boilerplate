@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"go-zero-boilerplate/app/user/model"
 	"go-zero-boilerplate/app/user/rpc/internal/svc"
@@ -62,12 +63,13 @@ func (l *AdminLoginLogic) AdminLogin(in *pb.AdminLoginRequest) (*pb.AdminLoginRe
 	recordLog := func(status int64, msg string) {
 		go func() {
 			_, _ = l.svcCtx.SysLoginLogModel.Insert(context.Background(), &model.SysLoginLog{
-				Username: account,
-				LoginIp:  "127.0.0.1",
-				Browser:  "Web Admin",
-				Os:       "Desktop",
-				Status:   status,
-				Msg:      msg,
+				Username:  account,
+				LoginIp:   "127.0.0.1",
+				Browser:   "Web Admin",
+				Os:        "Desktop",
+				Status:    status,
+				Msg:       msg,
+				LoginTime: time.Now(),
 			})
 		}()
 	}
