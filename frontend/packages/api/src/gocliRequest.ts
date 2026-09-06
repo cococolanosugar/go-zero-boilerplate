@@ -46,11 +46,15 @@ export function genUrl(url: string, params: any) {
     const path: Array<string> = [];
     for (const key of Object.keys(params)) {
         if (!ps.find((k) => k === key)) {
-            path.push(`${key}=${params[key]}`);
+            const val = params[key];
+            if (val !== undefined && val !== null && val !== '') {
+                path.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
+            }
         }
     }
 
-    return url + (path.length > 0 ? `?${path.join('&')}` : '');
+    const search = path.length > 0 ? (url.includes('?') ? '&' : '?') + path.join('&') : '';
+    return url + search;
 }
 
 export class ApiError extends Error {
@@ -170,7 +174,8 @@ function api<T>(
     config?: unknown
 ): Promise<T> {
     if (url.match(/:/) || method.match(/get|delete/i)) {
-        url = genUrl(url, req ? (req.params || req.forms) : undefined);
+        const queryParams = req ? (req.params || req.forms || req) : undefined;
+        url = genUrl(url, queryParams);
     }
     method = method.toLocaleLowerCase() as Method;
 
