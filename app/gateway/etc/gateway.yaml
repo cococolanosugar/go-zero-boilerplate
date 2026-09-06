@@ -1,39 +1,40 @@
 Name: gateway
-Host: ${GATEWAY_HOST:0.0.0.0}
-Port: ${GATEWAY_PORT:8888}
+Host: 0.0.0.0
+Port: 8888
 
 # JWT 鉴权配置
 Auth:
-  AccessSecret: ${JWT_SECRET:go-zero-boilerplate-secret-key-2026}
-  AccessExpire: ${JWT_EXPIRE:86400}
+  AccessSecret: go-zero-boilerplate-secret-key-2026
+  AccessExpire: 86400
 
 # ================= 下游微服务客户端连接配置 =================
 
 # 用户微服务 gRPC 客户端
 UserRpc:
-  # 模式一：Nacos 服务发现（当前默认启用）
-  Target: nacos://${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}/user.rpc?namespaceid=${NACOS_NAMESPACE:public}&timeout=5000s
-  NonBlock: true
-  # 模式二：Etcd 服务发现（切换至 Etcd 时：注释上方 Target，解开下方注释）
+  # 模式一：Nacos 服务发现
+  # Target: nacos://127.0.0.1:8848/user.rpc?namespaceid=public&timeout=5000s
+  # NonBlock: true
+  # 模式二：Etcd 服务发现
   # Etcd:
   #   Hosts:
-  #     - ${ETCD_HOST:127.0.0.1:2379}
+  #     - 127.0.0.1:2379
   #   Key: user.rpc
-  # 模式三：直连模式（单机调试或无注册中心时：注释上方 Target 和 Etcd，解开下方注释）
-  # Endpoints:
-  #   - ${USER_RPC_HOST:127.0.0.1:8080}
+  # 模式三：直连模式（当前单机极速调试启用，无需注册中心容器）
+  Endpoints:
+    - 127.0.0.1:8080
+  NonBlock: true
 
 # 订单微服务 gRPC 客户端
 OrderRpc:
-  # 模式一：Nacos 服务发现（当前默认启用）
-  Target: nacos://${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}/order.rpc?namespaceid=${NACOS_NAMESPACE:public}&timeout=5000s
-  NonBlock: true
-  # 模式二：Etcd 服务发现（切换至 Etcd 时：注释上方 Target，解开下方注释）
+  # 模式一：Nacos 服务发现
+  # Target: nacos://127.0.0.1:8848/order.rpc?namespaceid=public&timeout=5000s
+  # NonBlock: true
+  # 模式二：Etcd 服务发现
   # Etcd:
   #   Hosts:
-  #     - ${ETCD_HOST:127.0.0.1:2379}
+  #     - 127.0.0.1:2379
   #   Key: order.rpc
-  # 模式三：直连模式（单机调试或无注册中心时：注释上方 Target 和 Etcd，解开下方注释）
-  # Endpoints:
-  #   - ${ORDER_RPC_HOST:127.0.0.1:8081}
-
+  # 模式三：直连模式（当前单机极速调试启用，无需注册中心容器）
+  Endpoints:
+    - 127.0.0.1:8081
+  NonBlock: true

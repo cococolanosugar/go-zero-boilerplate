@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
 -- 初始基础数据种子
 -- 用户密码默认 123456 (使用 bcrypt 哈希值)
 INSERT INTO `user` (`id`, `mobile`, `username`, `password`, `avatar`) 
-VALUES (1, '13800000000', 'Antigravity Admin', '$2a$10$7EqJtq98hPqEX7fNZaFWoO.8/q7R905e1/1H7eZtTpm0F84lW1e5e', 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg')
+VALUES (1, '13800000000', 'Antigravity Admin', '$2a$10$Ng7owCC4Isoz4SlkX553jOuRn0dmxrNS2CIX8p/JGBwx2bCHFHHdC', 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg')
 ON DUPLICATE KEY UPDATE `username` = VALUES(`username`);
 
 INSERT INTO `orders` (`id`, `order_id`, `user_id`, `item`, `amount`, `status`)
@@ -247,7 +247,7 @@ ON DUPLICATE KEY UPDATE `dept_name` = VALUES(`dept_name`);
 
 -- 初始超管用户 (账号: admin, 手机: 13800000000, 密码默认 123456 bcrypt 哈希)
 INSERT INTO `sys_user` (`id`, `dept_id`, `username`, `password`, `real_name`, `mobile`, `email`, `avatar`, `status`, `token_version`)
-VALUES (1, 1, 'admin', '$2a$10$7EqJtq98hPqEX7fNZaFWoO.8/q7R905e1/1H7eZtTpm0F84lW1e5e', '超级管理员', '13800000000', 'admin@zero.dev', 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg', 1, 1)
+VALUES (1, 1, 'admin', '$2a$10$Ng7owCC4Isoz4SlkX553jOuRn0dmxrNS2CIX8p/JGBwx2bCHFHHdC', '超级管理员', '13800000000', 'admin@zero.dev', 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg', 1, 1)
 ON DUPLICATE KEY UPDATE `username` = VALUES(`username`);
 
 -- 初始超级管理员角色
