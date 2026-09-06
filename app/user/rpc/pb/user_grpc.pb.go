@@ -35,6 +35,15 @@ const (
 	User_AssignRolePermissions_FullMethodName = "/user.User/AssignRolePermissions"
 	User_GetSysMenuTree_FullMethodName        = "/user.User/GetSysMenuTree"
 	User_ListSysApis_FullMethodName           = "/user.User/ListSysApis"
+	User_ListSysDictTypes_FullMethodName      = "/user.User/ListSysDictTypes"
+	User_CreateSysDictType_FullMethodName     = "/user.User/CreateSysDictType"
+	User_UpdateSysDictType_FullMethodName     = "/user.User/UpdateSysDictType"
+	User_DeleteSysDictType_FullMethodName     = "/user.User/DeleteSysDictType"
+	User_ListSysDictData_FullMethodName       = "/user.User/ListSysDictData"
+	User_CreateSysDictData_FullMethodName     = "/user.User/CreateSysDictData"
+	User_UpdateSysDictData_FullMethodName     = "/user.User/UpdateSysDictData"
+	User_DeleteSysDictData_FullMethodName     = "/user.User/DeleteSysDictData"
+	User_GetDictDataByType_FullMethodName     = "/user.User/GetDictDataByType"
 )
 
 // UserClient is the client API for User service.
@@ -62,6 +71,16 @@ type UserClient interface {
 	// 菜单与接口字典
 	GetSysMenuTree(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetSysMenuTreeResponse, error)
 	ListSysApis(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ListSysApisResponse, error)
+	// 数据字典管理
+	ListSysDictTypes(ctx context.Context, in *ListSysDictTypesRequest, opts ...grpc.CallOption) (*ListSysDictTypesResponse, error)
+	CreateSysDictType(ctx context.Context, in *CreateSysDictTypeRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysDictType(ctx context.Context, in *UpdateSysDictTypeRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysDictType(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	ListSysDictData(ctx context.Context, in *ListSysDictDataRequest, opts ...grpc.CallOption) (*ListSysDictDataResponse, error)
+	CreateSysDictData(ctx context.Context, in *CreateSysDictDataRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysDictData(ctx context.Context, in *UpdateSysDictDataRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysDictData(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	GetDictDataByType(ctx context.Context, in *GetDictDataByTypeRequest, opts ...grpc.CallOption) (*GetDictDataByTypeResponse, error)
 }
 
 type userClient struct {
@@ -232,6 +251,96 @@ func (c *userClient) ListSysApis(ctx context.Context, in *EmptyRequest, opts ...
 	return out, nil
 }
 
+func (c *userClient) ListSysDictTypes(ctx context.Context, in *ListSysDictTypesRequest, opts ...grpc.CallOption) (*ListSysDictTypesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysDictTypesResponse)
+	err := c.cc.Invoke(ctx, User_ListSysDictTypes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysDictType(ctx context.Context, in *CreateSysDictTypeRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysDictType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysDictType(ctx context.Context, in *UpdateSysDictTypeRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysDictType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysDictType(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysDictType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListSysDictData(ctx context.Context, in *ListSysDictDataRequest, opts ...grpc.CallOption) (*ListSysDictDataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysDictDataResponse)
+	err := c.cc.Invoke(ctx, User_ListSysDictData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysDictData(ctx context.Context, in *CreateSysDictDataRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysDictData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysDictData(ctx context.Context, in *UpdateSysDictDataRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysDictData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysDictData(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysDictData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetDictDataByType(ctx context.Context, in *GetDictDataByTypeRequest, opts ...grpc.CallOption) (*GetDictDataByTypeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDictDataByTypeResponse)
+	err := c.cc.Invoke(ctx, User_GetDictDataByType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -257,6 +366,16 @@ type UserServer interface {
 	// 菜单与接口字典
 	GetSysMenuTree(context.Context, *EmptyRequest) (*GetSysMenuTreeResponse, error)
 	ListSysApis(context.Context, *EmptyRequest) (*ListSysApisResponse, error)
+	// 数据字典管理
+	ListSysDictTypes(context.Context, *ListSysDictTypesRequest) (*ListSysDictTypesResponse, error)
+	CreateSysDictType(context.Context, *CreateSysDictTypeRequest) (*IdRequest, error)
+	UpdateSysDictType(context.Context, *UpdateSysDictTypeRequest) (*EmptyResponse, error)
+	DeleteSysDictType(context.Context, *IdRequest) (*EmptyResponse, error)
+	ListSysDictData(context.Context, *ListSysDictDataRequest) (*ListSysDictDataResponse, error)
+	CreateSysDictData(context.Context, *CreateSysDictDataRequest) (*IdRequest, error)
+	UpdateSysDictData(context.Context, *UpdateSysDictDataRequest) (*EmptyResponse, error)
+	DeleteSysDictData(context.Context, *IdRequest) (*EmptyResponse, error)
+	GetDictDataByType(context.Context, *GetDictDataByTypeRequest) (*GetDictDataByTypeResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -314,6 +433,33 @@ func (UnimplementedUserServer) GetSysMenuTree(context.Context, *EmptyRequest) (*
 }
 func (UnimplementedUserServer) ListSysApis(context.Context, *EmptyRequest) (*ListSysApisResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSysApis not implemented")
+}
+func (UnimplementedUserServer) ListSysDictTypes(context.Context, *ListSysDictTypesRequest) (*ListSysDictTypesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysDictTypes not implemented")
+}
+func (UnimplementedUserServer) CreateSysDictType(context.Context, *CreateSysDictTypeRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysDictType not implemented")
+}
+func (UnimplementedUserServer) UpdateSysDictType(context.Context, *UpdateSysDictTypeRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysDictType not implemented")
+}
+func (UnimplementedUserServer) DeleteSysDictType(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysDictType not implemented")
+}
+func (UnimplementedUserServer) ListSysDictData(context.Context, *ListSysDictDataRequest) (*ListSysDictDataResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysDictData not implemented")
+}
+func (UnimplementedUserServer) CreateSysDictData(context.Context, *CreateSysDictDataRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysDictData not implemented")
+}
+func (UnimplementedUserServer) UpdateSysDictData(context.Context, *UpdateSysDictDataRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysDictData not implemented")
+}
+func (UnimplementedUserServer) DeleteSysDictData(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysDictData not implemented")
+}
+func (UnimplementedUserServer) GetDictDataByType(context.Context, *GetDictDataByTypeRequest) (*GetDictDataByTypeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDictDataByType not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -624,6 +770,168 @@ func _User_ListSysApis_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListSysDictTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysDictTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysDictTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysDictTypes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysDictTypes(ctx, req.(*ListSysDictTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysDictType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysDictTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysDictType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysDictType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysDictType(ctx, req.(*CreateSysDictTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysDictType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysDictTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysDictType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysDictType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysDictType(ctx, req.(*UpdateSysDictTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysDictType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysDictType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysDictType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysDictType(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListSysDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysDictDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysDictData(ctx, req.(*ListSysDictDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysDictDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysDictData(ctx, req.(*CreateSysDictDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysDictDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysDictData(ctx, req.(*UpdateSysDictDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysDictData(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetDictDataByType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictDataByTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetDictDataByType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetDictDataByType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetDictDataByType(ctx, req.(*GetDictDataByTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -694,6 +1002,42 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSysApis",
 			Handler:    _User_ListSysApis_Handler,
+		},
+		{
+			MethodName: "ListSysDictTypes",
+			Handler:    _User_ListSysDictTypes_Handler,
+		},
+		{
+			MethodName: "CreateSysDictType",
+			Handler:    _User_CreateSysDictType_Handler,
+		},
+		{
+			MethodName: "UpdateSysDictType",
+			Handler:    _User_UpdateSysDictType_Handler,
+		},
+		{
+			MethodName: "DeleteSysDictType",
+			Handler:    _User_DeleteSysDictType_Handler,
+		},
+		{
+			MethodName: "ListSysDictData",
+			Handler:    _User_ListSysDictData_Handler,
+		},
+		{
+			MethodName: "CreateSysDictData",
+			Handler:    _User_CreateSysDictData_Handler,
+		},
+		{
+			MethodName: "UpdateSysDictData",
+			Handler:    _User_UpdateSysDictData_Handler,
+		},
+		{
+			MethodName: "DeleteSysDictData",
+			Handler:    _User_DeleteSysDictData_Handler,
+		},
+		{
+			MethodName: "GetDictDataByType",
+			Handler:    _User_GetDictDataByType_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -35,6 +35,24 @@ export interface AssignRolePermReq {
 	menuIds: Array<number>
 }
 
+export interface CreateSysDictDataReq {
+	dictType: string
+	dictLabel: string
+	dictValue: string
+	dictSort?: number
+	listClass?: string
+	isDefault?: number
+	status?: number
+	remark?: string
+}
+
+export interface CreateSysDictTypeReq {
+	dictName: string
+	dictType: string
+	status?: number
+	remark?: string
+}
+
 export interface CreateSysRoleReq {
 	name: string
 	code: string
@@ -65,12 +83,50 @@ export interface DashboardResp {
 	sysTime: number
 }
 
+export interface GetDictDataByTypeReq {
+}
+export interface GetDictDataByTypeReqParams {
+}
+
+export interface GetDictDataByTypeResp {
+	list: Array<SysDictDataItem>
+}
+
 export interface GetSysMenuTreeResp {
 	list: Array<SysMenuItem>
 }
 
 export interface ListSysApisResp {
 	list: Array<SysApiItem>
+}
+
+export interface ListSysDictDataReq {
+}
+export interface ListSysDictDataReqParams {
+	page: number
+	pageSize: number
+	dictType: string
+	keyword?: string
+	status?: number
+}
+
+export interface ListSysDictDataResp {
+	total: number
+	list: Array<SysDictDataItem>
+}
+
+export interface ListSysDictTypesReq {
+}
+export interface ListSysDictTypesReqParams {
+	page: number
+	pageSize: number
+	keyword?: string
+	status?: number
+}
+
+export interface ListSysDictTypesResp {
+	total: number
+	list: Array<SysDictTypeItem>
 }
 
 export interface ListSysRolesReq {
@@ -149,6 +205,28 @@ export interface SysApiItem {
 	isAutoSync: number
 }
 
+export interface SysDictDataItem {
+	id: number
+	dictType: string
+	dictLabel: string
+	dictValue: string
+	dictSort: number
+	listClass: string
+	isDefault: number
+	status: number
+	remark: string
+	createTime: string
+}
+
+export interface SysDictTypeItem {
+	id: number
+	dictName: string
+	dictType: string
+	status: number
+	remark: string
+	createTime: string
+}
+
 export interface SysEmptyResp {
 	success: boolean
 }
@@ -200,6 +278,26 @@ export interface SysUserItem {
 	roleNames: Array<string>
 	roleIds: Array<number>
 	createTime: string
+}
+
+export interface UpdateSysDictDataReq {
+	id: number
+	dictType: string
+	dictLabel: string
+	dictValue: string
+	dictSort: number
+	listClass?: string
+	isDefault: number
+	status: number
+	remark?: string
+}
+
+export interface UpdateSysDictTypeReq {
+	id: number
+	dictName: string
+	dictType: string
+	status: number
+	remark?: string
 }
 
 export interface UpdateSysRoleReq {

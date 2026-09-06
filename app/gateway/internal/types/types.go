@@ -37,6 +37,24 @@ type AssignRolePermReq struct {
 	MenuIds []int64 `json:"menuIds"`
 }
 
+type CreateSysDictDataReq struct {
+	DictType  string `json:"dictType"`
+	DictLabel string `json:"dictLabel"`
+	DictValue string `json:"dictValue"`
+	DictSort  int32  `json:"dictSort,optional,default=0"`
+	ListClass string `json:"listClass,optional"`
+	IsDefault int32  `json:"isDefault,optional,default=0"`
+	Status    int32  `json:"status,optional,default=1"`
+	Remark    string `json:"remark,optional"`
+}
+
+type CreateSysDictTypeReq struct {
+	DictName string `json:"dictName"`
+	DictType string `json:"dictType"`
+	Status   int32  `json:"status,optional,default=1"`
+	Remark   string `json:"remark,optional"`
+}
+
 type CreateSysRoleReq struct {
 	Name        string `json:"name"`
 	Code        string `json:"code"`
@@ -65,12 +83,45 @@ type DashboardResp struct {
 	SysTime  int64           `json:"sysTime"`
 }
 
+type GetDictDataByTypeReq struct {
+	DictType string `path:"dictType"`
+}
+
+type GetDictDataByTypeResp struct {
+	List []*SysDictDataItem `json:"list"`
+}
+
 type GetSysMenuTreeResp struct {
 	List []*SysMenuItem `json:"list"`
 }
 
 type ListSysApisResp struct {
 	List []*SysApiItem `json:"list"`
+}
+
+type ListSysDictDataReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	DictType string `form:"dictType"`
+	Keyword  string `form:"keyword,optional"`
+	Status   int32  `form:"status,optional"`
+}
+
+type ListSysDictDataResp struct {
+	Total int64              `json:"total"`
+	List  []*SysDictDataItem `json:"list"`
+}
+
+type ListSysDictTypesReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Keyword  string `form:"keyword,optional"`
+	Status   int32  `form:"status,optional"`
+}
+
+type ListSysDictTypesResp struct {
+	Total int64              `json:"total"`
+	List  []*SysDictTypeItem `json:"list"`
 }
 
 type ListSysRolesReq struct {
@@ -142,6 +193,28 @@ type SysApiItem struct {
 	IsAutoSync int32  `json:"isAutoSync"`
 }
 
+type SysDictDataItem struct {
+	Id         int64  `json:"id"`
+	DictType   string `json:"dictType"`
+	DictLabel  string `json:"dictLabel"`
+	DictValue  string `json:"dictValue"`
+	DictSort   int32  `json:"dictSort"`
+	ListClass  string `json:"listClass"`
+	IsDefault  int32  `json:"isDefault"`
+	Status     int32  `json:"status"`
+	Remark     string `json:"remark"`
+	CreateTime string `json:"createTime"`
+}
+
+type SysDictTypeItem struct {
+	Id         int64  `json:"id"`
+	DictName   string `json:"dictName"`
+	DictType   string `json:"dictType"`
+	Status     int32  `json:"status"`
+	Remark     string `json:"remark"`
+	CreateTime string `json:"createTime"`
+}
+
 type SysEmptyResp struct {
 	Success bool `json:"success"`
 }
@@ -192,6 +265,26 @@ type SysUserItem struct {
 	RoleNames  []string `json:"roleNames"`
 	RoleIds    []int64  `json:"roleIds"`
 	CreateTime string   `json:"createTime"`
+}
+
+type UpdateSysDictDataReq struct {
+	Id        int64  `json:"id"`
+	DictType  string `json:"dictType"`
+	DictLabel string `json:"dictLabel"`
+	DictValue string `json:"dictValue"`
+	DictSort  int32  `json:"dictSort"`
+	ListClass string `json:"listClass,optional"`
+	IsDefault int32  `json:"isDefault"`
+	Status    int32  `json:"status"`
+	Remark    string `json:"remark,optional"`
+}
+
+type UpdateSysDictTypeReq struct {
+	Id       int64  `json:"id"`
+	DictName string `json:"dictName"`
+	DictType string `json:"dictType"`
+	Status   int32  `json:"status"`
+	Remark   string `json:"remark,optional"`
 }
 
 type UpdateSysRoleReq struct {

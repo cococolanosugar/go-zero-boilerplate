@@ -14,32 +14,44 @@ import (
 )
 
 type (
-	AdminLoginRequest      = pb.AdminLoginRequest
-	AdminLoginResponse     = pb.AdminLoginResponse
-	AdminProfileResponse   = pb.AdminProfileResponse
-	AssignRolePermRequest  = pb.AssignRolePermRequest
-	CreateSysRoleRequest   = pb.CreateSysRoleRequest
-	CreateSysUserRequest   = pb.CreateSysUserRequest
-	EmptyRequest           = pb.EmptyRequest
-	EmptyResponse          = pb.EmptyResponse
-	GetSysMenuTreeResponse = pb.GetSysMenuTreeResponse
-	IdRequest              = pb.IdRequest
-	ListSysApisResponse    = pb.ListSysApisResponse
-	ListSysRolesRequest    = pb.ListSysRolesRequest
-	ListSysRolesResponse   = pb.ListSysRolesResponse
-	ListSysUsersRequest    = pb.ListSysUsersRequest
-	ListSysUsersResponse   = pb.ListSysUsersResponse
-	LoginRequest           = pb.LoginRequest
-	LoginResponse          = pb.LoginResponse
-	MenuItem               = pb.MenuItem
-	RegisterRequest        = pb.RegisterRequest
-	RegisterResponse       = pb.RegisterResponse
-	SysApiItem             = pb.SysApiItem
-	SysRoleItem            = pb.SysRoleItem
-	SysUserItem            = pb.SysUserItem
-	UpdateSysRoleRequest   = pb.UpdateSysRoleRequest
-	UpdateSysUserRequest   = pb.UpdateSysUserRequest
-	UserInfoResponse       = pb.UserInfoResponse
+	AdminLoginRequest         = pb.AdminLoginRequest
+	AdminLoginResponse        = pb.AdminLoginResponse
+	AdminProfileResponse      = pb.AdminProfileResponse
+	AssignRolePermRequest     = pb.AssignRolePermRequest
+	CreateSysDictDataRequest  = pb.CreateSysDictDataRequest
+	CreateSysDictTypeRequest  = pb.CreateSysDictTypeRequest
+	CreateSysRoleRequest      = pb.CreateSysRoleRequest
+	CreateSysUserRequest      = pb.CreateSysUserRequest
+	EmptyRequest              = pb.EmptyRequest
+	EmptyResponse             = pb.EmptyResponse
+	GetDictDataByTypeRequest  = pb.GetDictDataByTypeRequest
+	GetDictDataByTypeResponse = pb.GetDictDataByTypeResponse
+	GetSysMenuTreeResponse    = pb.GetSysMenuTreeResponse
+	IdRequest                 = pb.IdRequest
+	ListSysApisResponse       = pb.ListSysApisResponse
+	ListSysDictDataRequest    = pb.ListSysDictDataRequest
+	ListSysDictDataResponse   = pb.ListSysDictDataResponse
+	ListSysDictTypesRequest   = pb.ListSysDictTypesRequest
+	ListSysDictTypesResponse  = pb.ListSysDictTypesResponse
+	ListSysRolesRequest       = pb.ListSysRolesRequest
+	ListSysRolesResponse      = pb.ListSysRolesResponse
+	ListSysUsersRequest       = pb.ListSysUsersRequest
+	ListSysUsersResponse      = pb.ListSysUsersResponse
+	LoginRequest              = pb.LoginRequest
+	LoginResponse             = pb.LoginResponse
+	MenuItem                  = pb.MenuItem
+	RegisterRequest           = pb.RegisterRequest
+	RegisterResponse          = pb.RegisterResponse
+	SysApiItem                = pb.SysApiItem
+	SysDictDataItem           = pb.SysDictDataItem
+	SysDictTypeItem           = pb.SysDictTypeItem
+	SysRoleItem               = pb.SysRoleItem
+	SysUserItem               = pb.SysUserItem
+	UpdateSysDictDataRequest  = pb.UpdateSysDictDataRequest
+	UpdateSysDictTypeRequest  = pb.UpdateSysDictTypeRequest
+	UpdateSysRoleRequest      = pb.UpdateSysRoleRequest
+	UpdateSysUserRequest      = pb.UpdateSysUserRequest
+	UserInfoResponse          = pb.UserInfoResponse
 
 	User interface {
 		// 原有业务接口
@@ -63,6 +75,16 @@ type (
 		// 菜单与接口字典
 		GetSysMenuTree(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetSysMenuTreeResponse, error)
 		ListSysApis(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ListSysApisResponse, error)
+		// 数据字典管理
+		ListSysDictTypes(ctx context.Context, in *ListSysDictTypesRequest, opts ...grpc.CallOption) (*ListSysDictTypesResponse, error)
+		CreateSysDictType(ctx context.Context, in *CreateSysDictTypeRequest, opts ...grpc.CallOption) (*IdRequest, error)
+		UpdateSysDictType(ctx context.Context, in *UpdateSysDictTypeRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		DeleteSysDictType(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		ListSysDictData(ctx context.Context, in *ListSysDictDataRequest, opts ...grpc.CallOption) (*ListSysDictDataResponse, error)
+		CreateSysDictData(ctx context.Context, in *CreateSysDictDataRequest, opts ...grpc.CallOption) (*IdRequest, error)
+		UpdateSysDictData(ctx context.Context, in *UpdateSysDictDataRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		DeleteSysDictData(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		GetDictDataByType(ctx context.Context, in *GetDictDataByTypeRequest, opts ...grpc.CallOption) (*GetDictDataByTypeResponse, error)
 	}
 
 	defaultUser struct {
@@ -159,4 +181,50 @@ func (m *defaultUser) GetSysMenuTree(ctx context.Context, in *EmptyRequest, opts
 func (m *defaultUser) ListSysApis(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ListSysApisResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.ListSysApis(ctx, in, opts...)
+}
+
+// 数据字典管理
+func (m *defaultUser) ListSysDictTypes(ctx context.Context, in *ListSysDictTypesRequest, opts ...grpc.CallOption) (*ListSysDictTypesResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysDictTypes(ctx, in, opts...)
+}
+
+func (m *defaultUser) CreateSysDictType(ctx context.Context, in *CreateSysDictTypeRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CreateSysDictType(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdateSysDictType(ctx context.Context, in *UpdateSysDictTypeRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdateSysDictType(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteSysDictType(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.DeleteSysDictType(ctx, in, opts...)
+}
+
+func (m *defaultUser) ListSysDictData(ctx context.Context, in *ListSysDictDataRequest, opts ...grpc.CallOption) (*ListSysDictDataResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysDictData(ctx, in, opts...)
+}
+
+func (m *defaultUser) CreateSysDictData(ctx context.Context, in *CreateSysDictDataRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CreateSysDictData(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdateSysDictData(ctx context.Context, in *UpdateSysDictDataRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdateSysDictData(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteSysDictData(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.DeleteSysDictData(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetDictDataByType(ctx context.Context, in *GetDictDataByTypeRequest, opts ...grpc.CallOption) (*GetDictDataByTypeResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetDictDataByType(ctx, in, opts...)
 }

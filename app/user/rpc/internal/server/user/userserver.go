@@ -107,3 +107,49 @@ func (s *UserServer) ListSysApis(ctx context.Context, in *pb.EmptyRequest) (*pb.
 	l := userlogic.NewListSysApisLogic(ctx, s.svcCtx)
 	return l.ListSysApis(in)
 }
+
+// 数据字典管理
+func (s *UserServer) ListSysDictTypes(ctx context.Context, in *pb.ListSysDictTypesRequest) (*pb.ListSysDictTypesResponse, error) {
+	l := userlogic.NewListSysDictTypesLogic(ctx, s.svcCtx)
+	return l.ListSysDictTypes(in)
+}
+
+func (s *UserServer) CreateSysDictType(ctx context.Context, in *pb.CreateSysDictTypeRequest) (*pb.IdRequest, error) {
+	l := userlogic.NewCreateSysDictTypeLogic(ctx, s.svcCtx)
+	return l.CreateSysDictType(in)
+}
+
+func (s *UserServer) UpdateSysDictType(ctx context.Context, in *pb.UpdateSysDictTypeRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdateSysDictTypeLogic(ctx, s.svcCtx)
+	return l.UpdateSysDictType(in)
+}
+
+func (s *UserServer) DeleteSysDictType(ctx context.Context, in *pb.IdRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewDeleteSysDictTypeLogic(ctx, s.svcCtx)
+	return l.DeleteSysDictType(in)
+}
+
+func (s *UserServer) ListSysDictData(ctx context.Context, in *pb.ListSysDictDataRequest) (*pb.ListSysDictDataResponse, error) {
+	l := userlogic.NewListSysDictDataLogic(ctx, s.svcCtx)
+	return l.ListSysDictData(in)
+}
+
+func (s *UserServer) CreateSysDictData(ctx context.Context, in *pb.CreateSysDictDataRequest) (*pb.IdRequest, error) {
+	l := userlogic.NewCreateSysDictDataLogic(ctx, s.svcCtx)
+	return l.CreateSysDictData(in)
+}
+
+func (s *UserServer) UpdateSysDictData(ctx context.Context, in *pb.UpdateSysDictDataRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdateSysDictDataLogic(ctx, s.svcCtx)
+	return l.UpdateSysDictData(in)
+}
+
+func (s *UserServer) DeleteSysDictData(ctx context.Context, in *pb.IdRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewDeleteSysDictDataLogic(ctx, s.svcCtx)
+	return l.DeleteSysDictData(in)
+}
+
+func (s *UserServer) GetDictDataByType(ctx context.Context, in *pb.GetDictDataByTypeRequest) (*pb.GetDictDataByTypeResponse, error) {
+	l := userlogic.NewGetDictDataByTypeLogic(ctx, s.svcCtx)
+	return l.GetDictDataByType(in)
+}

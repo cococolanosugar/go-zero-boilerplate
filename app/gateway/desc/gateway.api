@@ -10,3 +10,4 @@ info (
 import "user.api"
 import "order.api"
 import "system.api"
+import "dict.api"

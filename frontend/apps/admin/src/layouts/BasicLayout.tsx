@@ -22,6 +22,7 @@ import {
   SafetyCertificateOutlined,
   MenuOutlined,
   ApiOutlined,
+  BookOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
 import { setToken, type SysMenuItem } from "@zero/api";
@@ -45,6 +46,8 @@ const getIcon = (iconName?: string) => {
       return <MenuOutlined />;
     case "ApiOutlined":
       return <ApiOutlined />;
+    case "BookOutlined":
+      return <BookOutlined />;
     default:
       return <AppstoreOutlined />;
   }
@@ -92,6 +95,11 @@ const defaultRouteConfig = {
           path: "/system/apis",
           name: "接口字典",
           icon: <ApiOutlined />,
+        },
+        {
+          path: "/system/dicts",
+          name: "数据字典",
+          icon: <BookOutlined />,
         },
       ],
     },

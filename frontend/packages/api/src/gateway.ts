@@ -3,6 +3,78 @@ import * as components from "./gatewayComponents"
 export * from "./gatewayComponents"
 
 /**
+ * @description "获取字典数据项列表"
+ * @param params
+ */
+export function listSysDictData(params: components.ListSysDictDataReqParams) {
+	return webapi.get<components.ListSysDictDataResp>(`/api/v1/system/dict/data`, params)
+}
+
+/**
+ * @description "创建字典数据项"
+ * @param req
+ */
+export function createSysDictData(req: components.CreateSysDictDataReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/system/dict/data`, req)
+}
+
+/**
+ * @description "更新字典数据项"
+ * @param req
+ */
+export function updateSysDictData(req: components.UpdateSysDictDataReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/system/dict/data`, req)
+}
+
+/**
+ * @description "删除字典数据项"
+ * @param params
+ */
+export function deleteSysDictData(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/system/dict/data/${id}`, params)
+}
+
+/**
+ * @description "根据字典类型查询数据项列表"
+ * @param params
+ */
+export function getDictDataByType(params: components.GetDictDataByTypeReqParams, dictType: string) {
+	return webapi.get<components.GetDictDataByTypeResp>(`/api/v1/system/dict/data/type/${dictType}`, params)
+}
+
+/**
+ * @description "获取字典类型列表"
+ * @param params
+ */
+export function listSysDictTypes(params: components.ListSysDictTypesReqParams) {
+	return webapi.get<components.ListSysDictTypesResp>(`/api/v1/system/dict/types`, params)
+}
+
+/**
+ * @description "创建字典类型"
+ * @param req
+ */
+export function createSysDictType(req: components.CreateSysDictTypeReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/system/dict/types`, req)
+}
+
+/**
+ * @description "更新字典类型"
+ * @param req
+ */
+export function updateSysDictType(req: components.UpdateSysDictTypeReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/system/dict/types`, req)
+}
+
+/**
+ * @description "删除字典类型"
+ * @param params
+ */
+export function deleteSysDictType(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/system/dict/types/${id}`, params)
+}
+
+/**
  * @description "获取大盘聚合信息（mr.Finish 内网并发拉取微服务）"
  * @param params
  */

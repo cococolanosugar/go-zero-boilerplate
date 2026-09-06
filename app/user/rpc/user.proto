@@ -191,6 +191,103 @@ message ListSysApisResponse {
   repeated SysApiItem list = 1;
 }
 
+// -------------------------------------------------------------
+// 数据字典 (Data Dictionary)
+// -------------------------------------------------------------
+
+message SysDictTypeItem {
+  int64 id = 1;
+  string dictName = 2;
+  string dictType = 3;
+  int32 status = 4;
+  string remark = 5;
+  string createTime = 6;
+}
+
+message ListSysDictTypesRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string keyword = 3;
+  int32 status = 4;
+}
+
+message ListSysDictTypesResponse {
+  int64 total = 1;
+  repeated SysDictTypeItem list = 2;
+}
+
+message CreateSysDictTypeRequest {
+  string dictName = 1;
+  string dictType = 2;
+  int32 status = 3;
+  string remark = 4;
+}
+
+message UpdateSysDictTypeRequest {
+  int64 id = 1;
+  string dictName = 2;
+  string dictType = 3;
+  int32 status = 4;
+  string remark = 5;
+}
+
+message SysDictDataItem {
+  int64 id = 1;
+  string dictType = 2;
+  string dictLabel = 3;
+  string dictValue = 4;
+  int32 dictSort = 5;
+  string listClass = 6;
+  int32 isDefault = 7;
+  int32 status = 8;
+  string remark = 9;
+  string createTime = 10;
+}
+
+message ListSysDictDataRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string dictType = 3;
+  string keyword = 4;
+  int32 status = 5;
+}
+
+message ListSysDictDataResponse {
+  int64 total = 1;
+  repeated SysDictDataItem list = 2;
+}
+
+message CreateSysDictDataRequest {
+  string dictType = 1;
+  string dictLabel = 2;
+  string dictValue = 3;
+  int32 dictSort = 4;
+  string listClass = 5;
+  int32 isDefault = 6;
+  int32 status = 7;
+  string remark = 8;
+}
+
+message UpdateSysDictDataRequest {
+  int64 id = 1;
+  string dictType = 2;
+  string dictLabel = 3;
+  string dictValue = 4;
+  int32 dictSort = 5;
+  string listClass = 6;
+  int32 isDefault = 7;
+  int32 status = 8;
+  string remark = 9;
+}
+
+message GetDictDataByTypeRequest {
+  string dictType = 1;
+}
+
+message GetDictDataByTypeResponse {
+  repeated SysDictDataItem list = 1;
+}
+
 service User {
   // 原有业务接口
   rpc GetUserInfo(IdRequest) returns (UserInfoResponse);
@@ -217,4 +314,16 @@ service User {
   // 菜单与接口字典
   rpc GetSysMenuTree(EmptyRequest) returns (GetSysMenuTreeResponse);
   rpc ListSysApis(EmptyRequest) returns (ListSysApisResponse);
+
+  // 数据字典管理
+  rpc ListSysDictTypes(ListSysDictTypesRequest) returns (ListSysDictTypesResponse);
+  rpc CreateSysDictType(CreateSysDictTypeRequest) returns (IdRequest);
+  rpc UpdateSysDictType(UpdateSysDictTypeRequest) returns (EmptyResponse);
+  rpc DeleteSysDictType(IdRequest) returns (EmptyResponse);
+
+  rpc ListSysDictData(ListSysDictDataRequest) returns (ListSysDictDataResponse);
+  rpc CreateSysDictData(CreateSysDictDataRequest) returns (IdRequest);
+  rpc UpdateSysDictData(UpdateSysDictDataRequest) returns (EmptyResponse);
+  rpc DeleteSysDictData(IdRequest) returns (EmptyResponse);
+  rpc GetDictDataByType(GetDictDataByTypeRequest) returns (GetDictDataByTypeResponse);
 }

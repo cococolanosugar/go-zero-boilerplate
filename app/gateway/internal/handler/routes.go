@@ -6,6 +6,7 @@ package handler
 import (
 	"net/http"
 
+	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
 	order "go-zero-boilerplate/app/gateway/internal/handler/order"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
 	user "go-zero-boilerplate/app/gateway/internal/handler/user"
@@ -15,6 +16,67 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取字典数据项列表
+				Method:  http.MethodGet,
+				Path:    "/data",
+				Handler: dict.ListSysDictDataHandler(serverCtx),
+			},
+			{
+				// 创建字典数据项
+				Method:  http.MethodPost,
+				Path:    "/data",
+				Handler: dict.CreateSysDictDataHandler(serverCtx),
+			},
+			{
+				// 更新字典数据项
+				Method:  http.MethodPut,
+				Path:    "/data",
+				Handler: dict.UpdateSysDictDataHandler(serverCtx),
+			},
+			{
+				// 删除字典数据项
+				Method:  http.MethodDelete,
+				Path:    "/data/:id",
+				Handler: dict.DeleteSysDictDataHandler(serverCtx),
+			},
+			{
+				// 根据字典类型查询数据项列表
+				Method:  http.MethodGet,
+				Path:    "/data/type/:dictType",
+				Handler: dict.GetDictDataByTypeHandler(serverCtx),
+			},
+			{
+				// 获取字典类型列表
+				Method:  http.MethodGet,
+				Path:    "/types",
+				Handler: dict.ListSysDictTypesHandler(serverCtx),
+			},
+			{
+				// 创建字典类型
+				Method:  http.MethodPost,
+				Path:    "/types",
+				Handler: dict.CreateSysDictTypeHandler(serverCtx),
+			},
+			{
+				// 更新字典类型
+				Method:  http.MethodPut,
+				Path:    "/types",
+				Handler: dict.UpdateSysDictTypeHandler(serverCtx),
+			},
+			{
+				// 删除字典类型
+				Method:  http.MethodDelete,
+				Path:    "/types/:id",
+				Handler: dict.DeleteSysDictTypeHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/system/dict"),
+	)
+
 	server.AddRoutes(
 		[]rest.Route{
 			{

@@ -1,0 +1,136 @@
+syntax = "v1"
+
+info (
+	title:   "System Dict API"
+	desc:    "企业级数据字典管理契约"
+	author:  "antigravity"
+	version: "v1"
+)
+
+type (
+	SysDictTypeItem {
+		Id         int64  `json:"id"`
+		DictName   string `json:"dictName"`
+		DictType   string `json:"dictType"`
+		Status     int32  `json:"status"`
+		Remark     string `json:"remark"`
+		CreateTime string `json:"createTime"`
+	}
+	ListSysDictTypesReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Keyword  string `form:"keyword,optional"`
+		Status   int32  `form:"status,optional"`
+	}
+	ListSysDictTypesResp {
+		Total int64              `json:"total"`
+		List  []*SysDictTypeItem `json:"list"`
+	}
+	CreateSysDictTypeReq {
+		DictName string `json:"dictName"`
+		DictType string `json:"dictType"`
+		Status   int32  `json:"status,optional,default=1"`
+		Remark   string `json:"remark,optional"`
+	}
+	UpdateSysDictTypeReq {
+		Id       int64  `json:"id"`
+		DictName string `json:"dictName"`
+		DictType string `json:"dictType"`
+		Status   int32  `json:"status"`
+		Remark   string `json:"remark,optional"`
+	}
+
+	SysDictDataItem {
+		Id         int64  `json:"id"`
+		DictType   string `json:"dictType"`
+		DictLabel  string `json:"dictLabel"`
+		DictValue  string `json:"dictValue"`
+		DictSort   int32  `json:"dictSort"`
+		ListClass  string `json:"listClass"`
+		IsDefault  int32  `json:"isDefault"`
+		Status     int32  `json:"status"`
+		Remark     string `json:"remark"`
+		CreateTime string `json:"createTime"`
+	}
+	ListSysDictDataReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		DictType string `form:"dictType"`
+		Keyword  string `form:"keyword,optional"`
+		Status   int32  `form:"status,optional"`
+	}
+	ListSysDictDataResp {
+		Total int64              `json:"total"`
+		List  []*SysDictDataItem `json:"list"`
+	}
+	CreateSysDictDataReq {
+		DictType  string `json:"dictType"`
+		DictLabel string `json:"dictLabel"`
+		DictValue string `json:"dictValue"`
+		DictSort  int32  `json:"dictSort,optional,default=0"`
+		ListClass string `json:"listClass,optional"`
+		IsDefault int32  `json:"isDefault,optional,default=0"`
+		Status    int32  `json:"status,optional,default=1"`
+		Remark    string `json:"remark,optional"`
+	}
+	UpdateSysDictDataReq {
+		Id        int64  `json:"id"`
+		DictType  string `json:"dictType"`
+		DictLabel string `json:"dictLabel"`
+		DictValue string `json:"dictValue"`
+		DictSort  int32  `json:"dictSort"`
+		ListClass string `json:"listClass,optional"`
+		IsDefault int32  `json:"isDefault"`
+		Status    int32  `json:"status"`
+		Remark    string `json:"remark,optional"`
+	}
+	GetDictDataByTypeReq {
+		DictType string `path:"dictType"`
+	}
+	GetDictDataByTypeResp {
+		List []*SysDictDataItem `json:"list"`
+	}
+)
+
+@server (
+	prefix: /api/v1/system/dict
+	group:  dict
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取字典类型列表"
+	@handler ListSysDictTypes
+	get /types (ListSysDictTypesReq) returns (ListSysDictTypesResp)
+
+	@doc "创建字典类型"
+	@handler CreateSysDictType
+	post /types (CreateSysDictTypeReq) returns (SysIdResp)
+
+	@doc "更新字典类型"
+	@handler UpdateSysDictType
+	put /types (UpdateSysDictTypeReq) returns (SysEmptyResp)
+
+	@doc "删除字典类型"
+	@handler DeleteSysDictType
+	delete /types/:id (SysIdReq) returns (SysEmptyResp)
+
+	@doc "获取字典数据项列表"
+	@handler ListSysDictData
+	get /data (ListSysDictDataReq) returns (ListSysDictDataResp)
+
+	@doc "创建字典数据项"
+	@handler CreateSysDictData
+	post /data (CreateSysDictDataReq) returns (SysIdResp)
+
+	@doc "更新字典数据项"
+	@handler UpdateSysDictData
+	put /data (UpdateSysDictDataReq) returns (SysEmptyResp)
+
+	@doc "删除字典数据项"
+	@handler DeleteSysDictData
+	delete /data/:id (SysIdReq) returns (SysEmptyResp)
+
+	@doc "根据字典类型查询数据项列表"
+	@handler GetDictDataByType
+	get /data/type/:dictType (GetDictDataByTypeReq) returns (GetDictDataByTypeResp)
+}

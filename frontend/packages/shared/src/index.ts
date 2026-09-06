@@ -31,4 +31,14 @@ export const PERMISSIONS = {
   // 接口字典
   API_QUERY: 'system:api:query',
   API_SYNC: 'system:api:sync',
+
+  // 数据字典
+  DICT_VIEW: 'system:dict:view',
+  DICT_TYPE_ADD: 'system:dict:type:add',
+  DICT_TYPE_EDIT: 'system:dict:type:edit',
+  DICT_TYPE_DELETE: 'system:dict:type:delete',
+  DICT_DATA_ADD: 'system:dict:data:add',
+  DICT_DATA_EDIT: 'system:dict:data:edit',
+  DICT_DATA_DELETE: 'system:dict:data:delete',
 } as const;
+

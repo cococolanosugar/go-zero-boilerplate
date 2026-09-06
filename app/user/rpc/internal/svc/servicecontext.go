@@ -20,6 +20,8 @@ type ServiceContext struct {
 	SysMenuApiModel  model.SysMenuApiModel
 	SysRoleApiModel  model.SysRoleApiModel
 	SysDeptModel     model.SysDeptModel
+	SysDictTypeModel model.SysDictTypeModel
+	SysDictDataModel model.SysDictDataModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -37,5 +39,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		SysMenuApiModel:  model.NewSysMenuApiModel(conn, c.Cache),
 		SysRoleApiModel:  model.NewSysRoleApiModel(conn, c.Cache),
 		SysDeptModel:     model.NewSysDeptModel(conn, c.Cache),
+		SysDictTypeModel: model.NewSysDictTypeModel(conn, c.Cache),
+		SysDictDataModel: model.NewSysDictDataModel(conn, c.Cache),
 	}
 }

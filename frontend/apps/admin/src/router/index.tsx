@@ -12,6 +12,7 @@ import {
   RolesPage as SysRolesPage,
   MenusPage as SysMenusPage,
   ApisPage as SysApisPage,
+  DictsPage as SysDictsPage,
 } from "../pages/System";
 
 export const AppRouter: React.FC = () => {
@@ -36,6 +37,7 @@ export const AppRouter: React.FC = () => {
                 <Route path="roles" element={<SysRolesPage />} />
                 <Route path="menus" element={<SysMenusPage />} />
                 <Route path="apis" element={<SysApisPage />} />
+                <Route path="dicts" element={<SysDictsPage />} />
               </Route>
             </Route>
           </Route>

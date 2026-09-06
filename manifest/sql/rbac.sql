@@ -130,6 +130,37 @@ CREATE TABLE IF NOT EXISTS `sys_role_dept` (
     UNIQUE KEY `idx_role_dept` (`role_id`, `dept_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色自定义数据范围部门关联表';
 
+-- 8. 字典类型表
+CREATE TABLE IF NOT EXISTS `sys_dict_type` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '字典类型ID',
+    `dict_name` varchar(100) NOT NULL COMMENT '字典名称',
+    `dict_type` varchar(100) NOT NULL COMMENT '字典类型标识',
+    `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态 (1:正常 0:停用)',
+    `remark` varchar(500) NOT NULL DEFAULT '' COMMENT '备注说明',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_dict_type` (`dict_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统数据字典类型表';
+
+-- 9. 字典数据项表
+CREATE TABLE IF NOT EXISTS `sys_dict_data` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '字典编码ID',
+    `dict_type` varchar(100) NOT NULL COMMENT '字典类型标识',
+    `dict_label` varchar(100) NOT NULL COMMENT '字典标签',
+    `dict_value` varchar(100) NOT NULL COMMENT '字典键值',
+    `dict_sort` int NOT NULL DEFAULT 0 COMMENT '显示排序',
+    `list_class` varchar(100) NOT NULL DEFAULT '' COMMENT '表格回显样式(badge/tag)',
+    `is_default` tinyint NOT NULL DEFAULT 0 COMMENT '是否默认 (1:是 0:否)',
+    `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态 (1:正常 0:停用)',
+    `remark` varchar(500) NOT NULL DEFAULT '' COMMENT '备注说明',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_dict_type` (`dict_type`),
+    UNIQUE KEY `idx_type_value` (`dict_type`, `dict_value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统数据字典数据项表';
+
 -- ====================================================================
 -- 初始基础数据种子 (Default Seeds)
 -- ====================================================================
@@ -219,7 +250,21 @@ INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`,
 VALUES (34, 3, '接口字典', 2, '/system/apis', 'System/Apis', 'system:api:view', 'ApiOutlined', 4)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
--- 3.5 个人中心
+-- 3.5 数据字典管理及按钮
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
+VALUES (35, 3, '数据字典', 2, '/system/dicts', 'System/Dicts', 'system:dict:view', 'BookOutlined', 5)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
+VALUES (351, 35, '新增类型', 3, '', '', 'system:dict:type:add', '', 1),
+       (352, 35, '编辑类型', 3, '', '', 'system:dict:type:edit', '', 2),
+       (353, 35, '删除类型', 3, '', '', 'system:dict:type:delete', '', 3),
+       (354, 35, '新增数据', 3, '', '', 'system:dict:data:add', '', 4),
+       (355, 35, '编辑数据', 3, '', '', 'system:dict:data:edit', '', 5),
+       (356, 35, '删除数据', 3, '', '', 'system:dict:data:delete', '', 6)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
+
+-- 4. 个人中心
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
 VALUES (4, 0, '个人中心', 2, '/users', 'Users', 'user:profile:view', 'UserOutlined', 4)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
@@ -235,7 +280,16 @@ VALUES (1, 'user', '获取当前用户信息', '/api/v1/user/info', 'GET'),
        (7, 'system', '角色列表', '/api/v1/system/roles', 'GET'),
        (8, 'system', '角色授权', '/api/v1/system/roles/permissions', 'POST'),
        (9, 'system', '菜单树查询', '/api/v1/system/menus', 'GET'),
-       (10, 'system', '接口字典查询', '/api/v1/system/apis', 'GET')
+       (10, 'system', '接口字典查询', '/api/v1/system/apis', 'GET'),
+       (11, 'dict', '获取字典类型列表', '/api/v1/system/dict/types', 'GET'),
+       (12, 'dict', '创建字典类型', '/api/v1/system/dict/types', 'POST'),
+       (13, 'dict', '更新字典类型', '/api/v1/system/dict/types', 'PUT'),
+       (14, 'dict', '删除字典类型', '/api/v1/system/dict/types/:id', 'DELETE'),
+       (15, 'dict', '获取字典数据项列表', '/api/v1/system/dict/data', 'GET'),
+       (16, 'dict', '创建字典数据项', '/api/v1/system/dict/data', 'POST'),
+       (17, 'dict', '更新字典数据项', '/api/v1/system/dict/data', 'PUT'),
+       (18, 'dict', '删除字典数据项', '/api/v1/system/dict/data/:id', 'DELETE'),
+       (19, 'dict', '根据类型查询字典项', '/api/v1/system/dict/data/type/:dictType', 'GET')
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 按钮与 API 初始绑定 (一石二鸟联动)
@@ -248,5 +302,37 @@ VALUES (1, 2),   -- 监控大盘 -> /api/v1/order/dashboard
        (322, 8), -- 分配权限 -> /api/v1/system/roles/permissions POST
        (33, 9),  -- 菜单管理 -> /api/v1/system/menus GET
        (34, 10), -- 接口字典 -> /api/v1/system/apis GET
+       (35, 11), -- 数据字典 -> /api/v1/system/dict/types GET
+       (35, 15), -- 数据字典 -> /api/v1/system/dict/data GET
+       (35, 19), -- 数据字典 -> /api/v1/system/dict/data/type/:dictType GET
+       (351, 12), -- 新增类型 -> /api/v1/system/dict/types POST
+       (352, 13), -- 编辑类型 -> /api/v1/system/dict/types PUT
+       (353, 14), -- 删除类型 -> /api/v1/system/dict/types/:id DELETE
+       (354, 16), -- 新增数据 -> /api/v1/system/dict/data POST
+       (355, 17), -- 编辑数据 -> /api/v1/system/dict/data PUT
+       (356, 18), -- 删除数据 -> /api/v1/system/dict/data/:id DELETE
        (4, 1)    -- 个人中心 -> /api/v1/user/info GET
 ON DUPLICATE KEY UPDATE `api_id` = VALUES(`api_id`);
+
+-- 初始系统数据字典预置数据
+INSERT INTO `sys_dict_type` (`id`, `dict_name`, `dict_type`, `status`, `remark`)
+VALUES (1, '订单交易状态', 'order_status', 1, '商城的通用交易状态流转'),
+       (2, '用户性别', 'sys_user_sex', 1, '性别字典列表'),
+       (3, '系统通用状态', 'sys_common_status', 1, '启用/停用状态'),
+       (4, '通知公告类型', 'sys_notice_type', 1, '通知公告分类')
+ON DUPLICATE KEY UPDATE `dict_name` = VALUES(`dict_name`);
+
+INSERT INTO `sys_dict_data` (`id`, `dict_type`, `dict_label`, `dict_value`, `dict_sort`, `list_class`, `is_default`, `status`, `remark`)
+VALUES (1, 'order_status', '待支付', 'PENDING', 1, 'warning', 1, 1, '等待买家付款'),
+       (2, 'order_status', '已支付', 'PAID', 2, 'success', 0, 1, '买家已付款'),
+       (3, 'order_status', '已发货', 'SHIPPED', 3, 'processing', 0, 1, '商家已发货'),
+       (4, 'order_status', '已完成', 'COMPLETED', 4, 'default', 0, 1, '订单正常完结'),
+       (5, 'order_status', '已退款', 'REFUNDED', 5, 'error', 0, 1, '已原路退款'),
+       (6, 'sys_user_sex', '男', '1', 1, 'blue', 1, 1, '男性'),
+       (7, 'sys_user_sex', '女', '2', 2, 'magenta', 0, 1, '女性'),
+       (8, 'sys_user_sex', '未知', '0', 3, 'default', 0, 1, '未指定性别'),
+       (9, 'sys_common_status', '正常', '1', 1, 'success', 1, 1, '正常启用'),
+       (10, 'sys_common_status', '停用', '0', 2, 'error', 0, 1, '停用禁用'),
+       (11, 'sys_notice_type', '系统通知', '1', 1, 'processing', 1, 1, '系统重要通知'),
+       (12, 'sys_notice_type', '运营公告', '2', 2, 'warning', 0, 1, '平台运营公告')
+ON DUPLICATE KEY UPDATE `dict_label` = VALUES(`dict_label`);
