@@ -142,15 +142,20 @@ go-zero-boilerplate/
     "gitnexus": {
       "command": "gitnexus",
       "args": ["mcp"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
     }
   }
 }
 ```
-* **四大 MCP 核心矩阵**：
+* **五大 MCP 核心矩阵**：
   * **`go-zero` (mcp-zero v1.0.0)**：自动化执行 `goctl` 代码生成、API/RPC 验证、DDL 逆向 Model 与项目分析。
   * **`antd` (v6.6.2)**：毫秒级离线检索 75 个 Ant Design 组件的 Props、Design Tokens、classNames/styles 语义结构与可运行 Demo。
   * **`codegraph` (v1.6.0)**：本地持久化代码知识图谱，向 Agent 提供基于 AST 的符号定义、跨文件依赖与调用链路追踪（减少盲目文件扫描与 Token 消耗）。
   * **`gitnexus` (v1.6.11)**：基于知识图谱的代码全景引擎，专攻**修改影响面分析（Impact Analysis）**，精准回答“修改此方法会导致哪些下游调用链破坏”。
+  * **`chrome-devtools` (chrome-devtools-mcp)**：连接并控制 Chrome 浏览器开发者工具，支持页面检查、Console 错误追踪、网络请求监听与 DOM 自动化调试。
 * **离线模式库与工作流**：本地已持久化缓存 [`.agents/skills/zero-skills/`](file:///D:/work/go-zero-demo/.agents/skills/zero-skills/) 与 [`.ai-context/`](file:///D:/work/go-zero-demo/.ai-context/)。AI Agent 在编写微服务代码时应优先调用此知识库中的最佳实践。
 
 ### 3.6 前端 Ant Design 规范与 CLI 工具使用守则
