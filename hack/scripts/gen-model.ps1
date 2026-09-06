@@ -17,4 +17,14 @@ if ($Table -eq "all" -or $Table -eq "rbac" -or $Table -eq "system") {
     goctl model mysql ddl -src manifest/sql/rbac_schema.sql -dir app/user/model -c --style go_zero
 }
 
+if ($Table -eq "all" -or $Table -eq "dict") {
+    Write-Host "Generating Dict models from manifest/sql/dict_schema.sql..." -ForegroundColor Cyan
+    goctl model mysql ddl -src manifest/sql/dict_schema.sql -dir app/user/model -c --style go_zero
+}
+
+if ($Table -eq "all" -or $Table -eq "log") {
+    Write-Host "Generating Audit Log models from manifest/sql/log_schema.sql..." -ForegroundColor Cyan
+    goctl model mysql ddl -src manifest/sql/log_schema.sql -dir app/user/model -c --style go_zero
+}
+
 Write-Host "Done generating database models!" -ForegroundColor Green
