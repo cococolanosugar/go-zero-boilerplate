@@ -60,13 +60,65 @@ export function genUrl(url: string, params: any) {
 export class ApiError extends Error {
     code: number;
     data?: any;
+    handled?: boolean;
 
     constructor(code: number, message: string, data?: any) {
         super(message);
         this.name = 'ApiError';
         this.code = code;
         this.data = data;
+        this.handled = false;
     }
+}
+
+export interface RequestOptions extends Omit<RequestInit, 'body'> {
+    skipErrorHandler?: boolean;
+    headers?: Record<string, string>;
+    body?: any;
+    [key: string]: any;
+}
+
+export interface RequestContext {
+    url: string;
+    method: string;
+    options: RequestOptions;
+    data?: any;
+}
+
+export type RequestInterceptor = (
+    url: string,
+    options: RequestOptions
+) => { url?: string; options?: RequestOptions } | Promise<{ url?: string; options?: RequestOptions }> | void | Promise<void>;
+
+export type ResponseInterceptor = (
+    response: Response,
+    context: RequestContext
+) => Response | Promise<Response> | void | Promise<void>;
+
+export type ErrorHandler = (error: ApiError, context: RequestContext) => void | Promise<void>;
+
+const requestInterceptors: RequestInterceptor[] = [];
+const responseInterceptors: ResponseInterceptor[] = [];
+let globalErrorHandler: ErrorHandler | null = null;
+
+export function addRequestInterceptor(interceptor: RequestInterceptor) {
+    requestInterceptors.push(interceptor);
+    return () => {
+        const index = requestInterceptors.indexOf(interceptor);
+        if (index > -1) requestInterceptors.splice(index, 1);
+    };
+}
+
+export function addResponseInterceptor(interceptor: ResponseInterceptor) {
+    responseInterceptors.push(interceptor);
+    return () => {
+        const index = responseInterceptors.indexOf(interceptor);
+        if (index > -1) responseInterceptors.splice(index, 1);
+    };
+}
+
+export function setErrorHandler(handler: ErrorHandler | null) {
+    globalErrorHandler = handler;
 }
 
 let authToken: string | null = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
@@ -103,34 +155,69 @@ export function handleUnauthorized() {
 
 export async function request({
     method,
-    url,
+    url: initialUrl,
     data,
     config = {}
 }: {
     method: Method;
     url: string;
     data?: unknown;
-    config?: unknown;
+    config?: RequestOptions;
 }) {
+    let url = initialUrl;
+    let options: RequestOptions = {
+        credentials: 'include',
+        ...config,
+    };
+
     const upperMethod = method.toLocaleUpperCase();
     const isGetOrHead = upperMethod === 'GET' || upperMethod === 'HEAD';
 
     const token = getToken();
     const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(options.headers || {}),
     };
-    if (token) {
+    if (token && !headers['Authorization']) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(url, {
-        method: upperMethod,
-        credentials: 'include',
-        headers,
-        body: isGetOrHead ? undefined : (data ? JSON.stringify(data) : undefined),
-        // @ts-ignore
-        ...config
-    });
+    options.method = upperMethod;
+    options.headers = headers;
+    if (!isGetOrHead && data !== undefined) {
+        options.body = typeof data === 'string' ? data : JSON.stringify(data);
+    }
+
+    // Execute Request Interceptors
+    for (const interceptor of requestInterceptors) {
+        const res = await interceptor(url, options);
+        if (res) {
+            if (res.url) url = res.url;
+            if (res.options) options = res.options;
+        }
+    }
+
+    const context: RequestContext = { url, method: upperMethod, options, data };
+
+    let response: Response;
+    try {
+        response = await fetch(url, options);
+    } catch (networkErr: any) {
+        const apiError = new ApiError(-1, networkErr.message || '网络连接异常或服务未启动', networkErr);
+        if (globalErrorHandler && !options.skipErrorHandler) {
+            try {
+                await globalErrorHandler(apiError, context);
+                apiError.handled = true;
+            } catch (_) {}
+        }
+        throw apiError;
+    }
+
+    // Execute Response Interceptors
+    for (const interceptor of responseInterceptors) {
+        const modifiedResp = await interceptor(response, context);
+        if (modifiedResp) response = modifiedResp;
+    }
 
     if (!response.ok) {
         let errorMsg = `HTTP Error ${response.status}: ${response.statusText}`;
@@ -148,7 +235,15 @@ export async function request({
             handleUnauthorized();
         }
 
-        throw new ApiError(errorCode, errorMsg);
+        const apiError = new ApiError(errorCode, errorMsg);
+        if (globalErrorHandler && !options.skipErrorHandler) {
+            try {
+                await globalErrorHandler(apiError, context);
+                apiError.handled = true;
+            } catch (_) {}
+        }
+
+        throw apiError;
     }
 
     const res = await response.json();
@@ -161,7 +256,14 @@ export async function request({
         if (res.code === 100003) {
             handleUnauthorized();
         }
-        throw new ApiError(res.code, res.msg || `Request failed with code ${res.code}`, res.data);
+        const apiError = new ApiError(res.code, res.msg || `Request failed with code ${res.code}`, res.data);
+        if (globalErrorHandler && !options.skipErrorHandler) {
+            try {
+                await globalErrorHandler(apiError, context);
+                apiError.handled = true;
+            } catch (_) {}
+        }
+        throw apiError;
     }
 
     return res;
@@ -171,7 +273,7 @@ function api<T>(
     method: Method = 'get',
     url: string,
     req?: any,
-    config?: unknown
+    config?: RequestOptions
 ): Promise<T> {
     if (url.match(/:/) || method.match(/get|delete/i)) {
         const queryParams = req ? (req.params || req.forms || req) : undefined;
@@ -179,38 +281,25 @@ function api<T>(
     }
     method = method.toLocaleLowerCase() as Method;
 
-    switch (method) {
-        case 'get':
-            return request({method: 'get', url, data: req, config});
-        case 'delete':
-            return request({method: 'delete', url, data: req, config});
-        case 'put':
-            return request({method: 'put', url, data: req, config});
-        case 'post':
-            return request({method: 'post', url, data: req, config});
-        case 'patch':
-            return request({method: 'patch', url, data: req, config});
-        default:
-            return request({method: 'post', url, data: req, config});
-    }
+    return request({ method, url, data: req, config });
 }
 
 export const webapi = {
-    get<T>(url: string, req?: unknown, config?: unknown): Promise<T> {
+    get<T>(url: string, req?: unknown, config?: RequestOptions): Promise<T> {
         return api<T>('get', url, req, config);
     },
-    delete<T>(url: string, req?: unknown, config?: unknown): Promise<T> {
+    delete<T>(url: string, req?: unknown, config?: RequestOptions): Promise<T> {
         return api<T>('delete', url, req, config);
     },
-    put<T>(url: string, req?: unknown, config?: unknown): Promise<T> {
+    put<T>(url: string, req?: unknown, config?: RequestOptions): Promise<T> {
         return api<T>('put', url, req, config);
     },
-    post<T>(url: string, req?: unknown, config?: unknown): Promise<T> {
+    post<T>(url: string, req?: unknown, config?: RequestOptions): Promise<T> {
         return api<T>('post', url, req, config);
     },
-    patch<T>(url: string, req?: unknown, config?: unknown): Promise<T> {
+    patch<T>(url: string, req?: unknown, config?: RequestOptions): Promise<T> {
         return api<T>('patch', url, req, config);
     }
 };
 
-export default webapi
+export default webapi;

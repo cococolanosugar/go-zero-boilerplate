@@ -26,13 +26,30 @@ import {
   AppstoreOutlined,
   TranslationOutlined,
 } from "@ant-design/icons";
-import { getAdminProfile, getToken, setToken, type AdminProfileResp, type SysMenuItem } from "@zero/api";
+import {
+  setErrorHandler,
+  addRequestInterceptor,
+  getAdminProfile,
+  getToken,
+  setToken,
+  type AdminProfileResp,
+  type SysMenuItem,
+} from "@zero/api";
 import { APP_NAME } from "@zero/shared";
 import { LOCALES, type LocaleKey } from "./locales";
 import { routes as staticRoutes } from "./config/routes";
 import type { AppRouteItem } from "./config/routes.types";
 import { getAccess } from "./access";
 import type { InitialState } from "./contexts/InitialStateContext";
+import { errorHandler, requestErrorConfig } from "./requestErrorConfig";
+
+// 注册 Ant Design Pro 统一网络与错误拦截配置
+setErrorHandler(errorHandler);
+if (requestErrorConfig.requestInterceptors) {
+  requestErrorConfig.requestInterceptors.forEach(addRequestInterceptor);
+}
+
+export const request = requestErrorConfig;
 
 const getIcon = (iconName?: React.ReactNode | string) => {
   if (React.isValidElement(iconName)) return iconName;

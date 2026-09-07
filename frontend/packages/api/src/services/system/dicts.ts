@@ -1,0 +1,40 @@
+import {
+  listSysDictTypes,
+  createSysDictType,
+  updateSysDictType,
+  deleteSysDictType,
+  listSysDictData,
+  createSysDictData,
+  updateSysDictData,
+  deleteSysDictData,
+  getDictDataByType,
+  type ListSysDictTypesReqParams,
+  type ListSysDictTypesResp,
+  type CreateSysDictTypeReq,
+  type UpdateSysDictTypeReq,
+  type ListSysDictDataReqParams,
+  type ListSysDictDataResp,
+  type CreateSysDictDataReq,
+  type UpdateSysDictDataReq,
+  type GetDictDataByTypeReqParams,
+  type GetDictDataByTypeResp,
+  type SysIdReqParams,
+  type SysIdResp,
+  type SysEmptyResp,
+  type SysDictTypeItem,
+  type SysDictDataItem,
+} from "../../gateway";
+
+export const systemDictsApi = {
+  listTypes: listSysDictTypes,
+  createType: createSysDictType,
+  updateType: updateSysDictType,
+  removeType: deleteSysDictType,
+  listData: listSysDictData,
+  createData: createSysDictData,
+  updateData: updateSysDictData,
+  removeData: deleteSysDictData,
+  getDataByType: getDictDataByType,
+};
+
+export default systemDictsApi;

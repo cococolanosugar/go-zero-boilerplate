@@ -8,6 +8,16 @@ import { getInitialState } from "./app";
 import { routes } from "./config/routes";
 import { RouteRenderer } from "./router/RouteRenderer";
 
+import { setPortalAppFeedback } from "./requestErrorConfig";
+
+const FeedbackInitializer: React.FC = () => {
+  const { message, notification } = AntdApp.useApp();
+  React.useEffect(() => {
+    setPortalAppFeedback({ message, notification });
+  }, [message, notification]);
+  return null;
+};
+
 const AppContent: React.FC = () => {
   const { currentConfig } = useLocale();
 
@@ -24,6 +34,7 @@ const AppContent: React.FC = () => {
       }}
     >
       <AntdApp>
+        <FeedbackInitializer />
         <AuthProvider>
           <BrowserRouter>
             <RouteRenderer routes={routes} />

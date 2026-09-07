@@ -20,11 +20,26 @@ import {
   IdcardOutlined,
   TranslationOutlined,
 } from "@ant-design/icons";
-import { getAdminProfile, getToken, type AdminProfileResp } from "@zero/api";
+import {
+  setErrorHandler,
+  addRequestInterceptor,
+  getAdminProfile,
+  getToken,
+  type AdminProfileResp,
+} from "@zero/api";
 import { APP_NAME } from "@zero/shared";
 import { LOCALES, type LocaleKey } from "./locales";
 import { routes as staticRoutes } from "./config/routes";
 import type { PortalInitialState } from "./contexts/InitialStateContext";
+import { portalErrorHandler, portalRequestErrorConfig } from "./requestErrorConfig";
+
+// 注册门户网络错误拦截配置
+setErrorHandler(portalErrorHandler);
+if (portalRequestErrorConfig.requestInterceptors) {
+  portalRequestErrorConfig.requestInterceptors.forEach(addRequestInterceptor);
+}
+
+export const request = portalRequestErrorConfig;
 
 const getIcon = (iconName?: React.ReactNode | string) => {
   if (React.isValidElement(iconName)) return iconName;

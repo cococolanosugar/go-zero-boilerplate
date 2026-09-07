@@ -29,15 +29,11 @@ import {
   type ProColumns,
 } from "@ant-design/pro-components";
 import {
-  listSysRoles,
-  createSysRole,
-  updateSysRole,
-  deleteSysRole,
-  assignRolePermissions,
-  getSysMenuTree,
-  type SysRoleItem,
-  type SysMenuItem,
-} from "@zero/api";
+  systemRolesApi,
+  systemMenusApi,
+  toProTableRequest,
+} from "../../../services";
+import type { SysRoleItem, SysMenuItem } from "@zero/api";
 import { PERMISSIONS } from "@zero/shared";
 import { Access } from "../../../components/Access";
 import { useIntl } from "../../../contexts/LocaleContext";
@@ -94,10 +90,8 @@ export const RolesPage: React.FC = () => {
     setTreeLoading(true);
 
     try {
-      const res = await getSysMenuTree();
+      const res = await systemMenusApi.getTree();
       setMenuTreeData(formatTreeData(res.list || []));
-    } catch (err: any) {
-      message.error("加载菜单权限树失败: " + err.message);
     } finally {
       setTreeLoading(false);
     }
@@ -108,15 +102,13 @@ export const RolesPage: React.FC = () => {
     setAssignLoading(true);
     try {
       const menuIds = checkedKeys.map((k) => Number(k));
-      await assignRolePermissions({
+      await systemRolesApi.assignPermissions({
         roleId: currentRole.id,
         menuIds,
       });
       message.success("角色权限已成功分配并级联同步接口字典！");
       setDrawerVisible(false);
       actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err.message || "权限分配失败");
     } finally {
       setAssignLoading(false);
     }
@@ -133,45 +125,36 @@ export const RolesPage: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    try {
-      await deleteSysRole({}, id);
-      message.success("角色删除成功");
-      actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err.message || "删除失败");
-    }
+    await systemRolesApi.remove({}, id);
+    message.success("角色删除成功");
+    actionRef.current?.reload();
   };
 
   const handleFormSubmit = async (values: any) => {
-    try {
-      if (currentRow) {
-        await updateSysRole({
-          id: currentRow.id,
-          name: values.name,
-          code: values.code,
-          sort: values.sort ?? 0,
-          dataScope: values.dataScope ?? 1,
-          description: values.description || "",
-          status: values.status ?? 1,
-        });
-        message.success("更新角色信息成功");
-      } else {
-        await createSysRole({
-          name: values.name,
-          code: values.code,
-          sort: values.sort ?? 0,
-          dataScope: values.dataScope ?? 1,
-          description: values.description || "",
-        });
-        message.success("创建角色成功");
-      }
-      setModalVisible(false);
-      actionRef.current?.reload();
-      return true;
-    } catch (err: any) {
-      message.error(err.message || "操作失败");
-      return false;
+    if (currentRow) {
+      await systemRolesApi.update({
+        id: currentRow.id,
+        name: values.name,
+        code: values.code,
+        sort: values.sort ?? 0,
+        dataScope: values.dataScope ?? 1,
+        description: values.description || "",
+        status: values.status ?? 1,
+      });
+      message.success("更新角色信息成功");
+    } else {
+      await systemRolesApi.create({
+        name: values.name,
+        code: values.code,
+        sort: values.sort ?? 0,
+        dataScope: values.dataScope ?? 1,
+        description: values.description || "",
+      });
+      message.success("创建角色成功");
     }
+    setModalVisible(false);
+    actionRef.current?.reload();
+    return true;
   };
 
   const dataScopeMap: Record<number, { text: string; color: string }> = {
@@ -317,18 +300,7 @@ export const RolesPage: React.FC = () => {
             </Button>
           </Access>,
         ]}
-        request={async (params) => {
-          const res = await listSysRoles({
-            page: params.current || 1,
-            pageSize: params.pageSize || 10,
-            keyword: params.keyword,
-          });
-          return {
-            data: res.list || [],
-            success: true,
-            total: res.total,
-          };
-        }}
+        request={toProTableRequest(systemRolesApi.list)}
         columns={columns}
         pagination={{
           defaultPageSize: 10,

@@ -6,6 +6,16 @@ import { InitialStateProvider } from "./contexts/InitialStateContext";
 import { getInitialState } from "./app";
 import { AppRouter } from "./router";
 
+import { setAppFeedback } from "./requestErrorConfig";
+
+const FeedbackInitializer: React.FC = () => {
+  const { message, notification } = AntdApp.useApp();
+  React.useEffect(() => {
+    setAppFeedback({ message, notification });
+  }, [message, notification]);
+  return null;
+};
+
 const ThemedApp: React.FC = () => {
   const { settings, isDark } = useLayoutSettings();
   const { currentConfig } = useLocale();
@@ -22,6 +32,7 @@ const ThemedApp: React.FC = () => {
       }}
     >
       <AntdApp>
+        <FeedbackInitializer />
         <AppRouter />
       </AntdApp>
     </ConfigProvider>

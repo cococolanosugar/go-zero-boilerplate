@@ -2,7 +2,8 @@ import React, { useRef } from "react";
 import { Tag, Space, Avatar, Button, App as AntdApp } from "antd";
 import { ProTable, PageContainer, type ProColumns, type ActionType } from "@ant-design/pro-components";
 import { UserOutlined, CheckCircleOutlined, EyeOutlined } from "@ant-design/icons";
-import { getOrderDetail, type OrderDetailResp } from "@zero/api";
+import { orderService } from "../../services";
+import type { OrderDetailResp } from "@zero/api";
 import { formatPrice } from "@zero/shared";
 import { useIntl } from "../../contexts/LocaleContext";
 
@@ -107,22 +108,13 @@ export const OrdersPage: React.FC = () => {
           labelWidth: "auto",
         }}
         request={async (params) => {
-          try {
-            const targetOrderId = params.orderId ? Number(params.orderId) : 1001;
-            const res = await getOrderDetail({ orderId: targetOrderId });
-            return {
-              data: res ? [res] : [],
-              success: true,
-              total: res ? 1 : 0,
-            };
-          } catch (err: any) {
-            message.error(`查询订单失败: ${err.message || err}`);
-            return {
-              data: [],
-              success: false,
-              total: 0,
-            };
-          }
+          const targetOrderId = params.orderId ? Number(params.orderId) : 1001;
+          const res = await orderService.getOrderDetail({ orderId: targetOrderId });
+          return {
+            data: res ? [res] : [],
+            success: true,
+            total: res ? 1 : 0,
+          };
         }}
         pagination={{
           pageSize: 10,

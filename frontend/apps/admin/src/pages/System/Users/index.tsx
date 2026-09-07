@@ -16,13 +16,11 @@ import {
   type ProColumns,
 } from "@ant-design/pro-components";
 import {
-  listSysUsers,
-  createSysUser,
-  updateSysUser,
-  deleteSysUser,
-  listSysRoles,
-  type SysUserItem,
-} from "@zero/api";
+  systemUsersApi,
+  systemRolesApi,
+  toProTableRequest,
+} from "../../../services";
+import type { SysUserItem } from "@zero/api";
 import { PERMISSIONS } from "@zero/shared";
 import { Access } from "../../../components/Access";
 import { useIntl } from "../../../contexts/LocaleContext";
@@ -37,16 +35,14 @@ export const UsersPage: React.FC = () => {
 
   // 加载角色字典选项
   useEffect(() => {
-    listSysRoles({ page: 1, pageSize: 100 })
-      .then((res) => {
-        setRoleOptions(
-          (res.list || []).map((r) => ({
-            label: `${r.name} (${r.code})`,
-            value: r.id,
-          }))
-        );
-      })
-      .catch((err) => console.error("加载角色列表失败:", err));
+    systemRolesApi.list({ page: 1, pageSize: 100 }).then((res) => {
+      setRoleOptions(
+        (res.list || []).map((r) => ({
+          label: `${r.name} (${r.code})`,
+          value: r.id,
+        }))
+      );
+    });
   }, []);
 
   const handleEdit = (record: SysUserItem) => {
@@ -60,47 +56,38 @@ export const UsersPage: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    try {
-      await deleteSysUser({}, id);
-      message.success("员工删除成功");
-      actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err.message || "删除失败");
-    }
+    await systemUsersApi.remove({}, id);
+    message.success("员工删除成功");
+    actionRef.current?.reload();
   };
 
   const handleFormSubmit = async (values: any) => {
-    try {
-      if (currentRow) {
-        await updateSysUser({
-          id: currentRow.id,
-          deptId: values.deptId || 1,
-          realName: values.realName,
-          mobile: values.mobile || "",
-          email: values.email || "",
-          status: values.status ?? 1,
-          roleIds: values.roleIds || [],
-        });
-        message.success("更新员工信息成功");
-      } else {
-        await createSysUser({
-          deptId: values.deptId || 1,
-          username: values.username,
-          password: values.password,
-          realName: values.realName,
-          mobile: values.mobile || "",
-          email: values.email || "",
-          roleIds: values.roleIds || [],
-        });
-        message.success("创建员工成功");
-      }
-      setModalVisible(false);
-      actionRef.current?.reload();
-      return true;
-    } catch (err: any) {
-      message.error(err.message || "操作失败");
-      return false;
+    if (currentRow) {
+      await systemUsersApi.update({
+        id: currentRow.id,
+        deptId: values.deptId || 1,
+        realName: values.realName,
+        mobile: values.mobile || "",
+        email: values.email || "",
+        status: values.status ?? 1,
+        roleIds: values.roleIds || [],
+      });
+      message.success("更新员工信息成功");
+    } else {
+      await systemUsersApi.create({
+        deptId: values.deptId || 1,
+        username: values.username,
+        password: values.password,
+        realName: values.realName,
+        mobile: values.mobile || "",
+        email: values.email || "",
+        roleIds: values.roleIds || [],
+      });
+      message.success("创建员工成功");
     }
+    setModalVisible(false);
+    actionRef.current?.reload();
+    return true;
   };
 
   const columns: ProColumns<SysUserItem>[] = [
@@ -235,18 +222,7 @@ export const UsersPage: React.FC = () => {
             </Button>
           </Access>,
         ]}
-        request={async (params) => {
-          const res = await listSysUsers({
-            page: params.current || 1,
-            pageSize: params.pageSize || 10,
-            keyword: params.keyword,
-          });
-          return {
-            data: res.list || [],
-            success: true,
-            total: res.total,
-          };
-        }}
+        request={toProTableRequest(systemUsersApi.list)}
         columns={columns}
         pagination={{
           defaultPageSize: 10,
