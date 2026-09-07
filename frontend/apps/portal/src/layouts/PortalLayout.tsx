@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import { App as AntdApp, Button, Dropdown, Space, Tag, Tooltip } from "antd";
 import {
@@ -22,11 +22,26 @@ import {
   TranslationOutlined,
 } from "@ant-design/icons";
 import { APP_NAME } from "@zero/shared";
+import { routes as staticRoutes } from "../config/routes";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
 import { LOCALES } from "../locales";
 import { LoginModal } from "../components/LoginModal";
 import { ProfileDrawer } from "../components/ProfileDrawer";
+
+const getIcon = (iconName?: React.ReactNode | string) => {
+  if (React.isValidElement(iconName)) return iconName;
+  switch (iconName) {
+    case "HomeOutlined":
+      return <HomeOutlined />;
+    case "ClusterOutlined":
+      return <ClusterOutlined />;
+    case "ApiOutlined":
+      return <ApiOutlined />;
+    default:
+      return null;
+  }
+};
 
 export const PortalLayout: React.FC = () => {
   const { message } = AntdApp.useApp();
@@ -40,26 +55,23 @@ export const PortalLayout: React.FC = () => {
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
-  const routeConfig = {
-    path: "/",
-    routes: [
-      {
-        path: "/home",
-        name: formatMessage({ id: "menu.home", defaultMessage: "门户首页" }),
-        icon: <HomeOutlined />,
-      },
-      {
-        path: "/services",
-        name: formatMessage({ id: "menu.services", defaultMessage: "微服务治理" }),
-        icon: <ClusterOutlined />,
-      },
-      {
-        path: "/workbench",
-        name: formatMessage({ id: "menu.workbench", defaultMessage: "联调工作台" }),
-        icon: <ApiOutlined />,
-      },
-    ],
-  };
+  const routeConfig = useMemo(() => {
+    const mainRoutes = staticRoutes.find((r) => r.path === "/" && r.layout === true)?.routes || [];
+    return {
+      path: "/",
+      routes: mainRoutes
+        .filter((r) => !r.hideInMenu && r.name)
+        .map((r) => ({
+          path: r.path,
+          name: formatMessage({
+            id: r.locale || `menu.${r.path.replace(/^\//, "")}`,
+            defaultMessage: r.name,
+          }),
+          icon: getIcon(r.icon),
+        })),
+    };
+  }, [locale, formatMessage]);
+
 
   const handleLogout = () => {
     logout();

@@ -396,3 +396,5 @@ export const LogsPage: React.FC = () => {
     </PageContainer>
   );
 };
+
+export default LogsPage;

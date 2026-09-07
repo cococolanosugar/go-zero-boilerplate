@@ -29,6 +29,9 @@ import {
 } from "@ant-design/icons";
 import { setToken, type SysMenuItem } from "@zero/api";
 import { APP_NAME } from "@zero/shared";
+import { routes as staticRoutes } from "../config/routes";
+import type { AppRouteItem } from "../config/routes.types";
+import { getAccess } from "../access";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
@@ -95,75 +98,33 @@ const formatRoutes = (
   });
 };
 
-const getDefaultRouteConfig = (
-  formatMessage: (d: { id: string; defaultMessage?: string }) => string
-) => ({
-  path: "/",
-  routes: [
-    {
-      path: "/dashboard",
-      name: formatMessage({ id: "menu.dashboard", defaultMessage: "监控大盘" }),
-      locale: "menu.dashboard",
-      icon: <DashboardOutlined />,
-    },
-    {
-      path: "/orders",
-      name: formatMessage({ id: "menu.orders", defaultMessage: "订单管理" }),
-      locale: "menu.orders",
-      icon: <ShoppingCartOutlined />,
-    },
-    {
-      path: "/users",
-      name: formatMessage({ id: "menu.users", defaultMessage: "用户中心" }),
-      locale: "menu.users",
-      icon: <UserOutlined />,
-    },
-    {
-      path: "/system",
-      name: formatMessage({ id: "menu.system", defaultMessage: "系统与权限" }),
-      locale: "menu.system",
-      icon: <SettingOutlined />,
-      routes: [
-        {
-          path: "/system/users",
-          name: formatMessage({ id: "menu.system.users", defaultMessage: "员工管理" }),
-          locale: "menu.system.users",
-          icon: <UserOutlined />,
-        },
-        {
-          path: "/system/roles",
-          name: formatMessage({ id: "menu.system.roles", defaultMessage: "角色管理" }),
-          locale: "menu.system.roles",
-          icon: <SafetyCertificateOutlined />,
-        },
-        {
-          path: "/system/menus",
-          name: formatMessage({ id: "menu.system.menus", defaultMessage: "菜单权限" }),
-          locale: "menu.system.menus",
-          icon: <MenuOutlined />,
-        },
-        {
-          path: "/system/apis",
-          name: formatMessage({ id: "menu.system.apis", defaultMessage: "接口字典" }),
-          locale: "menu.system.apis",
-          icon: <ApiOutlined />,
-        },
-        {
-          path: "/system/dicts",
-          name: formatMessage({ id: "menu.system.dicts", defaultMessage: "数据字典" }),
-          locale: "menu.system.dicts",
-          icon: <BookOutlined />,
-        },
-        {
-          path: "/system/logs",
-          name: formatMessage({ id: "menu.system.logs", defaultMessage: "审计日志" }),
-          locale: "menu.system.logs",
-          icon: <HistoryOutlined />,
-        },
-      ],
-    },
-  ],
-});
+const formatStaticRoutes = (
+  items: AppRouteItem[],
+  formatMessage: (d: { id: string; defaultMessage?: string }) => string,
+  canAccess: (accessCode?: string | string[]) => boolean
+): any[] => {
+  return (items || [])
+    .filter((item) => {
+      if (item.hideInMenu) return false;
+      if (item.redirect && !item.name) return false;
+      if (item.access && !canAccess(item.access)) return false;
+      return true;
+    })
+    .map((item) => {
+      const localeKey = item.locale || getMenuLocaleKey(item.path);
+      const localizedName = formatMessage({ id: localeKey, defaultMessage: item.name });
+      return {
+        path: item.path,
+        name: localizedName,
+        locale: localeKey,
+        icon: typeof item.icon === "string" ? getIcon(item.icon) : item.icon,
+        routes:
+          item.routes && item.routes.length > 0
+            ? formatStaticRoutes(item.routes, formatMessage, canAccess)
+            : undefined,
+      };
+    });
+};
 
 export const BasicLayout: React.FC = () => {
   const { message } = AntdApp.useApp();
@@ -171,6 +132,7 @@ export const BasicLayout: React.FC = () => {
   const navigate = useNavigate();
   const { settings, setSettings, toggleNavTheme, isDark } = useLayoutSettings();
   const { profile, menus, isSuperAdmin, refreshProfile } = useAuth();
+  const accessInstance = useMemo(() => getAccess(profile), [profile]);
   const { locale, setLocale } = useLocale();
   const { formatMessage } = useIntl();
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -201,7 +163,7 @@ export const BasicLayout: React.FC = () => {
     }
   };
 
-  // 动态构建路由结构（优先使用后端根据角色权限下发的菜单树，同时深度注入国际化多语言热更新）
+  // 动态构建路由结构（优先使用后端根据角色权限下发的菜单树；未拉取时直接复用声明式编译时路由表 config/routes.ts，同时深度注入国际化多语言热更新）
   const routeData = useMemo(() => {
     if (menus && menus.length > 0) {
       return {
@@ -209,8 +171,13 @@ export const BasicLayout: React.FC = () => {
         routes: formatRoutes(menus, formatMessage),
       };
     }
-    return getDefaultRouteConfig(formatMessage);
-  }, [menus, locale, formatMessage]);
+    const mainRoutes = staticRoutes.find((r) => r.path === "/" && r.layout === true)?.routes || [];
+    return {
+      path: "/",
+      routes: formatStaticRoutes(mainRoutes, formatMessage, accessInstance.canAccess),
+    };
+  }, [menus, locale, formatMessage, accessInstance]);
+
 
   const displayName = profile?.realName || profile?.username || formatMessage({ id: "common.admin", defaultMessage: "管理员" });
 
