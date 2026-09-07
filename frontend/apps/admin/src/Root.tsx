@@ -2,6 +2,8 @@ import React from "react";
 import { ConfigProvider, App as AntdApp, theme } from "antd";
 import { LayoutSettingsProvider, useLayoutSettings } from "./contexts/LayoutSettingsContext";
 import { LocaleProvider, useLocale } from "./contexts/LocaleContext";
+import { InitialStateProvider } from "./contexts/InitialStateContext";
+import { getInitialState } from "./app";
 import { AppRouter } from "./router";
 
 const ThemedApp: React.FC = () => {
@@ -26,11 +28,13 @@ const ThemedApp: React.FC = () => {
   );
 };
 
-export default function App() {
+export default function Root() {
   return (
     <LocaleProvider>
       <LayoutSettingsProvider>
-        <ThemedApp />
+        <InitialStateProvider getInitialState={getInitialState}>
+          <ThemedApp />
+        </InitialStateProvider>
       </LayoutSettingsProvider>
     </LocaleProvider>
   );

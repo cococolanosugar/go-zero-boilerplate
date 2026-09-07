@@ -1,14 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useCallback } from "react";
 import {
   adminLogin,
   login,
-  getAdminProfile,
-  getToken,
   setToken,
   type AdminProfileResp,
   type AdminLoginReq,
   type LoginReq,
 } from "@zero/api";
+import { useInitialState } from "./InitialStateContext";
 
 interface AuthContextType {
   profile: AdminProfileResp | null;
@@ -31,55 +30,35 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [profile, setProfile] = useState<AdminProfileResp | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { initialState, setInitialState, refreshInitialState } = useInitialState();
 
   const refreshProfile = useCallback(async () => {
-    const token = getToken();
-    if (!token) {
-      setProfile(null);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const res = await getAdminProfile();
-      setProfile(res);
-    } catch (err) {
-      console.warn("未获取到系统员工画像（可能是普通用户或Token失效）:", err);
-      setProfile(null);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    refreshProfile();
-  }, [refreshProfile]);
+    await refreshInitialState();
+  }, [refreshInitialState]);
 
   const loginAsSysUser = async (req: AdminLoginReq) => {
     const res = await adminLogin(req);
     setToken(res.accessToken);
-    await refreshProfile();
+    await refreshInitialState();
   };
 
   const loginAsMobile = async (req: LoginReq) => {
     const res = await login(req);
     setToken(res.accessToken);
-    await refreshProfile();
+    await refreshInitialState();
   };
 
   const logout = () => {
     setToken(null);
-    setProfile(null);
+    setInitialState({ currentUser: null, isLoggedIn: false, loading: false });
   };
 
   return (
     <AuthContext.Provider
       value={{
-        profile,
-        isLoggedIn: !!getToken(),
-        loading,
+        profile: initialState.currentUser || null,
+        isLoggedIn: !!initialState.isLoggedIn,
+        loading: !!initialState.loading,
         loginAsSysUser,
         loginAsMobile,
         logout,
@@ -92,3 +71,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 export const useAuth = () => useContext(AuthContext);
+export default AuthContext;

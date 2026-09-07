@@ -1,145 +1,27 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { App as AntdApp, Dropdown, Space, Tag, Tooltip } from "antd";
-import {
-  ProLayout,
-  SettingDrawer,
-  DefaultFooter,
-} from "@ant-design/pro-components";
-import {
-  DashboardOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
-  LogoutOutlined,
-  FullscreenOutlined,
-  FullscreenExitOutlined,
-  SunOutlined,
-  MoonOutlined,
-  GithubOutlined,
-  GlobalOutlined,
-  QuestionCircleOutlined,
-  SettingOutlined,
-  SafetyCertificateOutlined,
-  MenuOutlined,
-  ApiOutlined,
-  BookOutlined,
-  HistoryOutlined,
-  AppstoreOutlined,
-  TranslationOutlined,
-} from "@ant-design/icons";
-import { setToken, type SysMenuItem } from "@zero/api";
-import { APP_NAME } from "@zero/shared";
-import { routes as staticRoutes } from "../config/routes";
-import type { AppRouteItem } from "../config/routes.types";
-import { getAccess } from "../access";
+import { App as AntdApp } from "antd";
+import { ProLayout, SettingDrawer } from "@ant-design/pro-components";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
-import { useAuth } from "../contexts/AuthContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
-import { LOCALES } from "../locales";
+import { useInitialState } from "../contexts/InitialStateContext";
+import { layout } from "../app";
 
-const getIcon = (iconName?: string) => {
-  switch (iconName) {
-    case "DashboardOutlined":
-      return <DashboardOutlined />;
-    case "ShoppingCartOutlined":
-      return <ShoppingCartOutlined />;
-    case "UserOutlined":
-      return <UserOutlined />;
-    case "SettingOutlined":
-      return <SettingOutlined />;
-    case "SafetyCertificateOutlined":
-      return <SafetyCertificateOutlined />;
-    case "MenuOutlined":
-      return <MenuOutlined />;
-    case "ApiOutlined":
-      return <ApiOutlined />;
-    case "BookOutlined":
-      return <BookOutlined />;
-    case "HistoryOutlined":
-      return <HistoryOutlined />;
-    default:
-      return <AppstoreOutlined />;
-  }
-};
-
-const getMenuLocaleKey = (path: string) => {
-  const map: Record<string, string> = {
-    "/dashboard": "menu.dashboard",
-    "/orders": "menu.orders",
-    "/users": "menu.users",
-    "/system": "menu.system",
-    "/system/users": "menu.system.users",
-    "/system/roles": "menu.system.roles",
-    "/system/menus": "menu.system.menus",
-    "/system/apis": "menu.system.apis",
-    "/system/dicts": "menu.system.dicts",
-    "/system/logs": "menu.system.logs",
-  };
-  return map[path] || `menu.${path.replace(/^\//, "").replace(/\//g, ".")}`;
-};
-
-const formatRoutes = (
-  items: SysMenuItem[],
-  formatMessage: (d: { id: string; defaultMessage?: string }) => string
-): any[] => {
-  return (items || []).map((item) => {
-    const localeKey = getMenuLocaleKey(item.path);
-    const localizedName = formatMessage({ id: localeKey, defaultMessage: item.title });
-    return {
-      path: item.path,
-      name: localizedName,
-      locale: localeKey,
-      icon: getIcon(item.icon),
-      routes:
-        item.children && item.children.length > 0
-          ? formatRoutes(item.children, formatMessage)
-          : undefined,
-    };
-  });
-};
-
-const formatStaticRoutes = (
-  items: AppRouteItem[],
-  formatMessage: (d: { id: string; defaultMessage?: string }) => string,
-  canAccess: (accessCode?: string | string[]) => boolean
-): any[] => {
-  return (items || [])
-    .filter((item) => {
-      if (item.hideInMenu) return false;
-      if (item.redirect && !item.name) return false;
-      if (item.access && !canAccess(item.access)) return false;
-      return true;
-    })
-    .map((item) => {
-      const localeKey = item.locale || getMenuLocaleKey(item.path);
-      const localizedName = formatMessage({ id: localeKey, defaultMessage: item.name });
-      return {
-        path: item.path,
-        name: localizedName,
-        locale: localeKey,
-        icon: typeof item.icon === "string" ? getIcon(item.icon) : item.icon,
-        routes:
-          item.routes && item.routes.length > 0
-            ? formatStaticRoutes(item.routes, formatMessage, canAccess)
-            : undefined,
-      };
-    });
-};
-
+/**
+ * 后台基础布局容器（纯视图 Shell）
+ * 所有的业务插槽与运行时交互委托至 src/app.tsx layout() 函数
+ */
 export const BasicLayout: React.FC = () => {
   const { message } = AntdApp.useApp();
   const location = useLocation();
   const navigate = useNavigate();
   const { settings, setSettings, toggleNavTheme, isDark } = useLayoutSettings();
-  const { profile, menus, isSuperAdmin, refreshProfile } = useAuth();
-  const accessInstance = useMemo(() => getAccess(profile), [profile]);
+  const { initialState, setInitialState } = useInitialState();
   const { locale, setLocale } = useLocale();
   const { formatMessage } = useIntl();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    refreshProfile();
-
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
@@ -147,13 +29,7 @@ export const BasicLayout: React.FC = () => {
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
-  }, [refreshProfile]);
-
-  const handleLogout = () => {
-    setToken(null);
-    message.success(formatMessage({ id: "navBar.logout.success", defaultMessage: "已安全退出登录" }));
-    navigate("/login", { replace: true });
-  };
+  }, []);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -163,182 +39,44 @@ export const BasicLayout: React.FC = () => {
     }
   };
 
-  // 动态构建路由结构（优先使用后端根据角色权限下发的菜单树；未拉取时直接复用声明式编译时路由表 config/routes.ts，同时深度注入国际化多语言热更新）
-  const routeData = useMemo(() => {
-    if (menus && menus.length > 0) {
-      return {
-        path: "/",
-        routes: formatRoutes(menus, formatMessage),
-      };
-    }
-    const mainRoutes = staticRoutes.find((r) => r.path === "/" && r.layout === true)?.routes || [];
-    return {
-      path: "/",
-      routes: formatStaticRoutes(mainRoutes, formatMessage, accessInstance.canAccess),
-    };
-  }, [menus, locale, formatMessage, accessInstance]);
-
-
-  const displayName = profile?.realName || profile?.username || formatMessage({ id: "common.admin", defaultMessage: "管理员" });
+  // 通过运行时配置计算完整的 ProLayout 属性字典
+  const layoutConfig = useMemo(() => {
+    return layout({
+      initialState,
+      setInitialState,
+      navigate,
+      formatMessage,
+      message,
+      settings,
+      setSettings,
+      toggleNavTheme,
+      isDark,
+      locale,
+      setLocale,
+      isFullscreen,
+      toggleFullscreen,
+    });
+  }, [
+    initialState,
+    navigate,
+    formatMessage,
+    message,
+    settings,
+    setSettings,
+    toggleNavTheme,
+    isDark,
+    locale,
+    setLocale,
+    isFullscreen,
+  ]);
 
   return (
     <div style={{ height: "100vh" }}>
       <ProLayout
         key={locale}
-        {...settings}
-        formatMessage={formatMessage}
-        title={APP_NAME}
-        logo="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-        route={routeData}
+        {...layoutConfig}
+        route={layoutConfig.routeData}
         location={{ pathname: location.pathname }}
-        waterMarkProps={{
-          content: `${displayName} (${APP_NAME})`,
-        }}
-        menuItemRender={(item, dom) => (
-          <div
-            onClick={() => {
-              if (item.path) {
-                navigate(item.path);
-              }
-            }}
-          >
-            {dom}
-          </div>
-        )}
-        actionsRender={() => [
-          <Dropdown
-            key="lang"
-            menu={{
-              selectedKeys: [locale],
-              items: Object.values(LOCALES).map((item) => ({
-                key: item.key,
-                label: (
-                  <Space>
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
-                  </Space>
-                ),
-                onClick: () => setLocale(item.key),
-              })),
-            }}
-          >
-            <span style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}>
-              <Tooltip title={formatMessage({ id: "navBar.lang", defaultMessage: "语言选择" })}>
-                <TranslationOutlined />
-              </Tooltip>
-            </span>
-          </Dropdown>,
-          <Tooltip key="theme" title={isDark ? formatMessage({ id: "navBar.theme.light", defaultMessage: "切换为浅色模式" }) : formatMessage({ id: "navBar.theme.dark", defaultMessage: "切换为暗黑模式" })}>
-            <span
-              style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-              onClick={toggleNavTheme}
-            >
-              {isDark ? <SunOutlined /> : <MoonOutlined />}
-            </span>
-          </Tooltip>,
-          <Tooltip key="fullscreen" title={isFullscreen ? formatMessage({ id: "navBar.fullscreen.exit", defaultMessage: "退出全屏" }) : formatMessage({ id: "navBar.fullscreen.enter", defaultMessage: "全屏模式" })}>
-            <span
-              style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-              onClick={toggleFullscreen}
-            >
-              {isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
-            </span>
-          </Tooltip>,
-          <Tooltip key="portal" title={formatMessage({ id: "navBar.portal", defaultMessage: "前往官方前台门户系统 (:3000)" })}>
-            <span
-              style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-              onClick={() => window.open("http://localhost:3000", "_blank")}
-            >
-              <GlobalOutlined />
-            </span>
-          </Tooltip>,
-          <Tooltip key="help" title={formatMessage({ id: "navBar.help", defaultMessage: "查看微服务文档与使用指南" })}>
-            <span
-              style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-              onClick={() => window.open("https://go-zero.dev", "_blank")}
-            >
-              <QuestionCircleOutlined />
-            </span>
-          </Tooltip>,
-          <Tooltip key="github" title={formatMessage({ id: "navBar.github", defaultMessage: "查看 GitHub 仓库" })}>
-            <span
-              style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-              onClick={() => window.open("https://github.com/zeromicro/go-zero", "_blank")}
-            >
-              <GithubOutlined />
-            </span>
-          </Tooltip>,
-        ]}
-        avatarProps={{
-          src: profile?.avatar || "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
-          title: displayName,
-          render: (_props, dom) => (
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    key: "user",
-                    label: (
-                      <Space>
-                        <UserOutlined />
-                        <span>{displayName}</span>
-                        {isSuperAdmin ? (
-                          <Tag color="gold">{formatMessage({ id: "role.superAdmin", defaultMessage: "超级管理员" })}</Tag>
-                        ) : (
-                          (profile?.roles || []).map((r, i) => (
-                            <Tag key={i} color="blue">
-                              {r}
-                            </Tag>
-                          ))
-                        )}
-                      </Space>
-                    ),
-                    disabled: true,
-                  },
-                  {
-                    type: "divider",
-                  },
-                  {
-                    key: "logout",
-                    icon: <LogoutOutlined />,
-                    label: formatMessage({ id: "navBar.logout", defaultMessage: "退出登录" }),
-                    danger: true,
-                    onClick: handleLogout,
-                  },
-                ],
-              }}
-            >
-              <div style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>
-                {dom}
-              </div>
-            </Dropdown>
-          ),
-        }}
-        footerRender={() => (
-          <DefaultFooter
-            copyright={`2026 ${APP_NAME} 工业级全栈 Monorepo`}
-            links={[
-              {
-                key: "go-zero",
-                title: "go-zero 微服务",
-                href: "https://go-zero.dev",
-                blankTarget: true,
-              },
-              {
-                key: "github",
-                title: <GithubOutlined />,
-                href: "https://github.com/zeromicro/go-zero",
-                blankTarget: true,
-              },
-              {
-                key: "Ant Design",
-                title: "Ant Design 6.6.2",
-                href: "https://ant.design",
-                blankTarget: true,
-              },
-            ]}
-          />
-        )}
       >
         <Outlet />
         <SettingDrawer
