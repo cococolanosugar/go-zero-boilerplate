@@ -30,13 +30,25 @@ run-user-rpc:
 run-order-rpc:
     cd app/order/rpc && go run order.go -f etc/order.yaml
 
-# 启动前端管理后台 (Vite 3001)
+# 启动前端管理后台 (Vite 3001，默认本地 8888 网关)
 run-admin:
     cd frontend && pnpm dev:admin
 
-# 启动前端门户 (Vite 3000)
+# 启动前端管理后台 (连接远程测试环境网关)
+run-admin-test:
+    cd frontend && pnpm dev:admin:test
+
+# 启动前端管理后台 (连接预发布环境网关)
+run-admin-pre:
+    cd frontend && pnpm dev:admin:pre
+
+# 启动前端门户 (Vite 3000，默认本地 8888 网关)
 run-portal:
     cd frontend && pnpm dev:portal
+
+# 启动前端门户 (连接远程测试环境网关)
+run-portal-test:
+    cd frontend && pnpm dev:portal:test
 
 # 构建全端前端产物
 build-frontend:
