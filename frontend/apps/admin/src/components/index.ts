@@ -3,4 +3,5 @@ export * from "./AuthGuard";
 export * from "./PageLoading";
 export * from "./Footer";
 export * from "./HeaderSearch";
+export * from "./MultiTabs";
 export * from "./RightContent";

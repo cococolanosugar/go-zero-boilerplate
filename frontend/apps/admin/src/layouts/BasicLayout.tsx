@@ -5,6 +5,7 @@ import { ProLayout, SettingDrawer } from "@ant-design/pro-components";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
 import { useInitialState } from "../contexts/InitialStateContext";
+import { MultiTabs } from "../components/MultiTabs";
 import { layout } from "../app";
 
 /**
@@ -78,6 +79,7 @@ export const BasicLayout: React.FC = () => {
         route={layoutConfig.routeData}
         location={{ pathname: location.pathname }}
       >
+        {settings.tabsLayout !== false && <MultiTabs />}
         <Outlet />
         <SettingDrawer
           enableDarkTheme

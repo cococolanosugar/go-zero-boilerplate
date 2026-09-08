@@ -24,7 +24,7 @@ import {
 } from "@zero/api";
 import { APP_NAME } from "@zero/shared";
 import { type LocaleKey } from "./locales";
-import { defaultSettings } from "./config/defaultSettings";
+import { defaultSettings, type DefaultSettings } from "./config/defaultSettings";
 import { RightContentActions, AvatarDropdown } from "./components/RightContent";
 import { Footer } from "./components/Footer";
 import { routes as staticRoutes } from "./config/routes";
@@ -178,8 +178,8 @@ export interface RuntimeLayoutContext {
   navigate: (to: string, options?: any) => void;
   formatMessage: (descriptor: { id: string; defaultMessage?: string }) => string;
   message: any;
-  settings: ProSettings;
-  setSettings: (settings: ProSettings) => void;
+  settings: Partial<DefaultSettings>;
+  setSettings: (settings: Partial<DefaultSettings>) => void;
   toggleNavTheme: () => void;
   isDark: boolean;
   locale: LocaleKey;

@@ -1,13 +1,10 @@
 import React, { createContext, useContext, useState } from "react";
-import type { ProSettings } from "@ant-design/pro-components";
-
-const STORAGE_KEY = "zero_admin_layout_settings";
-
-import { defaultSettings } from "../config/defaultSettings";
+import { defaultSettings, type DefaultSettings } from "../config/defaultSettings";
+import { STORAGE_KEYS } from "../constants";
 
 interface LayoutSettingsContextType {
-  settings: Partial<ProSettings>;
-  setSettings: (settings: Partial<ProSettings>) => void;
+  settings: Partial<DefaultSettings>;
+  setSettings: (settings: Partial<DefaultSettings>) => void;
   toggleNavTheme: () => void;
   isDark: boolean;
 }
@@ -22,9 +19,9 @@ const LayoutSettingsContext = createContext<LayoutSettingsContextType>({
 export const LayoutSettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [settings, setSettingsState] = useState<Partial<ProSettings>>(() => {
+  const [settings, setSettingsState] = useState<Partial<DefaultSettings>>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEYS.LAYOUT_SETTINGS);
       if (saved) {
         return { ...defaultSettings, ...JSON.parse(saved) };
       }
@@ -34,11 +31,11 @@ export const LayoutSettingsProvider: React.FC<{ children: React.ReactNode }> = (
     return defaultSettings;
   });
 
-  const setSettings = (newSettings: Partial<ProSettings>) => {
+  const setSettings = (newSettings: Partial<DefaultSettings>) => {
     setSettingsState((prev) => {
       const merged = { ...prev, ...newSettings };
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+        localStorage.setItem(STORAGE_KEYS.LAYOUT_SETTINGS, JSON.stringify(merged));
       } catch (e) {
         console.error("持久化布局配置异常:", e);
       }

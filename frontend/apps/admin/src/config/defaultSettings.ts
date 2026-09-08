@@ -4,7 +4,7 @@ import { APP_NAME } from "@zero/shared";
 export interface DefaultSettings extends ProSettings {
   pwa?: boolean;
   logo?: string;
-  title?: string;
+  tabsLayout?: boolean;
 }
 
 /**
@@ -18,6 +18,7 @@ export const defaultSettings: DefaultSettings = {
   fixedHeader: true,
   fixSiderbar: true,
   splitMenus: false,
+  tabsLayout: true,
   title: APP_NAME,
   pwa: false,
   logo: "/logo.svg",

@@ -125,13 +125,25 @@ export const routes: AppRouteItem[] = [
         hideInMenu: true,
         component: lazy(() => import("../pages/Exception/403")),
       },
+      {
+        path: "/404",
+        name: "404",
+        hideInMenu: true,
+        component: lazy(() => import("../pages/Exception/404")),
+      },
+      {
+        path: "/500",
+        name: "500",
+        hideInMenu: true,
+        component: lazy(() => import("../pages/Exception/500")),
+      },
     ],
   },
 
-  // 3. 兜底路由
+  // 3. 兜底未匹配路由 (404 Not Found)
   {
     path: "*",
-    redirect: "/dashboard",
+    component: lazy(() => import("../pages/Exception/404")),
     layout: false,
   },
 ];
