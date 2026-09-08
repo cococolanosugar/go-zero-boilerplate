@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1677ff" />
+      <stop offset="100%" stop-color="#0958d9" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#logo-grad)" />
+  <path d="M16 24C16 19.5817 19.5817 16 24 16C28.4183 16 32 19.5817 32 24C32 28.4183 28.4183 32 24 32" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+  <circle cx="24" cy="24" r="3" fill="#ffffff" />
+  <text x="56" y="27" fill="#1677ff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="700" letter-spacing="-0.5">Go-Zero</text>
+  <text x="135" y="27" fill="#595959" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="500">Pro</text>
+  <text x="56" y="40" fill="#8c8c8c" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="500" letter-spacing="0.5">ENTERPRISE ADMIN</text>
+</svg>

@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  DefaultFooter,
   type ProLayoutProps,
   type ProSettings,
 } from "@ant-design/pro-components";
@@ -15,7 +14,6 @@ import {
   BookOutlined,
   HistoryOutlined,
   AppstoreOutlined,
-  GithubOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
@@ -28,6 +26,7 @@ import { APP_NAME } from "@zero/shared";
 import { type LocaleKey } from "./locales";
 import { defaultSettings } from "./config/defaultSettings";
 import { RightContentActions, AvatarDropdown } from "./components/RightContent";
+import { Footer } from "./components/Footer";
 import { routes as staticRoutes } from "./config/routes";
 import type { AppRouteItem } from "./config/routes.types";
 import { getAccess } from "./access";
@@ -259,30 +258,6 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
       title: displayName,
       render: (_props, dom) => <AvatarDropdown dom={dom} />,
     },
-    footerRender: () => (
-      <DefaultFooter
-        copyright={`2026 ${APP_NAME} 工业级全栈 Monorepo`}
-        links={[
-          {
-            key: "go-zero",
-            title: "go-zero 微服务",
-            href: "https://go-zero.dev",
-            blankTarget: true,
-          },
-          {
-            key: "github",
-            title: <GithubOutlined />,
-            href: "https://github.com/zeromicro/go-zero",
-            blankTarget: true,
-          },
-          {
-            key: "Ant Design",
-            title: "Ant Design 6.6.2",
-            href: "https://ant.design",
-            blankTarget: true,
-          },
-        ]}
-      />
-    ),
+    footerRender: () => <Footer />,
   };
 };

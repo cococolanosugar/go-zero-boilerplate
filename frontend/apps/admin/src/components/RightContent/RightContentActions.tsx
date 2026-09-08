@@ -11,6 +11,7 @@ import { useIntl } from "../../contexts/LocaleContext";
 import { SelectLang } from "./SelectLang";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { NoticeIcon } from "./NoticeIcon";
+import { HeaderSearch } from "../HeaderSearch";
 
 export interface RightContentActionsProps {
   isFullscreen?: boolean;
@@ -24,6 +25,7 @@ export const RightContentActions: React.FC<RightContentActionsProps> = (props) =
 
   return (
     <>
+      <HeaderSearch />
       <NoticeIcon />
       <SelectLang />
       <ThemeSwitch isDark={props.isDark} toggleNavTheme={props.toggleNavTheme} />

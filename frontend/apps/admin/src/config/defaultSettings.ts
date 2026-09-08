@@ -20,7 +20,7 @@ export const defaultSettings: DefaultSettings = {
   splitMenus: false,
   title: APP_NAME,
   pwa: false,
-  logo: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+  logo: "/logo.svg",
 };
 
 export default defaultSettings;
