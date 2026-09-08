@@ -30,6 +30,7 @@ import {
 import { APP_NAME } from "@zero/shared";
 import { LOCALES, type LocaleKey } from "./locales";
 import { routes as staticRoutes } from "./config/routes";
+import { defaultSettings } from "./config/defaultSettings";
 import type { PortalInitialState } from "./contexts/InitialStateContext";
 import { portalErrorHandler, portalRequestErrorConfig } from "./requestErrorConfig";
 
@@ -149,12 +150,8 @@ export const layout = (
     formatMessage({ id: "portal.header.employee", defaultMessage: "企业员工" });
 
   const proSettings: ProSettings = {
-    layout: "top",
+    ...defaultSettings,
     navTheme: isDark ? "realDark" : "light",
-    contentWidth: "Fluid",
-    fixedHeader: true,
-    splitMenus: false,
-    colorPrimary: "#722ed1",
   };
 
   return {

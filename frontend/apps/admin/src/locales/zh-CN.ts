@@ -11,8 +11,10 @@ export default {
   'navBar.logout': '退出登录',
   'navBar.logout.success': '已安全退出登录',
   'navBar.user.center': '个人中心',
+  'navBar.settings': '个人设置',
 
   // 菜单
+  'menu.account.settings': '个人设置',
   'menu.dashboard': '监控大盘',
   'menu.orders': '订单管理',
   'menu.users': '用户中心',

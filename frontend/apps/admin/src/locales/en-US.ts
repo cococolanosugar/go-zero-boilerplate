@@ -11,8 +11,10 @@ export default {
   'navBar.logout': 'Logout',
   'navBar.logout.success': 'Logged out securely',
   'navBar.user.center': 'User Center',
+  'navBar.settings': 'Account Settings',
 
   // Menus
+  'menu.account.settings': 'Account Settings',
   'menu.dashboard': 'Dashboard',
   'menu.orders': 'Order Management',
   'menu.users': 'User Center',

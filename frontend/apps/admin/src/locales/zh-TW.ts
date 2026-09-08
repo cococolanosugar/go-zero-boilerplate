@@ -11,8 +11,10 @@ export default {
   'navBar.logout': '登出',
   'navBar.logout.success': '已安全登出',
   'navBar.user.center': '個人中心',
+  'navBar.settings': '個人設置',
 
   // 菜單
+  'menu.account.settings': '個人設置',
   'menu.dashboard': '監控大盤',
   'menu.orders': '訂單管理',
   'menu.users': '用戶中心',

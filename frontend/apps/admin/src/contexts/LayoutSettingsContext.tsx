@@ -1,17 +1,9 @@
-﻿import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import type { ProSettings } from "@ant-design/pro-components";
 
 const STORAGE_KEY = "zero_admin_layout_settings";
 
-const defaultSettings: Partial<ProSettings> = {
-  layout: "mix",
-  navTheme: "light",
-  colorPrimary: "#1677ff",
-  contentWidth: "Fluid",
-  fixedHeader: true,
-  fixSiderbar: true,
-  splitMenus: false,
-};
+import { defaultSettings } from "../config/defaultSettings";
 
 interface LayoutSettingsContextType {
   settings: Partial<ProSettings>;

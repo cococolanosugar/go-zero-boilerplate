@@ -1,5 +1,4 @@
 import React from "react";
-import { Dropdown, Space, Tag, Tooltip } from "antd";
 import {
   DefaultFooter,
   type ProLayoutProps,
@@ -9,14 +8,6 @@ import {
   DashboardOutlined,
   ShoppingCartOutlined,
   UserOutlined,
-  LogoutOutlined,
-  FullscreenOutlined,
-  FullscreenExitOutlined,
-  SunOutlined,
-  MoonOutlined,
-  GithubOutlined,
-  GlobalOutlined,
-  QuestionCircleOutlined,
   SettingOutlined,
   SafetyCertificateOutlined,
   MenuOutlined,
@@ -24,19 +15,19 @@ import {
   BookOutlined,
   HistoryOutlined,
   AppstoreOutlined,
-  TranslationOutlined,
+  GithubOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
   addRequestInterceptor,
   getAdminProfile,
   getToken,
-  setToken,
-  type AdminProfileResp,
   type SysMenuItem,
 } from "@zero/api";
 import { APP_NAME } from "@zero/shared";
-import { LOCALES, type LocaleKey } from "./locales";
+import { type LocaleKey } from "./locales";
+import { defaultSettings } from "./config/defaultSettings";
+import { RightContentActions, AvatarDropdown } from "./components/RightContent";
 import { routes as staticRoutes } from "./config/routes";
 import type { AppRouteItem } from "./config/routes.types";
 import { getAccess } from "./access";
@@ -200,24 +191,21 @@ export interface RuntimeLayoutContext {
 
 /**
  * 2. 运行时布局配置导出（对齐 Ant Design Pro layout 运行时规范）
- * 统筹管理头像下拉、多语言、暗黑模式切换、全屏、水印、页脚与动态菜单路由
+ * 统筹管理统一品牌默认配置、导航右侧动作区与动态菜单路由
  */
 export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData: any } => {
   const {
     initialState,
     navigate,
     formatMessage,
-    message,
     settings,
     toggleNavTheme,
     isDark,
-    locale,
-    setLocale,
     isFullscreen,
     toggleFullscreen,
   } = ctx;
 
-  const { currentUser, isSuperAdmin, menus } = initialState;
+  const { currentUser, menus } = initialState;
   const accessInstance = getAccess(currentUser);
 
   // 动态构建路由结构（优先使用后端动态菜单树；无动态树时使用编译时静态配置，并结合 access 进行权限过滤）
@@ -238,16 +226,10 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
   const displayName =
     currentUser?.realName || currentUser?.username || formatMessage({ id: "common.admin", defaultMessage: "管理员" });
 
-  const handleLogout = () => {
-    setToken(null);
-    message.success(formatMessage({ id: "navBar.logout.success", defaultMessage: "已安全退出登录" }));
-    navigate("/login", { replace: true });
-  };
-
   return {
+    ...defaultSettings,
     ...settings,
     title: APP_NAME,
-    logo: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
     routeData,
     waterMarkProps: {
       content: `${displayName} (${APP_NAME})`,
@@ -264,127 +246,18 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
       </div>
     ),
     actionsRender: () => [
-      <Dropdown
-        key="lang"
-        menu={{
-          selectedKeys: [locale],
-          items: Object.values(LOCALES).map((item) => ({
-            key: item.key,
-            label: (
-              <Space>
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
-              </Space>
-            ),
-            onClick: () => setLocale(item.key),
-          })),
-        }}
-      >
-        <span style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}>
-          <Tooltip title={formatMessage({ id: "navBar.lang", defaultMessage: "语言选择" })}>
-            <TranslationOutlined />
-          </Tooltip>
-        </span>
-      </Dropdown>,
-      <Tooltip
-        key="theme"
-        title={
-          isDark
-            ? formatMessage({ id: "navBar.theme.light", defaultMessage: "切换为浅色模式" })
-            : formatMessage({ id: "navBar.theme.dark", defaultMessage: "切换为暗黑模式" })
-        }
-      >
-        <span
-          style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-          onClick={toggleNavTheme}
-        >
-          {isDark ? <SunOutlined /> : <MoonOutlined />}
-        </span>
-      </Tooltip>,
-      <Tooltip
-        key="fullscreen"
-        title={
-          isFullscreen
-            ? formatMessage({ id: "navBar.fullscreen.exit", defaultMessage: "退出全屏" })
-            : formatMessage({ id: "navBar.fullscreen.enter", defaultMessage: "全屏模式" })
-        }
-      >
-        <span
-          style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-          onClick={toggleFullscreen}
-        >
-          {isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
-        </span>
-      </Tooltip>,
-      <Tooltip key="portal" title={formatMessage({ id: "navBar.portal", defaultMessage: "前往官方前台门户系统 (:3000)" })}>
-        <span
-          style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-          onClick={() => window.open("http://localhost:3000", "_blank")}
-        >
-          <GlobalOutlined />
-        </span>
-      </Tooltip>,
-      <Tooltip key="help" title={formatMessage({ id: "navBar.help", defaultMessage: "查看微服务文档与使用指南" })}>
-        <span
-          style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-          onClick={() => window.open("https://go-zero.dev", "_blank")}
-        >
-          <QuestionCircleOutlined />
-        </span>
-      </Tooltip>,
-      <Tooltip key="github" title={formatMessage({ id: "navBar.github", defaultMessage: "查看 GitHub 仓库" })}>
-        <span
-          style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-          onClick={() => window.open("https://github.com/zeromicro/go-zero", "_blank")}
-        >
-          <GithubOutlined />
-        </span>
-      </Tooltip>,
+      <RightContentActions
+        key="right-actions"
+        isDark={isDark}
+        toggleNavTheme={toggleNavTheme}
+        isFullscreen={isFullscreen}
+        toggleFullscreen={toggleFullscreen}
+      />,
     ],
     avatarProps: {
-      src: currentUser?.avatar || "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+      src: currentUser?.avatar || defaultSettings.logo,
       title: displayName,
-      render: (_props, dom) => (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: "user",
-                label: (
-                  <Space>
-                    <UserOutlined />
-                    <span>{displayName}</span>
-                    {isSuperAdmin ? (
-                      <Tag color="gold">{formatMessage({ id: "role.superAdmin", defaultMessage: "超级管理员" })}</Tag>
-                    ) : (
-                      (currentUser?.roles || []).map((r, i) => (
-                        <Tag key={i} color="blue">
-                          {r}
-                        </Tag>
-                      ))
-                    )}
-                  </Space>
-                ),
-                disabled: true,
-              },
-              {
-                type: "divider",
-              },
-              {
-                key: "logout",
-                icon: <LogoutOutlined />,
-                label: formatMessage({ id: "navBar.logout", defaultMessage: "退出登录" }),
-                danger: true,
-                onClick: handleLogout,
-              },
-            ],
-          }}
-        >
-          <div style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>
-            {dom}
-          </div>
-        </Dropdown>
-      ),
+      render: (_props, dom) => <AvatarDropdown dom={dom} />,
     },
     footerRender: () => (
       <DefaultFooter

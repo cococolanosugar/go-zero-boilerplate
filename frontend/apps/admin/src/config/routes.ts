@@ -109,6 +109,15 @@ export const routes: AppRouteItem[] = [
         ],
       },
 
+      // 个人设置中心
+      {
+        path: "/account/settings",
+        name: "menu.account.settings",
+        locale: "menu.account.settings",
+        hideInMenu: true,
+        component: lazy(() => import("../pages/Account/Settings")),
+      },
+
       // 异常状态页
       {
         path: "/403",
