@@ -1,11 +1,13 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { getProxyConfig } from "./src/config/proxy";
+import { vitePluginMock, mockData } from "./mock";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const appEnv = env.APP_ENV || mode || "dev";
+  const appEnv = env.APP_ENV || (mode === "mock" ? "dev" : mode) || "dev";
   const customTarget = env.PROXY_TARGET || process.env.PROXY_TARGET;
+  const useMock = env.VITE_USE_MOCK === "true" || mode === "mock";
 
   const rawProxy = getProxyConfig(appEnv, customTarget);
 
@@ -29,7 +31,14 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      vitePluginMock({
+        mockData,
+        enabled: useMock,
+        delay: 150,
+      }),
+    ],
     server: {
       port: 3000,
       proxy: proxyWithLogger,

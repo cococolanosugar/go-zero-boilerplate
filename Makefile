@@ -36,9 +36,17 @@ run-order-rpc:
 run-admin:
 	cd frontend && pnpm dev:admin
 
+# 启动前端管理后台 (离线 Mock 纯前端开发模式)
+run-admin-mock:
+	cd frontend && pnpm dev:admin:mock
+
 # 启动前端门户 (Vite 3000)
 run-portal:
 	cd frontend && pnpm dev:portal
+
+# 启动前端门户 (离线 Mock 纯前端开发模式)
+run-portal-mock:
+	cd frontend && pnpm dev:portal:mock
 
 # 构建前端产物
 build-frontend:

@@ -34,6 +34,10 @@ run-order-rpc:
 run-admin:
     cd frontend && pnpm dev:admin
 
+# 启动前端管理后台 (离线 Mock 纯前端开发模式，零依赖后端与中间件)
+run-admin-mock:
+    cd frontend && pnpm dev:admin:mock
+
 # 启动前端管理后台 (连接远程测试环境网关)
 run-admin-test:
     cd frontend && pnpm dev:admin:test
@@ -45,6 +49,10 @@ run-admin-pre:
 # 启动前端门户 (Vite 3000，默认本地 8888 网关)
 run-portal:
     cd frontend && pnpm dev:portal
+
+# 启动前端门户 (离线 Mock 纯前端开发模式)
+run-portal-mock:
+    cd frontend && pnpm dev:portal:mock
 
 # 启动前端门户 (连接远程测试环境网关)
 run-portal-test:
