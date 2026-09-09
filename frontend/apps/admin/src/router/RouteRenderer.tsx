@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthGuard } from "../components/AuthGuard";
 import { BasicLayout } from "../layouts/BasicLayout";
 import { PageLoading } from "../components/PageLoading";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 import { useAuth } from "../contexts/AuthContext";
 import { getAccess } from "../access";
 import type { AppRouteItem } from "../config/routes.types";
@@ -27,16 +28,18 @@ const RouteAccessWrapper: React.FC<{
 };
 
 /**
- * React.lazy 异步组件包裹器（提供 Suspense 骨架占位与 403 权限守卫）
+ * React.lazy 异步组件包裹器（提供 ErrorBoundary 容灾边界、Suspense 骨架占位与 403 权限守卫）
  */
 const LazyWrapper: React.FC<{
   Component: React.ComponentType<any> | React.LazyExoticComponent<any>;
   access?: string;
 }> = ({ Component, access }) => {
   return (
-    <Suspense fallback={<PageLoading />}>
-      <RouteAccessWrapper access={access} element={<Component />} />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoading />}>
+        <RouteAccessWrapper access={access} element={<Component />} />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

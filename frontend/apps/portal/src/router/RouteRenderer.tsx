@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { PortalLayout } from "../layouts/PortalLayout";
 import { PageLoading } from "../components/PageLoading";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 import { useAuth } from "../contexts/AuthContext";
 import { getAccess } from "../access";
 import type { AppRouteItem } from "../config/routes.types";
@@ -27,9 +28,11 @@ const LazyWrapper: React.FC<{
   access?: string;
 }> = ({ Component, access }) => {
   return (
-    <Suspense fallback={<PageLoading />}>
-      <RouteAccessWrapper access={access} element={<Component />} />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoading />}>
+        <RouteAccessWrapper access={access} element={<Component />} />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 
