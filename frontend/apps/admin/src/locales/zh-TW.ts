@@ -1,6 +1,7 @@
 export default {
   // 導航與基礎
   'navBar.lang': '語言選擇',
+  'navBar.search': '全站快捷搜尋...',
   'navBar.theme.light': '切換為淺色模式',
   'navBar.theme.dark': '切換為暗黑模式',
   'navBar.fullscreen.enter': '全螢幕模式',
@@ -77,4 +78,11 @@ export default {
   'common.cancel': '取消',
   'common.admin': '管理員',
   'role.superAdmin': '超級管理員',
+
+  // 異常頁面
+  'exception.403.subTitle': '抱歉，您暫無訪問該頁面的操作權限。請聯繫管理員分配權限或返回大盤。',
+  'exception.404.subTitle': '抱歉，您訪問的頁面不存在或已被移除。',
+  'exception.500.subTitle': '抱歉，服務器內部遇到異常或網關微服務暫時無法響應，請稍後重試。',
+  'exception.backHome': '返回監控大盤',
+  'exception.reload': '重新加載',
 };

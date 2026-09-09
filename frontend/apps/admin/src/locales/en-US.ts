@@ -1,6 +1,7 @@
 export default {
   // Navigation & Base
   'navBar.lang': 'Language',
+  'navBar.search': 'Global quick search...',
   'navBar.theme.light': 'Switch to Light Mode',
   'navBar.theme.dark': 'Switch to Dark Mode',
   'navBar.fullscreen.enter': 'Enter Fullscreen',
@@ -77,4 +78,11 @@ export default {
   'common.cancel': 'Cancel',
   'common.admin': 'Administrator',
   'role.superAdmin': 'Super Administrator',
+
+  // Exception Pages
+  'exception.403.subTitle': 'Sorry, you do not have permission to access this page. Please contact administrator or return to dashboard.',
+  'exception.404.subTitle': 'Sorry, the page you visited does not exist or has been removed.',
+  'exception.500.subTitle': 'Sorry, the server encountered an error or the gateway is temporarily unavailable.',
+  'exception.backHome': 'Back to Dashboard',
+  'exception.reload': 'Reload Page',
 };

@@ -3,6 +3,8 @@ export default {
   'menu.home': '門戶首頁',
   'menu.services': '微服務治理',
   'menu.workbench': '聯調工作台',
+  'portal.header.lang': '多語言切換',
+  'portal.header.search': '全站快捷搜尋...',
   'portal.header.theme.dark': '切換為暗黑模式',
   'portal.header.theme.light': '切換為淺色模式',
   'portal.header.admin': '管理後台',
@@ -89,4 +91,11 @@ export default {
   'profile.permissions': '擁有的按鈕與接口權限點',
   'profile.noPermissions': '暫無獨立細粒度權限編碼',
   'profile.logout': '退出登入',
+
+  // 異常頁面
+  'exception.403.subTitle': '抱歉，您暫無訪問該頁面的操作權限。請聯繫管理員分配權限或返回首頁。',
+  'exception.404.subTitle': '抱歉，您訪問的頁面不存在或已被移除。',
+  'exception.500.subTitle': '抱歉，服務器內部遇到異常或網關微服務暫時無法響應，請稍後重試。',
+  'exception.backHome': '返回門戶首頁',
+  'exception.reload': '重新加載',
 };

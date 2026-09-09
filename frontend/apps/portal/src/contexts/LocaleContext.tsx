@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { LOCALES, DEFAULT_LOCALE, type LocaleKey, type LocaleConfig } from '../locales';
+import { STORAGE_KEYS } from '../constants';
 
 interface LocaleContextType {
   locale: LocaleKey;
@@ -8,7 +9,7 @@ interface LocaleContextType {
   formatMessage: (descriptor: { id: string; defaultMessage?: string }) => string;
 }
 
-const STORAGE_KEY = 'umi_locale';
+const STORAGE_KEY = STORAGE_KEYS.LOCALE;
 
 const LocaleContext = createContext<LocaleContextType>({
   locale: DEFAULT_LOCALE,

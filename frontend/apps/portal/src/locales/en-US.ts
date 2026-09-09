@@ -3,6 +3,8 @@ export default {
   'menu.home': 'Portal Home',
   'menu.services': 'Services Governance',
   'menu.workbench': 'API Workbench',
+  'portal.header.lang': 'Switch Language',
+  'portal.header.search': 'Global quick search...',
   'portal.header.theme.dark': 'Switch to Dark Theme',
   'portal.header.theme.light': 'Switch to Light Theme',
   'portal.header.admin': 'Admin Portal',

@@ -1,6 +1,7 @@
 export default {
   // 导航与基础
   'navBar.lang': '语言选择',
+  'navBar.search': '全站快捷搜索...',
   'navBar.theme.light': '切换为浅色模式',
   'navBar.theme.dark': '切换为暗黑模式',
   'navBar.fullscreen.enter': '全屏模式',
@@ -77,4 +78,11 @@ export default {
   'common.cancel': '取消',
   'common.admin': '管理员',
   'role.superAdmin': '超级管理员',
+
+  // 异常页面
+  'exception.403.subTitle': '抱歉，您暂无访问该页面的操作权限。请联系管理员分配权限或返回大盘。',
+  'exception.404.subTitle': '抱歉，您访问的页面不存在或已被移除。',
+  'exception.500.subTitle': '抱歉，服务器内部遇到异常或网关微服务暂时无法响应，请稍后重试。',
+  'exception.backHome': '返回监控大盘',
+  'exception.reload': '重新加载',
 };

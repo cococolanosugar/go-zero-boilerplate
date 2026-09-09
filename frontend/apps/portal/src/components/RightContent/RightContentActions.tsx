@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { Button, Tooltip } from "antd";
 import {
   ExportOutlined,
@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { SelectLang } from "./SelectLang";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { HeaderSearch } from "../HeaderSearch";
 import { useIntl } from "../../contexts/LocaleContext";
 
 export interface RightContentActionsProps {
@@ -23,6 +24,7 @@ export const RightContentActions: React.FC<RightContentActionsProps> = ({
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <HeaderSearch />
       <SelectLang />
       <ThemeSwitch />
       <Tooltip

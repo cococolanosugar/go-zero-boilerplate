@@ -3,6 +3,8 @@ export default {
   'menu.home': '门户首页',
   'menu.services': '微服务治理',
   'menu.workbench': '联调工作台',
+  'portal.header.lang': '多语言切换',
+  'portal.header.search': '全站快捷搜索...',
   'portal.header.theme.dark': '切换为暗黑模式',
   'portal.header.theme.light': '切换为浅色模式',
   'portal.header.admin': '管理后台',
