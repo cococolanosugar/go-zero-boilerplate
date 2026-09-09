@@ -252,6 +252,15 @@ go-zero-boilerplate/
 * **前端审计日志中心**：
   * 管理后台 `/system/logs` 集成 Ant Design ProTable 双 Tab 标签页，支持按模块、操作人、IP、状态多条件筛选与详情弹窗。
 
+### 3.10 前端类型架构与自动化测试规范 (Frontend Types Architecture & Testing)
+* **类型边界防护守则 (`src/types/` vs `@zero/api`)**：
+  * **严禁重复声明后端 DTO**：服务端数据传输对象、API 请求与响应结构体**唯一事实源为 `@zero/api`**（通过 `just gen-ts` 自动生成）。禁止在 `src/types/` 或页面内人工复制或冗余定义后端模型。
+  * **`src/types/` 专用职责**：仅用于存放纯前端 UI 视图模型（ViewModel）、页面多步骤草稿态、表格列偏好设置等与后端接口无关的客户端状态。
+* **前端自动化测试套件 (`tests/` & Vitest)**：
+  * 采用 Vite 原生高速测试框架 **Vitest** 配合 `jsdom` 环境。
+  * 关键边界逻辑（如 `access.ts` 权限判定、`storage.ts` 带 TTL 持久化存储、数据格式化等）必须编写单元测试覆盖。
+  * 每次修改前端核心逻辑后，执行 `just test-frontend`（或 `pnpm test`）确保测试 100% 通过。
+
 ---
 
 ## 4. 常用命令速查 (Cheat Sheet)
@@ -297,6 +306,7 @@ just run-portal       # 启动官方门户 (http://localhost:3000)
 ```bash
 cd frontend && pnpm install  # 安装前端依赖
 just build-frontend          # 构建前端所有项目产物
+just test-frontend           # 运行前端全量自动化单元测试 (Vitest)
 just tidy                    # 整理后端 Go 依赖
 ```
 

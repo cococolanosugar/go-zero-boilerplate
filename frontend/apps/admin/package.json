@@ -9,6 +9,7 @@
     "dev:test": "vite --mode test",
     "dev:pre": "vite --mode pre",
     "build": "tsc && vite build",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "dependencies": {

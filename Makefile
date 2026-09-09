@@ -1,4 +1,4 @@
-.PHONY: gen-gateway gen-user-rpc gen-order-rpc gen-ts run-gateway run-user-rpc run-order-rpc run-admin run-portal build-frontend build-web tidy test lint-antd ai-index rename-project
+.PHONY: gen-gateway gen-user-rpc gen-order-rpc gen-ts run-gateway run-user-rpc run-order-rpc run-admin run-portal build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project
 
 # 生成网关 API 代码
 gen-gateway:
@@ -53,6 +53,10 @@ build-frontend:
 	cd frontend && pnpm build
 
 build-web: build-frontend
+
+# 运行前端全量自动化测试 (Vitest)
+test-frontend:
+	cd frontend && pnpm test
 
 # 整理后端依赖
 tidy:

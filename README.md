@@ -104,6 +104,7 @@ just gen-ts
 | 启动前端 Admin | `just run-admin` | `make run-admin` |
 | 启动前端 Portal | `just run-portal` | `make run-portal` |
 | 构建前端全部产物 | `just build-frontend` | `make build-frontend` |
+| **前端自动化单元测试** | `just test-frontend` | `make test-frontend` |
 | **前端 Ant Design 规范诊断** | `just lint-antd` | `make lint-antd` |
 | **构建 AI 知识图谱与全景索引** | `just ai-index` | `make ai-index` |
 | 整理 Go 依赖 | `just tidy` | `make tidy` |

@@ -62,6 +62,10 @@ run-portal-test:
 build-frontend:
     cd frontend && pnpm build
 
+# 运行前端全量自动化测试 (Vitest)
+test-frontend:
+    cd frontend && pnpm test
+
 # 兼容别名
 build-web:
     @just build-frontend
