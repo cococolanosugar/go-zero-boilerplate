@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Dropdown, Space, Tag, Tooltip } from "antd";
 import {
-  DefaultFooter,
   type ProLayoutProps,
   type ProSettings,
 } from "@ant-design/pro-components";
+import { Footer } from "./components";
 import {
   HomeOutlined,
   ClusterOutlined,
@@ -371,39 +371,6 @@ export const layout = (
           ),
         }
       : undefined,
-    footerRender: () => (
-      <DefaultFooter
-        copyright={`2026 ${APP_NAME} ${formatMessage({
-          id: "portal.footer.copyright",
-          defaultMessage: "工业级微服务门户体系",
-        })}`}
-        links={[
-          {
-            key: "go-zero",
-            title: "go-zero 微服务",
-            href: "https://go-zero.dev",
-            blankTarget: true,
-          },
-          {
-            key: "github",
-            title: <GithubOutlined />,
-            href: "https://github.com/zeromicro/go-zero",
-            blankTarget: true,
-          },
-          {
-            key: "admin",
-            title: "管理后台 (:3001)",
-            href: "http://localhost:3001",
-            blankTarget: true,
-          },
-          {
-            key: "Ant Design",
-            title: "Ant Design 6.6.2",
-            href: "https://ant.design",
-            blankTarget: true,
-          },
-        ]}
-      />
-    ),
+    footerRender: () => <Footer />,
   };
 };

@@ -1,0 +1,88 @@
+﻿/* ==========================================================================
+   Go-Zero Monorepo - Portal Global Styles
+   ========================================================================== */
+
+/* 1. 根视口与排版平滑渲染 */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 2. 文本选取高亮（极客紫基色） */
+::selection {
+  background-color: #722ed1;
+  color: #ffffff;
+}
+
+/* 3. 全局 6px 优雅自适应细滚动条 (对齐 macOS 与 Pro 视觉标准) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.38);
+}
+
+/* 深色主题下的滚动条自适应 */
+.ant-layout-has-sider[data-theme="dark"] ::-webkit-scrollbar-thumb,
+body[data-theme="dark"] ::-webkit-scrollbar-thumb,
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.ant-layout-has-sider[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+body[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* Firefox 滚动条适配 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* 4. 打印媒体查询支持 */
+@media print {
+  .ant-pro-top-nav-header,
+  .ant-pro-sider,
+  .ant-pro-global-footer {
+    display: none !important;
+  }
+}
+
+/* 5. 常用布局与文本辅助类 */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

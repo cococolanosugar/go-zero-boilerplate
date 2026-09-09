@@ -35,11 +35,23 @@ export const routes: AppRouteItem[] = [
         icon: "ApiOutlined",
         component: lazy(() => import("../pages/Workbench")),
       },
+      {
+        path: "/404",
+        name: "404",
+        hideInMenu: true,
+        component: lazy(() => import("../pages/Exception/404")),
+      },
+      {
+        path: "/500",
+        name: "500",
+        hideInMenu: true,
+        component: lazy(() => import("../pages/Exception/500")),
+      },
     ],
   },
   {
     path: "*",
-    redirect: "/home",
+    component: lazy(() => import("../pages/Exception/404")),
     layout: false,
   },
 ];

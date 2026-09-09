@@ -19,6 +19,7 @@ export const defaultSettings: PortalDefaultSettings = {
   fixSiderbar: false,
   splitMenus: false,
   title: `${APP_NAME} 官方技术门户`,
+  logo: "/logo.svg",
   pwa: false,
 };
 

@@ -89,4 +89,10 @@ export default {
   'profile.permissions': 'Assigned Permissions & APIs',
   'profile.noPermissions': 'No granular permissions assigned',
   'profile.logout': 'Log Out',
+
+  // Exception Pages
+  'exception.404.subTitle': 'Sorry, the page you visited does not exist or has been removed.',
+  'exception.500.subTitle': 'Sorry, the server encountered an error or the gateway is temporarily unavailable.',
+  'exception.backHome': 'Back to Portal Home',
+  'exception.reload': 'Reload Page',
 };

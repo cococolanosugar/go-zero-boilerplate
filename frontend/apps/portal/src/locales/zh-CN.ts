@@ -89,4 +89,10 @@ export default {
   'profile.permissions': '拥有的按钮与接口权限点',
   'profile.noPermissions': '暂无独立细粒度权限编码',
   'profile.logout': '退出登录',
+
+  // 异常页面
+  'exception.404.subTitle': '抱歉，您访问的页面不存在或已被移除。',
+  'exception.500.subTitle': '抱歉，服务器内部遇到异常或网关微服务暂时无法响应，请稍后重试。',
+  'exception.backHome': '返回门户首页',
+  'exception.reload': '重新加载',
 };
