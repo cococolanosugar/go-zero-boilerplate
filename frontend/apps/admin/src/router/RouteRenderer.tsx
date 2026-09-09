@@ -145,7 +145,17 @@ export const RouteRenderer: React.FC<{ routes: AppRouteItem[] }> = ({ routes }) 
         </Route>
       )}
 
-      {/* 3. 兜底未匹配路由 */}
+      {/* 3. 兜底未匹配路由 (支持 component 渲染与 redirect 跳转) */}
+      {fallbackRoute && fallbackRoute.component && (
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<PageLoading />}>
+              <fallbackRoute.component />
+            </Suspense>
+          }
+        />
+      )}
       {fallbackRoute && fallbackRoute.redirect && (
         <Route path="*" element={<Navigate to={fallbackRoute.redirect} replace />} />
       )}

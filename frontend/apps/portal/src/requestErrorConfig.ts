@@ -1,5 +1,13 @@
 import { ApiError, type RequestOptions, type RequestContext } from "@zero/api";
 
+export enum ErrorShowType {
+  SILENT = 0,
+  WARN_MESSAGE = 1,
+  ERROR_MESSAGE = 2,
+  NOTIFICATION = 3,
+  REDIRECT = 9,
+}
+
 let appFeedback: {
   message?: any;
   notification?: any;

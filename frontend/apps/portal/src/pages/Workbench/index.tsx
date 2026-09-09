@@ -19,6 +19,7 @@ import {
 } from "@zero/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
+import { Access } from "../../components";
 
 export const WorkbenchPage: React.FC = () => {
   const { onOpenLogin } = useOutletContext<{ onOpenLogin: () => void }>();
@@ -160,29 +161,33 @@ export const WorkbenchPage: React.FC = () => {
                   2. 员工个人画像与权限
                 </Button>
 
-                <Button
-                  block
-                  type={activeApi === "全量菜单权限树" ? "primary" : "default"}
-                  icon={<MenuOutlined />}
-                  style={{ textAlign: "left" }}
-                  onClick={() =>
-                    testApi("全量菜单权限树", () => getSysMenuTree())
-                  }
-                >
-                  3. 全量系统菜单与按钮树
-                </Button>
+                <Access role="ROLE_ADMIN" fallbackMode="disabled" fallbackTooltip="此接口仅限超级管理员角色调用">
+                  <Button
+                    block
+                    type={activeApi === "全量菜单权限树" ? "primary" : "default"}
+                    icon={<MenuOutlined />}
+                    style={{ textAlign: "left" }}
+                    onClick={() =>
+                      testApi("全量菜单权限树", () => getSysMenuTree())
+                    }
+                  >
+                    3. 全量系统菜单与按钮树
+                  </Button>
+                </Access>
 
-                <Button
-                  block
-                  type={activeApi === "接口字典列表" ? "primary" : "default"}
-                  icon={<ApiOutlined />}
-                  style={{ textAlign: "left" }}
-                  onClick={() =>
-                    testApi("接口字典列表", () => listSysApis())
-                  }
-                >
-                  4. 系统 API 字典列表
-                </Button>
+                <Access role="ROLE_ADMIN" fallbackMode="disabled" fallbackTooltip="此接口仅限超级管理员角色调用">
+                  <Button
+                    block
+                    type={activeApi === "接口字典列表" ? "primary" : "default"}
+                    icon={<ApiOutlined />}
+                    style={{ textAlign: "left" }}
+                    onClick={() =>
+                      testApi("接口字典列表", () => listSysApis())
+                    }
+                  >
+                    4. 系统 API 字典列表
+                  </Button>
+                </Access>
               </Flex>
             </ProCard>
           </Col>

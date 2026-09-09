@@ -2,14 +2,33 @@ import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { PortalLayout } from "../layouts/PortalLayout";
 import { PageLoading } from "../components/PageLoading";
+import { useAuth } from "../contexts/AuthContext";
+import { getAccess } from "../access";
 import type { AppRouteItem } from "../config/routes.types";
+
+const Exception403 = React.lazy(() => import("../pages/Exception/403"));
+
+const RouteAccessWrapper: React.FC<{
+  access?: string;
+  element: React.ReactElement;
+}> = ({ access, element }) => {
+  const { profile } = useAuth();
+  const accessInstance = getAccess(profile);
+
+  if (access && !accessInstance.canAccess(access)) {
+    return <Exception403 />;
+  }
+
+  return element;
+};
 
 const LazyWrapper: React.FC<{
   Component: React.ComponentType<any> | React.LazyExoticComponent<any>;
-}> = ({ Component }) => {
+  access?: string;
+}> = ({ Component, access }) => {
   return (
     <Suspense fallback={<PageLoading />}>
-      <Component />
+      <RouteAccessWrapper access={access} element={<Component />} />
     </Suspense>
   );
 };
@@ -54,9 +73,21 @@ function renderRouteNodes(items: AppRouteItem[], parentPath = ""): React.ReactNo
 
     if (item.component) {
       if (isIndex) {
-        return <Route key={key} index element={<LazyWrapper Component={item.component} />} />;
+        return (
+          <Route
+            key={key}
+            index
+            element={<LazyWrapper Component={item.component} access={item.access} />}
+          />
+        );
       }
-      return <Route key={key} path={relPath} element={<LazyWrapper Component={item.component} />} />;
+      return (
+        <Route
+          key={key}
+          path={relPath}
+          element={<LazyWrapper Component={item.component} access={item.access} />}
+        />
+      );
     }
 
     return null;
@@ -93,6 +124,16 @@ export const RouteRenderer: React.FC<{ routes: AppRouteItem[] }> = ({ routes }) 
         </Route>
       )}
 
+      {fallbackRoute && fallbackRoute.component && (
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<PageLoading />}>
+              <fallbackRoute.component />
+            </Suspense>
+          }
+        />
+      )}
       {fallbackRoute && fallbackRoute.redirect && (
         <Route path="*" element={<Navigate to={fallbackRoute.redirect} replace />} />
       )}

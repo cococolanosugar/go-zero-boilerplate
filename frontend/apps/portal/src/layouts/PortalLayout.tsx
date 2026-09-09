@@ -5,6 +5,7 @@ import { ProLayout } from "@ant-design/pro-components";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
 import { useInitialState } from "../contexts/InitialStateContext";
+import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { LoginModal } from "../components/LoginModal";
 import { ProfileDrawer } from "../components/ProfileDrawer";
 import { layout } from "../app";
@@ -24,7 +25,7 @@ export const PortalLayout: React.FC = () => {
 
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const { isDark, setIsDark } = useLayoutSettings();
 
   const layoutConfig = useMemo(() => {
     return layout({

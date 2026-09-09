@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback } from "react";
+﻿import React, { createContext, useContext, useCallback, useMemo } from "react";
 import {
   adminLogin,
   login,
@@ -13,6 +13,11 @@ interface AuthContextType {
   profile: AdminProfileResp | null;
   isLoggedIn: boolean;
   loading: boolean;
+  permissions: string[];
+  roles: string[];
+  isSuperAdmin: boolean;
+  hasPermission: (perm: string | string[], mode?: "all" | "one") => boolean;
+  hasRole: (role: string | string[], mode?: "all" | "one") => boolean;
   loginAsSysUser: (req: AdminLoginReq) => Promise<void>;
   loginAsMobile: (req: LoginReq) => Promise<void>;
   logout: () => void;
@@ -23,6 +28,11 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   isLoggedIn: false,
   loading: true,
+  permissions: [],
+  roles: [],
+  isSuperAdmin: false,
+  hasPermission: () => false,
+  hasRole: () => false,
   loginAsSysUser: async () => {},
   loginAsMobile: async () => {},
   logout: () => {},
@@ -31,6 +41,49 @@ const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { initialState, setInitialState, refreshInitialState } = useInitialState();
+
+  const profile = initialState.currentUser || null;
+  const roles = useMemo(() => profile?.roles || [], [profile]);
+  const permissions = useMemo(() => profile?.permissions || [], [profile]);
+  const isSuperAdmin = useMemo(
+    () =>
+      roles.includes("ROLE_ADMIN") ||
+      roles.includes("admin") ||
+      profile?.id === 1,
+    [roles, profile]
+  );
+
+  const hasPermission = useCallback(
+    (perm: string | string[], mode: "all" | "one" = "one"): boolean => {
+      if (isSuperAdmin) return true;
+      if (!perm) return true;
+
+      const permArray = Array.isArray(perm) ? perm : [perm];
+      if (permArray.length === 0) return true;
+
+      if (mode === "all") {
+        return permArray.every((p) => permissions.includes(p));
+      }
+      return permArray.some((p) => permissions.includes(p));
+    },
+    [isSuperAdmin, permissions]
+  );
+
+  const hasRole = useCallback(
+    (role: string | string[], mode: "all" | "one" = "one"): boolean => {
+      if (isSuperAdmin) return true;
+      if (!role) return true;
+
+      const roleArray = Array.isArray(role) ? role : [role];
+      if (roleArray.length === 0) return true;
+
+      if (mode === "all") {
+        return roleArray.every((r) => roles.includes(r));
+      }
+      return roleArray.some((r) => roles.includes(r));
+    },
+    [isSuperAdmin, roles]
+  );
 
   const refreshProfile = useCallback(async () => {
     await refreshInitialState();
@@ -56,9 +109,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <AuthContext.Provider
       value={{
-        profile: initialState.currentUser || null,
+        profile,
         isLoggedIn: !!initialState.isLoggedIn,
         loading: !!initialState.loading,
+        permissions,
+        roles,
+        isSuperAdmin,
+        hasPermission,
+        hasRole,
         loginAsSysUser,
         loginAsMobile,
         logout,

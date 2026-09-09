@@ -36,6 +36,12 @@ export const routes: AppRouteItem[] = [
         component: lazy(() => import("../pages/Workbench")),
       },
       {
+        path: "/403",
+        name: "403",
+        hideInMenu: true,
+        component: lazy(() => import("../pages/Exception/403")),
+      },
+      {
         path: "/404",
         name: "404",
         hideInMenu: true,
