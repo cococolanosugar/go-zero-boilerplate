@@ -6,3 +6,4 @@ export * from "./HeaderSearch";
 export * from "./MultiTabs";
 export * from "./RightContent";
 export * from "./ErrorBoundary";
+export * from "./CommandPalette";

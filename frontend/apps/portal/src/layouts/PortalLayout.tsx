@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import { App as AntdApp } from "antd";
-import { ProLayout } from "@ant-design/pro-components";
+import { ProLayout, PageLoading } from "@ant-design/pro-components";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
 import { useInitialState } from "../contexts/InitialStateContext";
@@ -19,6 +19,10 @@ export const PortalLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { initialState, setInitialState } = useInitialState();
+
+  if (initialState.loading) {
+    return <PageLoading />;
+  }
   const { logout } = useAuth();
   const { locale, setLocale } = useLocale();
   const { formatMessage } = useIntl();

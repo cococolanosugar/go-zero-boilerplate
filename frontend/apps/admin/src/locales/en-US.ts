@@ -17,6 +17,10 @@ export default {
   // Menus
   'menu.account.settings': 'Account Settings',
   'menu.dashboard': 'Dashboard',
+  'menu.workplace': 'Workplace',
+  'menu.form.stepform': 'Step Form',
+  'menu.profile.advanced': 'Advanced Profile',
+  'menu.result.success': 'Success',
   'menu.orders': 'Order Management',
   'menu.users': 'User Center',
   'menu.system': 'System & Security',
@@ -26,6 +30,7 @@ export default {
   'menu.system.apis': 'API Dictionary',
   'menu.system.dicts': 'Data Dictionary',
   'menu.system.logs': 'Audit Logs',
+  'menu.system.openapi': 'API Docs (OpenAPI)',
 
   // Dashboard
   'pages.dashboard.title': 'Monitoring Dashboard',

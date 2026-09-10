@@ -24,6 +24,8 @@ interface LayoutSettingsContextType {
   setSettings: (settings: Partial<DefaultSettings>) => void;
   toggleNavTheme: () => void;
   setColorPrimary: (color: string) => void;
+  setWatermark: (enabled: boolean) => void;
+  setCompact: (enabled: boolean) => void;
   isDark: boolean;
   presetColors: ThemeColorPreset[];
 }
@@ -33,6 +35,8 @@ const LayoutSettingsContext = createContext<LayoutSettingsContextType>({
   setSettings: () => {},
   toggleNavTheme: () => {},
   setColorPrimary: () => {},
+  setWatermark: () => {},
+  setCompact: () => {},
   isDark: false,
   presetColors: PRESET_THEME_COLORS,
 });
@@ -67,17 +71,28 @@ export const LayoutSettingsProvider: React.FC<{ children: React.ReactNode }> = (
   const isDark = settings.navTheme === "realDark";
 
   const toggleNavTheme = () => {
-    setSettings({
-      ...settings,
-      navTheme: isDark ? "light" : "realDark",
+    setSettingsState((prev) => {
+      const nextTheme = prev.navTheme === "realDark" ? "light" : "realDark";
+      const merged = { ...prev, navTheme: nextTheme as "light" | "realDark" };
+      try {
+        localStorage.setItem(STORAGE_KEYS.LAYOUT_SETTINGS, JSON.stringify(merged));
+      } catch (e) {
+        console.error("持久化布局配置异常:", e);
+      }
+      return merged;
     });
   };
 
   const setColorPrimary = (color: string) => {
-    setSettings({
-      ...settings,
-      colorPrimary: color,
-    });
+    setSettings({ colorPrimary: color });
+  };
+
+  const setWatermark = (enabled: boolean) => {
+    setSettings({ watermark: enabled });
+  };
+
+  const setCompact = (enabled: boolean) => {
+    setSettings({ compact: enabled });
   };
 
   return (
@@ -87,6 +102,8 @@ export const LayoutSettingsProvider: React.FC<{ children: React.ReactNode }> = (
         setSettings,
         toggleNavTheme,
         setColorPrimary,
+        setWatermark,
+        setCompact,
         isDark,
         presetColors: PRESET_THEME_COLORS,
       }}

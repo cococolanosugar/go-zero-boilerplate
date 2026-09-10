@@ -13,6 +13,7 @@ import (
 	"go-zero-boilerplate/app/gateway/internal/svc"
 
 	"net/http"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -63,6 +64,44 @@ func main() {
 	server.Use(middleware.NewRbacMiddleware(ctx).Handle)
 
 	handler.RegisterHandlers(server, ctx)
+
+	// 注册网关 SSE 实时通知流通道
+	server.AddRoute(rest.Route{
+		Method: http.MethodGet,
+		Path:   "/api/v1/system/notice/stream",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "text/event-stream")
+			w.Header().Set("Cache-Control", "no-cache")
+			w.Header().Set("Connection", "keep-alive")
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+
+			flusher, ok := w.(http.Flusher)
+			if !ok {
+				http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
+				return
+			}
+
+			// 发送初始握手与就绪通知
+			initMsg := `{"type":"notice","id":"init-01","title":"微服务网关 SSE 实时通知通道已就绪","datetime":"刚刚","category":"notification","status":"success"}`
+			fmt.Fprintf(w, "data: %s\n\n", initMsg)
+			flusher.Flush()
+
+			ticker := time.NewTicker(20 * time.Second)
+			defer ticker.Stop()
+
+			ctx := r.Context()
+			for {
+				select {
+				case <-ctx.Done():
+					return
+				case t := <-ticker.C:
+					pingMsg := fmt.Sprintf(`{"type":"heartbeat","time":"%s"}`, t.Format(time.RFC3339))
+					fmt.Fprintf(w, "data: %s\n\n", pingMsg)
+					flusher.Flush()
+				}
+			}
+		},
+	})
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()

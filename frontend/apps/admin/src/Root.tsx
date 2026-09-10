@@ -20,11 +20,16 @@ const ThemedApp: React.FC = () => {
   const { settings, isDark } = useLayoutSettings();
   const { currentConfig } = useLocale();
 
+  const algorithms = [
+    isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+    ...(settings.compact ? [theme.compactAlgorithm] : []),
+  ];
+
   return (
     <ConfigProvider
       locale={currentConfig.antdLocale}
       theme={{
-        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        algorithm: algorithms,
         token: {
           colorPrimary: settings.colorPrimary || "#1677ff",
           borderRadius: 8,

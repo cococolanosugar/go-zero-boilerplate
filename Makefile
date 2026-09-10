@@ -20,6 +20,11 @@ gen-model:
 gen-ts:
 	goctl api ts --api app/gateway/desc/gateway.api --dir frontend/packages/api/src
 
+# 基于网关契约生成 OpenAPI / Swagger 契约
+gen-swagger:
+	goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway
+	node -e "const fs = require('fs'); fs.copyFileSync('manifest/swagger/gateway.json', 'frontend/apps/admin/public/openapi.json');"
+
 # 启动网关服务 (HTTP 8888)
 run-gateway:
 	cd app/gateway && go run gateway.go -f etc/gateway.yaml

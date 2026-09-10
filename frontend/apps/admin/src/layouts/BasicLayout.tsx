@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { App as AntdApp } from "antd";
-import { ProLayout, SettingDrawer } from "@ant-design/pro-components";
+import { ProLayout, SettingDrawer, PageLoading } from "@ant-design/pro-components";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
 import { useInitialState } from "../contexts/InitialStateContext";
 import { MultiTabs } from "../components/MultiTabs";
+import { CommandPalette } from "../components/CommandPalette";
 import { layout } from "../app";
 
 /**
@@ -18,6 +19,10 @@ export const BasicLayout: React.FC = () => {
   const navigate = useNavigate();
   const { settings, setSettings, toggleNavTheme, isDark } = useLayoutSettings();
   const { initialState, setInitialState } = useInitialState();
+
+  if (initialState.loading) {
+    return <PageLoading />;
+  }
   const { locale, setLocale } = useLocale();
   const { formatMessage } = useIntl();
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -81,6 +86,7 @@ export const BasicLayout: React.FC = () => {
       >
         {settings.tabsLayout !== false && <MultiTabs />}
         <Outlet />
+        <CommandPalette />
         <SettingDrawer
           enableDarkTheme
           settings={settings}

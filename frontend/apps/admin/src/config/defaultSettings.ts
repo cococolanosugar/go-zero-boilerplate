@@ -5,6 +5,8 @@ export interface DefaultSettings extends ProSettings {
   pwa?: boolean;
   logo?: string;
   tabsLayout?: boolean;
+  watermark?: boolean;
+  compact?: boolean;
 }
 
 /**
@@ -19,6 +21,8 @@ export const defaultSettings: DefaultSettings = {
   fixSiderbar: true,
   splitMenus: false,
   tabsLayout: true,
+  watermark: true,
+  compact: false,
   title: APP_NAME,
   pwa: false,
   logo: "/logo.svg",

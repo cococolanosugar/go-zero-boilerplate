@@ -114,6 +114,7 @@ func isPublicRoute(path string) bool {
 		"/api/v1/user/login",
 		"/api/v1/user/register",
 		"/api/v1/system/auth/login",
+		"/api/v1/system/notice/stream",
 	}
 	for _, p := range publicPaths {
 		if path == p {

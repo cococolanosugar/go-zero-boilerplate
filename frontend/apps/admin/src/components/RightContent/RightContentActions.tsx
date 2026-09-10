@@ -6,7 +6,9 @@ import {
   GlobalOutlined,
   QuestionCircleOutlined,
   GithubOutlined,
+  ApiOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import { useIntl } from "../../contexts/LocaleContext";
 import { SelectLang } from "./SelectLang";
 import { ThemeSwitch } from "./ThemeSwitch";
@@ -22,6 +24,7 @@ export interface RightContentActionsProps {
 
 export const RightContentActions: React.FC<RightContentActionsProps> = (props) => {
   const { formatMessage } = useIntl();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -29,6 +32,14 @@ export const RightContentActions: React.FC<RightContentActionsProps> = (props) =
       <NoticeIcon />
       <SelectLang />
       <ThemeSwitch isDark={props.isDark} toggleNavTheme={props.toggleNavTheme} />
+      <Tooltip title="OpenAPI / Swagger 接口契约中心">
+        <span
+          style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
+          onClick={() => navigate("/system/openapi")}
+        >
+          <ApiOutlined />
+        </span>
+      </Tooltip>
       {props.toggleFullscreen && (
         <Tooltip
           title={

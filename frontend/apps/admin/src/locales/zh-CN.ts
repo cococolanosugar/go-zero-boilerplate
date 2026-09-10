@@ -17,6 +17,10 @@ export default {
   // 菜单
   'menu.account.settings': '个人设置',
   'menu.dashboard': '监控大盘',
+  'menu.workplace': '工作台',
+  'menu.form.stepform': '分步表单',
+  'menu.profile.advanced': '高级详情',
+  'menu.result.success': '成功页面',
   'menu.orders': '订单管理',
   'menu.users': '用户中心',
   'menu.system': '系统与权限',
@@ -26,6 +30,7 @@ export default {
   'menu.system.apis': '接口字典',
   'menu.system.dicts': '数据字典',
   'menu.system.logs': '审计日志',
+  'menu.system.openapi': '接口文档 (OpenAPI)',
 
   // 大盘
   'pages.dashboard.title': '系统监控大盘',

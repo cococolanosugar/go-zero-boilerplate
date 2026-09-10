@@ -14,6 +14,9 @@ import {
   BookOutlined,
   HistoryOutlined,
   AppstoreOutlined,
+  FormOutlined,
+  ProfileOutlined,
+  CheckCircleOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
@@ -62,6 +65,12 @@ const getIcon = (iconName?: React.ReactNode | string) => {
       return <BookOutlined />;
     case "HistoryOutlined":
       return <HistoryOutlined />;
+    case "FormOutlined":
+      return <FormOutlined />;
+    case "ProfileOutlined":
+      return <ProfileOutlined />;
+    case "CheckCircleOutlined":
+      return <CheckCircleOutlined />;
     default:
       return <AppstoreOutlined />;
   }
@@ -70,6 +79,10 @@ const getIcon = (iconName?: React.ReactNode | string) => {
 const getMenuLocaleKey = (path: string) => {
   const map: Record<string, string> = {
     "/dashboard": "menu.dashboard",
+    "/workplace": "menu.workplace",
+    "/form/step-form": "menu.form.stepform",
+    "/profile/advanced": "menu.profile.advanced",
+    "/result/success": "menu.result.success",
     "/orders": "menu.orders",
     "/users": "menu.users",
     "/system": "menu.system",
@@ -230,9 +243,12 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
     ...settings,
     title: APP_NAME,
     routeData,
-    waterMarkProps: {
-      content: `${displayName} (${APP_NAME})`,
-    },
+    waterMarkProps:
+      settings.watermark !== false
+        ? {
+            content: `${displayName} (${APP_NAME})`,
+          }
+        : undefined,
     menuItemRender: (item, dom) => (
       <div
         onClick={() => {

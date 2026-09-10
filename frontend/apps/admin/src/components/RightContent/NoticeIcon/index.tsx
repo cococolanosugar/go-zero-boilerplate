@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Badge,
   Popover,
@@ -89,6 +89,48 @@ export const NoticeIcon: React.FC = () => {
   const { message } = App.useApp();
   const [notices, setNotices] = useState<NoticeItem[]>(INITIAL_NOTICES);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("EventSource" in window)) {
+      return;
+    }
+
+    let es: EventSource | null = null;
+    try {
+      es = new EventSource("/api/v1/system/notice/stream");
+      es.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data && data.type === "notice" && data.title) {
+            setNotices((prev) => [
+              {
+                id: data.id || `sse-${Date.now()}`,
+                title: data.title,
+                datetime: data.datetime || "刚刚",
+                type: data.category === "message" ? "message" : data.category === "event" ? "event" : "notification",
+                status: data.status || "processing",
+                description: data.description,
+              },
+              ...prev,
+            ]);
+          }
+        } catch {
+          // ignore parsing error
+        }
+      };
+      es.onerror = () => {
+        // SSE browser auto-reconnects
+      };
+    } catch {
+      // ignore
+    }
+
+    return () => {
+      if (es) {
+        es.close();
+      }
+    };
+  }, []);
 
   const unreadCount = useMemo(() => {
     return notices.filter((item) => !item.read).length;
