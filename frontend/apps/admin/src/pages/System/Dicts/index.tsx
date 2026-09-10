@@ -374,6 +374,10 @@ export const DictsPage: React.FC = () => {
             }
             actionRef={typeActionRef}
             rowKey="id"
+            columnsState={{
+              persistenceKey: "pro-table-columns-system-dict-types",
+              persistenceType: "localStorage",
+            }}
             search={{
               labelWidth: "auto",
               filterType: "query",
@@ -438,6 +442,10 @@ export const DictsPage: React.FC = () => {
             actionRef={dataActionRef}
             params={{ dictType: selectedType?.dictType }}
             rowKey="id"
+            columnsState={{
+              persistenceKey: "pro-table-columns-system-dict-data",
+              persistenceType: "localStorage",
+            }}
             search={{
               labelWidth: "auto",
               filterType: "query",

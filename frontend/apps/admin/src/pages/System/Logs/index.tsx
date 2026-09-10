@@ -249,6 +249,10 @@ export const LogsPage: React.FC = () => {
                   headerTitle="系统操作审计日志"
                   actionRef={operActionRef}
                   rowKey="id"
+                  columnsState={{
+                    persistenceKey: "pro-table-columns-system-oper-logs",
+                    persistenceType: "localStorage",
+                  }}
                   search={{
                     labelWidth: "auto",
                   }}
@@ -298,6 +302,10 @@ export const LogsPage: React.FC = () => {
                   headerTitle="系统登录认证日志"
                   actionRef={loginActionRef}
                   rowKey="id"
+                  columnsState={{
+                    persistenceKey: "pro-table-columns-system-login-logs",
+                    persistenceType: "localStorage",
+                  }}
                   search={{
                     labelWidth: "auto",
                   }}

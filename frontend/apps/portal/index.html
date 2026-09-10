@@ -5,9 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Go-Zero Monorepo - 官方技术门户</title>
+    <meta name="description" content="Go-Zero Monorepo 企业级微服务与全栈开发脚手架官方门户，提供微服务架构、统一网关与高可用开发最佳实践。" />
+    <meta name="keywords" content="go-zero, monorepo, react, ant-design, microservices, gRPC, vite, pnpm, typescript" />
+    <meta name="author" content="Go-Zero Monorepo Team" />
+    
+    <!-- OpenGraph Metadata -->
+    <meta property="og:title" content="Go-Zero Monorepo - 官方技术门户" />
+    <meta property="og:description" content="Go-Zero Monorepo 企业级微服务与全栈开发脚手架官方门户，提供微服务架构、统一网关与高可用开发最佳实践。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://github.com/zeromicro/go-zero" />
+    <meta property="og:image" content="/favicon.svg" />
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Go-Zero Monorepo - 官方技术门户" />
+    <meta name="twitter:description" content="企业级微服务与全栈开发脚手架，基于 go-zero、React 18 与 Ant Design 6。" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #fbfbfb;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      }
+      .portal-shell-skeleton {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        width: 100%;
+      }
+      .portal-shell-navbar {
+        height: 64px;
+        background: #fff;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 48px;
+      }
+      .portal-shell-logo {
+        width: 150px;
+        height: 24px;
+        background: #f0f0f0;
+        border-radius: 4px;
+      }
+      .portal-shell-navlinks {
+        display: flex;
+        gap: 24px;
+      }
+      .portal-shell-navlink {
+        width: 60px;
+        height: 18px;
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+      .portal-shell-hero {
+        padding: 80px 24px 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background: linear-gradient(180deg, #ffffff 0%, #f7f9fa 100%);
+      }
+      .portal-shell-hero-title {
+        width: 360px;
+        max-width: 80%;
+        height: 40px;
+        background: #ececec;
+        border-radius: 6px;
+        margin-bottom: 20px;
+      }
+      .portal-shell-hero-sub {
+        width: 480px;
+        max-width: 90%;
+        height: 20px;
+        background: #f2f2f2;
+        border-radius: 4px;
+        margin-bottom: 32px;
+      }
+      .portal-shell-hero-btn {
+        width: 130px;
+        height: 40px;
+        background: #1677ff;
+        opacity: 0.2;
+        border-radius: 6px;
+      }
+      .portal-shell-content {
+        max-width: 1100px;
+        margin: 40px auto;
+        width: 90%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+      }
+      .portal-shell-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 24px;
+        border: 1px solid #f0f0f0;
+      }
+      .portal-shell-card-title {
+        width: 120px;
+        height: 22px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        margin-bottom: 16px;
+      }
+      .portal-shell-card-line {
+        height: 14px;
+        background: #f7f7f7;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+      .portal-pulse {
+        animation: portal-shimmer 1.5s ease-in-out infinite;
+      }
+      @keyframes portal-shimmer {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+    </style>
   </head>
-  <body style="margin: 0; padding: 0;">
-    <div id="root"></div>
+  <body>
+    <div id="root">
+      <div class="portal-shell-skeleton portal-pulse">
+        <header class="portal-shell-navbar">
+          <div class="portal-shell-logo"></div>
+          <div class="portal-shell-navlinks">
+            <div class="portal-shell-navlink"></div>
+            <div class="portal-shell-navlink"></div>
+            <div class="portal-shell-navlink"></div>
+          </div>
+        </header>
+        <section class="portal-shell-hero">
+          <div class="portal-shell-hero-title"></div>
+          <div class="portal-shell-hero-sub"></div>
+          <div class="portal-shell-hero-btn"></div>
+        </section>
+        <main class="portal-shell-content">
+          <div class="portal-shell-card">
+            <div class="portal-shell-card-title"></div>
+            <div class="portal-shell-card-line" style="width: 90%;"></div>
+            <div class="portal-shell-card-line" style="width: 75%;"></div>
+          </div>
+          <div class="portal-shell-card">
+            <div class="portal-shell-card-title"></div>
+            <div class="portal-shell-card-line" style="width: 85%;"></div>
+            <div class="portal-shell-card-line" style="width: 70%;"></div>
+          </div>
+          <div class="portal-shell-card">
+            <div class="portal-shell-card-title"></div>
+            <div class="portal-shell-card-line" style="width: 92%;"></div>
+            <div class="portal-shell-card-line" style="width: 60%;"></div>
+          </div>
+        </main>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

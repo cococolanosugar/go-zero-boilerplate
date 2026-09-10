@@ -3,6 +3,7 @@ import { App as AntdApp, Card, Tag, Avatar, Space, Button } from "antd";
 import { PageContainer, ProDescriptions } from "@ant-design/pro-components";
 import { UserOutlined, SafetyCertificateOutlined, ReloadOutlined } from "@ant-design/icons";
 import { getUserInfo, type UserInfoResp } from "@zero/api";
+import { maskPhone, copyToClipboard } from "@zero/shared";
 import { useIntl } from "../../contexts/LocaleContext";
 
 export const UsersPage: React.FC = () => {
@@ -59,7 +60,20 @@ export const UsersPage: React.FC = () => {
           }
         >
           <ProDescriptions.Item label="绑定手机号">
-            {user?.mobile || "13800000000"}
+            <Space size="small">
+              <span>{maskPhone(user?.mobile || "13800000000")}</span>
+              <Button
+                type="link"
+                size="small"
+                style={{ padding: 0 }}
+                onClick={async () => {
+                  const ok = await copyToClipboard(user?.mobile || "13800000000");
+                  if (ok) message.success("手机号已复制");
+                }}
+              >
+                复制
+              </Button>
+            </Space>
           </ProDescriptions.Item>
           <ProDescriptions.Item label="系统角色">
             <Tag color="geekblue">超级管理员 (Super Admin)</Tag>

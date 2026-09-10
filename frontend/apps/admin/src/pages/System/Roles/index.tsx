@@ -290,6 +290,10 @@ export const RolesPage: React.FC = () => {
         headerTitle="系统角色列表"
         actionRef={actionRef}
         rowKey="id"
+        columnsState={{
+          persistenceKey: "pro-table-columns-system-roles",
+          persistenceType: "localStorage",
+        }}
         search={{
           labelWidth: "auto",
         }}

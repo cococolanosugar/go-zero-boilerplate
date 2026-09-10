@@ -74,6 +74,10 @@ export const ApisPage: React.FC = () => {
         headerTitle="系统 API 资源字典与权限映射"
         actionRef={actionRef}
         rowKey="id"
+        columnsState={{
+          persistenceKey: "pro-table-columns-system-apis",
+          persistenceType: "localStorage",
+        }}
         search={{
           labelWidth: "auto",
         }}

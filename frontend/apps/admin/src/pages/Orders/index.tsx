@@ -131,6 +131,10 @@ export const OrdersPage: React.FC = () => {
         actionRef={actionRef}
         cardBordered
         rowKey="orderId"
+        columnsState={{
+          persistenceKey: "pro-table-columns-orders",
+          persistenceType: "localStorage",
+        }}
         search={{
           labelWidth: "auto",
         }}

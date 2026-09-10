@@ -21,7 +21,7 @@ import {
   toProTableRequest,
 } from "../../../services";
 import type { SysUserItem } from "@zero/api";
-import { PERMISSIONS } from "@zero/shared";
+import { PERMISSIONS, maskPhone, maskEmail, copyToClipboard } from "@zero/shared";
 import { Access } from "../../../components/Access";
 import { useIntl } from "../../../contexts/LocaleContext";
 
@@ -111,8 +111,52 @@ export const UsersPage: React.FC = () => {
     {
       title: "手机号",
       dataIndex: "mobile",
-      copyable: true,
       search: false,
+      render: (text) => {
+        const raw = String(text || "");
+        if (!raw) return <span style={{ color: "#bfbfbf" }}>-</span>;
+        return (
+          <Space size="small">
+            <span>{maskPhone(raw)}</span>
+            <Button
+              type="link"
+              size="small"
+              style={{ padding: 0 }}
+              onClick={async () => {
+                const ok = await copyToClipboard(raw);
+                if (ok) message.success("手机号已复制");
+              }}
+            >
+              复制
+            </Button>
+          </Space>
+        );
+      },
+    },
+    {
+      title: "企业邮箱",
+      dataIndex: "email",
+      search: false,
+      render: (text) => {
+        const raw = String(text || "");
+        if (!raw) return <span style={{ color: "#bfbfbf" }}>-</span>;
+        return (
+          <Space size="small">
+            <span>{maskEmail(raw)}</span>
+            <Button
+              type="link"
+              size="small"
+              style={{ padding: 0 }}
+              onClick={async () => {
+                const ok = await copyToClipboard(raw);
+                if (ok) message.success("邮箱已复制");
+              }}
+            >
+              复制
+            </Button>
+          </Space>
+        );
+      },
     },
     {
       title: "所属部门",
@@ -212,6 +256,10 @@ export const UsersPage: React.FC = () => {
         headerTitle="企业员工与账号列表"
         actionRef={actionRef}
         rowKey="id"
+        columnsState={{
+          persistenceKey: "pro-table-columns-system-users",
+          persistenceType: "localStorage",
+        }}
         search={{
           labelWidth: "auto",
         }}

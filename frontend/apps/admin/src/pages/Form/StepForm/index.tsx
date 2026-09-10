@@ -18,6 +18,7 @@ import {
 } from "@ant-design/pro-components";
 import { useNavigate } from "react-router-dom";
 import { formatPrice } from "@zero/shared";
+import { useUnsavedWarning } from "../../../hooks";
 
 const { Text, Paragraph } = Typography;
 
@@ -35,6 +36,7 @@ export const StepFormPage: React.FC = () => {
   const { message } = AntdApp.useApp();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [isDirty, setIsDirty] = useState(false);
   const [formData, setFormData] = useState<StepFormData>({
     payAccount: "ant-design@alipay.com",
     receiverAccount: "test@example.com",
@@ -42,6 +44,11 @@ export const StepFormPage: React.FC = () => {
     amount: 500,
     transferType: "alipay",
     remark: "微服务基础设施升级专项款",
+  });
+
+  // 当处于向导填写阶段且存在脏数据时，自动启用离开拦截防呆保护
+  useUnsavedWarning(isDirty && currentStep < 2, {
+    message: "转账向导流程尚未完成，离开后输入内容将丢失，确定要离开吗？",
   });
 
   return (
@@ -63,6 +70,7 @@ export const StepFormPage: React.FC = () => {
           onFinish={async (values) => {
             setFormData((prev) => ({ ...prev, ...values }));
             message.success("资金划转指令下发成功");
+            setIsDirty(false);
             setCurrentStep(2);
             return true;
           }}
@@ -74,6 +82,7 @@ export const StepFormPage: React.FC = () => {
             style={{ maxWidth: 520, margin: "0 auto" }}
             onFinish={async (values) => {
               setFormData((prev) => ({ ...prev, ...values }));
+              setIsDirty(true);
               return true;
             }}
           >
@@ -175,7 +184,14 @@ export const StepFormPage: React.FC = () => {
               title="操作成功"
               subTitle={`资金款项 ${formatPrice(Number(formData.amount || 0))} 已成功划转至 ${formData.receiverName}，预计两小时内到账。`}
               extra={[
-                <Button type="primary" key="again" onClick={() => setCurrentStep(0)}>
+                <Button
+                  type="primary"
+                  key="again"
+                  onClick={() => {
+                    setIsDirty(false);
+                    setCurrentStep(0);
+                  }}
+                >
                   再转一笔
                 </Button>,
                 <Button key="orders" onClick={() => navigate("/orders")}>
