@@ -43,5 +43,27 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       proxy: proxyWithLogger,
     },
+    build: {
+      chunkSizeWarningLimit: 2500,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("@ant-design/charts") || id.includes("@antv")) {
+                return "vendor-charts";
+              }
+              if (
+                id.includes("antd") ||
+                id.includes("@ant-design/") ||
+                id.includes("rc-")
+              ) {
+                return "vendor-ui";
+              }
+              return "vendor-core";
+            }
+          },
+        },
+      },
+    },
   };
 });

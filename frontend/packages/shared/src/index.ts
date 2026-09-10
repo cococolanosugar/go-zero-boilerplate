@@ -47,3 +47,5 @@ export const PERMISSIONS = {
   LOG_LOGIN_QUERY: 'system:log:login:query',
 } as const;
 
+export * from "./sessionSync";
+

@@ -11,7 +11,8 @@ export interface ProTableRequestData<T> {
 }
 
 export type ProTableApiFunction<TItem, TReq = any> = (
-  params: TReq
+  params: TReq,
+  config?: any
 ) => Promise<{ list?: TItem[]; total?: number } | any>;
 
 export interface ProTableAdapterOptions<TReq = any> {
@@ -19,6 +20,8 @@ export interface ProTableAdapterOptions<TReq = any> {
   transformParams?: (params: Record<string, any>, sort: any, filter: any) => TReq;
   /** 自定义结果转换逻辑 */
   transformResponse?: (res: any) => { data: any[]; total: number };
+  /** 启用防竞态自动取消：连续触发请求时自动 abort 上一个挂起请求，默认 true */
+  autoAbort?: boolean;
 }
 
 /**
@@ -33,11 +36,20 @@ export function toProTableRequest<TItem = any, TReq = any>(
   apiFn: ProTableApiFunction<TItem, TReq>,
   options?: ProTableAdapterOptions<TReq>
 ) {
+  let activeController: AbortController | null = null;
+
   return async (
     params: Record<string, any>,
     sort: Record<string, any> = {},
     filter: Record<string, any> = {}
   ): Promise<ProTableRequestData<TItem>> => {
+    if (options?.autoAbort !== false) {
+      if (activeController) {
+        activeController.abort();
+      }
+      activeController = new AbortController();
+    }
+
     const { current, pageSize, ...rest } = params;
 
     // 清洗掉空字符串或 undefined 过滤项
@@ -58,21 +70,32 @@ export function toProTableRequest<TItem = any, TReq = any>(
       finalParams = options.transformParams(params, sort, filter);
     }
 
-    const res = await apiFn(finalParams);
+    try {
+      const res = await apiFn(finalParams, { signal: activeController?.signal });
 
-    if (options?.transformResponse) {
-      const customData = options.transformResponse(res);
+      if (options?.transformResponse) {
+        const customData = options.transformResponse(res);
+        return {
+          data: customData.data || [],
+          total: customData.total || 0,
+          success: true,
+        };
+      }
+
       return {
-        data: customData.data || [],
-        total: customData.total || 0,
+        data: res?.list || res?.data || [],
+        total: res?.total || (res?.list ? res.list.length : 0),
         success: true,
       };
+    } catch (err: any) {
+      if (err?.code === -2 || err?.name === "AbortError") {
+        return {
+          data: [],
+          total: 0,
+          success: false,
+        };
+      }
+      throw err;
     }
-
-    return {
-      data: res?.list || res?.data || [],
-      total: res?.total || (res?.list ? res.list.length : 0),
-      success: true,
-    };
   };
 }

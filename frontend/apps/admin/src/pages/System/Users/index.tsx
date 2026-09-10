@@ -234,6 +234,7 @@ export const UsersPage: React.FC = () => {
         title={currentRow ? "编辑员工" : "新建员工"}
         open={modalVisible}
         onOpenChange={setModalVisible}
+        autoFocusFirstInput
         initialValues={
           currentRow
             ? {

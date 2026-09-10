@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { defaultSettings, type DefaultSettings } from "../config/defaultSettings";
 import { STORAGE_KEYS } from "../constants";
+import { broadcastSessionEvent } from "@zero/shared";
 
 export interface ThemeColorPreset {
   name: string;
@@ -61,6 +62,7 @@ export const LayoutSettingsProvider: React.FC<{ children: React.ReactNode }> = (
       const merged = { ...prev, ...newSettings };
       try {
         localStorage.setItem(STORAGE_KEYS.LAYOUT_SETTINGS, JSON.stringify(merged));
+        broadcastSessionEvent("THEME_CHANGE", merged);
       } catch (e) {
         console.error("持久化布局配置异常:", e);
       }
@@ -76,6 +78,7 @@ export const LayoutSettingsProvider: React.FC<{ children: React.ReactNode }> = (
       const merged = { ...prev, navTheme: nextTheme as "light" | "realDark" };
       try {
         localStorage.setItem(STORAGE_KEYS.LAYOUT_SETTINGS, JSON.stringify(merged));
+        broadcastSessionEvent("THEME_CHANGE", merged);
       } catch (e) {
         console.error("持久化布局配置异常:", e);
       }

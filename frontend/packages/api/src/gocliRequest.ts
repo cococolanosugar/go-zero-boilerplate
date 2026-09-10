@@ -75,6 +75,7 @@ export interface RequestOptions extends Omit<RequestInit, 'body'> {
     skipErrorHandler?: boolean;
     headers?: Record<string, string>;
     body?: any;
+    signal?: AbortSignal;
     [key: string]: any;
 }
 
@@ -130,6 +131,12 @@ export function setToken(token: string | null) {
             localStorage.setItem('token', token);
         } else {
             localStorage.removeItem('token');
+            try {
+                localStorage.setItem('zero_session_sync_channel', JSON.stringify({
+                    type: 'AUTH_LOGOUT',
+                    timestamp: Date.now()
+                }));
+            } catch (_) {}
         }
     }
 }
@@ -203,6 +210,13 @@ export async function request({
     try {
         response = await fetch(url, options);
     } catch (networkErr: any) {
+        // 主动取消的请求（AbortController.abort()），静默向上抛出，不触发全局错误提示
+        if (networkErr?.name === 'AbortError' || networkErr?.code === 20) {
+            const abortError = new ApiError(-2, '请求已主动取消', networkErr);
+            abortError.handled = true;
+            throw abortError;
+        }
+
         const apiError = new ApiError(-1, networkErr.message || '网络连接异常或服务未启动', networkErr);
         if (globalErrorHandler && !options.skipErrorHandler) {
             try {

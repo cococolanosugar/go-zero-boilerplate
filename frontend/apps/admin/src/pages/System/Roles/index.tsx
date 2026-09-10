@@ -313,6 +313,7 @@ export const RolesPage: React.FC = () => {
         title={currentRow ? "编辑角色" : "新建角色"}
         open={modalVisible}
         onOpenChange={setModalVisible}
+        autoFocusFirstInput
         initialValues={
           currentRow || {
             sort: 1,
