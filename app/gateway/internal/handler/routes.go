@@ -8,6 +8,7 @@ import (
 
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
 	order "go-zero-boilerplate/app/gateway/internal/handler/order"
+	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
 	user "go-zero-boilerplate/app/gateway/internal/handler/user"
 	"go-zero-boilerplate/app/gateway/internal/svc"
@@ -94,6 +95,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/order"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取岗位信息表列表
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: sys_post.ListSysPostHandler(serverCtx),
+			},
+			{
+				// 创建岗位信息表
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: sys_post.CreateSysPostHandler(serverCtx),
+			},
+			{
+				// 更新岗位信息表
+				Method:  http.MethodPut,
+				Path:    "/",
+				Handler: sys_post.UpdateSysPostHandler(serverCtx),
+			},
+			{
+				// 获取岗位信息表详情
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sys_post.GetSysPostHandler(serverCtx),
+			},
+			{
+				// 删除岗位信息表
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: sys_post.DeleteSysPostHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/user/sys-post"),
 	)
 
 	server.AddRoutes(

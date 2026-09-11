@@ -22,6 +22,7 @@ type (
 	CheckApiPermissionResponse = pb.CheckApiPermissionResponse
 	CreateSysDictDataRequest   = pb.CreateSysDictDataRequest
 	CreateSysDictTypeRequest   = pb.CreateSysDictTypeRequest
+	CreateSysPostRequest       = pb.CreateSysPostRequest
 	CreateSysRoleRequest       = pb.CreateSysRoleRequest
 	CreateSysUserRequest       = pb.CreateSysUserRequest
 	EmptyRequest               = pb.EmptyRequest
@@ -39,6 +40,8 @@ type (
 	ListSysLoginLogsResponse   = pb.ListSysLoginLogsResponse
 	ListSysOperLogsRequest     = pb.ListSysOperLogsRequest
 	ListSysOperLogsResponse    = pb.ListSysOperLogsResponse
+	ListSysPostRequest         = pb.ListSysPostRequest
+	ListSysPostResponse        = pb.ListSysPostResponse
 	ListSysRolesRequest        = pb.ListSysRolesRequest
 	ListSysRolesResponse       = pb.ListSysRolesResponse
 	ListSysUsersRequest        = pb.ListSysUsersRequest
@@ -57,10 +60,12 @@ type (
 	SysDictTypeItem            = pb.SysDictTypeItem
 	SysLoginLogItem            = pb.SysLoginLogItem
 	SysOperLogItem             = pb.SysOperLogItem
+	SysPostItem                = pb.SysPostItem
 	SysRoleItem                = pb.SysRoleItem
 	SysUserItem                = pb.SysUserItem
 	UpdateSysDictDataRequest   = pb.UpdateSysDictDataRequest
 	UpdateSysDictTypeRequest   = pb.UpdateSysDictTypeRequest
+	UpdateSysPostRequest       = pb.UpdateSysPostRequest
 	UpdateSysRoleRequest       = pb.UpdateSysRoleRequest
 	UpdateSysUserRequest       = pb.UpdateSysUserRequest
 	UserInfoResponse           = pb.UserInfoResponse
@@ -105,6 +110,12 @@ type (
 		RecordLoginLog(ctx context.Context, in *RecordLoginLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		ListSysOperLogs(ctx context.Context, in *ListSysOperLogsRequest, opts ...grpc.CallOption) (*ListSysOperLogsResponse, error)
 		ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsRequest, opts ...grpc.CallOption) (*ListSysLoginLogsResponse, error)
+		// 岗位信息表
+		ListSysPosts(ctx context.Context, in *ListSysPostRequest, opts ...grpc.CallOption) (*ListSysPostResponse, error)
+		GetSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysPostItem, error)
+		CreateSysPost(ctx context.Context, in *CreateSysPostRequest, opts ...grpc.CallOption) (*IdRequest, error)
+		UpdateSysPost(ctx context.Context, in *UpdateSysPostRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		DeleteSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	}
 
 	defaultUser struct {
@@ -279,4 +290,30 @@ func (m *defaultUser) ListSysOperLogs(ctx context.Context, in *ListSysOperLogsRe
 func (m *defaultUser) ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsRequest, opts ...grpc.CallOption) (*ListSysLoginLogsResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.ListSysLoginLogs(ctx, in, opts...)
+}
+
+// 岗位信息表
+func (m *defaultUser) ListSysPosts(ctx context.Context, in *ListSysPostRequest, opts ...grpc.CallOption) (*ListSysPostResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysPosts(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysPostItem, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetSysPost(ctx, in, opts...)
+}
+
+func (m *defaultUser) CreateSysPost(ctx context.Context, in *CreateSysPostRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CreateSysPost(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdateSysPost(ctx context.Context, in *UpdateSysPostRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdateSysPost(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.DeleteSysPost(ctx, in, opts...)
 }

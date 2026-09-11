@@ -55,3 +55,76 @@ service gateway {
 	@handler GetUserInfo
 	get /info returns (UserInfoResp)
 }
+
+
+// =============================================================
+// 岗位信息表 (sys_post)
+// =============================================================
+
+type (
+	SysPostItem {
+		Id int64 `json:"id"` // 岗位ID
+		PostCode string `json:"postCode"` // 岗位编码
+		PostName string `json:"postName"` // 岗位名称
+		PostSort int64 `json:"postSort"` // 显示顺序
+		Status int64 `json:"status"` // 状态（1正常 0停用）
+		Remark string `json:"remark"` // 备注
+		CreateTime string `json:"createTime"` // 创建时间
+		UpdateTime string `json:"updateTime"` // 更新时间
+	}
+
+	ListSysPostReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Keyword  string `form:"keyword,optional"`
+	}
+
+	ListSysPostResp {
+		Total int64                `json:"total"`
+		List  []*SysPostItem `json:"list"`
+	}
+
+	CreateSysPostReq {
+		PostCode string `json:"postCode"` // 岗位编码
+		PostName string `json:"postName"` // 岗位名称
+		PostSort int64 `json:"postSort"` // 显示顺序
+		Status int64 `json:"status"` // 状态（1正常 0停用）
+		Remark string `json:"remark,optional"` // 备注
+	}
+
+	UpdateSysPostReq {
+		Id int64 `json:"id"` // 岗位ID
+		PostCode string `json:"postCode"` // 岗位编码
+		PostName string `json:"postName"` // 岗位名称
+		PostSort int64 `json:"postSort"` // 显示顺序
+		Status int64 `json:"status"` // 状态（1正常 0停用）
+		Remark string `json:"remark"` // 备注
+	}
+)
+
+@server (
+	prefix: /api/v1/user/sys-post
+	group:  sys_post
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取岗位信息表列表"
+	@handler ListSysPost
+	get / (ListSysPostReq) returns (ListSysPostResp)
+
+	@doc "获取岗位信息表详情"
+	@handler GetSysPost
+	get /:id (SysIdReq) returns (SysPostItem)
+
+	@doc "创建岗位信息表"
+	@handler CreateSysPost
+	post / (CreateSysPostReq) returns (SysIdResp)
+
+	@doc "更新岗位信息表"
+	@handler UpdateSysPost
+	put / (UpdateSysPostReq) returns (SysEmptyResp)
+
+	@doc "删除岗位信息表"
+	@handler DeleteSysPost
+	delete /:id (SysIdReq) returns (SysEmptyResp)
+}

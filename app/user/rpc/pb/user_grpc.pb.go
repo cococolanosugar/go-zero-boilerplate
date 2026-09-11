@@ -50,6 +50,11 @@ const (
 	User_RecordLoginLog_FullMethodName          = "/user.User/RecordLoginLog"
 	User_ListSysOperLogs_FullMethodName         = "/user.User/ListSysOperLogs"
 	User_ListSysLoginLogs_FullMethodName        = "/user.User/ListSysLoginLogs"
+	User_ListSysPosts_FullMethodName            = "/user.User/ListSysPosts"
+	User_GetSysPost_FullMethodName              = "/user.User/GetSysPost"
+	User_CreateSysPost_FullMethodName           = "/user.User/CreateSysPost"
+	User_UpdateSysPost_FullMethodName           = "/user.User/UpdateSysPost"
+	User_DeleteSysPost_FullMethodName           = "/user.User/DeleteSysPost"
 )
 
 // UserClient is the client API for User service.
@@ -95,6 +100,12 @@ type UserClient interface {
 	RecordLoginLog(ctx context.Context, in *RecordLoginLogRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	ListSysOperLogs(ctx context.Context, in *ListSysOperLogsRequest, opts ...grpc.CallOption) (*ListSysOperLogsResponse, error)
 	ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsRequest, opts ...grpc.CallOption) (*ListSysLoginLogsResponse, error)
+	// 岗位信息表
+	ListSysPosts(ctx context.Context, in *ListSysPostRequest, opts ...grpc.CallOption) (*ListSysPostResponse, error)
+	GetSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysPostItem, error)
+	CreateSysPost(ctx context.Context, in *CreateSysPostRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysPost(ctx context.Context, in *UpdateSysPostRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type userClient struct {
@@ -415,6 +426,56 @@ func (c *userClient) ListSysLoginLogs(ctx context.Context, in *ListSysLoginLogsR
 	return out, nil
 }
 
+func (c *userClient) ListSysPosts(ctx context.Context, in *ListSysPostRequest, opts ...grpc.CallOption) (*ListSysPostResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysPostResponse)
+	err := c.cc.Invoke(ctx, User_ListSysPosts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysPostItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SysPostItem)
+	err := c.cc.Invoke(ctx, User_GetSysPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysPost(ctx context.Context, in *CreateSysPostRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysPost(ctx context.Context, in *UpdateSysPostRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -458,6 +519,12 @@ type UserServer interface {
 	RecordLoginLog(context.Context, *RecordLoginLogRequest) (*EmptyResponse, error)
 	ListSysOperLogs(context.Context, *ListSysOperLogsRequest) (*ListSysOperLogsResponse, error)
 	ListSysLoginLogs(context.Context, *ListSysLoginLogsRequest) (*ListSysLoginLogsResponse, error)
+	// 岗位信息表
+	ListSysPosts(context.Context, *ListSysPostRequest) (*ListSysPostResponse, error)
+	GetSysPost(context.Context, *IdRequest) (*SysPostItem, error)
+	CreateSysPost(context.Context, *CreateSysPostRequest) (*IdRequest, error)
+	UpdateSysPost(context.Context, *UpdateSysPostRequest) (*EmptyResponse, error)
+	DeleteSysPost(context.Context, *IdRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -560,6 +627,21 @@ func (UnimplementedUserServer) ListSysOperLogs(context.Context, *ListSysOperLogs
 }
 func (UnimplementedUserServer) ListSysLoginLogs(context.Context, *ListSysLoginLogsRequest) (*ListSysLoginLogsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSysLoginLogs not implemented")
+}
+func (UnimplementedUserServer) ListSysPosts(context.Context, *ListSysPostRequest) (*ListSysPostResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysPosts not implemented")
+}
+func (UnimplementedUserServer) GetSysPost(context.Context, *IdRequest) (*SysPostItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSysPost not implemented")
+}
+func (UnimplementedUserServer) CreateSysPost(context.Context, *CreateSysPostRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysPost not implemented")
+}
+func (UnimplementedUserServer) UpdateSysPost(context.Context, *UpdateSysPostRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysPost not implemented")
+}
+func (UnimplementedUserServer) DeleteSysPost(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysPost not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1140,6 +1222,96 @@ func _User_ListSysLoginLogs_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListSysPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysPosts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysPosts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysPosts(ctx, req.(*ListSysPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetSysPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetSysPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetSysPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetSysPost(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysPost(ctx, req.(*CreateSysPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysPost(ctx, req.(*UpdateSysPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysPost(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1270,6 +1442,26 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSysLoginLogs",
 			Handler:    _User_ListSysLoginLogs_Handler,
+		},
+		{
+			MethodName: "ListSysPosts",
+			Handler:    _User_ListSysPosts_Handler,
+		},
+		{
+			MethodName: "GetSysPost",
+			Handler:    _User_GetSysPost_Handler,
+		},
+		{
+			MethodName: "CreateSysPost",
+			Handler:    _User_CreateSysPost_Handler,
+		},
+		{
+			MethodName: "UpdateSysPost",
+			Handler:    _User_UpdateSysPost_Handler,
+		},
+		{
+			MethodName: "DeleteSysPost",
+			Handler:    _User_DeleteSysPost_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

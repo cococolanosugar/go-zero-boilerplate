@@ -185,3 +185,29 @@ func (s *UserServer) ListSysLoginLogs(ctx context.Context, in *pb.ListSysLoginLo
 	l := userlogic.NewListSysLoginLogsLogic(ctx, s.svcCtx)
 	return l.ListSysLoginLogs(in)
 }
+
+// 岗位信息表
+func (s *UserServer) ListSysPosts(ctx context.Context, in *pb.ListSysPostRequest) (*pb.ListSysPostResponse, error) {
+	l := userlogic.NewListSysPostsLogic(ctx, s.svcCtx)
+	return l.ListSysPosts(in)
+}
+
+func (s *UserServer) GetSysPost(ctx context.Context, in *pb.IdRequest) (*pb.SysPostItem, error) {
+	l := userlogic.NewGetSysPostLogic(ctx, s.svcCtx)
+	return l.GetSysPost(in)
+}
+
+func (s *UserServer) CreateSysPost(ctx context.Context, in *pb.CreateSysPostRequest) (*pb.IdRequest, error) {
+	l := userlogic.NewCreateSysPostLogic(ctx, s.svcCtx)
+	return l.CreateSysPost(in)
+}
+
+func (s *UserServer) UpdateSysPost(ctx context.Context, in *pb.UpdateSysPostRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdateSysPostLogic(ctx, s.svcCtx)
+	return l.UpdateSysPost(in)
+}
+
+func (s *UserServer) DeleteSysPost(ctx context.Context, in *pb.IdRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewDeleteSysPostLogic(ctx, s.svcCtx)
+	return l.DeleteSysPost(in)
+}

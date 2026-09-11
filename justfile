@@ -116,3 +116,29 @@ docker-infra-up:
 docker-infra-down:
     docker-compose -f manifest/deploy/docker-compose/docker-compose.yml down
 
+# ================= 数据库版本迁移流水线 (Atlas Migrations) =================
+
+# 创建新的数据库迁移版本文件 (例如: just migrate-new add_sys_notice)
+migrate-new name:
+    atlas migrate new {{name}} --env local
+    atlas migrate hash --env local
+
+# 执行数据库未应用的迁移升级
+migrate-up:
+    atlas migrate apply --env local
+
+# 回滚最后一个迁移版本
+migrate-down amount="1":
+    atlas migrate down {{amount}} --env local
+
+# 查看数据库迁移同步状态
+migrate-status:
+    atlas migrate status --env local
+
+# ================= 全栈 CRUD 代码生成器 =================
+
+# 全栈一体化 CRUD 代码生成器 (例如: just gen-crud user sys_post)
+gen-crud service table:
+    pwsh -File ./hack/scripts/gen-crud.ps1 -Service {{service}} -Table {{table}}
+
+

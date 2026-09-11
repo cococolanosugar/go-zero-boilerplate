@@ -60,6 +60,14 @@ type CreateSysDictTypeReq struct {
 	Remark   string `json:"remark,optional"`
 }
 
+type CreateSysPostReq struct {
+	PostCode string `json:"postCode"`        // 岗位编码
+	PostName string `json:"postName"`        // 岗位名称
+	PostSort int64  `json:"postSort"`        // 显示顺序
+	Status   int64  `json:"status"`          // 状态（1正常 0停用）
+	Remark   string `json:"remark,optional"` // 备注
+}
+
 type CreateSysRoleReq struct {
 	Name        string `json:"name"`
 	Code        string `json:"code"`
@@ -152,6 +160,17 @@ type ListSysOperLogsReq struct {
 type ListSysOperLogsResp struct {
 	Total int64             `json:"total"`
 	List  []*SysOperLogItem `json:"list"`
+}
+
+type ListSysPostReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Keyword  string `form:"keyword,optional"`
+}
+
+type ListSysPostResp struct {
+	Total int64          `json:"total"`
+	List  []*SysPostItem `json:"list"`
 }
 
 type ListSysRolesReq struct {
@@ -294,6 +313,17 @@ type SysOperLogItem struct {
 	CreateTime string `json:"createTime"`
 }
 
+type SysPostItem struct {
+	Id         int64  `json:"id"`         // 岗位ID
+	PostCode   string `json:"postCode"`   // 岗位编码
+	PostName   string `json:"postName"`   // 岗位名称
+	PostSort   int64  `json:"postSort"`   // 显示顺序
+	Status     int64  `json:"status"`     // 状态（1正常 0停用）
+	Remark     string `json:"remark"`     // 备注
+	CreateTime string `json:"createTime"` // 创建时间
+	UpdateTime string `json:"updateTime"` // 更新时间
+}
+
 type SysRoleItem struct {
 	Id          int64   `json:"id"`
 	Name        string  `json:"name"`
@@ -339,6 +369,15 @@ type UpdateSysDictTypeReq struct {
 	DictType string `json:"dictType"`
 	Status   int32  `json:"status"`
 	Remark   string `json:"remark,optional"`
+}
+
+type UpdateSysPostReq struct {
+	Id       int64  `json:"id"`       // 岗位ID
+	PostCode string `json:"postCode"` // 岗位编码
+	PostName string `json:"postName"` // 岗位名称
+	PostSort int64  `json:"postSort"` // 显示顺序
+	Status   int64  `json:"status"`   // 状态（1正常 0停用）
+	Remark   string `json:"remark"`   // 备注
 }
 
 type UpdateSysRoleReq struct {

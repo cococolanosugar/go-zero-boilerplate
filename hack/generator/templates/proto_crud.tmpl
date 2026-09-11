@@ -1,0 +1,32 @@
+// =============================================================
+// {{.TableComment}} ({{.TableName}})
+// =============================================================
+
+message {{.EntityName}}Item {
+{{- range $i, $col := .Columns}}
+  {{$col.ProtoType}} {{$col.ProtoField}} = {{inc $i}};{{if $col.ColumnComment}} // {{$col.ColumnComment}}{{end}}
+{{- end}}
+}
+
+message List{{.EntityName}}Request {
+  int64 page = 1;
+  int64 pageSize = 2;
+  string keyword = 3;
+}
+
+message List{{.EntityName}}Response {
+  int64 total = 1;
+  repeated {{.EntityName}}Item list = 2;
+}
+
+message Create{{.EntityName}}Request {
+{{- range $i, $col := .EditableColumns}}
+  {{$col.ProtoType}} {{$col.ProtoField}} = {{inc $i}};{{if $col.ColumnComment}} // {{$col.ColumnComment}}{{end}}
+{{- end}}
+}
+
+message Update{{.EntityName}}Request {
+{{- range $i, $col := .AllUpdatableColumns}}
+  {{$col.ProtoType}} {{$col.ProtoField}} = {{inc $i}};{{if $col.ColumnComment}} // {{$col.ColumnComment}}{{end}}
+{{- end}}
+}

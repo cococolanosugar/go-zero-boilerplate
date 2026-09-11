@@ -436,4 +436,53 @@ service User {
   rpc RecordLoginLog(RecordLoginLogRequest) returns (EmptyResponse);
   rpc ListSysOperLogs(ListSysOperLogsRequest) returns (ListSysOperLogsResponse);
   rpc ListSysLoginLogs(ListSysLoginLogsRequest) returns (ListSysLoginLogsResponse);
+  // 岗位信息表
+  rpc ListSysPosts(ListSysPostRequest) returns (ListSysPostResponse);
+  rpc GetSysPost(IdRequest) returns (SysPostItem);
+  rpc CreateSysPost(CreateSysPostRequest) returns (IdRequest);
+  rpc UpdateSysPost(UpdateSysPostRequest) returns (EmptyResponse);
+  rpc DeleteSysPost(IdRequest) returns (EmptyResponse);
+}
+
+// =============================================================
+// 岗位信息表 (sys_post)
+// =============================================================
+
+message SysPostItem {
+  int64 id = 1; // 岗位ID
+  string post_code = 2; // 岗位编码
+  string post_name = 3; // 岗位名称
+  int64 post_sort = 4; // 显示顺序
+  int64 status = 5; // 状态（1正常 0停用）
+  string remark = 6; // 备注
+  string create_time = 7; // 创建时间
+  string update_time = 8; // 更新时间
+}
+
+message ListSysPostRequest {
+  int64 page = 1;
+  int64 pageSize = 2;
+  string keyword = 3;
+}
+
+message ListSysPostResponse {
+  int64 total = 1;
+  repeated SysPostItem list = 2;
+}
+
+message CreateSysPostRequest {
+  string post_code = 1; // 岗位编码
+  string post_name = 2; // 岗位名称
+  int64 post_sort = 3; // 显示顺序
+  int64 status = 4; // 状态（1正常 0停用）
+  string remark = 5; // 备注
+}
+
+message UpdateSysPostRequest {
+  int64 id = 1; // 岗位ID
+  string post_code = 2; // 岗位编码
+  string post_name = 3; // 岗位名称
+  int64 post_sort = 4; // 显示顺序
+  int64 status = 5; // 状态（1正常 0停用）
+  string remark = 6; // 备注
 }

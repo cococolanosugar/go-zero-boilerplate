@@ -148,6 +148,13 @@ export const routes: AppRouteItem[] = [
             icon: "ApiOutlined",
             component: lazy(() => import("../pages/System/OpenApi")),
           },
+          {
+            path: "/system/sys-post",
+            name: "岗位信息表",
+            locale: "menu.system.syspost",
+            icon: "ClusterOutlined",
+            component: lazy(() => import("../pages/SysPost")),
+          },
         ],
       },
 

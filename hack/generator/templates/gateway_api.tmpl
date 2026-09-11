@@ -1,0 +1,61 @@
+// =============================================================
+// {{.TableComment}} ({{.TableName}})
+// =============================================================
+
+type (
+	{{.EntityName}}Item {
+{{- range .Columns}}
+		{{.GoField}} {{.GoType}} `json:"{{.JsonTag}}"`{{if .ColumnComment}} // {{.ColumnComment}}{{end}}
+{{- end}}
+	}
+
+	List{{.EntityName}}Req {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Keyword  string `form:"keyword,optional"`
+	}
+
+	List{{.EntityName}}Resp {
+		Total int64                `json:"total"`
+		List  []*{{.EntityName}}Item `json:"list"`
+	}
+
+	Create{{.EntityName}}Req {
+{{- range .EditableColumns}}
+		{{.GoField}} {{.GoType}} `json:"{{.JsonTag}}{{if not .FormRequired}},optional{{end}}"`{{if .ColumnComment}} // {{.ColumnComment}}{{end}}
+{{- end}}
+	}
+
+	Update{{.EntityName}}Req {
+{{- range .AllUpdatableColumns}}
+		{{.GoField}} {{.GoType}} `json:"{{.JsonTag}}"`{{if .ColumnComment}} // {{.ColumnComment}}{{end}}
+{{- end}}
+	}
+)
+
+@server (
+	prefix: /api/v1/{{.ServiceName}}/{{.RoutePath}}
+	group:  {{.EntitySnake}}
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取{{.TableComment}}列表"
+	@handler List{{.EntityName}}
+	get / (List{{.EntityName}}Req) returns (List{{.EntityName}}Resp)
+
+	@doc "获取{{.TableComment}}详情"
+	@handler Get{{.EntityName}}
+	get /:id (SysIdReq) returns ({{.EntityName}}Item)
+
+	@doc "创建{{.TableComment}}"
+	@handler Create{{.EntityName}}
+	post / (Create{{.EntityName}}Req) returns (SysIdResp)
+
+	@doc "更新{{.TableComment}}"
+	@handler Update{{.EntityName}}
+	put / (Update{{.EntityName}}Req) returns (SysEmptyResp)
+
+	@doc "删除{{.TableComment}}"
+	@handler Delete{{.EntityName}}
+	delete /:id (SysIdReq) returns (SysEmptyResp)
+}

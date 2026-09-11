@@ -58,6 +58,14 @@ export interface CreateSysDictTypeReq {
 	remark?: string
 }
 
+export interface CreateSysPostReq {
+	postCode: string // 岗位编码
+	postName: string // 岗位名称
+	postSort: number // 显示顺序
+	status: number // 状态（1正常 0停用）
+	remark?: string // 备注
+}
+
 export interface CreateSysRoleReq {
 	name: string
 	code: string
@@ -161,6 +169,19 @@ export interface ListSysOperLogsReqParams {
 export interface ListSysOperLogsResp {
 	total: number
 	list: Array<SysOperLogItem>
+}
+
+export interface ListSysPostReq {
+}
+export interface ListSysPostReqParams {
+	page: number
+	pageSize: number
+	keyword?: string
+}
+
+export interface ListSysPostResp {
+	total: number
+	list: Array<SysPostItem>
 }
 
 export interface ListSysRolesReq {
@@ -311,6 +332,17 @@ export interface SysOperLogItem {
 	createTime: string
 }
 
+export interface SysPostItem {
+	id: number // 岗位ID
+	postCode: string // 岗位编码
+	postName: string // 岗位名称
+	postSort: number // 显示顺序
+	status: number // 状态（1正常 0停用）
+	remark: string // 备注
+	createTime: string // 创建时间
+	updateTime: string // 更新时间
+}
+
 export interface SysRoleItem {
 	id: number
 	name: string
@@ -356,6 +388,15 @@ export interface UpdateSysDictTypeReq {
 	dictType: string
 	status: number
 	remark?: string
+}
+
+export interface UpdateSysPostReq {
+	id: number // 岗位ID
+	postCode: string // 岗位编码
+	postName: string // 岗位名称
+	postSort: number // 显示顺序
+	status: number // 状态（1正常 0停用）
+	remark: string // 备注
 }
 
 export interface UpdateSysRoleReq {

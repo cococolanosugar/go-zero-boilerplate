@@ -1,0 +1,224 @@
+import React, { useRef, useState } from "react";
+import { App as AntdApp, Button, Space, Popconfirm } from "antd";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  ProTable,
+  PageContainer,
+  ModalForm,
+  ProFormText,
+  ProFormDigit,
+  ProFormTextArea,
+  ProFormSelect,
+  type ActionType,
+  type ProColumns,
+} from "@ant-design/pro-components";
+import { useIntl } from "../../contexts/LocaleContext";
+
+import {
+  list{{.EntityName}},
+  create{{.EntityName}},
+  update{{.EntityName}},
+  delete{{.EntityName}},
+  type {{.EntityName}}Item,
+} from "@zero/api";
+
+export type {{.EntityName}}Record = {{.EntityName}}Item;
+
+export const {{.EntityName}}Page: React.FC = () => {
+  const { message } = AntdApp.useApp();
+  const { formatMessage } = useIntl();
+  const actionRef = useRef<ActionType>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentRow, setCurrentRow] = useState<{{.EntityName}}Record | null>(null);
+
+  const handleEdit = (record: {{.EntityName}}Record) => {
+    setCurrentRow(record);
+    setModalVisible(true);
+  };
+
+  const handleAdd = () => {
+    setCurrentRow(null);
+    setModalVisible(true);
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await delete{{.EntityName}}({}, id);
+      message.success(
+        formatMessage({ id: "common.deleteSuccess", defaultMessage: "删除成功" })
+      );
+      actionRef.current?.reload();
+    } catch (err: any) {
+      message.error(err.message || "删除失败");
+    }
+  };
+
+  const handleFormSubmit = async (values: any) => {
+    try {
+      if (currentRow && currentRow.id) {
+        await update{{.EntityName}}({ ...values, id: currentRow.id });
+        message.success(
+          formatMessage({ id: "common.updateSuccess", defaultMessage: "更新成功" })
+        );
+      } else {
+        await create{{.EntityName}}(values);
+        message.success(
+          formatMessage({ id: "common.createSuccess", defaultMessage: "创建成功" })
+        );
+      }
+      setModalVisible(false);
+      actionRef.current?.reload();
+      return true;
+    } catch (err: any) {
+      message.error(err.message || "操作失败");
+      return false;
+    }
+  };
+
+  const columns: ProColumns<{{.EntityName}}Record>[] = [
+{{- range .Columns}}
+    {
+      title: "{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}",
+      dataIndex: "{{.TsField}}",
+      valueType: "{{.ProTableValueType}}",
+{{- if .IsPrimaryKey}}
+      hideInSearch: true,
+      width: 80,
+{{- else if .IsCommonField}}
+      hideInSearch: true,
+{{- end}}
+{{- if eq .ColumnName "status"}}
+      valueEnum: {
+        1: { text: "正常", status: "Success" },
+        0: { text: "停用", status: "Default" },
+      },
+{{- end}}
+    },
+{{- end}}
+    {
+      title: formatMessage({ id: "common.action", defaultMessage: "操作" }),
+      valueType: "option",
+      width: 160,
+      render: (_, record) => [
+        <Button
+          type="link"
+          key="edit"
+          icon={<EditOutlined />}
+          onClick={() => handleEdit(record)}
+        >
+          {formatMessage({ id: "common.edit", defaultMessage: "编辑" })}
+        </Button>,
+        <Popconfirm
+          key="delete"
+          title={formatMessage({
+            id: "common.deleteConfirm",
+            defaultMessage: "确定要删除此条记录吗？",
+          })}
+          onConfirm={() => record.id && handleDelete(record.id)}
+        >
+          <Button type="link" danger icon={<DeleteOutlined />}>
+            {formatMessage({ id: "common.delete", defaultMessage: "删除" })}
+          </Button>
+        </Popconfirm>,
+      ],
+    },
+  ];
+
+  return (
+    <PageContainer
+      header={ {
+        title: "{{.TableComment}}",
+        breadcrumb: {
+          items: [
+            { title: "首页", path: "/" },
+            { title: "{{.TableComment}}" },
+          ],
+        },
+      } }
+    >
+      <ProTable<{{.EntityName}}Record>
+        headerTitle="{{.TableComment}}列表"
+        actionRef={actionRef}
+        rowKey="id"
+        search={ { labelWidth: "auto" } }
+        toolBarRender={() => [
+          <Button type="primary" key="add" icon={<PlusOutlined />} onClick={handleAdd}>
+            {formatMessage({ id: "common.create", defaultMessage: "新建" })}
+          </Button>,
+        ]}
+        request={async (params) => {
+          try {
+            const res = await list{{.EntityName}}({
+              page: params.current || 1,
+              pageSize: params.pageSize || 10,
+              keyword: (params as any).keyword,
+            });
+            return {
+              data: res.list || [],
+              success: true,
+              total: res.total || 0,
+            };
+          } catch (err: any) {
+            message.error(err.message || "获取列表失败");
+            return {
+              data: [],
+              success: false,
+              total: 0,
+            };
+          }
+        }}
+        columns={columns}
+      />
+
+      <ModalForm
+        title={currentRow ? "编辑{{.TableComment}}" : "新建{{.TableComment}}"}
+        open={modalVisible}
+        onOpenChange={setModalVisible}
+        initialValues={currentRow || undefined}
+        onFinish={handleFormSubmit}
+        modalProps={ { destroyOnClose: true } }
+      >
+{{- range .EditableColumns}}
+{{- if eq .ColumnName "status"}}
+        <ProFormSelect
+          name="{{.TsField}}"
+          label="{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}"
+          options={[
+            { label: "正常", value: 1 },
+            { label: "停用", value: 0 },
+          ]}
+          initialValue={1}
+          rules={[{ required: true, message: "请选择状态" }]}
+        />
+{{- else if eq .ProTableValueType "digit"}}
+        <ProFormDigit
+          name="{{.TsField}}"
+          label="{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}"
+{{- if .FormRequired}}
+          rules={[{ required: true, message: "请输入{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}" }]}
+{{- end}}
+        />
+{{- else if eq .ProTableValueType "textarea"}}
+        <ProFormTextArea
+          name="{{.TsField}}"
+          label="{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}"
+{{- if .FormRequired}}
+          rules={[{ required: true, message: "请输入{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}" }]}
+{{- end}}
+        />
+{{- else}}
+        <ProFormText
+          name="{{.TsField}}"
+          label="{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}"
+{{- if .FormRequired}}
+          rules={[{ required: true, message: "请输入{{if .ColumnComment}}{{.ColumnComment}}{{else}}{{.GoField}}{{end}}" }]}
+{{- end}}
+        />
+{{- end}}
+{{- end}}
+      </ModalForm>
+    </PageContainer>
+  );
+};
+
+export default {{.EntityName}}Page;

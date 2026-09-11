@@ -98,6 +98,8 @@ just gen-ts
 | 生成 user RPC | `just gen-rpc user` | `make gen-user-rpc` |
 | 生成 order RPC | `just gen-rpc order` | `make gen-order-rpc` |
 | **生成持久层 Model 代码** | `just gen-model` | `make gen-model` |
+| **全栈 CRUD 一键代码生成** | `just gen-crud <service> <table>` | `make gen-crud SERVICE=<service> TABLE=<table>` |
+| **数据库版本化迁移 (新建/执行/回滚/状态)** | `just migrate-(new/up/down/status)` | `make migrate-(new/up/down/status)` |
 | **同步生成前端 TS SDK** | `just gen-ts` | `make gen-ts` |
 | 启动网关 | `just run-gateway` | `make run-gateway` |
 | 启动 user-rpc | `just run-user-rpc` | `make run-user-rpc` |

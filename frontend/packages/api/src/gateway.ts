@@ -91,6 +91,46 @@ export function getOrderDetail(params: components.OrderDetailReqParams) {
 }
 
 /**
+ * @description "获取岗位信息表列表"
+ * @param params
+ */
+export function listSysPost(params: components.ListSysPostReqParams) {
+	return webapi.get<components.ListSysPostResp>(`/api/v1/user/sys-post`, params)
+}
+
+/**
+ * @description "创建岗位信息表"
+ * @param req
+ */
+export function createSysPost(req: components.CreateSysPostReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/user/sys-post`, req)
+}
+
+/**
+ * @description "更新岗位信息表"
+ * @param req
+ */
+export function updateSysPost(req: components.UpdateSysPostReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/user/sys-post`, req)
+}
+
+/**
+ * @description "获取岗位信息表详情"
+ * @param params
+ */
+export function getSysPost(params: components.SysIdReqParams, id: number) {
+	return webapi.get<components.SysPostItem>(`/api/v1/user/sys-post/${id}`, params)
+}
+
+/**
+ * @description "删除岗位信息表"
+ * @param params
+ */
+export function deleteSysPost(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/user/sys-post/${id}`, params)
+}
+
+/**
  * @description "Casdoor SSO 统一身份登录"
  * @param req
  */

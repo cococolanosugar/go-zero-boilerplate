@@ -363,6 +363,31 @@ just rename-project my-org/shop-system "Shop System"
 make rename-project NEW_MODULE=my-org/shop-system DISPLAY_NAME="Shop System"
 ```
 
+### 4.7 数据库版本化迁移 (Database Migrations: Atlas)
+采用 Atlas 管理数据库版本迁移（迁移文件位于 `manifest/sql/migrations/`），支持多环境正向递增与安全回滚：
+```bash
+# 1. 创建增量迁移脚本
+just migrate-new create_sys_notice
+
+# 2. 执行所有未应用的增量迁移（正向升级）
+just migrate-up
+
+# 3. 回滚最近一个迁移版本
+just migrate-down
+
+# 4. 查看当前迁移执行状态与版本列表
+just migrate-status
+```
+
+### 4.8 全栈 CRUD 一键代码生成 (Full-Stack CRUD Code Generator)
+从 MySQL 数据表一键逆向生成完整的全栈端到端生产级代码：
+- 后端：带 Cache-Aside 与动态分页的 Model、微服务 RPC（契约 + Logic + Client）、网关 RESTful API（契约 + Logic + Handler）
+- 前端：自动生成强类型 `@zero/api` SDK，并在管理后台输出符合 Ant Design 6.x / ProComponents 规范的独立 ProTable 页面并自动注册路由
+```bash
+# 语法：just gen-crud <所属微服务> <数据表名>
+just gen-crud user sys_post
+```
+
 ---
 
 ## 5. 新增业务微服务标准流程 (Adding a New Service)
