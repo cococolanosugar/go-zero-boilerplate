@@ -93,6 +93,8 @@ export default {
   'profile.logout': 'Log Out',
 
   // Exception Pages
+  'common.networkRestored': 'Network connection restored',
+  'common.offlineWarning': 'Network connection lost. Some features may not sync in real time.',
   'exception.403.subTitle': 'Sorry, you do not have permission to access this page. Please contact administrator or return home.',
   'exception.404.subTitle': 'Sorry, the page you visited does not exist or has been removed.',
   'exception.500.subTitle': 'Sorry, the server encountered an error or the gateway is temporarily unavailable.',

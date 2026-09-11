@@ -18,6 +18,12 @@ importers:
       '@testing-library/react':
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ^18.3.18
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.5
+        version: 18.3.7(@types/react@18.3.31)
       jsdom:
         specifier: ^30.0.1
         version: 30.0.1
@@ -138,7 +144,15 @@ importers:
         specifier: ^1.7.9
         version: 1.20.0(debug@4.4.3)
 
-  packages/shared: {}
+  packages/shared:
+    dependencies:
+      react:
+        specifier: '>=18.0.0'
+        version: 18.3.1
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.18
+        version: 18.3.31
 
 packages:
 

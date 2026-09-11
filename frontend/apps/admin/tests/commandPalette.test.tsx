@@ -30,4 +30,18 @@ describe("CommandPalette", () => {
     expect(screen.getByText(/工作台/)).toBeDefined();
     expect(screen.queryByText(/员工管理/)).toBeNull();
   });
+
+  it("dynamically discovers system dictionary and api routes from route configuration", () => {
+    render(
+      <BrowserRouter>
+        <CommandPalette open={true} />
+      </BrowserRouter>
+    );
+
+    const input = screen.getByPlaceholderText(/输入页面名称/);
+    fireEvent.change(input, { target: { value: "数据字典" } });
+
+    expect(screen.getByText(/数据字典/)).toBeDefined();
+    expect(screen.queryByText(/工作台/)).toBeNull();
+  });
 });

@@ -76,6 +76,7 @@ export interface RequestOptions extends Omit<RequestInit, 'body'> {
     headers?: Record<string, string>;
     body?: any;
     signal?: AbortSignal;
+    timeout?: number;
     [key: string]: any;
 }
 
@@ -206,12 +207,52 @@ export async function request({
 
     const context: RequestContext = { url, method: upperMethod, options, data };
 
+    const callerSignal = options.signal;
+    const timeoutMs = options.timeout !== undefined ? options.timeout : 30000;
+    let timeoutTimer: any = null;
+    let timedOut = false;
+    let controller: AbortController | null = null;
+
+    if (timeoutMs > 0 || callerSignal) {
+        controller = new AbortController();
+
+        if (callerSignal) {
+            if (callerSignal.aborted) {
+                controller.abort(callerSignal.reason);
+            } else {
+                callerSignal.addEventListener('abort', () => {
+                    controller?.abort(callerSignal.reason);
+                }, { once: true });
+            }
+        }
+
+        if (timeoutMs > 0) {
+            timeoutTimer = setTimeout(() => {
+                timedOut = true;
+                controller?.abort('timeout');
+            }, timeoutMs);
+        }
+
+        options.signal = controller.signal;
+    }
+
     let response: Response;
     try {
         response = await fetch(url, options);
     } catch (networkErr: any) {
+        if (timedOut) {
+            const timeoutError = new ApiError(-3, '请求超时，请检查网络', networkErr);
+            if (globalErrorHandler && !options.skipErrorHandler) {
+                try {
+                    await globalErrorHandler(timeoutError, context);
+                    timeoutError.handled = true;
+                } catch (_) {}
+            }
+            throw timeoutError;
+        }
+
         // 主动取消的请求（AbortController.abort()），静默向上抛出，不触发全局错误提示
-        if (networkErr?.name === 'AbortError' || networkErr?.code === 20) {
+        if (networkErr?.name === 'AbortError' || networkErr?.code === 20 || callerSignal?.aborted) {
             const abortError = new ApiError(-2, '请求已主动取消', networkErr);
             abortError.handled = true;
             throw abortError;
@@ -225,6 +266,10 @@ export async function request({
             } catch (_) {}
         }
         throw apiError;
+    } finally {
+        if (timeoutTimer) {
+            clearTimeout(timeoutTimer);
+        }
     }
 
     // Execute Response Interceptors

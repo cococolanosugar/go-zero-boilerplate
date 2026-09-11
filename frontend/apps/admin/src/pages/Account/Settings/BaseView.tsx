@@ -47,7 +47,7 @@ export const BaseView: React.FC = () => {
   };
 
   const avatarUrl =
-    currentUser?.avatar || "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg";
+    currentUser?.avatar || "/favicon.svg";
 
   return (
     <div style={{ padding: "12px 0" }}>

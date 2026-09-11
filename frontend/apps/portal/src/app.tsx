@@ -177,7 +177,7 @@ export const layout = (
       ? {
           src:
             currentUser?.avatar ||
-            "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+            "/favicon.svg",
           title: displayName,
           render: (_props, dom) => (
             <AvatarDropdown

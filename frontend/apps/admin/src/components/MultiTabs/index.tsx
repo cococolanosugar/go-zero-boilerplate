@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Tabs, Dropdown, Button, Space, theme } from "antd";
+import { Tabs, Dropdown, Button, theme } from "antd";
 import type { MenuProps } from "antd";
 import {
-  CloseOutlined,
   ReloadOutlined,
   CloseCircleOutlined,
   MinusCircleOutlined,
   DashboardOutlined,
   MoreOutlined,
+  VerticalLeftOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useIntl } from "../../contexts/LocaleContext";
 import { routes as staticRoutes } from "../../config/routes";
 import type { AppRouteItem } from "../../config/routes.types";
-import { TABS_CONFIG } from "../../constants";
+import { TABS_CONFIG, STORAGE_KEYS } from "../../constants";
+import { sessionStore } from "../../utils/storage";
 
 export interface TabItem {
   key: string;
@@ -52,13 +53,43 @@ export const MultiTabs: React.FC = () => {
   // 默认首页 Tab 永久固定
   const defaultDashboardTitle = routeTitleMap.get(TABS_CONFIG.HOME_PATH) || TABS_CONFIG.HOME_TITLE;
 
-  const [tabs, setTabs] = useState<TabItem[]>([
-    {
-      key: TABS_CONFIG.HOME_PATH,
-      label: defaultDashboardTitle,
-      closable: false,
-    },
-  ]);
+  // 优先从 sessionStore 恢复已打开的 Tab 列表，保障 F5 刷新不丢失标签上下文
+  const [tabs, setTabs] = useState<TabItem[]>(() => {
+    const cached = sessionStore.get<TabItem[]>(STORAGE_KEYS.TABS_HISTORY);
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      const hasHome = cached.some((t) => t.key === TABS_CONFIG.HOME_PATH);
+      if (!hasHome) {
+        return [
+          {
+            key: TABS_CONFIG.HOME_PATH,
+            label: defaultDashboardTitle,
+            closable: false,
+          },
+          ...cached,
+        ];
+      }
+      return cached;
+    }
+    return [
+      {
+        key: TABS_CONFIG.HOME_PATH,
+        label: defaultDashboardTitle,
+        closable: false,
+      },
+    ];
+  });
+
+  // 当语言切换或路由映射表更新时，联动同步更新各 Tab 的多语言标题
+  useEffect(() => {
+    setTabs((prev) =>
+      prev.map((t) => ({
+        ...t,
+        label: t.key === TABS_CONFIG.HOME_PATH
+          ? (routeTitleMap.get(TABS_CONFIG.HOME_PATH) || TABS_CONFIG.HOME_TITLE)
+          : (routeTitleMap.get(t.key) || t.label),
+      }))
+    );
+  }, [routeTitleMap]);
 
   // 路由变动时动态追加 Tab
   useEffect(() => {
@@ -73,7 +104,7 @@ export const MultiTabs: React.FC = () => {
         return prev;
       }
       const title = routeTitleMap.get(currentPath) || currentPath;
-      return [
+      const nextTabs = [
         ...prev,
         {
           key: currentPath,
@@ -81,8 +112,20 @@ export const MultiTabs: React.FC = () => {
           closable: currentPath !== TABS_CONFIG.HOME_PATH,
         },
       ];
+      // 控制最大标签数，防止溢出
+      if (nextTabs.length > TABS_CONFIG.MAX_OPEN_TABS) {
+        const homeTab = nextTabs.find((t) => t.key === TABS_CONFIG.HOME_PATH)!;
+        const otherTabs = nextTabs.filter((t) => t.key !== TABS_CONFIG.HOME_PATH);
+        return [homeTab, ...otherTabs.slice(-(TABS_CONFIG.MAX_OPEN_TABS - 1))];
+      }
+      return nextTabs;
     });
   }, [location.pathname, routeTitleMap]);
+
+  // 状态变动时自动持久化到 sessionStore
+  useEffect(() => {
+    sessionStore.set(STORAGE_KEYS.TABS_HISTORY, tabs);
+  }, [tabs]);
 
   // 关闭指定标签
   const removeTab = useCallback(
@@ -104,6 +147,15 @@ export const MultiTabs: React.FC = () => {
     },
     [location.pathname, navigate]
   );
+
+  // 关闭右侧标签页
+  const closeRightTabs = useCallback(() => {
+    setTabs((prev) => {
+      const currentIndex = prev.findIndex((t) => t.key === location.pathname);
+      if (currentIndex === -1 || currentIndex >= prev.length - 1) return prev;
+      return prev.slice(0, currentIndex + 1);
+    });
+  }, [location.pathname]);
 
   // 关闭其他标签
   const closeOtherTabs = useCallback(() => {
@@ -129,6 +181,10 @@ export const MultiTabs: React.FC = () => {
     window.location.reload();
   }, []);
 
+  // 计算当前激活标签位置是否支持“关闭右侧”
+  const activeIndex = tabs.findIndex((t) => t.key === location.pathname);
+  const canCloseRight = activeIndex !== -1 && activeIndex < tabs.length - 1;
+
   // 右侧快捷操作菜单配置
   const extraMenuItems: MenuProps["items"] = [
     {
@@ -139,6 +195,13 @@ export const MultiTabs: React.FC = () => {
     },
     {
       type: "divider",
+    },
+    {
+      key: "closeRight",
+      label: formatMessage({ id: "tabs.closeRight", defaultMessage: "关闭右侧标签" }),
+      icon: <VerticalLeftOutlined />,
+      disabled: !canCloseRight,
+      onClick: closeRightTabs,
     },
     {
       key: "closeOthers",

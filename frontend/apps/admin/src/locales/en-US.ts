@@ -14,6 +14,12 @@ export default {
   'navBar.user.center': 'User Center',
   'navBar.settings': 'Account Settings',
 
+  // Tabs
+  'tabs.refresh': 'Refresh Tab',
+  'tabs.closeRight': 'Close Tabs to the Right',
+  'tabs.closeOthers': 'Close Other Tabs',
+  'tabs.closeAll': 'Close All Tabs',
+
   // Menus
   'menu.account.settings': 'Account Settings',
   'menu.dashboard': 'Dashboard',
@@ -83,6 +89,8 @@ export default {
   'common.cancel': 'Cancel',
   'common.admin': 'Administrator',
   'role.superAdmin': 'Super Administrator',
+  'common.networkRestored': 'Network connection restored',
+  'common.offlineWarning': 'Network connection lost. Some features may not sync in real time.',
 
   // Exception Pages
   'exception.403.subTitle': 'Sorry, you do not have permission to access this page. Please contact administrator or return to dashboard.',

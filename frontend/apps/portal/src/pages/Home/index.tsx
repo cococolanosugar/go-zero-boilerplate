@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Space, Tag, Typography, Row, Col, Card, Flex } from "antd";
+import { Button, Space, Tag, Typography, Row, Col, Card, Flex, theme } from "antd";
 import {
   RocketOutlined,
   ThunderboltOutlined,
@@ -17,6 +17,7 @@ import { useOutletContext } from "react-router-dom";
 import { APP_NAME } from "@zero/shared";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
+import { useLayoutSettings } from "../../contexts/LayoutSettingsContext";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -24,6 +25,8 @@ export const HomePage: React.FC = () => {
   const { onOpenLogin } = useOutletContext<{ onOpenLogin: () => void }>();
   const { profile, isLoggedIn } = useAuth();
   const { formatMessage } = useIntl();
+  const { isDark } = useLayoutSettings();
+  const { token } = theme.useToken();
 
   const trafficData = [
     { time: "09-01", service: "Gateway (HTTP)", qps: 1240 },
@@ -214,6 +217,7 @@ export const HomePage: React.FC = () => {
             colorField="service"
             shapeField="smooth"
             height={260}
+            theme={isDark ? "classicDark" : "classic"}
             scale={{
               color: {
                 range: ["#722ed1", "#1677ff", "#52c41a"],
@@ -236,7 +240,7 @@ export const HomePage: React.FC = () => {
         </Title>
         <Row gutter={[20, 20]} style={{ marginBottom: 32 }}>
           <Col xs={24} sm={12} md={8}>
-            <Card hoverable variant="borderless" style={{ height: "100%", background: "#fff" }}>
+            <Card hoverable variant="borderless" style={{ height: "100%", background: token.colorBgContainer }}>
               <ThunderboltOutlined style={{ fontSize: 32, color: "#722ed1", marginBottom: 12 }} />
               <Title level={4} style={{ marginBottom: 8 }}>
                 {formatMessage({
@@ -254,7 +258,7 @@ export const HomePage: React.FC = () => {
             </Card>
           </Col>
           <Col xs={24} sm={12} md={8}>
-            <Card hoverable variant="borderless" style={{ height: "100%", background: "#fff" }}>
+            <Card hoverable variant="borderless" style={{ height: "100%", background: token.colorBgContainer }}>
               <SafetyCertificateOutlined style={{ fontSize: 32, color: "#722ed1", marginBottom: 12 }} />
               <Title level={4} style={{ marginBottom: 8 }}>
                 {formatMessage({
@@ -272,7 +276,7 @@ export const HomePage: React.FC = () => {
             </Card>
           </Col>
           <Col xs={24} sm={12} md={8}>
-            <Card hoverable variant="borderless" style={{ height: "100%", background: "#fff" }}>
+            <Card hoverable variant="borderless" style={{ height: "100%", background: token.colorBgContainer }}>
               <RocketOutlined style={{ fontSize: 32, color: "#722ed1", marginBottom: 12 }} />
               <Title level={4} style={{ marginBottom: 8 }}>
                 {formatMessage({

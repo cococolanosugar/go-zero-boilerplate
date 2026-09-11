@@ -22,7 +22,15 @@ export const LoginPage: React.FC = () => {
       setToken(res.accessToken);
       message.success(`欢迎回来，${res.realName || res.username || "管理员"}！`);
       
-      const from = (location.state as any)?.from?.pathname || "/dashboard";
+      const searchParams = new URLSearchParams(location.search);
+      const queryFrom = searchParams.get("from");
+      const stateFrom = (location.state as any)?.from;
+      const statePath = typeof stateFrom === "string"
+        ? stateFrom
+        : stateFrom?.pathname
+          ? `${stateFrom.pathname}${stateFrom.search || ""}`
+          : undefined;
+      const from = statePath || queryFrom || "/dashboard";
       navigate(from, { replace: true });
     } catch (err: any) {
       message.error(err.message || "登录失败，请检查账号密码");
@@ -45,7 +53,7 @@ export const LoginPage: React.FC = () => {
       <LoginForm
         title={APP_NAME}
         subTitle="基于 go-zero 微服务网关与 Ant Design Pro 构建的企业级大仓后台"
-        logo="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+        logo="/favicon.svg"
         loading={loading}
         initialValues={{
           account: "admin",

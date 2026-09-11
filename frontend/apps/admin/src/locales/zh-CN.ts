@@ -14,6 +14,12 @@ export default {
   'navBar.user.center': '个人中心',
   'navBar.settings': '个人设置',
 
+  // 标签页操作
+  'tabs.refresh': '刷新当前页',
+  'tabs.closeRight': '关闭右侧标签',
+  'tabs.closeOthers': '关闭其他标签',
+  'tabs.closeAll': '关闭所有标签',
+
   // 菜单
   'menu.account.settings': '个人设置',
   'menu.dashboard': '监控大盘',
@@ -83,6 +89,8 @@ export default {
   'common.cancel': '取消',
   'common.admin': '管理员',
   'role.superAdmin': '超级管理员',
+  'common.networkRestored': '网络连接已恢复',
+  'common.offlineWarning': '当前网络连接已断开，部分数据可能无法实时同步，请检查网络设置。',
 
   // 异常页面
   'exception.403.subTitle': '抱歉，您暂无访问该页面的操作权限。请联系管理员分配权限或返回大盘。',

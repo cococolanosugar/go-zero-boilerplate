@@ -93,6 +93,8 @@ export default {
   'profile.logout': '退出登录',
 
   // 异常页面
+  'common.networkRestored': '网络连接已恢复',
+  'common.offlineWarning': '当前网络连接已断开，部分数据可能无法实时同步，请检查网络设置。',
   'exception.403.subTitle': '抱歉，您暂无访问该页面的操作权限。请联系管理员分配权限或返回首页。',
   'exception.404.subTitle': '抱歉，您访问的页面不存在或已被移除。',
   'exception.500.subTitle': '抱歉，服务器内部遇到异常或网关微服务暂时无法响应，请稍后重试。',

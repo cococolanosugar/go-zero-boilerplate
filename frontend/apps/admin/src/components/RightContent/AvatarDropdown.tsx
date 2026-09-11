@@ -30,7 +30,7 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = (props) => {
     formatMessage({ id: "common.admin", defaultMessage: "管理员" });
 
   const avatarUrl =
-    currentUser?.avatar || "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg";
+    currentUser?.avatar || "/favicon.svg";
 
   const handleLogout = () => {
     if (props.onLogout) {

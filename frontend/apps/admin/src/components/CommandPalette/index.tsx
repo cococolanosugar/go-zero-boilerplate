@@ -13,10 +13,22 @@ import {
   RightOutlined,
   FormOutlined,
   ProfileOutlined,
+  CheckCircleOutlined,
+  SafetyCertificateOutlined,
+  MenuOutlined,
+  ApiOutlined,
+  BookOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "@zero/api";
 import { useLayoutSettings } from "../../contexts/LayoutSettingsContext";
+import { useIntl } from "../../contexts/LocaleContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { getAccess } from "../../access";
+import { routes as staticRoutes } from "../../config/routes";
+import type { AppRouteItem } from "../../config/routes.types";
+import zhCN from "../../locales/zh-CN";
 
 const { Text } = Typography;
 
@@ -29,6 +41,40 @@ export interface CommandItem {
   keywords?: string[];
 }
 
+const getRouteIcon = (iconName?: string | React.ReactNode) => {
+  if (React.isValidElement(iconName)) return iconName;
+  switch (iconName) {
+    case "DashboardOutlined":
+      return <DashboardOutlined />;
+    case "AppstoreOutlined":
+      return <AppstoreOutlined />;
+    case "FormOutlined":
+      return <FormOutlined />;
+    case "ProfileOutlined":
+      return <ProfileOutlined />;
+    case "CheckCircleOutlined":
+      return <CheckCircleOutlined />;
+    case "ShoppingCartOutlined":
+      return <ShoppingCartOutlined />;
+    case "UserOutlined":
+      return <UserOutlined />;
+    case "SettingOutlined":
+      return <SettingOutlined />;
+    case "SafetyCertificateOutlined":
+      return <SafetyCertificateOutlined />;
+    case "MenuOutlined":
+      return <MenuOutlined />;
+    case "ApiOutlined":
+      return <ApiOutlined />;
+    case "BookOutlined":
+      return <BookOutlined />;
+    case "HistoryOutlined":
+      return <HistoryOutlined />;
+    default:
+      return <AppstoreOutlined />;
+  }
+};
+
 export const CommandPalette: React.FC<{
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -39,6 +85,9 @@ export const CommandPalette: React.FC<{
   const inputRef = useRef<any>(null);
   const navigate = useNavigate();
   const { toggleNavTheme, isDark } = useLayoutSettings();
+  const { formatMessage } = useIntl();
+  const { profile } = useAuth();
+  const accessInstance = getAccess(profile);
 
   const handleLogout = () => {
     setToken(null);
@@ -69,72 +118,59 @@ export const CommandPalette: React.FC<{
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
-  const allCommands: CommandItem[] = useMemo(
-    () => [
-      {
-        key: "workplace",
-        title: "工作台 (Workplace)",
-        category: "页面导航",
-        icon: <AppstoreOutlined />,
-        action: () => navigate("/workplace"),
-        keywords: ["workplace", "gongzuotai", "home"],
-      },
-      {
-        key: "dashboard",
-        title: "监控大盘 (Dashboard)",
-        category: "页面导航",
-        icon: <DashboardOutlined />,
-        action: () => navigate("/dashboard"),
-        keywords: ["dashboard", "dapan", "monitor"],
-      },
-      {
-        key: "orders",
-        title: "订单管理 (Orders)",
-        category: "页面导航",
-        icon: <ShoppingCartOutlined />,
-        action: () => navigate("/orders"),
-        keywords: ["orders", "dingdan"],
-      },
-      {
-        key: "step-form",
-        title: "分步向导表单 (StepsForm)",
-        category: "页面导航",
-        icon: <FormOutlined />,
-        action: () => navigate("/form/step-form"),
-        keywords: ["step", "form", "xiangdao", "zhuanzhang"],
-      },
-      {
-        key: "profile-advanced",
-        title: "高级详情页 (Advanced Profile)",
-        category: "页面导航",
-        icon: <ProfileOutlined />,
-        action: () => navigate("/profile/advanced"),
-        keywords: ["profile", "xiangqing", "advanced"],
-      },
-      {
-        key: "system-users",
-        title: "员工管理 (Users)",
-        category: "页面导航",
-        icon: <UserOutlined />,
-        action: () => navigate("/system/users"),
-        keywords: ["users", "yuangong"],
-      },
-      {
-        key: "system-roles",
-        title: "角色管理 (Roles)",
-        category: "页面导航",
-        icon: <SettingOutlined />,
-        action: () => navigate("/system/roles"),
-        keywords: ["roles", "juese"],
-      },
-      {
-        key: "system-logs",
-        title: "审计日志 (Logs)",
-        category: "页面导航",
-        icon: <SettingOutlined />,
-        action: () => navigate("/system/logs"),
-        keywords: ["logs", "shenji", "rizhi"],
-      },
+  const allCommands: CommandItem[] = useMemo(() => {
+    const list: CommandItem[] = [];
+
+    // 递归遍历路由配置提取所有可访问的业务页面
+    const walkRoutes = (items: AppRouteItem[]) => {
+      items.forEach((item) => {
+        if (
+          item.path &&
+          item.name &&
+          !item.redirect &&
+          item.path !== "/login" &&
+          !item.path.startsWith("/40") &&
+          !item.path.startsWith("/50")
+        ) {
+          // 具备权限校验，当存在 profile 时判定细粒度权限
+          if (!item.access || !profile || accessInstance.canAccess(item.access)) {
+            const localeKey = item.locale || item.name;
+            const fallbackChinese = (zhCN as Record<string, string>)[localeKey] || item.name;
+            const translated = formatMessage({
+              id: localeKey,
+              defaultMessage: fallbackChinese,
+            });
+            const displayName =
+              translated === localeKey && fallbackChinese ? fallbackChinese : translated;
+
+            list.push({
+              key: `nav-${item.path}`,
+              title: `${displayName} (${item.path})`,
+              category: "页面导航",
+              icon: getRouteIcon(item.icon),
+              action: () => navigate(item.path),
+              keywords: [
+                item.path.replace(/\//g, " ").trim(),
+                displayName,
+                localeKey,
+                item.name,
+              ],
+            });
+          }
+        }
+
+        if (item.routes && item.routes.length > 0) {
+          walkRoutes(item.routes);
+        }
+      });
+    };
+
+    const mainRoutes =
+      staticRoutes.find((r) => r.path === "/" && r.layout === true)?.routes || [];
+    walkRoutes(mainRoutes);
+
+    // 全局快捷动作
+    const globalActions: CommandItem[] = [
       {
         key: "toggle-theme",
         title: isDark ? "切换为浅色主题" : "切换为暗黑模式",
@@ -165,9 +201,10 @@ export const CommandPalette: React.FC<{
         action: () => handleLogout(),
         keywords: ["logout", "tuichu"],
       },
-    ],
-    [navigate, isDark, toggleNavTheme]
-  );
+    ];
+
+    return [...list, ...globalActions];
+  }, [navigate, isDark, toggleNavTheme, formatMessage, profile]);
 
   const filteredCommands = useMemo(() => {
     if (!search.trim()) return allCommands;

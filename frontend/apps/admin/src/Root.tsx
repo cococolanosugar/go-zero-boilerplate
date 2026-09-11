@@ -1,7 +1,7 @@
-import React from "react";
-import { ConfigProvider, App as AntdApp, theme } from "antd";
+import React, { useState, useEffect } from "react";
+import { ConfigProvider, App as AntdApp, theme, Alert } from "antd";
 import { LayoutSettingsProvider, useLayoutSettings } from "./contexts/LayoutSettingsContext";
-import { LocaleProvider, useLocale } from "./contexts/LocaleContext";
+import { LocaleProvider, useLocale, useIntl } from "./contexts/LocaleContext";
 import { InitialStateProvider } from "./contexts/InitialStateContext";
 import { getInitialState } from "./app";
 import { AppRouter } from "./router";
@@ -12,7 +12,7 @@ import { addSessionSyncListener } from "@zero/shared";
 
 const FeedbackInitializer: React.FC = () => {
   const { message, notification } = AntdApp.useApp();
-  React.useEffect(() => {
+  useEffect(() => {
     setAppFeedback({ message, notification });
   }, [message, notification]);
   return null;
@@ -22,7 +22,7 @@ const SessionSyncBridge: React.FC = () => {
   const { setSettings } = useLayoutSettings();
   const { setLocale } = useLocale();
 
-  React.useEffect(() => {
+  useEffect(() => {
     return addSessionSyncListener((payload) => {
       if (payload.type === "AUTH_LOGOUT") {
         if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
@@ -37,6 +37,54 @@ const SessionSyncBridge: React.FC = () => {
   }, [setSettings, setLocale]);
 
   return null;
+};
+
+export const OfflineGuard: React.FC = () => {
+  const [isOffline, setIsOffline] = useState(() => {
+    return typeof navigator !== "undefined" && !navigator.onLine;
+  });
+  const { message } = AntdApp.useApp();
+  const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOffline(false);
+      message.success(
+        formatMessage({ id: "common.networkRestored", defaultMessage: "网络连接已恢复" })
+      );
+    };
+    const handleOffline = () => {
+      setIsOffline(true);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [message, formatMessage]);
+
+  if (!isOffline) return null;
+
+  return (
+    <Alert
+      banner
+      type="warning"
+      title={formatMessage({
+        id: "common.offlineWarning",
+        defaultMessage: "当前网络连接已断开，部分数据可能无法实时同步，请检查网络设置。",
+      })}
+      showIcon
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 9999,
+        width: "100%",
+        textAlign: "center",
+      }}
+    />
+  );
 };
 
 const ThemedApp: React.FC = () => {
@@ -62,6 +110,7 @@ const ThemedApp: React.FC = () => {
       <AntdApp>
         <FeedbackInitializer />
         <SessionSyncBridge />
+        <OfflineGuard />
         <AppRouter />
       </AntdApp>
     </ConfigProvider>
