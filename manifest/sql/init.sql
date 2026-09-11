@@ -1,5 +1,6 @@
 -- 初始化数据库与表结构
 CREATE DATABASE IF NOT EXISTS `go_zero_boilerplate` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `casdoor` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `go_zero_boilerplate`;
 
 -- 用户表

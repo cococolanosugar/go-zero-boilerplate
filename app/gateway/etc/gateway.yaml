@@ -38,3 +38,12 @@ OrderRpc:
   Endpoints:
     - 127.0.0.1:8081
   NonBlock: true
+
+# ================= Casdoor SSO 认证配置 =================
+Casdoor:
+  Endpoint: http://127.0.0.1:8000
+  ClientId: d795c3b1a7b960bd0b61
+  ClientSecret: 2cc190e9c43e9659f45ad233cf0bec3038f59b46
+  Certificate: ""
+  OrganizationName: built-in
+  ApplicationName: app-built-in

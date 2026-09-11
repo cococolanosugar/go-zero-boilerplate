@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { App as AntdApp, Modal, Tabs, Alert } from "antd";
+import { App as AntdApp, Modal, Tabs, Alert, Button, Divider } from "antd";
 import {
   LoginForm,
   ProFormText,
@@ -10,6 +10,7 @@ import {
   MobileOutlined,
   SafetyCertificateOutlined,
 } from "@ant-design/icons";
+import { buildCasdoorAuthUrl } from "@zero/shared";
 import { useAuth } from "../contexts/AuthContext";
 import { useIntl } from "../contexts/LocaleContext";
 
@@ -164,6 +165,29 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
               })}
               rules={[{ required: true, message: "请输入密码" }]}
             />
+            <div style={{ marginTop: 8, marginBottom: 8 }}>
+              <Divider plain style={{ margin: "16px 0 12px", color: "#8c8c8c", fontSize: 13 }}>
+                {formatMessage({
+                  id: "login.casdoor.divider",
+                  defaultMessage: "或使用企业统一身份登录",
+                })}
+              </Divider>
+              <Button
+                block
+                size="large"
+                icon={<SafetyCertificateOutlined style={{ color: "#722ed1" }} />}
+                onClick={() => {
+                  const redirectUri = `${window.location.origin}/callback`;
+                  const authUrl = buildCasdoorAuthUrl({ redirectUri });
+                  window.location.href = authUrl;
+                }}
+              >
+                {formatMessage({
+                  id: "login.casdoor.button",
+                  defaultMessage: "Casdoor 企业统一 SSO 登录",
+                })}
+              </Button>
+            </div>
           </LoginForm>
         </div>
       ) : (

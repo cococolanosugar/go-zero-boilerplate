@@ -56,6 +56,13 @@ export const routes: AppRouteItem[] = [
     ],
   },
   {
+    path: "/callback",
+    name: "callback",
+    layout: false,
+    hideInMenu: true,
+    component: lazy(() => import("../pages/Callback")),
+  },
+  {
     path: "*",
     component: lazy(() => import("../pages/Exception/404")),
     layout: false,

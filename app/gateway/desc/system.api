@@ -24,6 +24,12 @@ type (
 		Roles        []string `json:"roles"`
 	}
 
+	// Casdoor SSO 统一身份登录
+	CasdoorLoginReq {
+		Code  string `json:"code"`
+		State string `json:"state,optional"`
+	}
+
 	// 菜单树节点
 	SysMenuItem {
 		Id             int64          `json:"id"`
@@ -221,6 +227,10 @@ service gateway {
 	@doc "管理员账号登录"
 	@handler AdminLogin
 	post /auth/login (AdminLoginReq) returns (AdminLoginResp)
+
+	@doc "Casdoor SSO 统一身份登录"
+	@handler CasdoorLogin
+	post /auth/casdoor/login (CasdoorLoginReq) returns (AdminLoginResp)
 }
 
 @server (

@@ -4,6 +4,7 @@
 
 * **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`order`）收缩为纯 gRPC 通信。
 * **前端**：采用 `pnpm workspace` 统一管理后台（`admin`，基于 Ant Design 6.6.2 + Pro Components 2.8.10）与前台门户（`portal`，基于 Ant Design 6.6.2），通过 `goctl api ts` 自动生成统一的 `@zero/api` TypeScript SDK，契约一键直通！
+* **认证**：深度集成 [Casdoor](https://casdoor.org) 企业级统一身份认证（IAM/SSO），支持 OAuth 2.0 / OIDC 授权码安全置换与微服务 JIT 即时自动拨备建档，与传统账号密码双模并存。
 
 ---
 
@@ -190,7 +191,13 @@ just gen-ts
 * **登录日志 (`sys_login_log`)**：用户与员工登录成功/失败自动记录客户端 IP、浏览器与操作系统。
 * **前端审计中心**：管理后台 `/system/logs` 采用 Ant Design ProTable 双 Tab 提供多维度筛选、状态指示与详情弹窗。
 
-### 3. 脚手架一键重命名与工程定制 (Rebranding)
+### 3. 企业级 Casdoor 统一身份认证与单点登录 (IAM / SSO)
+* **OAuth 2.0 / OIDC 标准协议**：通过 Casdoor 统一身份认证中心（`:8000`）实现全栈 SSO，与本地账号密码登录模式并存（双模认证）。
+* **服务端 OIDC 换票安全隔离**：前端仅携带静默重定向的 `code` 提交网关，由网关服务端通过 `ClientSecret` 与 Casdoor 进行后端令牌置换，杜绝密钥泄露风险。
+* **微服务 JIT 即时自动拨备 (JIT Provisioning)**：新员工首次通过 SSO 登录时，用户微服务自动在本地 `sys_user` 建立档案并下发默认权限角色，免去人工建档流程。
+* **多端 Parity 体验一致**：管理后台与官方门户均内置一键 SSO 登录与独立 `/callback` 路由，默认支持内网 IP 局域网跨设备联调。
+
+### 4. 脚手架一键重命名与工程定制 (Rebranding)
 只需一条命令即可将本脚手架一键定制为任意新项目名：
 ```bash
 # Windows

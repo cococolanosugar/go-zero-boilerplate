@@ -45,6 +45,11 @@ func (s *UserServer) AdminLogin(ctx context.Context, in *pb.AdminLoginRequest) (
 	return l.AdminLogin(in)
 }
 
+func (s *UserServer) SyncOrCreateCasdoorUser(ctx context.Context, in *pb.SyncCasdoorUserRequest) (*pb.SyncCasdoorUserResponse, error) {
+	l := userlogic.NewSyncOrCreateCasdoorUserLogic(ctx, s.svcCtx)
+	return l.SyncOrCreateCasdoorUser(in)
+}
+
 func (s *UserServer) GetAdminProfile(ctx context.Context, in *pb.IdRequest) (*pb.AdminProfileResponse, error) {
 	l := userlogic.NewGetAdminProfileLogic(ctx, s.svcCtx)
 	return l.GetAdminProfile(in)

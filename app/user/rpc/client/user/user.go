@@ -50,6 +50,8 @@ type (
 	RecordOperLogRequest       = pb.RecordOperLogRequest
 	RegisterRequest            = pb.RegisterRequest
 	RegisterResponse           = pb.RegisterResponse
+	SyncCasdoorUserRequest     = pb.SyncCasdoorUserRequest
+	SyncCasdoorUserResponse    = pb.SyncCasdoorUserResponse
 	SysApiItem                 = pb.SysApiItem
 	SysDictDataItem            = pb.SysDictDataItem
 	SysDictTypeItem            = pb.SysDictTypeItem
@@ -70,6 +72,7 @@ type (
 		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 		// 系统管理与 RBAC 权限接口
 		AdminLogin(ctx context.Context, in *AdminLoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error)
+		SyncOrCreateCasdoorUser(ctx context.Context, in *SyncCasdoorUserRequest, opts ...grpc.CallOption) (*SyncCasdoorUserResponse, error)
 		GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error)
 		// 员工管理
 		ListSysUsers(ctx context.Context, in *ListSysUsersRequest, opts ...grpc.CallOption) (*ListSysUsersResponse, error)
@@ -135,6 +138,11 @@ func (m *defaultUser) Login(ctx context.Context, in *LoginRequest, opts ...grpc.
 func (m *defaultUser) AdminLogin(ctx context.Context, in *AdminLoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.AdminLogin(ctx, in, opts...)
+}
+
+func (m *defaultUser) SyncOrCreateCasdoorUser(ctx context.Context, in *SyncCasdoorUserRequest, opts ...grpc.CallOption) (*SyncCasdoorUserResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.SyncOrCreateCasdoorUser(ctx, in, opts...)
 }
 
 func (m *defaultUser) GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error) {

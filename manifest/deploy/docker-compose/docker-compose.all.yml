@@ -59,6 +59,22 @@ services:
     networks:
       - go-zero-net
 
+  casdoor:
+    image: casbin/casdoor:latest
+    container_name: go-zero-casdoor
+    environment:
+      RUNNING_IN_DOCKER: "true"
+      driverName: "mysql"
+      dataSourceName: "root:root@tcp(mysql:3306)/"
+      dbName: "casdoor"
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - go-zero-net
+
   # -------------------------------------------------------------
   # 2. 内部微服务集群 (Internal gRPC Services)
   # -------------------------------------------------------------

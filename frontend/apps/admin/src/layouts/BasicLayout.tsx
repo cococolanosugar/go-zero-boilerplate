@@ -19,10 +19,6 @@ export const BasicLayout: React.FC = () => {
   const navigate = useNavigate();
   const { settings, setSettings, toggleNavTheme, isDark } = useLayoutSettings();
   const { initialState, setInitialState } = useInitialState();
-
-  if (initialState.loading) {
-    return <PageLoading />;
-  }
   const { locale, setLocale } = useLocale();
   const { formatMessage } = useIntl();
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -75,6 +71,10 @@ export const BasicLayout: React.FC = () => {
     setLocale,
     isFullscreen,
   ]);
+
+  if (initialState.loading) {
+    return <PageLoading />;
+  }
 
   return (
     <div style={{ height: "100vh" }}>

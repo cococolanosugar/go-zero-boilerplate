@@ -91,6 +91,14 @@ export function getOrderDetail(params: components.OrderDetailReqParams) {
 }
 
 /**
+ * @description "Casdoor SSO 统一身份登录"
+ * @param req
+ */
+export function casdoorLogin(req: components.CasdoorLoginReq) {
+	return webapi.post<components.AdminLoginResp>(`/api/v1/system/auth/casdoor/login`, req)
+}
+
+/**
  * @description "管理员账号登录"
  * @param req
  */

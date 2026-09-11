@@ -261,6 +261,18 @@ go-zero-boilerplate/
   * 关键边界逻辑（如 `access.ts` 权限判定、`storage.ts` 带 TTL 持久化存储、数据格式化等）必须编写单元测试覆盖。
   * 每次修改前端核心逻辑后，执行 `just test-frontend`（或 `pnpm test`）确保测试 100% 通过。
 
+### 3.11 Casdoor 企业级统一身份认证与 SSO (IAM & SSO Architecture)
+* **架构模式**：采用标准 OAuth 2.0 Authorization Code + OIDC 协议，Casdoor 作为独立统一认证中心（端口 8000），与本地账号密码登录模式并存（双模认证）。
+* **OIDC 换票安全隔离**：
+  * 前端通过 `@zero/shared` 的 `buildCasdoorAuthUrl` 跳转 Casdoor 授权页，经重定向回 `/callback?code=xxx`。
+  * **严禁前端持有 ClientSecret**：前端仅携带 `code` 调用网关 `POST /api/v1/system/auth/casdoor/login`；由网关服务端使用 `ClientSecret` 向 Casdoor 置换 AccessToken 并提取 Claims。
+* **用户即时拨备 (JIT Provisioning)**：
+  * 网关调用 `UserRpc.SyncOrCreateCasdoorUser`：若存在本地 `sys_user` 账号则更新最新画像声明；若为全新员工，底层自动 JIT 建档并下发默认通用员工角色（`ROLE_COMMON` / `ROLE_USER`），实现零人工录入的自动化入职建档。
+  * 用户登录后由网关统一签发系统内部标准 JWT Token（HS256），无缝享受既有 RBAC、菜单树与数据权限。
+* **双端 Parity 对齐**：
+  * 管理后台 (`apps/admin`) 与技术门户 (`apps/portal`) 统一提供一键 SSO 登录入口与独立 `/callback` 路由。
+  * 默认端点自适应内网与局域网 IP（`http://192.168.31.174:8000`），支持多端局域网设备联调。
+
 ---
 
 ## 4. 常用命令速查 (Cheat Sheet)

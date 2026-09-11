@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { App as AntdApp } from "antd";
+import { App as AntdApp, Button, Divider } from "antd";
 import { LoginForm, ProFormText } from "@ant-design/pro-components";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { adminLogin, setToken } from "@zero/api";
-import { APP_NAME } from "@zero/shared";
+import { APP_NAME, buildCasdoorAuthUrl } from "@zero/shared";
 
 export const LoginPage: React.FC = () => {
   const { message } = AntdApp.useApp();
@@ -84,6 +84,23 @@ export const LoginPage: React.FC = () => {
           placeholder="密码（默认: 123456）"
           rules={[{ required: true, message: "请输入密码" }]}
         />
+        <div style={{ marginTop: 8, marginBottom: 8 }}>
+          <Divider plain style={{ margin: "16px 0 12px", color: "#8c8c8c", fontSize: 13 }}>
+            或使用企业统一身份登录
+          </Divider>
+          <Button
+            block
+            size="large"
+            icon={<SafetyCertificateOutlined style={{ color: "#1677ff" }} />}
+            onClick={() => {
+              const redirectUri = `${window.location.origin}/callback`;
+              const authUrl = buildCasdoorAuthUrl({ redirectUri });
+              window.location.href = authUrl;
+            }}
+          >
+            Casdoor 企业统一 SSO 登录
+          </Button>
+        </div>
       </LoginForm>
     </div>
   );

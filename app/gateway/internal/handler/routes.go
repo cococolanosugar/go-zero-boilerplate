@@ -99,6 +99,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// Casdoor SSO 统一身份登录
+				Method:  http.MethodPost,
+				Path:    "/auth/casdoor/login",
+				Handler: system.CasdoorLoginHandler(serverCtx),
+			},
+			{
 				// 管理员账号登录
 				Method:  http.MethodPost,
 				Path:    "/auth/login",

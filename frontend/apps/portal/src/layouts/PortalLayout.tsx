@@ -20,13 +20,9 @@ export const PortalLayout: React.FC = () => {
   const navigate = useNavigate();
   const { initialState, setInitialState } = useInitialState();
 
-  if (initialState.loading) {
-    return <PageLoading />;
-  }
   const { logout } = useAuth();
   const { locale, setLocale } = useLocale();
   const { formatMessage } = useIntl();
-
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
   const { isDark, setIsDark } = useLayoutSettings();
@@ -65,6 +61,10 @@ export const PortalLayout: React.FC = () => {
     isDark,
     logout,
   ]);
+
+  if (initialState.loading) {
+    return <PageLoading />;
+  }
 
   return (
     <div style={{ minHeight: "100vh" }}>

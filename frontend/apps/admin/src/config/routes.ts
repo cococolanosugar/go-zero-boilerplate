@@ -14,6 +14,12 @@ export const routes: AppRouteItem[] = [
     layout: false,
     public: true,
   },
+  {
+    path: "/callback",
+    component: lazy(() => import("../pages/Callback")),
+    layout: false,
+    public: true,
+  },
 
   // 2. 主后台业务路由体系（受 AuthGuard 保护，嵌套在 BasicLayout 中）
   {

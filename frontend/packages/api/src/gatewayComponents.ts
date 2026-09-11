@@ -35,6 +35,11 @@ export interface AssignRolePermReq {
 	menuIds: Array<number>
 }
 
+export interface CasdoorLoginReq {
+	code: string
+	state?: string
+}
+
 export interface CreateSysDictDataReq {
 	dictType: string
 	dictLabel: string
@@ -201,7 +206,7 @@ export interface LoginResp {
 export interface OrderDetailReq {
 }
 export interface OrderDetailReqParams {
-	orderId: number
+	orderId?: number
 }
 
 export interface OrderDetailResp {

@@ -19,36 +19,37 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_GetUserInfo_FullMethodName           = "/user.User/GetUserInfo"
-	User_Register_FullMethodName              = "/user.User/Register"
-	User_Login_FullMethodName                 = "/user.User/Login"
-	User_AdminLogin_FullMethodName            = "/user.User/AdminLogin"
-	User_GetAdminProfile_FullMethodName       = "/user.User/GetAdminProfile"
-	User_ListSysUsers_FullMethodName          = "/user.User/ListSysUsers"
-	User_CreateSysUser_FullMethodName         = "/user.User/CreateSysUser"
-	User_UpdateSysUser_FullMethodName         = "/user.User/UpdateSysUser"
-	User_DeleteSysUser_FullMethodName         = "/user.User/DeleteSysUser"
-	User_ListSysRoles_FullMethodName          = "/user.User/ListSysRoles"
-	User_CreateSysRole_FullMethodName         = "/user.User/CreateSysRole"
-	User_UpdateSysRole_FullMethodName         = "/user.User/UpdateSysRole"
-	User_DeleteSysRole_FullMethodName         = "/user.User/DeleteSysRole"
-	User_AssignRolePermissions_FullMethodName = "/user.User/AssignRolePermissions"
-	User_GetSysMenuTree_FullMethodName        = "/user.User/GetSysMenuTree"
-	User_ListSysApis_FullMethodName           = "/user.User/ListSysApis"
-	User_ListSysDictTypes_FullMethodName      = "/user.User/ListSysDictTypes"
-	User_CreateSysDictType_FullMethodName     = "/user.User/CreateSysDictType"
-	User_UpdateSysDictType_FullMethodName     = "/user.User/UpdateSysDictType"
-	User_DeleteSysDictType_FullMethodName     = "/user.User/DeleteSysDictType"
-	User_ListSysDictData_FullMethodName       = "/user.User/ListSysDictData"
-	User_CreateSysDictData_FullMethodName     = "/user.User/CreateSysDictData"
-	User_UpdateSysDictData_FullMethodName     = "/user.User/UpdateSysDictData"
-	User_DeleteSysDictData_FullMethodName     = "/user.User/DeleteSysDictData"
-	User_GetDictDataByType_FullMethodName     = "/user.User/GetDictDataByType"
-	User_CheckApiPermission_FullMethodName    = "/user.User/CheckApiPermission"
-	User_RecordOperLog_FullMethodName         = "/user.User/RecordOperLog"
-	User_RecordLoginLog_FullMethodName        = "/user.User/RecordLoginLog"
-	User_ListSysOperLogs_FullMethodName       = "/user.User/ListSysOperLogs"
-	User_ListSysLoginLogs_FullMethodName      = "/user.User/ListSysLoginLogs"
+	User_GetUserInfo_FullMethodName             = "/user.User/GetUserInfo"
+	User_Register_FullMethodName                = "/user.User/Register"
+	User_Login_FullMethodName                   = "/user.User/Login"
+	User_AdminLogin_FullMethodName              = "/user.User/AdminLogin"
+	User_SyncOrCreateCasdoorUser_FullMethodName = "/user.User/SyncOrCreateCasdoorUser"
+	User_GetAdminProfile_FullMethodName         = "/user.User/GetAdminProfile"
+	User_ListSysUsers_FullMethodName            = "/user.User/ListSysUsers"
+	User_CreateSysUser_FullMethodName           = "/user.User/CreateSysUser"
+	User_UpdateSysUser_FullMethodName           = "/user.User/UpdateSysUser"
+	User_DeleteSysUser_FullMethodName           = "/user.User/DeleteSysUser"
+	User_ListSysRoles_FullMethodName            = "/user.User/ListSysRoles"
+	User_CreateSysRole_FullMethodName           = "/user.User/CreateSysRole"
+	User_UpdateSysRole_FullMethodName           = "/user.User/UpdateSysRole"
+	User_DeleteSysRole_FullMethodName           = "/user.User/DeleteSysRole"
+	User_AssignRolePermissions_FullMethodName   = "/user.User/AssignRolePermissions"
+	User_GetSysMenuTree_FullMethodName          = "/user.User/GetSysMenuTree"
+	User_ListSysApis_FullMethodName             = "/user.User/ListSysApis"
+	User_ListSysDictTypes_FullMethodName        = "/user.User/ListSysDictTypes"
+	User_CreateSysDictType_FullMethodName       = "/user.User/CreateSysDictType"
+	User_UpdateSysDictType_FullMethodName       = "/user.User/UpdateSysDictType"
+	User_DeleteSysDictType_FullMethodName       = "/user.User/DeleteSysDictType"
+	User_ListSysDictData_FullMethodName         = "/user.User/ListSysDictData"
+	User_CreateSysDictData_FullMethodName       = "/user.User/CreateSysDictData"
+	User_UpdateSysDictData_FullMethodName       = "/user.User/UpdateSysDictData"
+	User_DeleteSysDictData_FullMethodName       = "/user.User/DeleteSysDictData"
+	User_GetDictDataByType_FullMethodName       = "/user.User/GetDictDataByType"
+	User_CheckApiPermission_FullMethodName      = "/user.User/CheckApiPermission"
+	User_RecordOperLog_FullMethodName           = "/user.User/RecordOperLog"
+	User_RecordLoginLog_FullMethodName          = "/user.User/RecordLoginLog"
+	User_ListSysOperLogs_FullMethodName         = "/user.User/ListSysOperLogs"
+	User_ListSysLoginLogs_FullMethodName        = "/user.User/ListSysLoginLogs"
 )
 
 // UserClient is the client API for User service.
@@ -61,6 +62,7 @@ type UserClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// 系统管理与 RBAC 权限接口
 	AdminLogin(ctx context.Context, in *AdminLoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error)
+	SyncOrCreateCasdoorUser(ctx context.Context, in *SyncCasdoorUserRequest, opts ...grpc.CallOption) (*SyncCasdoorUserResponse, error)
 	GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error)
 	// 员工管理
 	ListSysUsers(ctx context.Context, in *ListSysUsersRequest, opts ...grpc.CallOption) (*ListSysUsersResponse, error)
@@ -137,6 +139,16 @@ func (c *userClient) AdminLogin(ctx context.Context, in *AdminLoginRequest, opts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminLoginResponse)
 	err := c.cc.Invoke(ctx, User_AdminLogin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) SyncOrCreateCasdoorUser(ctx context.Context, in *SyncCasdoorUserRequest, opts ...grpc.CallOption) (*SyncCasdoorUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncCasdoorUserResponse)
+	err := c.cc.Invoke(ctx, User_SyncOrCreateCasdoorUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -413,6 +425,7 @@ type UserServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// 系统管理与 RBAC 权限接口
 	AdminLogin(context.Context, *AdminLoginRequest) (*AdminLoginResponse, error)
+	SyncOrCreateCasdoorUser(context.Context, *SyncCasdoorUserRequest) (*SyncCasdoorUserResponse, error)
 	GetAdminProfile(context.Context, *IdRequest) (*AdminProfileResponse, error)
 	// 员工管理
 	ListSysUsers(context.Context, *ListSysUsersRequest) (*ListSysUsersResponse, error)
@@ -466,6 +479,9 @@ func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*LoginResp
 }
 func (UnimplementedUserServer) AdminLogin(context.Context, *AdminLoginRequest) (*AdminLoginResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminLogin not implemented")
+}
+func (UnimplementedUserServer) SyncOrCreateCasdoorUser(context.Context, *SyncCasdoorUserRequest) (*SyncCasdoorUserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SyncOrCreateCasdoorUser not implemented")
 }
 func (UnimplementedUserServer) GetAdminProfile(context.Context, *IdRequest) (*AdminProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAdminProfile not implemented")
@@ -634,6 +650,24 @@ func _User_AdminLogin_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).AdminLogin(ctx, req.(*AdminLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_SyncOrCreateCasdoorUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncCasdoorUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SyncOrCreateCasdoorUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SyncOrCreateCasdoorUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SyncOrCreateCasdoorUser(ctx, req.(*SyncCasdoorUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1128,6 +1162,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AdminLogin",
 			Handler:    _User_AdminLogin_Handler,
+		},
+		{
+			MethodName: "SyncOrCreateCasdoorUser",
+			Handler:    _User_SyncOrCreateCasdoorUser_Handler,
 		},
 		{
 			MethodName: "GetAdminProfile",

@@ -55,6 +55,23 @@ message AdminLoginResponse {
   repeated string roles = 5;
 }
 
+message SyncCasdoorUserRequest {
+  string casdoorSub = 1;
+  string username = 2;
+  string email = 3;
+  string mobile = 4;
+  string realName = 5;
+  string avatar = 6;
+}
+
+message SyncCasdoorUserResponse {
+  int64 id = 1;
+  string username = 2;
+  string realName = 3;
+  string avatar = 4;
+  repeated string roles = 5;
+}
+
 message AdminProfileResponse {
   int64 id = 1;
   string username = 2;
@@ -379,6 +396,7 @@ service User {
 
   // 系统管理与 RBAC 权限接口
   rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse);
+  rpc SyncOrCreateCasdoorUser(SyncCasdoorUserRequest) returns (SyncCasdoorUserResponse);
   rpc GetAdminProfile(IdRequest) returns (AdminProfileResponse);
   
   // 员工管理

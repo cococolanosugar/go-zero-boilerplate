@@ -37,6 +37,11 @@ type AssignRolePermReq struct {
 	MenuIds []int64 `json:"menuIds"`
 }
 
+type CasdoorLoginReq struct {
+	Code  string `json:"code"`
+	State string `json:"state,optional"`
+}
+
 type CreateSysDictDataReq struct {
 	DictType  string `json:"dictType"`
 	DictLabel string `json:"dictLabel"`

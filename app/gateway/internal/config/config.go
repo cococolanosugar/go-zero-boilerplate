@@ -17,4 +17,14 @@ type Config struct {
 	// 下游微服务的 gRPC 客户端配置
 	UserRpc  zrpc.RpcClientConf
 	OrderRpc zrpc.RpcClientConf
+
+	// Casdoor SSO 认证配置
+	Casdoor struct {
+		Endpoint         string
+		ClientId         string
+		ClientSecret     string
+		Certificate      string `json:",optional"`
+		OrganizationName string
+		ApplicationName  string
+	}
 }
