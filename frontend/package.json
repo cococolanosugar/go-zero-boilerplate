@@ -2,20 +2,12 @@
   "name": "go-zero-boilerplate-frontend",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@11.17.0",
   "scripts": {
-    "dev:admin": "pnpm --filter @zero/admin dev",
-    "dev:admin:mock": "pnpm --filter @zero/admin dev:mock",
-    "dev:admin:test": "pnpm --filter @zero/admin dev:test",
-    "dev:admin:pre": "pnpm --filter @zero/admin dev:pre",
-    "dev:portal": "pnpm --filter @zero/portal dev",
-    "dev:portal:mock": "pnpm --filter @zero/portal dev:mock",
-    "dev:portal:test": "pnpm --filter @zero/portal dev:test",
-    "dev:portal:pre": "pnpm --filter @zero/portal dev:pre",
-    "build": "pnpm -r build",
+    "dev:admin": "npm run dev --workspace=@zero/admin",
+    "dev:portal": "npm run dev --workspace=@zero/portal",
+    "build": "npm run build --workspaces",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "gen:api": "goctl api ts --api ../app/gateway/desc/gateway.api --dir ./packages/api/src"
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",

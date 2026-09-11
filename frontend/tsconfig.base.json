@@ -9,6 +9,13 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "declarationMap": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@zero/api": ["packages/api/src"],
+      "@zero/api/*": ["packages/api/src/*"],
+      "@zero/shared": ["packages/shared/src"],
+      "@zero/shared/*": ["packages/shared/src/*"]
+    }
   }
 }

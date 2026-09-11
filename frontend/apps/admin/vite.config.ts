@@ -1,13 +1,18 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { getProxyConfig } from "./src/config/proxy";
 import { vitePluginMock, mockData } from "./mock";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const appEnv = env.APP_ENV || (mode === "mock" ? "dev" : mode) || "dev";
   const customTarget = env.PROXY_TARGET || process.env.PROXY_TARGET;
-  const useMock = env.VITE_USE_MOCK === "true" || mode === "mock";
+  const useMock = env.VITE_USE_MOCK !== "false" || mode === "mock";
 
   const rawProxy = getProxyConfig(appEnv, customTarget);
 
@@ -39,8 +44,16 @@ export default defineConfig(({ mode }) => {
         delay: 150,
       }),
     ],
+    resolve: {
+      alias: {
+        "@zero/api": path.resolve(__dirname, "../../packages/api/src"),
+        "@zero/shared": path.resolve(__dirname, "../../packages/shared/src"),
+      },
+    },
     server: {
-      port: 3001,
+      port: 3000,
+      host: "0.0.0.0",
+      allowedHosts: true,
       proxy: proxyWithLogger,
     },
     build: {

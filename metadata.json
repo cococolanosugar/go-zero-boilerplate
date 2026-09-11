@@ -1,0 +1,6 @@
+{
+  "name": "Go-Zero Monorepo - Ant Design Pro 管理后台",
+  "description": "基于 React 18、Ant Design 6 与 Pro Components 的企业级微服务管理后台，支持动态权限治理、仪表盘监控与审计日志。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
