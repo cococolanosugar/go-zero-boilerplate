@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { App as AntdApp } from "antd";
+import { App as AntdApp, Switch } from "antd";
 import { ProLayout, SettingDrawer, PageLoading } from "@ant-design/pro-components";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
@@ -94,6 +94,41 @@ export const BasicLayout: React.FC = () => {
             setSettings(newSettings);
           }}
           disableUrlParams
+          drawerProps={{
+            footer: (
+              <div style={{ padding: "4px 8px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 12,
+                  }}
+                >
+                  <span style={{ fontSize: 14 }}>全站防截屏水印</span>
+                  <Switch
+                    size="small"
+                    checked={settings.watermark !== false}
+                    onChange={(checked) => setSettings({ ...settings, watermark: checked })}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span style={{ fontSize: 14 }}>多标签页导航 (MultiTabs)</span>
+                  <Switch
+                    size="small"
+                    checked={settings.tabsLayout !== false}
+                    onChange={(checked) => setSettings({ ...settings, tabsLayout: checked })}
+                  />
+                </div>
+              </div>
+            ),
+          }}
         />
       </ProLayout>
     </div>

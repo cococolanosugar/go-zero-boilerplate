@@ -246,7 +246,16 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
     waterMarkProps:
       settings.watermark !== false
         ? {
-            content: `${displayName} (${APP_NAME})`,
+            content: [
+              `${displayName} (@${currentUser?.username || "admin"})`,
+              `${APP_NAME} · 内部机密 严禁外传`,
+            ],
+            font: {
+              color: isDark ? "rgba(255, 255, 255, 0.07)" : "rgba(0, 0, 0, 0.07)",
+              fontSize: 14,
+            },
+            gap: [140, 140],
+            rotate: -22,
           }
         : undefined,
     menuItemRender: (item, dom) => (

@@ -172,7 +172,12 @@ const emptyBundle = buildDictBundle([]);
  * 1. 单字典：const { options, valueEnum, getLabel } = useDict('sys_common_status');
  * 2. 多字典：const { sys_notice_type, sys_common_status, loading } = useDict('sys_notice_type', 'sys_common_status');
  */
-export function useDict(...types: (string | string[])[]) {
+export function useDict<T extends string = string>(
+  ...types: (T | T[])[]
+): DictBundle & Record<T, DictBundle> & {
+  loading: boolean;
+  refresh: () => Promise<void>;
+} {
   const flattenedTypes = useMemo(() => {
     const list: string[] = [];
     for (const t of types) {
@@ -246,7 +251,7 @@ export function useDict(...types: (string | string[])[]) {
     ...firstBundle,
     loading,
     refresh: () => loadAll(true),
-  };
+  } as any;
 }
 
 /**

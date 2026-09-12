@@ -339,7 +339,7 @@ export const DeptPage: React.FC = () => {
             style={{ width: "100%" }}
             value={parentDeptId}
             treeData={treeSelectData}
-            styles={{ popup: { maxHeight: 400, overflow: "auto" } }}
+            styles={{ popup: { root: { maxHeight: 400, overflow: "auto" } } }}
             placeholder="请选择上级部门"
             treeDefaultExpandAll
             onChange={(val) => setParentDeptId(val as number)}
