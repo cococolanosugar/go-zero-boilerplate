@@ -234,6 +234,13 @@ export function listSysApis() {
 }
 
 /**
+ * @description "通用文件上传"
+ */
+export function uploadFile() {
+	return webapi.post<components.FileUploadResp>(`/api/v1/system/file/upload`)
+}
+
+/**
  * @description "获取登录日志列表"
  * @param params
  */

@@ -79,8 +79,8 @@ func (m *RbacMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		// 5. 个人中心与登录认证相关接口（已登录员工人人可访问）
-		if strings.HasPrefix(path, "/api/v1/system/personal") || strings.HasPrefix(path, "/api/v1/system/auth") {
+		// 5. 个人中心、文件上传与登录认证相关接口（已登录员工人人可访问）
+		if strings.HasPrefix(path, "/api/v1/system/personal") || strings.HasPrefix(path, "/api/v1/system/auth") || strings.HasPrefix(path, "/api/v1/system/file/upload") {
 			next(w, r)
 			return
 		}

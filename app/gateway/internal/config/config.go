@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
+	"go-zero-boilerplate/pkg/storage"
 )
 
 type Config struct {
@@ -27,4 +28,7 @@ type Config struct {
 		OrganizationName string
 		ApplicationName  string
 	}
+
+	// 对象存储配置
+	Storage storage.Config
 }

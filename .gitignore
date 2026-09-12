@@ -56,3 +56,7 @@ Thumbs.db
 .codegraph/
 .gitnexus/
 .pnpm-store/
+
+# Uploaded Files & Local Persistent Storage
+data/
+app/gateway/data/

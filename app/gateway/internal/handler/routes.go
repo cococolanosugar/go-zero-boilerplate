@@ -238,6 +238,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: system.ListSysApisHandler(serverCtx),
 			},
 			{
+				// 通用文件上传
+				Method:  http.MethodPost,
+				Path:    "/file/upload",
+				Handler: system.UploadFileHandler(serverCtx),
+			},
+			{
 				// 获取登录日志列表
 				Method:  http.MethodGet,
 				Path:    "/logs/login",

@@ -99,3 +99,22 @@ export function toProTableRequest<TItem = any, TReq = any>(
     }
   };
 }
+
+/**
+ * 通用文件上传方法，自动包装 FormData 并调用 /api/v1/system/file/upload
+ * @param file File 实例或包含 file 字段的 FormData
+ */
+export async function uploadSingleFile(
+  file: any,
+  options?: any
+): Promise<any> {
+  const { webapi } = await import('./gocliRequest');
+  let formData: any;
+  if (typeof FormData !== 'undefined' && file instanceof FormData) {
+    formData = file;
+  } else {
+    formData = new FormData();
+    formData.append('file', file);
+  }
+  return webapi.post('/api/v1/system/file/upload', formData, options);
+}

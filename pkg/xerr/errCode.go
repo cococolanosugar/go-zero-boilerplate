@@ -15,6 +15,11 @@ const (
 	UserNotFound uint32 = 200001
 	UserExisted  uint32 = 200002
 	PasswordErr  uint32 = 200003
+
+	// 文件存储模块错误码 (300000 - 399999)
+	FileUploadError    uint32 = 300001
+	FileTooLargeError  uint32 = 300002
+	FileForbiddenError uint32 = 300003
 )
 
 var message = map[uint32]string{
@@ -30,6 +35,10 @@ var message = map[uint32]string{
 	UserNotFound: "用户不存在",
 	UserExisted:  "用户已存在",
 	PasswordErr:  "密码错误",
+
+	FileUploadError:    "文件上传失败",
+	FileTooLargeError:  "文件大小超出允许范围",
+	FileForbiddenError: "禁止上传可执行或危险脚本文件",
 }
 
 // MapErrMsg 根据错误码返回预设的错误描述

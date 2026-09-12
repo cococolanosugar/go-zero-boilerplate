@@ -47,3 +47,10 @@ Casdoor:
   Certificate: ""
   OrganizationName: built-in
   ApplicationName: app-built-in
+
+# ================= 对象存储配置 =================
+Storage:
+  Driver: local
+  BasePath: ./data/uploads
+  BaseUrl: /uploads
+  MaxSize: 20971520 # 20MB

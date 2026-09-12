@@ -114,6 +114,15 @@ export interface DashboardResp {
 	sysTime: number
 }
 
+export interface FileUploadResp {
+	url: string
+	filename: string
+	originalName: string
+	size: number
+	mimeType: string
+	hash: string
+}
+
 export interface GetDictDataByTypeReq {
 }
 export interface GetDictDataByTypeReqParams {

@@ -13,6 +13,8 @@ import (
 	"go-zero-boilerplate/app/gateway/internal/svc"
 
 	"net/http"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/conf"
@@ -29,7 +31,26 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	server := rest.MustNewServer(c.RestConf)
+	// 挂载静态文件目录服务（支持 /uploads/* 访问本地上传资源）
+	uploadPrefix := strings.TrimRight(c.Storage.BaseUrl, "/") + "/"
+	if uploadPrefix == "/" {
+		uploadPrefix = "/uploads/"
+	}
+	basePath := c.Storage.BasePath
+	if basePath == "" {
+		basePath = "./data/uploads"
+	}
+	_ = os.MkdirAll(basePath, 0755)
+	fileServer := http.StripPrefix(uploadPrefix, http.FileServer(http.Dir(basePath)))
+
+	server := rest.MustNewServer(c.RestConf, rest.WithNotFoundHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, uploadPrefix) {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			fileServer.ServeHTTP(w, r)
+			return
+		}
+		http.NotFound(w, r)
+	})))
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)

@@ -114,6 +114,15 @@ type DashboardResp struct {
 	SysTime  int64           `json:"sysTime"`
 }
 
+type FileUploadResp struct {
+	Url          string `json:"url"`
+	Filename     string `json:"filename"`
+	OriginalName string `json:"originalName"`
+	Size         int64  `json:"size"`
+	MimeType     string `json:"mimeType"`
+	Hash         string `json:"hash"`
+}
+
 type GetDictDataByTypeReq struct {
 	DictType string `path:"dictType"`
 }

@@ -182,8 +182,9 @@ export async function request({
     const isGetOrHead = upperMethod === 'GET' || upperMethod === 'HEAD';
 
     const token = getToken();
+    const isFormData = typeof FormData !== 'undefined' && data instanceof FormData;
     const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
         ...(options.headers || {}),
     };
     if (token && !headers['Authorization']) {
@@ -193,7 +194,11 @@ export async function request({
     options.method = upperMethod;
     options.headers = headers;
     if (!isGetOrHead && data !== undefined) {
-        options.body = typeof data === 'string' ? data : JSON.stringify(data);
+        if (isFormData) {
+            options.body = data as any;
+        } else {
+            options.body = typeof data === 'string' ? data : JSON.stringify(data);
+        }
     }
 
     // Execute Request Interceptors

@@ -217,6 +217,16 @@ type (
 		Total int64              `json:"total"`
 		List  []*SysLoginLogItem `json:"list"`
 	}
+
+	// 文件上传响应
+	FileUploadResp {
+		Url          string `json:"url"`
+		Filename     string `json:"filename"`
+		OriginalName string `json:"originalName"`
+		Size         int64  `json:"size"`
+		MimeType     string `json:"mimeType"`
+		Hash         string `json:"hash"`
+	}
 )
 
 @server (
@@ -294,4 +304,8 @@ service gateway {
 	@doc "获取登录日志列表"
 	@handler ListSysLoginLogs
 	get /logs/login (ListSysLoginLogsReq) returns (ListSysLoginLogsResp)
+
+	@doc "通用文件上传"
+	@handler UploadFile
+	post /file/upload returns (FileUploadResp)
 }
