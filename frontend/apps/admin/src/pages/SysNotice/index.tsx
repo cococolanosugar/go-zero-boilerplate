@@ -21,6 +21,7 @@ import {
   deleteSysNotice,
   type SysNoticeItem,
 } from "@zero/api";
+import { useDict } from "../../hooks/useDict";
 
 export type SysNoticeRecord = SysNoticeItem;
 
@@ -30,6 +31,12 @@ export const SysNoticePage: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState<SysNoticeRecord | null>(null);
+
+  // 响应式通用数据字典驱动
+  const { sys_notice_type, sys_common_status } = useDict(
+    "sys_notice_type",
+    "sys_common_status"
+  );
 
   const handleEdit = (record: SysNoticeRecord) => {
     setCurrentRow(record);
@@ -97,11 +104,7 @@ export const SysNoticePage: React.FC = () => {
       title: "公告类型",
       dataIndex: "noticeType",
       valueType: "select",
-      valueEnum: {
-        1: { text: "通知", status: "Processing" },
-        2: { text: "消息", status: "Success" },
-        3: { text: "待办", status: "Warning" },
-      },
+      valueEnum: sys_notice_type.valueEnum,
     },
     {
       title: "公告内容",
@@ -112,10 +115,7 @@ export const SysNoticePage: React.FC = () => {
       title: "公告状态",
       dataIndex: "status",
       valueType: "select",
-      valueEnum: {
-        1: { text: "正常", status: "Success" },
-        0: { text: "停用", status: "Default" },
-      },
+      valueEnum: sys_common_status.valueEnum,
     },
     {
       title: "创建者",
@@ -230,11 +230,7 @@ export const SysNoticePage: React.FC = () => {
         <ProFormSelect
           name="noticeType"
           label="公告类型"
-          options={[
-            { label: "通知", value: 1 },
-            { label: "消息", value: 2 },
-            { label: "待办", value: 3 },
-          ]}
+          options={sys_notice_type.options}
           initialValue={1}
           rules={[{ required: true, message: "请选择公告类型" }]}
         />
@@ -246,10 +242,7 @@ export const SysNoticePage: React.FC = () => {
         <ProFormSelect
           name="status"
           label="公告状态（1正常 0关闭）"
-          options={[
-            { label: "正常", value: 1 },
-            { label: "停用", value: 0 },
-          ]}
+          options={sys_common_status.options}
           initialValue={1}
           rules={[{ required: true, message: "请选择状态" }]}
         />

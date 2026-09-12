@@ -21,6 +21,7 @@ import {
   deleteSysPost,
   type SysPostItem,
 } from "@zero/api";
+import { useDict } from "../../hooks/useDict";
 
 export type SysPostRecord = SysPostItem;
 
@@ -30,6 +31,9 @@ export const SysPostPage: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState<SysPostRecord | null>(null);
+
+  // 通用字典驱动
+  const { options: statusOptions, valueEnum: statusValueEnum } = useDict("sys_common_status");
 
   const handleEdit = (record: SysPostRecord) => {
     setCurrentRow(record);
@@ -102,10 +106,7 @@ export const SysPostPage: React.FC = () => {
       title: "状态（1正常 0停用）",
       dataIndex: "status",
       valueType: "select",
-      valueEnum: {
-        1: { text: "正常", status: "Success" },
-        0: { text: "停用", status: "Default" },
-      },
+      valueEnum: statusValueEnum,
     },
     {
       title: "备注",
@@ -225,10 +226,7 @@ export const SysPostPage: React.FC = () => {
         <ProFormSelect
           name="status"
           label="状态（1正常 0停用）"
-          options={[
-            { label: "正常", value: 1 },
-            { label: "停用", value: 0 },
-          ]}
+          options={statusOptions}
           initialValue={1}
           rules={[{ required: true, message: "请选择状态" }]}
         />
