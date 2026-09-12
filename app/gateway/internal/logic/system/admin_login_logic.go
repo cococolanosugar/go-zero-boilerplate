@@ -7,6 +7,7 @@ import (
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
 	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	"go-zero-boilerplate/pkg/session"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -44,6 +45,7 @@ func (l *AdminLoginLogic) AdminLogin(req *types.AdminLoginReq) (resp *types.Admi
 	claims["exp"] = now + accessExpire
 	claims["iat"] = now
 	claims["userId"] = rpcResp.Id
+	claims["jti"] = session.GenerateSessionId()
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims
@@ -51,6 +53,22 @@ func (l *AdminLoginLogic) AdminLogin(req *types.AdminLoginReq) (resp *types.Admi
 	if err != nil {
 		l.Errorf("Generate JWT token err: %v", err)
 		return nil, xerr.NewErrCode(xerr.TokenGenerateError)
+	}
+
+	// 记录在线会话
+	if l.svcCtx.SessionMgr != nil {
+		ip, ua := session.FromContext(l.ctx)
+		browser, os := session.ParseUserAgent(ua)
+		location := session.ParseLocation(ip)
+		_ = l.svcCtx.SessionMgr.CreateSession(l.ctx, &session.OnlineSession{
+			UserId:        rpcResp.Id,
+			Username:      rpcResp.Username,
+			RealName:      rpcResp.RealName,
+			LoginIp:       ip,
+			LoginLocation: location,
+			Browser:       browser,
+			Os:            os,
+		}, tokenString, accessExpire)
 	}
 
 	return &types.AdminLoginResp{

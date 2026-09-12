@@ -149,6 +149,14 @@ export const routes: AppRouteItem[] = [
             component: lazy(() => import("../pages/System/Logs")),
           },
           {
+            path: "/system/online",
+            name: "menu.system.online",
+            locale: "menu.system.online",
+            icon: "TeamOutlined",
+            access: PERMISSIONS.ONLINE_QUERY,
+            component: lazy(() => import("../pages/System/Online")),
+          },
+          {
             path: "/system/openapi",
             name: "menu.system.openapi",
             locale: "menu.system.openapi",

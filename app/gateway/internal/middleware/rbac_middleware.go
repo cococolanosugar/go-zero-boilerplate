@@ -35,14 +35,30 @@ func (m *RbacMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		// 3. 仅对后台 /api/v1/system/* 接口执行动态 RBAC 权限拦截
+		// 3. 若携带 Authorization Header，优先检查是否处于强制下线黑名单
+		authHeader := r.Header.Get("Authorization")
+		if authHeader != "" && strings.HasPrefix(authHeader, "Bearer ") {
+			tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+			if m.svcCtx.SessionMgr != nil && m.svcCtx.SessionMgr.IsBlacklisted(r.Context(), tokenStr) {
+				w.Header().Set("Content-Type", "application/json; charset=utf-8")
+				w.WriteHeader(http.StatusUnauthorized)
+				resp := map[string]interface{}{
+					"code": 401,
+					"msg":  "该账号已被管理员强制下线，请重新登录",
+					"data": nil,
+				}
+				_ = json.NewEncoder(w).Encode(resp)
+				return
+			}
+		}
+
+		// 4. 仅对后台 /api/v1/system/* 接口执行动态 RBAC 权限拦截
 		if !strings.HasPrefix(path, "/api/v1/system") {
 			next(w, r)
 			return
 		}
 
-		// 4. 解析 Authorization Header 提取登录态
-		authHeader := r.Header.Get("Authorization")
+		// 5. 解析 Authorization Header 提取登录态
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
 			// 未携带有效 Token，放行交由后续 go-zero 官方 JWT 校验器返回 401
 			next(w, r)

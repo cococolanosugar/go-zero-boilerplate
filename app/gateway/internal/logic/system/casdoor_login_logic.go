@@ -8,6 +8,7 @@ import (
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
 	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	"go-zero-boilerplate/pkg/session"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
@@ -87,6 +88,7 @@ func (l *CasdoorLoginLogic) CasdoorLogin(req *types.CasdoorLoginReq) (resp *type
 	claimsMap["exp"] = now + accessExpire
 	claimsMap["iat"] = now
 	claimsMap["userId"] = rpcResp.Id
+	claimsMap["jti"] = session.GenerateSessionId()
 
 	jwtToken := jwt.New(jwt.SigningMethodHS256)
 	jwtToken.Claims = claimsMap
@@ -94,6 +96,22 @@ func (l *CasdoorLoginLogic) CasdoorLogin(req *types.CasdoorLoginReq) (resp *type
 	if err != nil {
 		l.Errorf("Generate system JWT token err: %v", err)
 		return nil, xerr.NewErrCode(xerr.TokenGenerateError)
+	}
+
+	// 记录在线会话
+	if l.svcCtx.SessionMgr != nil {
+		ip, ua := session.FromContext(l.ctx)
+		browser, os := session.ParseUserAgent(ua)
+		location := session.ParseLocation(ip)
+		_ = l.svcCtx.SessionMgr.CreateSession(l.ctx, &session.OnlineSession{
+			UserId:        rpcResp.Id,
+			Username:      rpcResp.Username,
+			RealName:      rpcResp.RealName,
+			LoginIp:       ip,
+			LoginLocation: location,
+			Browser:       browser,
+			Os:            os,
+		}, tokenString, accessExpire)
 	}
 
 	return &types.AdminLoginResp{

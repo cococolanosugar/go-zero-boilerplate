@@ -37,6 +37,7 @@ export default {
   'menu.system.apis': '接口字典',
   'menu.system.dicts': '数据字典',
   'menu.system.logs': '审计日志',
+  'menu.system.online': '在线用户',
   'menu.system.openapi': '接口文档 (OpenAPI)',
 
   // 大盘

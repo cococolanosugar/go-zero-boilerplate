@@ -37,6 +37,7 @@ export default {
   'menu.system.apis': 'API Dictionary',
   'menu.system.dicts': 'Data Dictionary',
   'menu.system.logs': 'Audit Logs',
+  'menu.system.online': 'Online Users',
   'menu.system.openapi': 'API Docs (OpenAPI)',
 
   // Dashboard

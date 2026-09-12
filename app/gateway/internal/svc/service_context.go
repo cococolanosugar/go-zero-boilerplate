@@ -4,16 +4,20 @@ import (
 	"go-zero-boilerplate/app/gateway/internal/config"
 	orderClient "go-zero-boilerplate/app/order/rpc/client/order"
 	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	"go-zero-boilerplate/pkg/session"
 	"go-zero-boilerplate/pkg/storage"
 
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
-	Config   config.Config
-	UserRpc  userClient.User
-	OrderRpc orderClient.Order
-	Storage  storage.Driver
+	Config      config.Config
+	UserRpc     userClient.User
+	OrderRpc    orderClient.Order
+	Storage     storage.Driver
+	RedisClient *redis.Redis
+	SessionMgr  *session.Manager
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -22,10 +26,16 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		panic(err)
 	}
 
+	redisClient := redis.MustNewRedis(c.Redis)
+	sessionMgr := session.NewManager(redisClient)
+
 	return &ServiceContext{
-		Config:   c,
-		UserRpc:  userClient.NewUser(zrpc.MustNewClient(c.UserRpc)),
-		OrderRpc: orderClient.NewOrder(zrpc.MustNewClient(c.OrderRpc)),
-		Storage:  storageDriver,
+		Config:      c,
+		UserRpc:     userClient.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		OrderRpc:    orderClient.NewOrder(zrpc.MustNewClient(c.OrderRpc)),
+		Storage:     storageDriver,
+		RedisClient: redisClient,
+		SessionMgr:  sessionMgr,
 	}
 }
+

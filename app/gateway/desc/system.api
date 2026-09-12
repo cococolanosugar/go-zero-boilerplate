@@ -241,6 +241,34 @@ type (
 		OldPassword string `json:"oldPassword"`
 		NewPassword string `json:"newPassword"`
 	}
+
+	// 在线用户会话条目
+	OnlineSessionItem {
+		SessionId     string `json:"sessionId"`
+		UserId        int64  `json:"userId"`
+		Username      string `json:"username"`
+		RealName      string `json:"realName"`
+		DeptName      string `json:"deptName"`
+		LoginIp       string `json:"loginIp"`
+		LoginLocation string `json:"loginLocation"`
+		Browser       string `json:"browser"`
+		Os            string `json:"os"`
+		LoginTime     string `json:"loginTime"`
+		IsCurrent     bool   `json:"isCurrent"`
+	}
+	ListOnlineSessionsReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Username string `form:"username,optional"`
+		LoginIp  string `form:"loginIp,optional"`
+	}
+	ListOnlineSessionsResp {
+		Total int64                `json:"total"`
+		List  []*OnlineSessionItem `json:"list"`
+	}
+	ForceLogoutReq {
+		SessionId string `path:"sessionId"`
+	}
 )
 
 @server (
@@ -330,4 +358,12 @@ service gateway {
 	@doc "通用文件上传"
 	@handler UploadFile
 	post /file/upload returns (FileUploadResp)
+
+	@doc "获取当前在线用户会话列表"
+	@handler ListOnlineSessions
+	get /online (ListOnlineSessionsReq) returns (ListOnlineSessionsResp)
+
+	@doc "强退指定在线用户会话"
+	@handler ForceLogoutOnlineSession
+	delete /online/:sessionId (ForceLogoutReq) returns (SysEmptyResp)
 }

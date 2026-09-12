@@ -11,6 +11,7 @@ import (
 	"go-zero-boilerplate/app/gateway/internal/handler"
 	"go-zero-boilerplate/app/gateway/internal/middleware"
 	"go-zero-boilerplate/app/gateway/internal/svc"
+	"go-zero-boilerplate/pkg/session"
 
 	"net/http"
 	"os"
@@ -54,6 +55,14 @@ func main() {
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
+
+	// 启用请求上下文注入中间件（注入真实客户端 IP 与 User-Agent 供在线会话与审计分析）
+	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			r = r.WithContext(session.WithRequestInfo(r.Context(), r))
+			next(w, r)
+		}
+	})
 
 	// 启用全局 CORS 跨域支持中间件（严格符合 W3C CORS 规范与凭据安全要求）
 	server.Use(func(next http.HandlerFunc) http.HandlerFunc {

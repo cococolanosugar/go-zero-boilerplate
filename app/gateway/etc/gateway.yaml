@@ -7,6 +7,11 @@ Auth:
   AccessSecret: go-zero-boilerplate-secret-key-2026
   AccessExpire: 86400
 
+# Redis 缓存配置 (用于在线会话与 Token 黑名单)
+Redis:
+  Host: 127.0.0.1:6379
+  Type: node
+
 # ================= 下游微服务客户端连接配置 =================
 
 # 用户微服务 gRPC 客户端

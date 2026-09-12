@@ -128,6 +128,11 @@ export interface FileUploadResp {
 	hash: string
 }
 
+export interface ForceLogoutReq {
+}
+export interface ForceLogoutReqParams {
+}
+
 export interface GetDictDataByTypeReq {
 }
 export interface GetDictDataByTypeReqParams {
@@ -150,6 +155,20 @@ export interface GetMyNoticeFeedResp {
 
 export interface GetSysMenuTreeResp {
 	list: Array<SysMenuItem>
+}
+
+export interface ListOnlineSessionsReq {
+}
+export interface ListOnlineSessionsReqParams {
+	page: number
+	pageSize: number
+	username?: string
+	loginIp?: string
+}
+
+export interface ListOnlineSessionsResp {
+	total: number
+	list: Array<OnlineSessionItem>
 }
 
 export interface ListSysApisResp {
@@ -310,6 +329,20 @@ export interface NoticeFeedItem {
 	createTime: string
 	updateTime: string
 	isRead: boolean
+}
+
+export interface OnlineSessionItem {
+	sessionId: string
+	userId: number
+	username: string
+	realName: string
+	deptName: string
+	loginIp: string
+	loginLocation: string
+	browser: string
+	os: string
+	loginTime: string
+	isCurrent: boolean
 }
 
 export interface OrderDetailReq {

@@ -27,6 +27,7 @@ export default {
   'menu.system.apis': '接口字典',
   'menu.system.dicts': '數據字典',
   'menu.system.logs': '審計日誌',
+  'menu.system.online': '在線用戶',
 
   // 大盤
   'pages.dashboard.title': '系統監控大盤',

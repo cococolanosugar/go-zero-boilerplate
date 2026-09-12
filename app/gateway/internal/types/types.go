@@ -128,6 +128,10 @@ type FileUploadResp struct {
 	Hash         string `json:"hash"`
 }
 
+type ForceLogoutReq struct {
+	SessionId string `path:"sessionId"`
+}
+
 type GetDictDataByTypeReq struct {
 	DictType string `path:"dictType"`
 }
@@ -147,6 +151,18 @@ type GetMyNoticeFeedResp struct {
 
 type GetSysMenuTreeResp struct {
 	List []*SysMenuItem `json:"list"`
+}
+
+type ListOnlineSessionsReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Username string `form:"username,optional"`
+	LoginIp  string `form:"loginIp,optional"`
+}
+
+type ListOnlineSessionsResp struct {
+	Total int64                `json:"total"`
+	List  []*OnlineSessionItem `json:"list"`
 }
 
 type ListSysApisResp struct {
@@ -289,6 +305,20 @@ type NoticeFeedItem struct {
 	CreateTime    string `json:"createTime"`
 	UpdateTime    string `json:"updateTime"`
 	IsRead        bool   `json:"isRead"`
+}
+
+type OnlineSessionItem struct {
+	SessionId     string `json:"sessionId"`
+	UserId        int64  `json:"userId"`
+	Username      string `json:"username"`
+	RealName      string `json:"realName"`
+	DeptName      string `json:"deptName"`
+	LoginIp       string `json:"loginIp"`
+	LoginLocation string `json:"loginLocation"`
+	Browser       string `json:"browser"`
+	Os            string `json:"os"`
+	LoginTime     string `json:"loginTime"`
+	IsCurrent     bool   `json:"isCurrent"`
 }
 
 type OrderDetailReq struct {

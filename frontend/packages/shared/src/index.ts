@@ -45,6 +45,10 @@ export const PERMISSIONS = {
   LOG_VIEW: 'system:log:view',
   LOG_OPER_QUERY: 'system:log:oper:query',
   LOG_LOGIN_QUERY: 'system:log:login:query',
+
+  // 在线用户监控
+  ONLINE_QUERY: 'system:online:query',
+  ONLINE_FORCE: 'system:online:force',
 } as const;
 
 export * from "./sessionSync";

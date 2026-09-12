@@ -264,6 +264,22 @@ export function getSysMenuTree() {
 }
 
 /**
+ * @description "获取当前在线用户会话列表"
+ * @param params
+ */
+export function listOnlineSessions(params: components.ListOnlineSessionsReqParams) {
+	return webapi.get<components.ListOnlineSessionsResp>(`/api/v1/system/online`, params)
+}
+
+/**
+ * @description "强退指定在线用户会话"
+ * @param params
+ */
+export function forceLogoutOnlineSession(params: components.ForceLogoutReqParams, sessionId: string) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/system/online/${sessionId}`, params)
+}
+
+/**
  * @description "修改当前登录员工密码"
  * @param req
  */

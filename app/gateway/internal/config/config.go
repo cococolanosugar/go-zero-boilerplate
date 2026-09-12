@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"go-zero-boilerplate/pkg/storage"
@@ -14,6 +15,9 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
+
+	// Redis 缓存配置 (用于在线会话与 Token 黑名单)
+	Redis redis.RedisConf
 
 	// 下游微服务的 gRPC 客户端配置
 	UserRpc  zrpc.RpcClientConf

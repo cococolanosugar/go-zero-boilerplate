@@ -262,6 +262,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: system.GetSysMenuTreeHandler(serverCtx),
 			},
 			{
+				// 获取当前在线用户会话列表
+				Method:  http.MethodGet,
+				Path:    "/online",
+				Handler: system.ListOnlineSessionsHandler(serverCtx),
+			},
+			{
+				// 强退指定在线用户会话
+				Method:  http.MethodDelete,
+				Path:    "/online/:sessionId",
+				Handler: system.ForceLogoutOnlineSessionHandler(serverCtx),
+			},
+			{
 				// 修改当前登录员工密码
 				Method:  http.MethodPut,
 				Path:    "/personal/password",
