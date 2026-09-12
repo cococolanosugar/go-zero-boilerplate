@@ -22,6 +22,7 @@ import {
   type SysPostItem,
 } from "@zero/api";
 import { useDict } from "../../hooks/useDict";
+import { DictBadge } from "../../components/Dict";
 
 export type SysPostRecord = SysPostItem;
 
@@ -103,10 +104,13 @@ export const SysPostPage: React.FC = () => {
       valueType: "digit",
     },
     {
-      title: "状态（1正常 0停用）",
+      title: "岗位状态",
       dataIndex: "status",
       valueType: "select",
       valueEnum: statusValueEnum,
+      render: (_, record) => (
+        <DictBadge dictType="sys_common_status" value={record.status} />
+      ),
     },
     {
       title: "备注",

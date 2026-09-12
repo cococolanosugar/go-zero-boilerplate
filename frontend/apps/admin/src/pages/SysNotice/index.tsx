@@ -22,6 +22,7 @@ import {
   type SysNoticeItem,
 } from "@zero/api";
 import { useDict } from "../../hooks/useDict";
+import { DictTag, DictBadge } from "../../components/Dict";
 
 export type SysNoticeRecord = SysNoticeItem;
 
@@ -105,6 +106,9 @@ export const SysNoticePage: React.FC = () => {
       dataIndex: "noticeType",
       valueType: "select",
       valueEnum: sys_notice_type.valueEnum,
+      render: (_, record) => (
+        <DictTag dictType="sys_notice_type" value={record.noticeType} />
+      ),
     },
     {
       title: "公告内容",
@@ -116,6 +120,9 @@ export const SysNoticePage: React.FC = () => {
       dataIndex: "status",
       valueType: "select",
       valueEnum: sys_common_status.valueEnum,
+      render: (_, record) => (
+        <DictBadge dictType="sys_common_status" value={record.status} />
+      ),
     },
     {
       title: "创建者",

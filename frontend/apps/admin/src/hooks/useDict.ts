@@ -37,17 +37,189 @@ export interface DictBundle {
   getTagColor: (value: any) => string;
 }
 
-const CACHE_TTL = 10 * 60 * 1000; // 10 分钟缓存
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 默认 24 小时持久缓存
+const L2_PREFIX = 'sys:dict:cache:';
+const L2_VERSION_KEY = 'sys:dict:version';
+export const CURRENT_DICT_VERSION = '1.0';
+const BROADCAST_CHANNEL_NAME = 'zero_dict_sync_channel';
+const STORAGE_SYNC_KEY = 'zero_dict_sync_flag';
+
+// L1 极速内存缓存
 const dictMemoryCache = new Map<string, { data: SysDictDataItem[]; expireAt: number }>();
+// In-Flight 并发请求去重池
 const inFlightPromises = new Map<string, Promise<SysDictDataItem[]>>();
 
 /**
- * 底层字典数据加载与防竞态去重拉取器
+ * 响应式字典事件总线 (DictEventEmitter)
+ * 当字典数据更新时通知所有订阅者静默重绘
+ */
+type DictListener = () => void;
+
+export class DictEventEmitter {
+  private listeners = new Map<string, Set<DictListener>>();
+
+  subscribe(dictType: string, listener: DictListener): () => void {
+    if (!this.listeners.has(dictType)) {
+      this.listeners.set(dictType, new Set());
+    }
+    this.listeners.get(dictType)!.add(listener);
+    return () => {
+      this.listeners.get(dictType)?.delete(listener);
+    };
+  }
+
+  /**
+   * 别名方法，等同于 subscribe
+   */
+  on(dictType: string, listener: DictListener): () => void {
+    return this.subscribe(dictType, listener);
+  }
+
+  emit(dictType?: string): void {
+    if (dictType) {
+      this.listeners.get(dictType)?.forEach((fn) => fn());
+    }
+    // 通知通配订阅者
+    this.listeners.get('*')?.forEach((fn) => fn());
+  }
+}
+
+export const dictEventEmitter = new DictEventEmitter();
+
+/**
+ * L2 本地持久化缓存读写器 (LocalStorage)
+ */
+function getFromL2(dictType: string): SysDictDataItem[] | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(L2_PREFIX + dictType);
+    if (!raw) return null;
+    const item = JSON.parse(raw);
+    const versionMatch = String(item.version) === String(CURRENT_DICT_VERSION) || item.version === 1;
+    if (!versionMatch || Date.now() > item.expireAt) {
+      localStorage.removeItem(L2_PREFIX + dictType);
+      return null;
+    }
+    return Array.isArray(item.data) ? item.data : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveToL2(dictType: string, data: SysDictDataItem[], ttl = CACHE_TTL): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    const item = {
+      dictType,
+      version: CURRENT_DICT_VERSION,
+      data,
+      expireAt: Date.now() + ttl,
+    };
+    localStorage.setItem(L2_PREFIX + dictType, JSON.stringify(item));
+  } catch {}
+}
+
+function removeFromL2(dictType?: string): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    if (dictType) {
+      localStorage.removeItem(L2_PREFIX + dictType);
+    } else {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(L2_PREFIX)) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    }
+  } catch {}
+}
+
+interface DictBroadcastMsg {
+  type: 'DICT_UPDATED' | 'DICT_CLEARED';
+  dictType?: string;
+  timestamp: number;
+}
+
+let broadcastChannel: BroadcastChannel | null = null;
+if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+  try {
+    broadcastChannel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+    broadcastChannel.onmessage = (event) => {
+      const msg = event.data as DictBroadcastMsg;
+      if (msg && (msg.type === 'DICT_UPDATED' || msg.type === 'DICT_CLEARED')) {
+        handleExternalDictUpdate(msg.dictType);
+      }
+    };
+  } catch {}
+}
+
+// 降级回退至 storage 事件通信（兼容不支持 BroadcastChannel 的环境）
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_SYNC_KEY && e.newValue) {
+      try {
+        const msg = JSON.parse(e.newValue) as DictBroadcastMsg;
+        handleExternalDictUpdate(msg.dictType);
+      } catch {}
+    }
+  });
+}
+
+function handleExternalDictUpdate(dictType?: string) {
+  if (dictType) {
+    dictMemoryCache.delete(dictType);
+  } else {
+    dictMemoryCache.clear();
+  }
+  dictEventEmitter.emit(dictType);
+}
+
+/**
+ * 广播字典已更新/已清除（向当前页面及全浏览器其它 Tab 推送）
+ */
+export function broadcastDictUpdate(dictType?: string) {
+  // 1. 本地更新 L1 & L2
+  if (dictType) {
+    dictMemoryCache.delete(dictType);
+    removeFromL2(dictType);
+  } else {
+    dictMemoryCache.clear();
+    removeFromL2();
+  }
+
+  // 2. 本地事件通知
+  dictEventEmitter.emit(dictType);
+
+  // 3. 跨 Tab 广播
+  const msg: DictBroadcastMsg = {
+    type: dictType ? 'DICT_UPDATED' : 'DICT_CLEARED',
+    dictType,
+    timestamp: Date.now(),
+  };
+
+  if (broadcastChannel) {
+    try {
+      broadcastChannel.postMessage(msg);
+    } catch {}
+  }
+
+  if (typeof localStorage !== 'undefined') {
+    try {
+      localStorage.setItem(STORAGE_SYNC_KEY, JSON.stringify(msg));
+    } catch {}
+  }
+}
+
+/**
+ * 底层字典数据加载与防竞态去重拉取器（L1 内存 + L2 存储二级命中）
  */
 async function fetchDictData(dictType: string, force = false): Promise<SysDictDataItem[]> {
   if (!dictType) return [];
 
-  // 1. 缓存有效则优先命中
+  // 1. L1 内存极速命中
   if (!force && dictMemoryCache.has(dictType)) {
     const cached = dictMemoryCache.get(dictType)!;
     if (Date.now() < cached.expireAt) {
@@ -55,7 +227,16 @@ async function fetchDictData(dictType: string, force = false): Promise<SysDictDa
     }
   }
 
-  // 2. 避免并发重复请求（In-Flight Deduplication）
+  // 2. L2 本地持久化缓存命中（0ms 秒开）
+  if (!force) {
+    const l2Data = getFromL2(dictType);
+    if (l2Data) {
+      dictMemoryCache.set(dictType, { data: l2Data, expireAt: Date.now() + CACHE_TTL });
+      return l2Data;
+    }
+  }
+
+  // 3. 并发防重复请求 (In-Flight Deduplication)
   if (inFlightPromises.has(dictType)) {
     return inFlightPromises.get(dictType)!;
   }
@@ -64,7 +245,9 @@ async function fetchDictData(dictType: string, force = false): Promise<SysDictDa
     try {
       const res = await getDictDataByType({}, dictType);
       const list = res?.list || [];
+      // 写入 L1 内存与 L2 本地存储
       dictMemoryCache.set(dictType, { data: list, expireAt: Date.now() + CACHE_TTL });
+      saveToL2(dictType, list, CACHE_TTL);
       return list;
     } catch (err) {
       console.warn(`[useDict] 加载数据字典 [${dictType}] 失败:`, err);
@@ -168,8 +351,8 @@ const emptyBundle = buildDictBundle([]);
 /**
  * 企业级通用数据字典 Hook (useDict)
  *
- * 支持单字典或多字典加载：
- * 1. 单字典：const { options, valueEnum, getLabel } = useDict('sys_common_status');
+ * 支持单字典或多字典加载、二级缓存秒开、响应式事件驱动自动重绘：
+ * 1. 单字典：const { options, valueEnum, getLabel, getTagColor } = useDict('sys_common_status');
  * 2. 多字典：const { sys_notice_type, sys_common_status, loading } = useDict('sys_notice_type', 'sys_common_status');
  */
 export function useDict<T extends string = string>(
@@ -190,18 +373,25 @@ export function useDict<T extends string = string>(
     return Array.from(new Set(list));
   }, [JSON.stringify(types)]);
 
+  // 优先从 L1 / L2 获取初值，实现首屏 0ms 秒开无白屏
   const [dictState, setDictState] = useState<Record<string, SysDictDataItem[]>>(() => {
     const initial: Record<string, SysDictDataItem[]> = {};
     for (const t of flattenedTypes) {
       if (dictMemoryCache.has(t)) {
         initial[t] = dictMemoryCache.get(t)!.data;
+      } else {
+        const l2 = getFromL2(t);
+        if (l2) {
+          dictMemoryCache.set(t, { data: l2, expireAt: Date.now() + CACHE_TTL });
+          initial[t] = l2;
+        }
       }
     }
     return initial;
   });
 
   const [loading, setLoading] = useState<boolean>(() => {
-    return flattenedTypes.some((t) => !dictMemoryCache.has(t));
+    return flattenedTypes.some((t) => !dictMemoryCache.has(t) && !getFromL2(t));
   });
 
   const loadAll = useCallback(
@@ -210,7 +400,14 @@ export function useDict<T extends string = string>(
         setLoading(false);
         return;
       }
-      setLoading(true);
+      // 若已有缓存，且非强制刷新，则完全无需展示 loading（0ms 秒开）
+      const hasAllCached = !force && flattenedTypes.every((t) => {
+        const c = dictMemoryCache.get(t);
+        return (c && Date.now() < c.expireAt) || !!getFromL2(t);
+      });
+      if (!hasAllCached) {
+        setLoading(true);
+      }
       try {
         const results = await Promise.all(
           flattenedTypes.map(async (t) => {
@@ -234,6 +431,23 @@ export function useDict<T extends string = string>(
     loadAll();
   }, [loadAll]);
 
+  // 自动订阅响应式字典事件（支持本地更新与跨 Tab 广播自动重绘）
+  useEffect(() => {
+    const unsubs = flattenedTypes.map((t) =>
+      dictEventEmitter.subscribe(t, () => {
+        loadAll(true);
+      })
+    );
+    const unsubWildcard = dictEventEmitter.subscribe('*', () => {
+      loadAll(true);
+    });
+
+    return () => {
+      unsubs.forEach((unsub) => unsub());
+      unsubWildcard();
+    };
+  }, [flattenedTypes, loadAll]);
+
   // 为每个 dictType 构建 DictBundle
   const bundles = useMemo(() => {
     const map: Record<string, DictBundle> = {};
@@ -255,12 +469,20 @@ export function useDict<T extends string = string>(
 }
 
 /**
- * 清除指定字典或全局字典缓存
+ * 清除指定字典或全局字典缓存并派发全站广播
  */
-export function clearDictCache(dictType?: string) {
-  if (dictType) {
-    dictMemoryCache.delete(dictType);
+export function clearDictCache(dictType?: string, broadcast = true) {
+  if (broadcast) {
+    broadcastDictUpdate(dictType);
   } else {
-    dictMemoryCache.clear();
+    if (dictType) {
+      dictMemoryCache.delete(dictType);
+      removeFromL2(dictType);
+    } else {
+      dictMemoryCache.clear();
+      removeFromL2();
+    }
+    dictEventEmitter.emit(dictType);
   }
 }
+

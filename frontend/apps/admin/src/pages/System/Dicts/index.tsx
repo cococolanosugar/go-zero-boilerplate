@@ -388,6 +388,16 @@ export const DictsPage: React.FC = () => {
                   新增类型
                 </Button>
               </Access>,
+              <Button
+                key="clearAllCache"
+                icon={<ReloadOutlined />}
+                onClick={() => {
+                  clearDictCache();
+                  message.success("全站字典二级缓存已重置，已向全浏览器标签页广播更新");
+                }}
+              >
+                刷新全站缓存
+              </Button>,
             ]}
             request={async (params) => {
               const res = await listSysDictTypes({
