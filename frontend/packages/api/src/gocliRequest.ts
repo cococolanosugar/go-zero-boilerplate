@@ -77,6 +77,12 @@ export interface RequestOptions extends Omit<RequestInit, 'body'> {
     body?: any;
     signal?: AbortSignal;
     timeout?: number;
+    /** 显式指定客户端幂等唯一 Key */
+    idempotencyKey?: string;
+    /** 是否开启客户端在途并发防重 (默认对 POST, PUT, PATCH, DELETE 开启) */
+    preventDuplicate?: boolean;
+    /** 防重复提交窗口时间 (毫秒)，默认 3000 */
+    duplicateInterval?: number;
     [key: string]: any;
 }
 
@@ -102,6 +108,19 @@ export type ErrorHandler = (error: ApiError, context: RequestContext) => void | 
 const requestInterceptors: RequestInterceptor[] = [];
 const responseInterceptors: ResponseInterceptor[] = [];
 let globalErrorHandler: ErrorHandler | null = null;
+
+// 客户端在途请求并发与防重状态记录
+interface PendingRequestItem {
+    timestamp: number;
+}
+const pendingRequests = new Map<string, PendingRequestItem>();
+
+/**
+ * 清除所有客户端在途防重锁（用于测试或全局状态重置）
+ */
+export function clearPendingRequests() {
+    pendingRequests.clear();
+}
 
 export function addRequestInterceptor(interceptor: RequestInterceptor) {
     requestInterceptors.push(interceptor);
@@ -201,6 +220,13 @@ export async function request({
         }
     }
 
+    if (options.idempotencyKey && !headers['X-Idempotency-Key']) {
+        headers['X-Idempotency-Key'] = options.idempotencyKey;
+    }
+    if (options.duplicateInterval && !headers['X-Repeat-Submit-Interval']) {
+        headers['X-Repeat-Submit-Interval'] = String(Math.round(options.duplicateInterval / 1000));
+    }
+
     // Execute Request Interceptors
     for (const interceptor of requestInterceptors) {
         const res = await interceptor(url, options);
@@ -211,6 +237,32 @@ export async function request({
     }
 
     const context: RequestContext = { url, method: upperMethod, options, data };
+
+    // 客户端并发防重与防抖拦截（针对写请求 POST/PUT/PATCH/DELETE）
+    const isMutating = upperMethod === 'POST' || upperMethod === 'PUT' || upperMethod === 'PATCH' || upperMethod === 'DELETE';
+    const enableAntiRepeat = isMutating && !isFormData && options.preventDuplicate !== false;
+    let pendingKey = '';
+
+    if (enableAntiRepeat) {
+        const bodyStr = typeof options.body === 'string' ? options.body : '';
+        pendingKey = `${upperMethod}:${url}:${options.idempotencyKey || bodyStr}`;
+        const existing = pendingRequests.get(pendingKey);
+        const interval = options.duplicateInterval || 3000;
+        if (existing) {
+            const timeDiff = Date.now() - existing.timestamp;
+            if (timeDiff < interval) {
+                const repeatErr = new ApiError(100008, '请求正在处理中或请勿频繁重复提交，请稍后再试');
+                if (globalErrorHandler && !options.skipErrorHandler) {
+                    try {
+                        await globalErrorHandler(repeatErr, context);
+                        repeatErr.handled = true;
+                    } catch (_) {}
+                }
+                throw repeatErr;
+            }
+        }
+        pendingRequests.set(pendingKey, { timestamp: Date.now() });
+    }
 
     const callerSignal = options.signal;
     const timeoutMs = options.timeout !== undefined ? options.timeout : 30000;
@@ -274,6 +326,12 @@ export async function request({
     } finally {
         if (timeoutTimer) {
             clearTimeout(timeoutTimer);
+        }
+        if (pendingKey) {
+            const cleanupInterval = options.duplicateInterval || 3000;
+            setTimeout(() => {
+                pendingRequests.delete(pendingKey);
+            }, cleanupInterval);
         }
     }
 

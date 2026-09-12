@@ -74,7 +74,7 @@ func main() {
 			} else {
 				w.Header().Set("Access-Control-Allow-Origin", "*")
 			}
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, X-Idempotency-Key, Repeat-Submit-Token, X-Repeat-Submit-Interval")
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH")
 			w.Header().Set("Access-Control-Expose-Headers", "Content-Length, Content-Type")
 			w.Header().Set("Access-Control-Max-Age", "86400")
@@ -86,6 +86,9 @@ func main() {
 			next(w, r)
 		}
 	})
+
+	// 挂载业务数据防重复提交与幂等控制切面中间件（秒级防刷与连击拦截）
+	server.Use(middleware.NewAntiRepeatMiddleware(ctx).Handle)
 
 	// 挂载企业级操作审计日志中间件（异步记录增删改操作）
 	server.Use(middleware.NewOperLogMiddleware(ctx).Handle)
