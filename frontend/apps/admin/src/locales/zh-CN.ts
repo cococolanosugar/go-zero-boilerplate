@@ -30,6 +30,7 @@ export default {
   'menu.orders': '订单管理',
   'menu.users': '用户中心',
   'menu.system': '系统与权限',
+  'menu.system.dept': '部门管理',
   'menu.system.users': '员工管理',
   'menu.system.roles': '角色管理',
   'menu.system.menus': '菜单权限',

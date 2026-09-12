@@ -40,6 +40,15 @@ export interface CasdoorLoginReq {
 	state?: string
 }
 
+export interface CreateSysDeptReq {
+	parentId: number
+	deptName: string
+	sort?: number
+	leader?: string
+	phone?: string
+	status?: number
+}
+
 export interface CreateSysDictDataReq {
 	dictType: string
 	dictLabel: string
@@ -131,6 +140,17 @@ export interface GetSysMenuTreeResp {
 
 export interface ListSysApisResp {
 	list: Array<SysApiItem>
+}
+
+export interface ListSysDeptReq {
+}
+export interface ListSysDeptReqParams {
+	keyword?: string
+	status?: number
+}
+
+export interface ListSysDeptResp {
+	list: Array<SysDeptItem>
 }
 
 export interface ListSysDictDataReq {
@@ -314,6 +334,20 @@ export interface SysApiItem {
 	isAutoSync: number
 }
 
+export interface SysDeptItem {
+	id: number
+	parentId: number
+	ancestors: string
+	deptName: string
+	sort: number
+	leader: string
+	phone: string
+	status: number
+	createTime: string
+	updateTime: string
+	children?: Array<SysDeptItem>
+}
+
 export interface SysDictDataItem {
 	id: number
 	dictType: string
@@ -434,6 +468,16 @@ export interface SysUserItem {
 	roleNames: Array<string>
 	roleIds: Array<number>
 	createTime: string
+}
+
+export interface UpdateSysDeptReq {
+	id: number
+	parentId: number
+	deptName: string
+	sort: number
+	leader?: string
+	phone?: string
+	status: number
 }
 
 export interface UpdateSysDictDataReq {

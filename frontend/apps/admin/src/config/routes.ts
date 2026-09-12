@@ -94,6 +94,13 @@ export const routes: AppRouteItem[] = [
             redirect: "/system/users",
           },
           {
+            path: "/system/dept",
+            name: "menu.system.dept",
+            locale: "menu.system.dept",
+            icon: "ApartmentOutlined",
+            component: lazy(() => import("../pages/System/Dept")),
+          },
+          {
             path: "/system/users",
             name: "menu.system.users",
             locale: "menu.system.users",

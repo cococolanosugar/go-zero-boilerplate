@@ -63,6 +63,11 @@ const (
 	User_GetMyNoticeFeed_FullMethodName         = "/user.User/GetMyNoticeFeed"
 	User_MarkNoticeRead_FullMethodName          = "/user.User/MarkNoticeRead"
 	User_MarkAllNoticesRead_FullMethodName      = "/user.User/MarkAllNoticesRead"
+	User_ListSysDepts_FullMethodName            = "/user.User/ListSysDepts"
+	User_GetSysDept_FullMethodName              = "/user.User/GetSysDept"
+	User_CreateSysDept_FullMethodName           = "/user.User/CreateSysDept"
+	User_UpdateSysDept_FullMethodName           = "/user.User/UpdateSysDept"
+	User_DeleteSysDept_FullMethodName           = "/user.User/DeleteSysDept"
 )
 
 // UserClient is the client API for User service.
@@ -124,6 +129,12 @@ type UserClient interface {
 	GetMyNoticeFeed(ctx context.Context, in *GetMyNoticeFeedRequest, opts ...grpc.CallOption) (*GetMyNoticeFeedResponse, error)
 	MarkNoticeRead(ctx context.Context, in *MarkNoticeReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	// 组织机构部门管理 (sys_dept)
+	ListSysDepts(ctx context.Context, in *ListSysDeptsRequest, opts ...grpc.CallOption) (*ListSysDeptsResponse, error)
+	GetSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysDeptItem, error)
+	CreateSysDept(ctx context.Context, in *CreateSysDeptRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysDept(ctx context.Context, in *UpdateSysDeptRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type userClient struct {
@@ -574,6 +585,56 @@ func (c *userClient) MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesR
 	return out, nil
 }
 
+func (c *userClient) ListSysDepts(ctx context.Context, in *ListSysDeptsRequest, opts ...grpc.CallOption) (*ListSysDeptsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysDeptsResponse)
+	err := c.cc.Invoke(ctx, User_ListSysDepts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysDeptItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SysDeptItem)
+	err := c.cc.Invoke(ctx, User_GetSysDept_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysDept(ctx context.Context, in *CreateSysDeptRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysDept_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysDept(ctx context.Context, in *UpdateSysDeptRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysDept_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysDept_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -633,6 +694,12 @@ type UserServer interface {
 	GetMyNoticeFeed(context.Context, *GetMyNoticeFeedRequest) (*GetMyNoticeFeedResponse, error)
 	MarkNoticeRead(context.Context, *MarkNoticeReadRequest) (*EmptyResponse, error)
 	MarkAllNoticesRead(context.Context, *MarkAllNoticesReadRequest) (*EmptyResponse, error)
+	// 组织机构部门管理 (sys_dept)
+	ListSysDepts(context.Context, *ListSysDeptsRequest) (*ListSysDeptsResponse, error)
+	GetSysDept(context.Context, *IdRequest) (*SysDeptItem, error)
+	CreateSysDept(context.Context, *CreateSysDeptRequest) (*IdRequest, error)
+	UpdateSysDept(context.Context, *UpdateSysDeptRequest) (*EmptyResponse, error)
+	DeleteSysDept(context.Context, *IdRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -774,6 +841,21 @@ func (UnimplementedUserServer) MarkNoticeRead(context.Context, *MarkNoticeReadRe
 }
 func (UnimplementedUserServer) MarkAllNoticesRead(context.Context, *MarkAllNoticesReadRequest) (*EmptyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MarkAllNoticesRead not implemented")
+}
+func (UnimplementedUserServer) ListSysDepts(context.Context, *ListSysDeptsRequest) (*ListSysDeptsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysDepts not implemented")
+}
+func (UnimplementedUserServer) GetSysDept(context.Context, *IdRequest) (*SysDeptItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSysDept not implemented")
+}
+func (UnimplementedUserServer) CreateSysDept(context.Context, *CreateSysDeptRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysDept not implemented")
+}
+func (UnimplementedUserServer) UpdateSysDept(context.Context, *UpdateSysDeptRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysDept not implemented")
+}
+func (UnimplementedUserServer) DeleteSysDept(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysDept not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1588,6 +1670,96 @@ func _User_MarkAllNoticesRead_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListSysDepts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysDeptsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysDepts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysDepts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysDepts(ctx, req.(*ListSysDeptsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetSysDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetSysDept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetSysDept_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetSysDept(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysDeptRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysDept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysDept_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysDept(ctx, req.(*CreateSysDeptRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysDeptRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysDept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysDept_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysDept(ctx, req.(*UpdateSysDeptRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysDept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysDept_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysDept(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1770,6 +1942,26 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MarkAllNoticesRead",
 			Handler:    _User_MarkAllNoticesRead_Handler,
+		},
+		{
+			MethodName: "ListSysDepts",
+			Handler:    _User_ListSysDepts_Handler,
+		},
+		{
+			MethodName: "GetSysDept",
+			Handler:    _User_GetSysDept_Handler,
+		},
+		{
+			MethodName: "CreateSysDept",
+			Handler:    _User_CreateSysDept_Handler,
+		},
+		{
+			MethodName: "UpdateSysDept",
+			Handler:    _User_UpdateSysDept_Handler,
+		},
+		{
+			MethodName: "DeleteSysDept",
+			Handler:    _User_DeleteSysDept_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

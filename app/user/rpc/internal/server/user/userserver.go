@@ -253,3 +253,29 @@ func (s *UserServer) MarkAllNoticesRead(ctx context.Context, in *pb.MarkAllNotic
 	l := userlogic.NewMarkAllNoticesReadLogic(ctx, s.svcCtx)
 	return l.MarkAllNoticesRead(in)
 }
+
+// 组织机构部门管理 (sys_dept)
+func (s *UserServer) ListSysDepts(ctx context.Context, in *pb.ListSysDeptsRequest) (*pb.ListSysDeptsResponse, error) {
+	l := userlogic.NewListSysDeptsLogic(ctx, s.svcCtx)
+	return l.ListSysDepts(in)
+}
+
+func (s *UserServer) GetSysDept(ctx context.Context, in *pb.IdRequest) (*pb.SysDeptItem, error) {
+	l := userlogic.NewGetSysDeptLogic(ctx, s.svcCtx)
+	return l.GetSysDept(in)
+}
+
+func (s *UserServer) CreateSysDept(ctx context.Context, in *pb.CreateSysDeptRequest) (*pb.IdRequest, error) {
+	l := userlogic.NewCreateSysDeptLogic(ctx, s.svcCtx)
+	return l.CreateSysDept(in)
+}
+
+func (s *UserServer) UpdateSysDept(ctx context.Context, in *pb.UpdateSysDeptRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdateSysDeptLogic(ctx, s.svcCtx)
+	return l.UpdateSysDept(in)
+}
+
+func (s *UserServer) DeleteSysDept(ctx context.Context, in *pb.IdRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewDeleteSysDeptLogic(ctx, s.svcCtx)
+	return l.DeleteSysDept(in)
+}

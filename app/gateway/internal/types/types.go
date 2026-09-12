@@ -42,6 +42,15 @@ type CasdoorLoginReq struct {
 	State string `json:"state,optional"`
 }
 
+type CreateSysDeptReq struct {
+	ParentId int64  `json:"parentId"`
+	DeptName string `json:"deptName"`
+	Sort     int64  `json:"sort,optional"`
+	Leader   string `json:"leader,optional"`
+	Phone    string `json:"phone,optional"`
+	Status   int64  `json:"status,optional,default=1"`
+}
+
 type CreateSysDictDataReq struct {
 	DictType  string `json:"dictType"`
 	DictLabel string `json:"dictLabel"`
@@ -128,6 +137,15 @@ type GetSysMenuTreeResp struct {
 
 type ListSysApisResp struct {
 	List []*SysApiItem `json:"list"`
+}
+
+type ListSysDeptReq struct {
+	Keyword string `form:"keyword,optional"`
+	Status  int64  `form:"status,optional,default=-1"`
+}
+
+type ListSysDeptResp struct {
+	List []*SysDeptItem `json:"list"`
 }
 
 type ListSysDictDataReq struct {
@@ -292,6 +310,20 @@ type SysApiItem struct {
 	IsAutoSync int32  `json:"isAutoSync"`
 }
 
+type SysDeptItem struct {
+	Id         int64          `json:"id"`
+	ParentId   int64          `json:"parentId"`
+	Ancestors  string         `json:"ancestors"`
+	DeptName   string         `json:"deptName"`
+	Sort       int64          `json:"sort"`
+	Leader     string         `json:"leader"`
+	Phone      string         `json:"phone"`
+	Status     int64          `json:"status"`
+	CreateTime string         `json:"createTime"`
+	UpdateTime string         `json:"updateTime"`
+	Children   []*SysDeptItem `json:"children,omitempty"`
+}
+
 type SysDictDataItem struct {
 	Id         int64  `json:"id"`
 	DictType   string `json:"dictType"`
@@ -411,6 +443,16 @@ type SysUserItem struct {
 	RoleNames  []string `json:"roleNames"`
 	RoleIds    []int64  `json:"roleIds"`
 	CreateTime string   `json:"createTime"`
+}
+
+type UpdateSysDeptReq struct {
+	Id       int64  `json:"id"`
+	ParentId int64  `json:"parentId"`
+	DeptName string `json:"deptName"`
+	Sort     int64  `json:"sort"`
+	Leader   string `json:"leader,optional"`
+	Phone    string `json:"phone,optional"`
+	Status   int64  `json:"status"`
 }
 
 type UpdateSysDictDataReq struct {

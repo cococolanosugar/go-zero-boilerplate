@@ -91,6 +91,46 @@ export function getOrderDetail(params: components.OrderDetailReqParams) {
 }
 
 /**
+ * @description "获取部门树形列表"
+ * @param params
+ */
+export function listSysDept(params: components.ListSysDeptReqParams) {
+	return webapi.get<components.ListSysDeptResp>(`/api/v1/user/dept`, params)
+}
+
+/**
+ * @description "创建新部门"
+ * @param req
+ */
+export function createSysDept(req: components.CreateSysDeptReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/user/dept`, req)
+}
+
+/**
+ * @description "更新部门"
+ * @param req
+ */
+export function updateSysDept(req: components.UpdateSysDeptReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/user/dept`, req)
+}
+
+/**
+ * @description "获取部门详情"
+ * @param params
+ */
+export function getSysDept(params: components.SysIdReqParams, id: number) {
+	return webapi.get<components.SysDeptItem>(`/api/v1/user/dept/${id}`, params)
+}
+
+/**
+ * @description "删除部门"
+ * @param params
+ */
+export function deleteSysDept(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/user/dept/${id}`, params)
+}
+
+/**
  * @description "获取通知公告表列表"
  * @param params
  */

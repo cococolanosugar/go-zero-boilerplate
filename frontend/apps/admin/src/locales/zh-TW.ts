@@ -20,6 +20,7 @@ export default {
   'menu.orders': '訂單管理',
   'menu.users': '用戶中心',
   'menu.system': '系統與權限',
+  'menu.system.dept': '部門管理',
   'menu.system.users': '員工管理',
   'menu.system.roles': '角色管理',
   'menu.system.menus': '菜單權限',

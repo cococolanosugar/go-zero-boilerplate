@@ -9,6 +9,7 @@ const (
 	TokenGenerateError  uint32 = 100004
 	DbError             uint32 = 100005
 	RecordNotFound      uint32 = 100006
+	Forbidden           uint32 = 100007
 
 	// 用户模块错误码 (200000 - 299999)
 	UserNotFound uint32 = 200001
@@ -24,6 +25,7 @@ var message = map[uint32]string{
 	TokenGenerateError: "生成Token失败",
 	DbError:            "数据库操作失败",
 	RecordNotFound:     "记录不存在",
+	Forbidden:          "无权限访问或操作被禁止",
 
 	UserNotFound: "用户不存在",
 	UserExisted:  "用户已存在",

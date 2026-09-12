@@ -20,6 +20,7 @@ type (
 	AssignRolePermRequest      = pb.AssignRolePermRequest
 	CheckApiPermissionRequest  = pb.CheckApiPermissionRequest
 	CheckApiPermissionResponse = pb.CheckApiPermissionResponse
+	CreateSysDeptRequest       = pb.CreateSysDeptRequest
 	CreateSysDictDataRequest   = pb.CreateSysDictDataRequest
 	CreateSysDictTypeRequest   = pb.CreateSysDictTypeRequest
 	CreateSysNoticeRequest     = pb.CreateSysNoticeRequest
@@ -35,6 +36,8 @@ type (
 	GetSysMenuTreeResponse     = pb.GetSysMenuTreeResponse
 	IdRequest                  = pb.IdRequest
 	ListSysApisResponse        = pb.ListSysApisResponse
+	ListSysDeptsRequest        = pb.ListSysDeptsRequest
+	ListSysDeptsResponse       = pb.ListSysDeptsResponse
 	ListSysDictDataRequest     = pb.ListSysDictDataRequest
 	ListSysDictDataResponse    = pb.ListSysDictDataResponse
 	ListSysDictTypesRequest    = pb.ListSysDictTypesRequest
@@ -64,6 +67,7 @@ type (
 	SyncCasdoorUserRequest     = pb.SyncCasdoorUserRequest
 	SyncCasdoorUserResponse    = pb.SyncCasdoorUserResponse
 	SysApiItem                 = pb.SysApiItem
+	SysDeptItem                = pb.SysDeptItem
 	SysDictDataItem            = pb.SysDictDataItem
 	SysDictTypeItem            = pb.SysDictTypeItem
 	SysLoginLogItem            = pb.SysLoginLogItem
@@ -72,6 +76,7 @@ type (
 	SysPostItem                = pb.SysPostItem
 	SysRoleItem                = pb.SysRoleItem
 	SysUserItem                = pb.SysUserItem
+	UpdateSysDeptRequest       = pb.UpdateSysDeptRequest
 	UpdateSysDictDataRequest   = pb.UpdateSysDictDataRequest
 	UpdateSysDictTypeRequest   = pb.UpdateSysDictTypeRequest
 	UpdateSysNoticeRequest     = pb.UpdateSysNoticeRequest
@@ -136,6 +141,12 @@ type (
 		GetMyNoticeFeed(ctx context.Context, in *GetMyNoticeFeedRequest, opts ...grpc.CallOption) (*GetMyNoticeFeedResponse, error)
 		MarkNoticeRead(ctx context.Context, in *MarkNoticeReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		// 组织机构部门管理 (sys_dept)
+		ListSysDepts(ctx context.Context, in *ListSysDeptsRequest, opts ...grpc.CallOption) (*ListSysDeptsResponse, error)
+		GetSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysDeptItem, error)
+		CreateSysDept(ctx context.Context, in *CreateSysDeptRequest, opts ...grpc.CallOption) (*IdRequest, error)
+		UpdateSysDept(ctx context.Context, in *UpdateSysDeptRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		DeleteSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	}
 
 	defaultUser struct {
@@ -378,4 +389,30 @@ func (m *defaultUser) MarkNoticeRead(ctx context.Context, in *MarkNoticeReadRequ
 func (m *defaultUser) MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.MarkAllNoticesRead(ctx, in, opts...)
+}
+
+// 组织机构部门管理 (sys_dept)
+func (m *defaultUser) ListSysDepts(ctx context.Context, in *ListSysDeptsRequest, opts ...grpc.CallOption) (*ListSysDeptsResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysDepts(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysDeptItem, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetSysDept(ctx, in, opts...)
+}
+
+func (m *defaultUser) CreateSysDept(ctx context.Context, in *CreateSysDeptRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CreateSysDept(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdateSysDept(ctx context.Context, in *UpdateSysDeptRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdateSysDept(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.DeleteSysDept(ctx, in, opts...)
 }

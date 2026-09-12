@@ -30,6 +30,7 @@ export default {
   'menu.orders': 'Order Management',
   'menu.users': 'User Center',
   'menu.system': 'System & Security',
+  'menu.system.dept': 'Department',
   'menu.system.users': 'Staff Management',
   'menu.system.roles': 'Role Management',
   'menu.system.menus': 'Menu Permissions',

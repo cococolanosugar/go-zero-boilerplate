@@ -8,6 +8,7 @@ import (
 
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
 	order "go-zero-boilerplate/app/gateway/internal/handler/order"
+	sys_dept "go-zero-boilerplate/app/gateway/internal/handler/sys_dept"
 	sys_notice "go-zero-boilerplate/app/gateway/internal/handler/sys_notice"
 	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
@@ -97,6 +98,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/order"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取部门树形列表
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: sys_dept.ListSysDeptHandler(serverCtx),
+			},
+			{
+				// 创建新部门
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: sys_dept.CreateSysDeptHandler(serverCtx),
+			},
+			{
+				// 更新部门
+				Method:  http.MethodPut,
+				Path:    "/",
+				Handler: sys_dept.UpdateSysDeptHandler(serverCtx),
+			},
+			{
+				// 获取部门详情
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sys_dept.GetSysDeptHandler(serverCtx),
+			},
+			{
+				// 删除部门
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: sys_dept.DeleteSysDeptHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/user/dept"),
 	)
 
 	server.AddRoutes(
