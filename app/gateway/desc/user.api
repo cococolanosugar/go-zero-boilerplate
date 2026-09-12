@@ -330,3 +330,76 @@ service gateway {
 }
 
 
+
+
+// =============================================================
+// 参数配置表 (sys_config)
+// =============================================================
+
+type (
+	SysConfigItem {
+		Id int64 `json:"id"` // 参数主键
+		ConfigName string `json:"configName"` // 参数名称
+		ConfigKey string `json:"configKey"` // 参数键名
+		ConfigValue string `json:"configValue"` // 参数键值
+		ConfigType string `json:"configType"` // 系统内置（Y是 N否）
+		Remark string `json:"remark"` // 备注说明
+		CreateTime string `json:"createTime"` // 创建时间
+		UpdateTime string `json:"updateTime"` // 更新时间
+	}
+
+	ListSysConfigReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Keyword  string `form:"keyword,optional"`
+	}
+
+	ListSysConfigResp {
+		Total int64                `json:"total"`
+		List  []*SysConfigItem `json:"list"`
+	}
+
+	CreateSysConfigReq {
+		ConfigName string `json:"configName"` // 参数名称
+		ConfigKey string `json:"configKey"` // 参数键名
+		ConfigValue string `json:"configValue"` // 参数键值
+		ConfigType string `json:"configType"` // 系统内置（Y是 N否）
+		Remark string `json:"remark"` // 备注说明
+	}
+
+	UpdateSysConfigReq {
+		Id int64 `json:"id"` // 参数主键
+		ConfigName string `json:"configName"` // 参数名称
+		ConfigKey string `json:"configKey"` // 参数键名
+		ConfigValue string `json:"configValue"` // 参数键值
+		ConfigType string `json:"configType"` // 系统内置（Y是 N否）
+		Remark string `json:"remark"` // 备注说明
+	}
+)
+
+@server (
+	prefix: /api/v1/user/sys-config
+	group:  sys_config
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取参数配置表列表"
+	@handler ListSysConfig
+	get / (ListSysConfigReq) returns (ListSysConfigResp)
+
+	@doc "获取参数配置表详情"
+	@handler GetSysConfig
+	get /:id (SysIdReq) returns (SysConfigItem)
+
+	@doc "创建参数配置表"
+	@handler CreateSysConfig
+	post / (CreateSysConfigReq) returns (SysIdResp)
+
+	@doc "更新参数配置表"
+	@handler UpdateSysConfig
+	put / (UpdateSysConfigReq) returns (SysEmptyResp)
+
+	@doc "删除参数配置表"
+	@handler DeleteSysConfig
+	delete /:id (SysIdReq) returns (SysEmptyResp)
+}

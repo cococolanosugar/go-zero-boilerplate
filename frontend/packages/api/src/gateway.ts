@@ -91,6 +91,46 @@ export function getOrderDetail(params: components.OrderDetailReqParams) {
 }
 
 /**
+ * @description "获取参数配置表列表"
+ * @param params
+ */
+export function listSysConfig(params: components.ListSysConfigReqParams) {
+	return webapi.get<components.ListSysConfigResp>(`/api/v1/user/sys-config`, params)
+}
+
+/**
+ * @description "创建参数配置表"
+ * @param req
+ */
+export function createSysConfig(req: components.CreateSysConfigReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/user/sys-config`, req)
+}
+
+/**
+ * @description "更新参数配置表"
+ * @param req
+ */
+export function updateSysConfig(req: components.UpdateSysConfigReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/user/sys-config`, req)
+}
+
+/**
+ * @description "获取参数配置表详情"
+ * @param params
+ */
+export function getSysConfig(params: components.SysIdReqParams, id: number) {
+	return webapi.get<components.SysConfigItem>(`/api/v1/user/sys-config/${id}`, params)
+}
+
+/**
+ * @description "删除参数配置表"
+ * @param params
+ */
+export function deleteSysConfig(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/user/sys-config/${id}`, params)
+}
+
+/**
  * @description "获取部门树形列表"
  * @param params
  */

@@ -289,3 +289,29 @@ func (s *UserServer) DeleteSysDept(ctx context.Context, in *pb.IdRequest) (*pb.E
 	l := userlogic.NewDeleteSysDeptLogic(ctx, s.svcCtx)
 	return l.DeleteSysDept(in)
 }
+
+// 参数配置表
+func (s *UserServer) ListSysConfigs(ctx context.Context, in *pb.ListSysConfigRequest) (*pb.ListSysConfigResponse, error) {
+	l := userlogic.NewListSysConfigsLogic(ctx, s.svcCtx)
+	return l.ListSysConfigs(in)
+}
+
+func (s *UserServer) GetSysConfig(ctx context.Context, in *pb.IdRequest) (*pb.SysConfigItem, error) {
+	l := userlogic.NewGetSysConfigLogic(ctx, s.svcCtx)
+	return l.GetSysConfig(in)
+}
+
+func (s *UserServer) CreateSysConfig(ctx context.Context, in *pb.CreateSysConfigRequest) (*pb.IdRequest, error) {
+	l := userlogic.NewCreateSysConfigLogic(ctx, s.svcCtx)
+	return l.CreateSysConfig(in)
+}
+
+func (s *UserServer) UpdateSysConfig(ctx context.Context, in *pb.UpdateSysConfigRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdateSysConfigLogic(ctx, s.svcCtx)
+	return l.UpdateSysConfig(in)
+}
+
+func (s *UserServer) DeleteSysConfig(ctx context.Context, in *pb.IdRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewDeleteSysConfigLogic(ctx, s.svcCtx)
+	return l.DeleteSysConfig(in)
+}

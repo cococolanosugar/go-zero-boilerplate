@@ -70,6 +70,11 @@ const (
 	User_CreateSysDept_FullMethodName           = "/user.User/CreateSysDept"
 	User_UpdateSysDept_FullMethodName           = "/user.User/UpdateSysDept"
 	User_DeleteSysDept_FullMethodName           = "/user.User/DeleteSysDept"
+	User_ListSysConfigs_FullMethodName          = "/user.User/ListSysConfigs"
+	User_GetSysConfig_FullMethodName            = "/user.User/GetSysConfig"
+	User_CreateSysConfig_FullMethodName         = "/user.User/CreateSysConfig"
+	User_UpdateSysConfig_FullMethodName         = "/user.User/UpdateSysConfig"
+	User_DeleteSysConfig_FullMethodName         = "/user.User/DeleteSysConfig"
 )
 
 // UserClient is the client API for User service.
@@ -139,6 +144,12 @@ type UserClient interface {
 	CreateSysDept(ctx context.Context, in *CreateSysDeptRequest, opts ...grpc.CallOption) (*IdRequest, error)
 	UpdateSysDept(ctx context.Context, in *UpdateSysDeptRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	DeleteSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	// 参数配置表
+	ListSysConfigs(ctx context.Context, in *ListSysConfigRequest, opts ...grpc.CallOption) (*ListSysConfigResponse, error)
+	GetSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysConfigItem, error)
+	CreateSysConfig(ctx context.Context, in *CreateSysConfigRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysConfig(ctx context.Context, in *UpdateSysConfigRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type userClient struct {
@@ -659,6 +670,56 @@ func (c *userClient) DeleteSysDept(ctx context.Context, in *IdRequest, opts ...g
 	return out, nil
 }
 
+func (c *userClient) ListSysConfigs(ctx context.Context, in *ListSysConfigRequest, opts ...grpc.CallOption) (*ListSysConfigResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysConfigResponse)
+	err := c.cc.Invoke(ctx, User_ListSysConfigs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysConfigItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SysConfigItem)
+	err := c.cc.Invoke(ctx, User_GetSysConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysConfig(ctx context.Context, in *CreateSysConfigRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysConfig(ctx context.Context, in *UpdateSysConfigRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -726,6 +787,12 @@ type UserServer interface {
 	CreateSysDept(context.Context, *CreateSysDeptRequest) (*IdRequest, error)
 	UpdateSysDept(context.Context, *UpdateSysDeptRequest) (*EmptyResponse, error)
 	DeleteSysDept(context.Context, *IdRequest) (*EmptyResponse, error)
+	// 参数配置表
+	ListSysConfigs(context.Context, *ListSysConfigRequest) (*ListSysConfigResponse, error)
+	GetSysConfig(context.Context, *IdRequest) (*SysConfigItem, error)
+	CreateSysConfig(context.Context, *CreateSysConfigRequest) (*IdRequest, error)
+	UpdateSysConfig(context.Context, *UpdateSysConfigRequest) (*EmptyResponse, error)
+	DeleteSysConfig(context.Context, *IdRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -888,6 +955,21 @@ func (UnimplementedUserServer) UpdateSysDept(context.Context, *UpdateSysDeptRequ
 }
 func (UnimplementedUserServer) DeleteSysDept(context.Context, *IdRequest) (*EmptyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteSysDept not implemented")
+}
+func (UnimplementedUserServer) ListSysConfigs(context.Context, *ListSysConfigRequest) (*ListSysConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysConfigs not implemented")
+}
+func (UnimplementedUserServer) GetSysConfig(context.Context, *IdRequest) (*SysConfigItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSysConfig not implemented")
+}
+func (UnimplementedUserServer) CreateSysConfig(context.Context, *CreateSysConfigRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysConfig not implemented")
+}
+func (UnimplementedUserServer) UpdateSysConfig(context.Context, *UpdateSysConfigRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysConfig not implemented")
+}
+func (UnimplementedUserServer) DeleteSysConfig(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysConfig not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1828,6 +1910,96 @@ func _User_DeleteSysDept_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListSysConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysConfigs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysConfigs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysConfigs(ctx, req.(*ListSysConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetSysConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetSysConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetSysConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetSysConfig(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysConfig(ctx, req.(*CreateSysConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysConfig(ctx, req.(*UpdateSysConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysConfig(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2038,6 +2210,26 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteSysDept",
 			Handler:    _User_DeleteSysDept_Handler,
+		},
+		{
+			MethodName: "ListSysConfigs",
+			Handler:    _User_ListSysConfigs_Handler,
+		},
+		{
+			MethodName: "GetSysConfig",
+			Handler:    _User_GetSysConfig_Handler,
+		},
+		{
+			MethodName: "CreateSysConfig",
+			Handler:    _User_CreateSysConfig_Handler,
+		},
+		{
+			MethodName: "UpdateSysConfig",
+			Handler:    _User_UpdateSysConfig_Handler,
+		},
+		{
+			MethodName: "DeleteSysConfig",
+			Handler:    _User_DeleteSysConfig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

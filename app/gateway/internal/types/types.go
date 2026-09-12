@@ -47,6 +47,14 @@ type ChangePersonalPasswordReq struct {
 	NewPassword string `json:"newPassword"`
 }
 
+type CreateSysConfigReq struct {
+	ConfigName  string `json:"configName"`  // 参数名称
+	ConfigKey   string `json:"configKey"`   // 参数键名
+	ConfigValue string `json:"configValue"` // 参数键值
+	ConfigType  string `json:"configType"`  // 系统内置（Y是 N否）
+	Remark      string `json:"remark"`      // 备注说明
+}
+
 type CreateSysDeptReq struct {
 	ParentId int64  `json:"parentId"`
 	DeptName string `json:"deptName"`
@@ -167,6 +175,17 @@ type ListOnlineSessionsResp struct {
 
 type ListSysApisResp struct {
 	List []*SysApiItem `json:"list"`
+}
+
+type ListSysConfigReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Keyword  string `form:"keyword,optional"`
+}
+
+type ListSysConfigResp struct {
+	Total int64            `json:"total"`
+	List  []*SysConfigItem `json:"list"`
 }
 
 type ListSysDeptReq struct {
@@ -354,6 +373,17 @@ type SysApiItem struct {
 	IsAutoSync int32  `json:"isAutoSync"`
 }
 
+type SysConfigItem struct {
+	Id          int64  `json:"id"`          // 参数主键
+	ConfigName  string `json:"configName"`  // 参数名称
+	ConfigKey   string `json:"configKey"`   // 参数键名
+	ConfigValue string `json:"configValue"` // 参数键值
+	ConfigType  string `json:"configType"`  // 系统内置（Y是 N否）
+	Remark      string `json:"remark"`      // 备注说明
+	CreateTime  string `json:"createTime"`  // 创建时间
+	UpdateTime  string `json:"updateTime"`  // 更新时间
+}
+
 type SysDeptItem struct {
 	Id         int64          `json:"id"`
 	ParentId   int64          `json:"parentId"`
@@ -494,6 +524,15 @@ type UpdatePersonalProfileReq struct {
 	Mobile   string `json:"mobile,optional"`
 	Email    string `json:"email,optional"`
 	Avatar   string `json:"avatar,optional"`
+}
+
+type UpdateSysConfigReq struct {
+	Id          int64  `json:"id"`          // 参数主键
+	ConfigName  string `json:"configName"`  // 参数名称
+	ConfigKey   string `json:"configKey"`   // 参数键名
+	ConfigValue string `json:"configValue"` // 参数键值
+	ConfigType  string `json:"configType"`  // 系统内置（Y是 N否）
+	Remark      string `json:"remark"`      // 备注说明
 }
 
 type UpdateSysDeptReq struct {

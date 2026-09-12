@@ -45,6 +45,14 @@ export interface ChangePersonalPasswordReq {
 	newPassword: string
 }
 
+export interface CreateSysConfigReq {
+	configName: string // 参数名称
+	configKey: string // 参数键名
+	configValue: string // 参数键值
+	configType: string // 系统内置（Y是 N否）
+	remark: string // 备注说明
+}
+
 export interface CreateSysDeptReq {
 	parentId: number
 	deptName: string
@@ -173,6 +181,19 @@ export interface ListOnlineSessionsResp {
 
 export interface ListSysApisResp {
 	list: Array<SysApiItem>
+}
+
+export interface ListSysConfigReq {
+}
+export interface ListSysConfigReqParams {
+	page: number
+	pageSize: number
+	keyword?: string
+}
+
+export interface ListSysConfigResp {
+	total: number
+	list: Array<SysConfigItem>
 }
 
 export interface ListSysDeptReq {
@@ -381,6 +402,17 @@ export interface SysApiItem {
 	isAutoSync: number
 }
 
+export interface SysConfigItem {
+	id: number // 参数主键
+	configName: string // 参数名称
+	configKey: string // 参数键名
+	configValue: string // 参数键值
+	configType: string // 系统内置（Y是 N否）
+	remark: string // 备注说明
+	createTime: string // 创建时间
+	updateTime: string // 更新时间
+}
+
 export interface SysDeptItem {
 	id: number
 	parentId: number
@@ -522,6 +554,15 @@ export interface UpdatePersonalProfileReq {
 	mobile?: string
 	email?: string
 	avatar?: string
+}
+
+export interface UpdateSysConfigReq {
+	id: number // 参数主键
+	configName: string // 参数名称
+	configKey: string // 参数键名
+	configValue: string // 参数键值
+	configType: string // 系统内置（Y是 N否）
+	remark: string // 备注说明
 }
 
 export interface UpdateSysDeptReq {

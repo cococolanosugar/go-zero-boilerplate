@@ -8,6 +8,7 @@ import (
 
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
 	order "go-zero-boilerplate/app/gateway/internal/handler/order"
+	sys_config "go-zero-boilerplate/app/gateway/internal/handler/sys_config"
 	sys_dept "go-zero-boilerplate/app/gateway/internal/handler/sys_dept"
 	sys_notice "go-zero-boilerplate/app/gateway/internal/handler/sys_notice"
 	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
@@ -98,6 +99,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/order"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取参数配置表列表
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: sys_config.ListSysConfigHandler(serverCtx),
+			},
+			{
+				// 创建参数配置表
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: sys_config.CreateSysConfigHandler(serverCtx),
+			},
+			{
+				// 更新参数配置表
+				Method:  http.MethodPut,
+				Path:    "/",
+				Handler: sys_config.UpdateSysConfigHandler(serverCtx),
+			},
+			{
+				// 获取参数配置表详情
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sys_config.GetSysConfigHandler(serverCtx),
+			},
+			{
+				// 删除参数配置表
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: sys_config.DeleteSysConfigHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/user/sys-config"),
 	)
 
 	server.AddRoutes(

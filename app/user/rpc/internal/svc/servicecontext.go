@@ -26,6 +26,7 @@ type ServiceContext struct {
 	SysLoginLogModel model.SysLoginLogModel
 	SysPostModel model.SysPostModel
 	SysNoticeModel model.SysNoticeModel
+	SysConfigModel model.SysConfigModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -49,5 +50,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		SysLoginLogModel: model.NewSysLoginLogModel(conn, c.Cache),
 		SysPostModel: model.NewSysPostModel(conn, c.Cache),
 		SysNoticeModel: model.NewSysNoticeModel(conn, c.Cache),
+		SysConfigModel: model.NewSysConfigModel(conn, c.Cache),
 	}
 }

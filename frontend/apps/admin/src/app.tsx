@@ -17,6 +17,12 @@ import {
   FormOutlined,
   ProfileOutlined,
   CheckCircleOutlined,
+  ApartmentOutlined,
+  IdcardOutlined,
+  BellOutlined,
+  TeamOutlined,
+  FundProjectionScreenOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
@@ -71,6 +77,18 @@ const getIcon = (iconName?: React.ReactNode | string) => {
       return <ProfileOutlined />;
     case "CheckCircleOutlined":
       return <CheckCircleOutlined />;
+    case "ApartmentOutlined":
+      return <ApartmentOutlined />;
+    case "IdcardOutlined":
+      return <IdcardOutlined />;
+    case "BellOutlined":
+      return <BellOutlined />;
+    case "TeamOutlined":
+      return <TeamOutlined />;
+    case "FundProjectionScreenOutlined":
+      return <FundProjectionScreenOutlined />;
+    case "FileTextOutlined":
+      return <FileTextOutlined />;
     default:
       return <AppstoreOutlined />;
   }
@@ -85,13 +103,20 @@ const getMenuLocaleKey = (path: string) => {
     "/result/success": "menu.result.success",
     "/orders": "menu.orders",
     "/users": "menu.users",
+    "/monitor": "menu.monitor",
     "/system": "menu.system",
+    "/system/dept": "menu.system.dept",
     "/system/users": "menu.system.users",
     "/system/roles": "menu.system.roles",
     "/system/menus": "menu.system.menus",
     "/system/apis": "menu.system.apis",
     "/system/dicts": "menu.system.dicts",
     "/system/logs": "menu.system.logs",
+    "/system/sys-post": "menu.system.syspost",
+    "/system/sys-notice": "menu.system.sysnotice",
+    "/system/config": "menu.system.config",
+    "/system/online": "menu.system.online",
+    "/system/openapi": "menu.system.openapi",
   };
   return map[path] || `menu.${path.replace(/^\//, "").replace(/\//g, ".")}`;
 };

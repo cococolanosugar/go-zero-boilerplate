@@ -21,6 +21,7 @@ type (
 	ChangePersonalPasswordRequest = pb.ChangePersonalPasswordRequest
 	CheckApiPermissionRequest     = pb.CheckApiPermissionRequest
 	CheckApiPermissionResponse    = pb.CheckApiPermissionResponse
+	CreateSysConfigRequest        = pb.CreateSysConfigRequest
 	CreateSysDeptRequest          = pb.CreateSysDeptRequest
 	CreateSysDictDataRequest      = pb.CreateSysDictDataRequest
 	CreateSysDictTypeRequest      = pb.CreateSysDictTypeRequest
@@ -37,6 +38,8 @@ type (
 	GetSysMenuTreeResponse        = pb.GetSysMenuTreeResponse
 	IdRequest                     = pb.IdRequest
 	ListSysApisResponse           = pb.ListSysApisResponse
+	ListSysConfigRequest          = pb.ListSysConfigRequest
+	ListSysConfigResponse         = pb.ListSysConfigResponse
 	ListSysDeptsRequest           = pb.ListSysDeptsRequest
 	ListSysDeptsResponse          = pb.ListSysDeptsResponse
 	ListSysDictDataRequest        = pb.ListSysDictDataRequest
@@ -68,6 +71,7 @@ type (
 	SyncCasdoorUserRequest        = pb.SyncCasdoorUserRequest
 	SyncCasdoorUserResponse       = pb.SyncCasdoorUserResponse
 	SysApiItem                    = pb.SysApiItem
+	SysConfigItem                 = pb.SysConfigItem
 	SysDeptItem                   = pb.SysDeptItem
 	SysDictDataItem               = pb.SysDictDataItem
 	SysDictTypeItem               = pb.SysDictTypeItem
@@ -78,6 +82,7 @@ type (
 	SysRoleItem                   = pb.SysRoleItem
 	SysUserItem                   = pb.SysUserItem
 	UpdatePersonalProfileRequest  = pb.UpdatePersonalProfileRequest
+	UpdateSysConfigRequest        = pb.UpdateSysConfigRequest
 	UpdateSysDeptRequest          = pb.UpdateSysDeptRequest
 	UpdateSysDictDataRequest      = pb.UpdateSysDictDataRequest
 	UpdateSysDictTypeRequest      = pb.UpdateSysDictTypeRequest
@@ -151,6 +156,12 @@ type (
 		CreateSysDept(ctx context.Context, in *CreateSysDeptRequest, opts ...grpc.CallOption) (*IdRequest, error)
 		UpdateSysDept(ctx context.Context, in *UpdateSysDeptRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		DeleteSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		// 参数配置表
+		ListSysConfigs(ctx context.Context, in *ListSysConfigRequest, opts ...grpc.CallOption) (*ListSysConfigResponse, error)
+		GetSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysConfigItem, error)
+		CreateSysConfig(ctx context.Context, in *CreateSysConfigRequest, opts ...grpc.CallOption) (*IdRequest, error)
+		UpdateSysConfig(ctx context.Context, in *UpdateSysConfigRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		DeleteSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	}
 
 	defaultUser struct {
@@ -429,4 +440,30 @@ func (m *defaultUser) UpdateSysDept(ctx context.Context, in *UpdateSysDeptReques
 func (m *defaultUser) DeleteSysDept(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.DeleteSysDept(ctx, in, opts...)
+}
+
+// 参数配置表
+func (m *defaultUser) ListSysConfigs(ctx context.Context, in *ListSysConfigRequest, opts ...grpc.CallOption) (*ListSysConfigResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysConfigs(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysConfigItem, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetSysConfig(ctx, in, opts...)
+}
+
+func (m *defaultUser) CreateSysConfig(ctx context.Context, in *CreateSysConfigRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CreateSysConfig(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdateSysConfig(ctx context.Context, in *UpdateSysConfigRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdateSysConfig(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.DeleteSysConfig(ctx, in, opts...)
 }
