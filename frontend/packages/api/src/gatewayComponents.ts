@@ -58,6 +58,15 @@ export interface CreateSysDictTypeReq {
 	remark?: string
 }
 
+export interface CreateSysNoticeReq {
+	noticeTitle: string // 公告标题
+	noticeType: number // 公告类型（1通知 2消息 3待办）
+	noticeContent: string // 公告内容
+	status: number // 公告状态（1正常 0关闭）
+	createBy: string // 创建者
+	remark?: string // 备注
+}
+
 export interface CreateSysPostReq {
 	postCode: string // 岗位编码
 	postName: string // 岗位名称
@@ -103,6 +112,17 @@ export interface GetDictDataByTypeReqParams {
 
 export interface GetDictDataByTypeResp {
 	list: Array<SysDictDataItem>
+}
+
+export interface GetMyNoticeFeedReq {
+}
+export interface GetMyNoticeFeedReqParams {
+	limit?: number
+}
+
+export interface GetMyNoticeFeedResp {
+	totalUnread: number
+	list: Array<NoticeFeedItem>
 }
 
 export interface GetSysMenuTreeResp {
@@ -154,6 +174,19 @@ export interface ListSysLoginLogsReqParams {
 export interface ListSysLoginLogsResp {
 	total: number
 	list: Array<SysLoginLogItem>
+}
+
+export interface ListSysNoticeReq {
+}
+export interface ListSysNoticeReqParams {
+	page: number
+	pageSize: number
+	keyword?: string
+}
+
+export interface ListSysNoticeResp {
+	total: number
+	list: Array<SysNoticeItem>
 }
 
 export interface ListSysOperLogsReq {
@@ -222,6 +255,27 @@ export interface LoginResp {
 	refreshAfter: number
 	userId: number
 	username: string
+}
+
+export interface MarkAllNoticesReadReq {
+	noticeType?: number
+}
+
+export interface MarkNoticeReadReq {
+	noticeId: number
+}
+
+export interface NoticeFeedItem {
+	id: number
+	noticeTitle: string
+	noticeType: number
+	noticeContent: string
+	status: number
+	createBy: string
+	remark: string
+	createTime: string
+	updateTime: string
+	isRead: boolean
 }
 
 export interface OrderDetailReq {
@@ -319,6 +373,18 @@ export interface SysMenuItem {
 	children?: Array<SysMenuItem>
 }
 
+export interface SysNoticeItem {
+	id: number // 公告ID
+	noticeTitle: string // 公告标题
+	noticeType: number // 公告类型（1通知 2消息 3待办）
+	noticeContent: string // 公告内容
+	status: number // 公告状态（1正常 0关闭）
+	createBy: string // 创建者
+	remark: string // 备注
+	createTime: string // 创建时间
+	updateTime: string // 更新时间
+}
+
 export interface SysOperLogItem {
 	id: number
 	title: string
@@ -388,6 +454,16 @@ export interface UpdateSysDictTypeReq {
 	dictType: string
 	status: number
 	remark?: string
+}
+
+export interface UpdateSysNoticeReq {
+	id: number // 公告ID
+	noticeTitle: string // 公告标题
+	noticeType: number // 公告类型（1通知 2消息 3待办）
+	noticeContent: string // 公告内容
+	status: number // 公告状态（1正常 0关闭）
+	createBy: string // 创建者
+	remark: string // 备注
 }
 
 export interface UpdateSysPostReq {

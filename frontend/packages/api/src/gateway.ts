@@ -91,6 +91,46 @@ export function getOrderDetail(params: components.OrderDetailReqParams) {
 }
 
 /**
+ * @description "获取通知公告表列表"
+ * @param params
+ */
+export function listSysNotice(params: components.ListSysNoticeReqParams) {
+	return webapi.get<components.ListSysNoticeResp>(`/api/v1/user/sys-notice`, params)
+}
+
+/**
+ * @description "创建通知公告表"
+ * @param req
+ */
+export function createSysNotice(req: components.CreateSysNoticeReq) {
+	return webapi.post<components.SysIdResp>(`/api/v1/user/sys-notice`, req)
+}
+
+/**
+ * @description "更新通知公告表"
+ * @param req
+ */
+export function updateSysNotice(req: components.UpdateSysNoticeReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/user/sys-notice`, req)
+}
+
+/**
+ * @description "获取通知公告表详情"
+ * @param params
+ */
+export function getSysNotice(params: components.SysIdReqParams, id: number) {
+	return webapi.get<components.SysNoticeItem>(`/api/v1/user/sys-notice/${id}`, params)
+}
+
+/**
+ * @description "删除通知公告表"
+ * @param params
+ */
+export function deleteSysNotice(params: components.SysIdReqParams, id: number) {
+	return webapi.delete<components.SysEmptyResp>(`/api/v1/user/sys-notice/${id}`, params)
+}
+
+/**
  * @description "获取岗位信息表列表"
  * @param params
  */
@@ -276,4 +316,28 @@ export function register(req: components.RegisterReq) {
  */
 export function getUserInfo() {
 	return webapi.get<components.UserInfoResp>(`/api/v1/user/info`)
+}
+
+/**
+ * @description "获取当前员工个人通知流与未读数"
+ * @param params
+ */
+export function getMyNoticeFeed(params: components.GetMyNoticeFeedReqParams) {
+	return webapi.get<components.GetMyNoticeFeedResp>(`/api/v1/user/notice/my-list`, params)
+}
+
+/**
+ * @description "标记单条通知已读"
+ * @param req
+ */
+export function markNoticeRead(req: components.MarkNoticeReadReq) {
+	return webapi.post<components.SysEmptyResp>(`/api/v1/user/notice/read`, req)
+}
+
+/**
+ * @description "全部标记已读"
+ * @param req
+ */
+export function markAllNoticesRead(req: components.MarkAllNoticesReadReq) {
+	return webapi.post<components.SysEmptyResp>(`/api/v1/user/notice/read-all`, req)
 }

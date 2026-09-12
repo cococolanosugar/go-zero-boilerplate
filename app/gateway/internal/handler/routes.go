@@ -8,9 +8,11 @@ import (
 
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
 	order "go-zero-boilerplate/app/gateway/internal/handler/order"
+	sys_notice "go-zero-boilerplate/app/gateway/internal/handler/sys_notice"
 	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
 	user "go-zero-boilerplate/app/gateway/internal/handler/user"
+	user_notice "go-zero-boilerplate/app/gateway/internal/handler/user_notice"
 	"go-zero-boilerplate/app/gateway/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -95,6 +97,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/order"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取通知公告表列表
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: sys_notice.ListSysNoticeHandler(serverCtx),
+			},
+			{
+				// 创建通知公告表
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: sys_notice.CreateSysNoticeHandler(serverCtx),
+			},
+			{
+				// 更新通知公告表
+				Method:  http.MethodPut,
+				Path:    "/",
+				Handler: sys_notice.UpdateSysNoticeHandler(serverCtx),
+			},
+			{
+				// 获取通知公告表详情
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sys_notice.GetSysNoticeHandler(serverCtx),
+			},
+			{
+				// 删除通知公告表
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: sys_notice.DeleteSysNoticeHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/user/sys-notice"),
 	)
 
 	server.AddRoutes(
@@ -272,5 +311,30 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/user"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取当前员工个人通知流与未读数
+				Method:  http.MethodGet,
+				Path:    "/my-list",
+				Handler: user_notice.GetMyNoticeFeedHandler(serverCtx),
+			},
+			{
+				// 标记单条通知已读
+				Method:  http.MethodPost,
+				Path:    "/read",
+				Handler: user_notice.MarkNoticeReadHandler(serverCtx),
+			},
+			{
+				// 全部标记已读
+				Method:  http.MethodPost,
+				Path:    "/read-all",
+				Handler: user_notice.MarkAllNoticesReadHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/user/notice"),
 	)
 }

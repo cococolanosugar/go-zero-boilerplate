@@ -55,6 +55,14 @@ const (
 	User_CreateSysPost_FullMethodName           = "/user.User/CreateSysPost"
 	User_UpdateSysPost_FullMethodName           = "/user.User/UpdateSysPost"
 	User_DeleteSysPost_FullMethodName           = "/user.User/DeleteSysPost"
+	User_ListSysNotices_FullMethodName          = "/user.User/ListSysNotices"
+	User_GetSysNotice_FullMethodName            = "/user.User/GetSysNotice"
+	User_CreateSysNotice_FullMethodName         = "/user.User/CreateSysNotice"
+	User_UpdateSysNotice_FullMethodName         = "/user.User/UpdateSysNotice"
+	User_DeleteSysNotice_FullMethodName         = "/user.User/DeleteSysNotice"
+	User_GetMyNoticeFeed_FullMethodName         = "/user.User/GetMyNoticeFeed"
+	User_MarkNoticeRead_FullMethodName          = "/user.User/MarkNoticeRead"
+	User_MarkAllNoticesRead_FullMethodName      = "/user.User/MarkAllNoticesRead"
 )
 
 // UserClient is the client API for User service.
@@ -106,6 +114,16 @@ type UserClient interface {
 	CreateSysPost(ctx context.Context, in *CreateSysPostRequest, opts ...grpc.CallOption) (*IdRequest, error)
 	UpdateSysPost(ctx context.Context, in *UpdateSysPostRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	DeleteSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	// 通知公告表
+	ListSysNotices(ctx context.Context, in *ListSysNoticeRequest, opts ...grpc.CallOption) (*ListSysNoticeResponse, error)
+	GetSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysNoticeItem, error)
+	CreateSysNotice(ctx context.Context, in *CreateSysNoticeRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysNotice(ctx context.Context, in *UpdateSysNoticeRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	// 员工通知中心
+	GetMyNoticeFeed(ctx context.Context, in *GetMyNoticeFeedRequest, opts ...grpc.CallOption) (*GetMyNoticeFeedResponse, error)
+	MarkNoticeRead(ctx context.Context, in *MarkNoticeReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type userClient struct {
@@ -476,6 +494,86 @@ func (c *userClient) DeleteSysPost(ctx context.Context, in *IdRequest, opts ...g
 	return out, nil
 }
 
+func (c *userClient) ListSysNotices(ctx context.Context, in *ListSysNoticeRequest, opts ...grpc.CallOption) (*ListSysNoticeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysNoticeResponse)
+	err := c.cc.Invoke(ctx, User_ListSysNotices_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysNoticeItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SysNoticeItem)
+	err := c.cc.Invoke(ctx, User_GetSysNotice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysNotice(ctx context.Context, in *CreateSysNoticeRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysNotice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysNotice(ctx context.Context, in *UpdateSysNoticeRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysNotice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysNotice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetMyNoticeFeed(ctx context.Context, in *GetMyNoticeFeedRequest, opts ...grpc.CallOption) (*GetMyNoticeFeedResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMyNoticeFeedResponse)
+	err := c.cc.Invoke(ctx, User_GetMyNoticeFeed_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) MarkNoticeRead(ctx context.Context, in *MarkNoticeReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_MarkNoticeRead_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_MarkAllNoticesRead_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -525,6 +623,16 @@ type UserServer interface {
 	CreateSysPost(context.Context, *CreateSysPostRequest) (*IdRequest, error)
 	UpdateSysPost(context.Context, *UpdateSysPostRequest) (*EmptyResponse, error)
 	DeleteSysPost(context.Context, *IdRequest) (*EmptyResponse, error)
+	// 通知公告表
+	ListSysNotices(context.Context, *ListSysNoticeRequest) (*ListSysNoticeResponse, error)
+	GetSysNotice(context.Context, *IdRequest) (*SysNoticeItem, error)
+	CreateSysNotice(context.Context, *CreateSysNoticeRequest) (*IdRequest, error)
+	UpdateSysNotice(context.Context, *UpdateSysNoticeRequest) (*EmptyResponse, error)
+	DeleteSysNotice(context.Context, *IdRequest) (*EmptyResponse, error)
+	// 员工通知中心
+	GetMyNoticeFeed(context.Context, *GetMyNoticeFeedRequest) (*GetMyNoticeFeedResponse, error)
+	MarkNoticeRead(context.Context, *MarkNoticeReadRequest) (*EmptyResponse, error)
+	MarkAllNoticesRead(context.Context, *MarkAllNoticesReadRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -642,6 +750,30 @@ func (UnimplementedUserServer) UpdateSysPost(context.Context, *UpdateSysPostRequ
 }
 func (UnimplementedUserServer) DeleteSysPost(context.Context, *IdRequest) (*EmptyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteSysPost not implemented")
+}
+func (UnimplementedUserServer) ListSysNotices(context.Context, *ListSysNoticeRequest) (*ListSysNoticeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysNotices not implemented")
+}
+func (UnimplementedUserServer) GetSysNotice(context.Context, *IdRequest) (*SysNoticeItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSysNotice not implemented")
+}
+func (UnimplementedUserServer) CreateSysNotice(context.Context, *CreateSysNoticeRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysNotice not implemented")
+}
+func (UnimplementedUserServer) UpdateSysNotice(context.Context, *UpdateSysNoticeRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysNotice not implemented")
+}
+func (UnimplementedUserServer) DeleteSysNotice(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysNotice not implemented")
+}
+func (UnimplementedUserServer) GetMyNoticeFeed(context.Context, *GetMyNoticeFeedRequest) (*GetMyNoticeFeedResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMyNoticeFeed not implemented")
+}
+func (UnimplementedUserServer) MarkNoticeRead(context.Context, *MarkNoticeReadRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MarkNoticeRead not implemented")
+}
+func (UnimplementedUserServer) MarkAllNoticesRead(context.Context, *MarkAllNoticesReadRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MarkAllNoticesRead not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1312,6 +1444,150 @@ func _User_DeleteSysPost_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListSysNotices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysNoticeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysNotices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysNotices_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysNotices(ctx, req.(*ListSysNoticeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetSysNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetSysNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetSysNotice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetSysNotice(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysNoticeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysNotice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysNotice(ctx, req.(*CreateSysNoticeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysNoticeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysNotice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysNotice(ctx, req.(*UpdateSysNoticeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysNotice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysNotice(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetMyNoticeFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyNoticeFeedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetMyNoticeFeed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetMyNoticeFeed_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetMyNoticeFeed(ctx, req.(*GetMyNoticeFeedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_MarkNoticeRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkNoticeReadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).MarkNoticeRead(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_MarkNoticeRead_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).MarkNoticeRead(ctx, req.(*MarkNoticeReadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_MarkAllNoticesRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkAllNoticesReadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).MarkAllNoticesRead(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_MarkAllNoticesRead_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).MarkAllNoticesRead(ctx, req.(*MarkAllNoticesReadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1462,6 +1738,38 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteSysPost",
 			Handler:    _User_DeleteSysPost_Handler,
+		},
+		{
+			MethodName: "ListSysNotices",
+			Handler:    _User_ListSysNotices_Handler,
+		},
+		{
+			MethodName: "GetSysNotice",
+			Handler:    _User_GetSysNotice_Handler,
+		},
+		{
+			MethodName: "CreateSysNotice",
+			Handler:    _User_CreateSysNotice_Handler,
+		},
+		{
+			MethodName: "UpdateSysNotice",
+			Handler:    _User_UpdateSysNotice_Handler,
+		},
+		{
+			MethodName: "DeleteSysNotice",
+			Handler:    _User_DeleteSysNotice_Handler,
+		},
+		{
+			MethodName: "GetMyNoticeFeed",
+			Handler:    _User_GetMyNoticeFeed_Handler,
+		},
+		{
+			MethodName: "MarkNoticeRead",
+			Handler:    _User_MarkNoticeRead_Handler,
+		},
+		{
+			MethodName: "MarkAllNoticesRead",
+			Handler:    _User_MarkAllNoticesRead_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

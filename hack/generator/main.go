@@ -265,12 +265,22 @@ func updateProtoAndGenRpc(config GeneratorConfig, ctx *TemplateContext) error {
   rpc Delete%s(IdRequest) returns (EmptyResponse);
 `, ctx.TableComment, ctx.EntityName, ctx.EntityName, ctx.EntityName, ctx.EntityName, ctx.EntityName, ctx.EntityName, ctx.EntityName, ctx.EntityName, ctx.EntityName, ctx.EntityName)
 
-		lastBrace := strings.LastIndex(content, "}")
-		if lastBrace != -1 {
-			newProto := content[:lastBrace] + rpcMethods + content[lastBrace:] + "\n" + msgBuf.String()
-			if err := os.WriteFile(protoPath, []byte(newProto), 0644); err != nil {
-				return fmt.Errorf("write proto: %w", err)
+		// 注入 RPC 方法定义到 service 块中（找到 service <Service> 的右花括号）
+		serviceHeader := fmt.Sprintf("service %s", strings.ToLower(config.Service))
+		serviceIdx := strings.Index(strings.ToLower(content), serviceHeader)
+		if serviceIdx != -1 {
+			closingBraceOffset := strings.Index(content[serviceIdx:], "\n}")
+			if closingBraceOffset != -1 {
+				serviceEnd := serviceIdx + closingBraceOffset
+				newProto := content[:serviceEnd] + "\n" + rpcMethods + content[serviceEnd:] + "\n" + msgBuf.String()
+				if err := os.WriteFile(protoPath, []byte(newProto), 0644); err != nil {
+					return fmt.Errorf("write proto: %w", err)
+				}
+			} else {
+				return fmt.Errorf("could not find closing brace for service %s", config.Service)
 			}
+		} else {
+			return fmt.Errorf("could not find service %s in proto", config.Service)
 		}
 	}
 

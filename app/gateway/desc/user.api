@@ -128,3 +128,129 @@ service gateway {
 	@handler DeleteSysPost
 	delete /:id (SysIdReq) returns (SysEmptyResp)
 }
+
+
+// =============================================================
+// 通知公告表 (sys_notice)
+// =============================================================
+
+type (
+	SysNoticeItem {
+		Id int64 `json:"id"` // 公告ID
+		NoticeTitle string `json:"noticeTitle"` // 公告标题
+		NoticeType int64 `json:"noticeType"` // 公告类型（1通知 2消息 3待办）
+		NoticeContent string `json:"noticeContent"` // 公告内容
+		Status int64 `json:"status"` // 公告状态（1正常 0关闭）
+		CreateBy string `json:"createBy"` // 创建者
+		Remark string `json:"remark"` // 备注
+		CreateTime string `json:"createTime"` // 创建时间
+		UpdateTime string `json:"updateTime"` // 更新时间
+	}
+
+	ListSysNoticeReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Keyword  string `form:"keyword,optional"`
+	}
+
+	ListSysNoticeResp {
+		Total int64                `json:"total"`
+		List  []*SysNoticeItem `json:"list"`
+	}
+
+	CreateSysNoticeReq {
+		NoticeTitle string `json:"noticeTitle"` // 公告标题
+		NoticeType int64 `json:"noticeType"` // 公告类型（1通知 2消息 3待办）
+		NoticeContent string `json:"noticeContent"` // 公告内容
+		Status int64 `json:"status"` // 公告状态（1正常 0关闭）
+		CreateBy string `json:"createBy"` // 创建者
+		Remark string `json:"remark,optional"` // 备注
+	}
+
+	UpdateSysNoticeReq {
+		Id int64 `json:"id"` // 公告ID
+		NoticeTitle string `json:"noticeTitle"` // 公告标题
+		NoticeType int64 `json:"noticeType"` // 公告类型（1通知 2消息 3待办）
+		NoticeContent string `json:"noticeContent"` // 公告内容
+		Status int64 `json:"status"` // 公告状态（1正常 0关闭）
+		CreateBy string `json:"createBy"` // 创建者
+		Remark string `json:"remark"` // 备注
+	}
+
+	NoticeFeedItem {
+		Id int64 `json:"id"`
+		NoticeTitle string `json:"noticeTitle"`
+		NoticeType int64 `json:"noticeType"`
+		NoticeContent string `json:"noticeContent"`
+		Status int64 `json:"status"`
+		CreateBy string `json:"createBy"`
+		Remark string `json:"remark"`
+		CreateTime string `json:"createTime"`
+		UpdateTime string `json:"updateTime"`
+		IsRead bool `json:"isRead"`
+	}
+
+	GetMyNoticeFeedReq {
+		Limit int64 `form:"limit,optional,default=50"`
+	}
+
+	GetMyNoticeFeedResp {
+		TotalUnread int64 `json:"totalUnread"`
+		List []*NoticeFeedItem `json:"list"`
+	}
+
+	MarkNoticeReadReq {
+		NoticeId int64 `json:"noticeId"`
+	}
+
+	MarkAllNoticesReadReq {
+		NoticeType int64 `json:"noticeType,optional"`
+	}
+)
+
+@server (
+	prefix: /api/v1/user/sys-notice
+	group:  sys_notice
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取通知公告表列表"
+	@handler ListSysNotice
+	get / (ListSysNoticeReq) returns (ListSysNoticeResp)
+
+	@doc "获取通知公告表详情"
+	@handler GetSysNotice
+	get /:id (SysIdReq) returns (SysNoticeItem)
+
+	@doc "创建通知公告表"
+	@handler CreateSysNotice
+	post / (CreateSysNoticeReq) returns (SysIdResp)
+
+	@doc "更新通知公告表"
+	@handler UpdateSysNotice
+	put / (UpdateSysNoticeReq) returns (SysEmptyResp)
+
+	@doc "删除通知公告表"
+	@handler DeleteSysNotice
+	delete /:id (SysIdReq) returns (SysEmptyResp)
+}
+
+@server (
+	prefix: /api/v1/user/notice
+	group:  user_notice
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取当前员工个人通知流与未读数"
+	@handler GetMyNoticeFeed
+	get /my-list (GetMyNoticeFeedReq) returns (GetMyNoticeFeedResp)
+
+	@doc "标记单条通知已读"
+	@handler MarkNoticeRead
+	post /read (MarkNoticeReadReq) returns (SysEmptyResp)
+
+	@doc "全部标记已读"
+	@handler MarkAllNoticesRead
+	post /read-all (MarkAllNoticesReadReq) returns (SysEmptyResp)
+}
+

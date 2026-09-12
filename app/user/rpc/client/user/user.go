@@ -22,6 +22,7 @@ type (
 	CheckApiPermissionResponse = pb.CheckApiPermissionResponse
 	CreateSysDictDataRequest   = pb.CreateSysDictDataRequest
 	CreateSysDictTypeRequest   = pb.CreateSysDictTypeRequest
+	CreateSysNoticeRequest     = pb.CreateSysNoticeRequest
 	CreateSysPostRequest       = pb.CreateSysPostRequest
 	CreateSysRoleRequest       = pb.CreateSysRoleRequest
 	CreateSysUserRequest       = pb.CreateSysUserRequest
@@ -29,6 +30,8 @@ type (
 	EmptyResponse              = pb.EmptyResponse
 	GetDictDataByTypeRequest   = pb.GetDictDataByTypeRequest
 	GetDictDataByTypeResponse  = pb.GetDictDataByTypeResponse
+	GetMyNoticeFeedRequest     = pb.GetMyNoticeFeedRequest
+	GetMyNoticeFeedResponse    = pb.GetMyNoticeFeedResponse
 	GetSysMenuTreeResponse     = pb.GetSysMenuTreeResponse
 	IdRequest                  = pb.IdRequest
 	ListSysApisResponse        = pb.ListSysApisResponse
@@ -38,6 +41,8 @@ type (
 	ListSysDictTypesResponse   = pb.ListSysDictTypesResponse
 	ListSysLoginLogsRequest    = pb.ListSysLoginLogsRequest
 	ListSysLoginLogsResponse   = pb.ListSysLoginLogsResponse
+	ListSysNoticeRequest       = pb.ListSysNoticeRequest
+	ListSysNoticeResponse      = pb.ListSysNoticeResponse
 	ListSysOperLogsRequest     = pb.ListSysOperLogsRequest
 	ListSysOperLogsResponse    = pb.ListSysOperLogsResponse
 	ListSysPostRequest         = pb.ListSysPostRequest
@@ -48,7 +53,10 @@ type (
 	ListSysUsersResponse       = pb.ListSysUsersResponse
 	LoginRequest               = pb.LoginRequest
 	LoginResponse              = pb.LoginResponse
+	MarkAllNoticesReadRequest  = pb.MarkAllNoticesReadRequest
+	MarkNoticeReadRequest      = pb.MarkNoticeReadRequest
 	MenuItem                   = pb.MenuItem
+	NoticeFeedItem             = pb.NoticeFeedItem
 	RecordLoginLogRequest      = pb.RecordLoginLogRequest
 	RecordOperLogRequest       = pb.RecordOperLogRequest
 	RegisterRequest            = pb.RegisterRequest
@@ -59,12 +67,14 @@ type (
 	SysDictDataItem            = pb.SysDictDataItem
 	SysDictTypeItem            = pb.SysDictTypeItem
 	SysLoginLogItem            = pb.SysLoginLogItem
+	SysNoticeItem              = pb.SysNoticeItem
 	SysOperLogItem             = pb.SysOperLogItem
 	SysPostItem                = pb.SysPostItem
 	SysRoleItem                = pb.SysRoleItem
 	SysUserItem                = pb.SysUserItem
 	UpdateSysDictDataRequest   = pb.UpdateSysDictDataRequest
 	UpdateSysDictTypeRequest   = pb.UpdateSysDictTypeRequest
+	UpdateSysNoticeRequest     = pb.UpdateSysNoticeRequest
 	UpdateSysPostRequest       = pb.UpdateSysPostRequest
 	UpdateSysRoleRequest       = pb.UpdateSysRoleRequest
 	UpdateSysUserRequest       = pb.UpdateSysUserRequest
@@ -116,6 +126,16 @@ type (
 		CreateSysPost(ctx context.Context, in *CreateSysPostRequest, opts ...grpc.CallOption) (*IdRequest, error)
 		UpdateSysPost(ctx context.Context, in *UpdateSysPostRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		DeleteSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		// 通知公告表
+		ListSysNotices(ctx context.Context, in *ListSysNoticeRequest, opts ...grpc.CallOption) (*ListSysNoticeResponse, error)
+		GetSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysNoticeItem, error)
+		CreateSysNotice(ctx context.Context, in *CreateSysNoticeRequest, opts ...grpc.CallOption) (*IdRequest, error)
+		UpdateSysNotice(ctx context.Context, in *UpdateSysNoticeRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		DeleteSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		// 员工通知中心
+		GetMyNoticeFeed(ctx context.Context, in *GetMyNoticeFeedRequest, opts ...grpc.CallOption) (*GetMyNoticeFeedResponse, error)
+		MarkNoticeRead(ctx context.Context, in *MarkNoticeReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	}
 
 	defaultUser struct {
@@ -316,4 +336,46 @@ func (m *defaultUser) UpdateSysPost(ctx context.Context, in *UpdateSysPostReques
 func (m *defaultUser) DeleteSysPost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.DeleteSysPost(ctx, in, opts...)
+}
+
+// 通知公告表
+func (m *defaultUser) ListSysNotices(ctx context.Context, in *ListSysNoticeRequest, opts ...grpc.CallOption) (*ListSysNoticeResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysNotices(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SysNoticeItem, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetSysNotice(ctx, in, opts...)
+}
+
+func (m *defaultUser) CreateSysNotice(ctx context.Context, in *CreateSysNoticeRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CreateSysNotice(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdateSysNotice(ctx context.Context, in *UpdateSysNoticeRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdateSysNotice(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteSysNotice(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.DeleteSysNotice(ctx, in, opts...)
+}
+
+// 员工通知中心
+func (m *defaultUser) GetMyNoticeFeed(ctx context.Context, in *GetMyNoticeFeedRequest, opts ...grpc.CallOption) (*GetMyNoticeFeedResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetMyNoticeFeed(ctx, in, opts...)
+}
+
+func (m *defaultUser) MarkNoticeRead(ctx context.Context, in *MarkNoticeReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.MarkNoticeRead(ctx, in, opts...)
+}
+
+func (m *defaultUser) MarkAllNoticesRead(ctx context.Context, in *MarkAllNoticesReadRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.MarkAllNoticesRead(ctx, in, opts...)
 }

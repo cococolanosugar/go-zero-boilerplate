@@ -442,6 +442,17 @@ service User {
   rpc CreateSysPost(CreateSysPostRequest) returns (IdRequest);
   rpc UpdateSysPost(UpdateSysPostRequest) returns (EmptyResponse);
   rpc DeleteSysPost(IdRequest) returns (EmptyResponse);
+  // 通知公告表
+  rpc ListSysNotices(ListSysNoticeRequest) returns (ListSysNoticeResponse);
+  rpc GetSysNotice(IdRequest) returns (SysNoticeItem);
+  rpc CreateSysNotice(CreateSysNoticeRequest) returns (IdRequest);
+  rpc UpdateSysNotice(UpdateSysNoticeRequest) returns (EmptyResponse);
+  rpc DeleteSysNotice(IdRequest) returns (EmptyResponse);
+
+  // 员工通知中心
+  rpc GetMyNoticeFeed(GetMyNoticeFeedRequest) returns (GetMyNoticeFeedResponse);
+  rpc MarkNoticeRead(MarkNoticeReadRequest) returns (EmptyResponse);
+  rpc MarkAllNoticesRead(MarkAllNoticesReadRequest) returns (EmptyResponse);
 }
 
 // =============================================================
@@ -485,4 +496,84 @@ message UpdateSysPostRequest {
   int64 post_sort = 4; // 显示顺序
   int64 status = 5; // 状态（1正常 0停用）
   string remark = 6; // 备注
+}
+
+// =============================================================
+// 通知公告表 (sys_notice)
+// =============================================================
+
+message SysNoticeItem {
+  int64 id = 1; // 公告ID
+  string notice_title = 2; // 公告标题
+  int64 notice_type = 3; // 公告类型（1通知 2消息 3待办）
+  string notice_content = 4; // 公告内容
+  int64 status = 5; // 公告状态（1正常 0关闭）
+  string create_by = 6; // 创建者
+  string remark = 7; // 备注
+  string create_time = 8; // 创建时间
+  string update_time = 9; // 更新时间
+}
+
+message ListSysNoticeRequest {
+  int64 page = 1;
+  int64 pageSize = 2;
+  string keyword = 3;
+}
+
+message ListSysNoticeResponse {
+  int64 total = 1;
+  repeated SysNoticeItem list = 2;
+}
+
+message CreateSysNoticeRequest {
+  string notice_title = 1; // 公告标题
+  int64 notice_type = 2; // 公告类型（1通知 2消息 3待办）
+  string notice_content = 3; // 公告内容
+  int64 status = 4; // 公告状态（1正常 0关闭）
+  string create_by = 5; // 创建者
+  string remark = 6; // 备注
+}
+
+message UpdateSysNoticeRequest {
+  int64 id = 1; // 公告ID
+  string notice_title = 2; // 公告标题
+  int64 notice_type = 3; // 公告类型（1通知 2消息 3待办）
+  string notice_content = 4; // 公告内容
+  int64 status = 5; // 公告状态（1正常 0关闭）
+  string create_by = 6; // 创建者
+  string remark = 7; // 备注
+}
+
+// 员工端通知流消息
+message NoticeFeedItem {
+  int64 id = 1;
+  string notice_title = 2;
+  int64 notice_type = 3;
+  string notice_content = 4;
+  int64 status = 5;
+  string create_by = 6;
+  string remark = 7;
+  string create_time = 8;
+  string update_time = 9;
+  bool is_read = 10;
+}
+
+message GetMyNoticeFeedRequest {
+  int64 user_id = 1;
+  int64 limit = 2;
+}
+
+message GetMyNoticeFeedResponse {
+  int64 total_unread = 1;
+  repeated NoticeFeedItem list = 2;
+}
+
+message MarkNoticeReadRequest {
+  int64 user_id = 1;
+  int64 notice_id = 2;
+}
+
+message MarkAllNoticesReadRequest {
+  int64 user_id = 1;
+  int64 notice_type = 2; // 0 表示全部分类
 }

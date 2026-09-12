@@ -149,6 +149,13 @@ export const routes: AppRouteItem[] = [
             component: lazy(() => import("../pages/System/OpenApi")),
           },
           {
+            path: "/system/sys-notice",
+            name: "通知公告表",
+            locale: "menu.system.sysnotice",
+            icon: "ClusterOutlined",
+            component: lazy(() => import("../pages/SysNotice")),
+          },
+          {
             path: "/system/sys-post",
             name: "岗位信息表",
             locale: "menu.system.syspost",

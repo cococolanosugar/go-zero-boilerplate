@@ -4001,6 +4001,727 @@ func (x *UpdateSysPostRequest) GetRemark() string {
 	return ""
 }
 
+type SysNoticeItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 公告ID
+	NoticeTitle   string                 `protobuf:"bytes,2,opt,name=notice_title,json=noticeTitle,proto3" json:"notice_title,omitempty"`       // 公告标题
+	NoticeType    int64                  `protobuf:"varint,3,opt,name=notice_type,json=noticeType,proto3" json:"notice_type,omitempty"`         // 公告类型（1通知 2消息 3待办）
+	NoticeContent string                 `protobuf:"bytes,4,opt,name=notice_content,json=noticeContent,proto3" json:"notice_content,omitempty"` // 公告内容
+	Status        int64                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`                                   // 公告状态（1正常 0关闭）
+	CreateBy      string                 `protobuf:"bytes,6,opt,name=create_by,json=createBy,proto3" json:"create_by,omitempty"`                // 创建者
+	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`                                    // 备注
+	CreateTime    string                 `protobuf:"bytes,8,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`          // 创建时间
+	UpdateTime    string                 `protobuf:"bytes,9,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`          // 更新时间
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SysNoticeItem) Reset() {
+	*x = SysNoticeItem{}
+	mi := &file_user_proto_msgTypes[55]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SysNoticeItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SysNoticeItem) ProtoMessage() {}
+
+func (x *SysNoticeItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[55]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SysNoticeItem.ProtoReflect.Descriptor instead.
+func (*SysNoticeItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{55}
+}
+
+func (x *SysNoticeItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SysNoticeItem) GetNoticeTitle() string {
+	if x != nil {
+		return x.NoticeTitle
+	}
+	return ""
+}
+
+func (x *SysNoticeItem) GetNoticeType() int64 {
+	if x != nil {
+		return x.NoticeType
+	}
+	return 0
+}
+
+func (x *SysNoticeItem) GetNoticeContent() string {
+	if x != nil {
+		return x.NoticeContent
+	}
+	return ""
+}
+
+func (x *SysNoticeItem) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *SysNoticeItem) GetCreateBy() string {
+	if x != nil {
+		return x.CreateBy
+	}
+	return ""
+}
+
+func (x *SysNoticeItem) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *SysNoticeItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *SysNoticeItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+type ListSysNoticeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Keyword       string                 `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysNoticeRequest) Reset() {
+	*x = ListSysNoticeRequest{}
+	mi := &file_user_proto_msgTypes[56]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysNoticeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysNoticeRequest) ProtoMessage() {}
+
+func (x *ListSysNoticeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[56]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysNoticeRequest.ProtoReflect.Descriptor instead.
+func (*ListSysNoticeRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{56}
+}
+
+func (x *ListSysNoticeRequest) GetPage() int64 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListSysNoticeRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSysNoticeRequest) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
+type ListSysNoticeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*SysNoticeItem       `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysNoticeResponse) Reset() {
+	*x = ListSysNoticeResponse{}
+	mi := &file_user_proto_msgTypes[57]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysNoticeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysNoticeResponse) ProtoMessage() {}
+
+func (x *ListSysNoticeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[57]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysNoticeResponse.ProtoReflect.Descriptor instead.
+func (*ListSysNoticeResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{57}
+}
+
+func (x *ListSysNoticeResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListSysNoticeResponse) GetList() []*SysNoticeItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type CreateSysNoticeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NoticeTitle   string                 `protobuf:"bytes,1,opt,name=notice_title,json=noticeTitle,proto3" json:"notice_title,omitempty"`       // 公告标题
+	NoticeType    int64                  `protobuf:"varint,2,opt,name=notice_type,json=noticeType,proto3" json:"notice_type,omitempty"`         // 公告类型（1通知 2消息 3待办）
+	NoticeContent string                 `protobuf:"bytes,3,opt,name=notice_content,json=noticeContent,proto3" json:"notice_content,omitempty"` // 公告内容
+	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                                   // 公告状态（1正常 0关闭）
+	CreateBy      string                 `protobuf:"bytes,5,opt,name=create_by,json=createBy,proto3" json:"create_by,omitempty"`                // 创建者
+	Remark        string                 `protobuf:"bytes,6,opt,name=remark,proto3" json:"remark,omitempty"`                                    // 备注
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSysNoticeRequest) Reset() {
+	*x = CreateSysNoticeRequest{}
+	mi := &file_user_proto_msgTypes[58]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSysNoticeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSysNoticeRequest) ProtoMessage() {}
+
+func (x *CreateSysNoticeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[58]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSysNoticeRequest.ProtoReflect.Descriptor instead.
+func (*CreateSysNoticeRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{58}
+}
+
+func (x *CreateSysNoticeRequest) GetNoticeTitle() string {
+	if x != nil {
+		return x.NoticeTitle
+	}
+	return ""
+}
+
+func (x *CreateSysNoticeRequest) GetNoticeType() int64 {
+	if x != nil {
+		return x.NoticeType
+	}
+	return 0
+}
+
+func (x *CreateSysNoticeRequest) GetNoticeContent() string {
+	if x != nil {
+		return x.NoticeContent
+	}
+	return ""
+}
+
+func (x *CreateSysNoticeRequest) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *CreateSysNoticeRequest) GetCreateBy() string {
+	if x != nil {
+		return x.CreateBy
+	}
+	return ""
+}
+
+func (x *CreateSysNoticeRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+type UpdateSysNoticeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 公告ID
+	NoticeTitle   string                 `protobuf:"bytes,2,opt,name=notice_title,json=noticeTitle,proto3" json:"notice_title,omitempty"`       // 公告标题
+	NoticeType    int64                  `protobuf:"varint,3,opt,name=notice_type,json=noticeType,proto3" json:"notice_type,omitempty"`         // 公告类型（1通知 2消息 3待办）
+	NoticeContent string                 `protobuf:"bytes,4,opt,name=notice_content,json=noticeContent,proto3" json:"notice_content,omitempty"` // 公告内容
+	Status        int64                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`                                   // 公告状态（1正常 0关闭）
+	CreateBy      string                 `protobuf:"bytes,6,opt,name=create_by,json=createBy,proto3" json:"create_by,omitempty"`                // 创建者
+	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`                                    // 备注
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateSysNoticeRequest) Reset() {
+	*x = UpdateSysNoticeRequest{}
+	mi := &file_user_proto_msgTypes[59]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateSysNoticeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateSysNoticeRequest) ProtoMessage() {}
+
+func (x *UpdateSysNoticeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[59]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateSysNoticeRequest.ProtoReflect.Descriptor instead.
+func (*UpdateSysNoticeRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{59}
+}
+
+func (x *UpdateSysNoticeRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateSysNoticeRequest) GetNoticeTitle() string {
+	if x != nil {
+		return x.NoticeTitle
+	}
+	return ""
+}
+
+func (x *UpdateSysNoticeRequest) GetNoticeType() int64 {
+	if x != nil {
+		return x.NoticeType
+	}
+	return 0
+}
+
+func (x *UpdateSysNoticeRequest) GetNoticeContent() string {
+	if x != nil {
+		return x.NoticeContent
+	}
+	return ""
+}
+
+func (x *UpdateSysNoticeRequest) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *UpdateSysNoticeRequest) GetCreateBy() string {
+	if x != nil {
+		return x.CreateBy
+	}
+	return ""
+}
+
+func (x *UpdateSysNoticeRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+// 员工端通知流消息
+type NoticeFeedItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	NoticeTitle   string                 `protobuf:"bytes,2,opt,name=notice_title,json=noticeTitle,proto3" json:"notice_title,omitempty"`
+	NoticeType    int64                  `protobuf:"varint,3,opt,name=notice_type,json=noticeType,proto3" json:"notice_type,omitempty"`
+	NoticeContent string                 `protobuf:"bytes,4,opt,name=notice_content,json=noticeContent,proto3" json:"notice_content,omitempty"`
+	Status        int64                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	CreateBy      string                 `protobuf:"bytes,6,opt,name=create_by,json=createBy,proto3" json:"create_by,omitempty"`
+	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,8,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,9,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	IsRead        bool                   `protobuf:"varint,10,opt,name=is_read,json=isRead,proto3" json:"is_read,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NoticeFeedItem) Reset() {
+	*x = NoticeFeedItem{}
+	mi := &file_user_proto_msgTypes[60]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NoticeFeedItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NoticeFeedItem) ProtoMessage() {}
+
+func (x *NoticeFeedItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[60]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NoticeFeedItem.ProtoReflect.Descriptor instead.
+func (*NoticeFeedItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{60}
+}
+
+func (x *NoticeFeedItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *NoticeFeedItem) GetNoticeTitle() string {
+	if x != nil {
+		return x.NoticeTitle
+	}
+	return ""
+}
+
+func (x *NoticeFeedItem) GetNoticeType() int64 {
+	if x != nil {
+		return x.NoticeType
+	}
+	return 0
+}
+
+func (x *NoticeFeedItem) GetNoticeContent() string {
+	if x != nil {
+		return x.NoticeContent
+	}
+	return ""
+}
+
+func (x *NoticeFeedItem) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *NoticeFeedItem) GetCreateBy() string {
+	if x != nil {
+		return x.CreateBy
+	}
+	return ""
+}
+
+func (x *NoticeFeedItem) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *NoticeFeedItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *NoticeFeedItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+func (x *NoticeFeedItem) GetIsRead() bool {
+	if x != nil {
+		return x.IsRead
+	}
+	return false
+}
+
+type GetMyNoticeFeedRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Limit         int64                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMyNoticeFeedRequest) Reset() {
+	*x = GetMyNoticeFeedRequest{}
+	mi := &file_user_proto_msgTypes[61]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMyNoticeFeedRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyNoticeFeedRequest) ProtoMessage() {}
+
+func (x *GetMyNoticeFeedRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[61]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyNoticeFeedRequest.ProtoReflect.Descriptor instead.
+func (*GetMyNoticeFeedRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{61}
+}
+
+func (x *GetMyNoticeFeedRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *GetMyNoticeFeedRequest) GetLimit() int64 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type GetMyNoticeFeedResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TotalUnread   int64                  `protobuf:"varint,1,opt,name=total_unread,json=totalUnread,proto3" json:"total_unread,omitempty"`
+	List          []*NoticeFeedItem      `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMyNoticeFeedResponse) Reset() {
+	*x = GetMyNoticeFeedResponse{}
+	mi := &file_user_proto_msgTypes[62]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMyNoticeFeedResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyNoticeFeedResponse) ProtoMessage() {}
+
+func (x *GetMyNoticeFeedResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[62]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyNoticeFeedResponse.ProtoReflect.Descriptor instead.
+func (*GetMyNoticeFeedResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{62}
+}
+
+func (x *GetMyNoticeFeedResponse) GetTotalUnread() int64 {
+	if x != nil {
+		return x.TotalUnread
+	}
+	return 0
+}
+
+func (x *GetMyNoticeFeedResponse) GetList() []*NoticeFeedItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type MarkNoticeReadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	NoticeId      int64                  `protobuf:"varint,2,opt,name=notice_id,json=noticeId,proto3" json:"notice_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarkNoticeReadRequest) Reset() {
+	*x = MarkNoticeReadRequest{}
+	mi := &file_user_proto_msgTypes[63]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarkNoticeReadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarkNoticeReadRequest) ProtoMessage() {}
+
+func (x *MarkNoticeReadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[63]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarkNoticeReadRequest.ProtoReflect.Descriptor instead.
+func (*MarkNoticeReadRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{63}
+}
+
+func (x *MarkNoticeReadRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *MarkNoticeReadRequest) GetNoticeId() int64 {
+	if x != nil {
+		return x.NoticeId
+	}
+	return 0
+}
+
+type MarkAllNoticesReadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	NoticeType    int64                  `protobuf:"varint,2,opt,name=notice_type,json=noticeType,proto3" json:"notice_type,omitempty"` // 0 表示全部分类
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarkAllNoticesReadRequest) Reset() {
+	*x = MarkAllNoticesReadRequest{}
+	mi := &file_user_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarkAllNoticesReadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarkAllNoticesReadRequest) ProtoMessage() {}
+
+func (x *MarkAllNoticesReadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarkAllNoticesReadRequest.ProtoReflect.Descriptor instead.
+func (*MarkAllNoticesReadRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{64}
+}
+
+func (x *MarkAllNoticesReadRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *MarkAllNoticesReadRequest) GetNoticeType() int64 {
+	if x != nil {
+		return x.NoticeType
+	}
+	return 0
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
@@ -4337,7 +5058,72 @@ const file_user_proto_rawDesc = "" +
 	"\tpost_name\x18\x03 \x01(\tR\bpostName\x12\x1b\n" +
 	"\tpost_sort\x18\x04 \x01(\x03R\bpostSort\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\x03R\x06status\x12\x16\n" +
-	"\x06remark\x18\x06 \x01(\tR\x06remark2\x8c\x13\n" +
+	"\x06remark\x18\x06 \x01(\tR\x06remark\"\x99\x02\n" +
+	"\rSysNoticeItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12!\n" +
+	"\fnotice_title\x18\x02 \x01(\tR\vnoticeTitle\x12\x1f\n" +
+	"\vnotice_type\x18\x03 \x01(\x03R\n" +
+	"noticeType\x12%\n" +
+	"\x0enotice_content\x18\x04 \x01(\tR\rnoticeContent\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x03R\x06status\x12\x1b\n" +
+	"\tcreate_by\x18\x06 \x01(\tR\bcreateBy\x12\x16\n" +
+	"\x06remark\x18\a \x01(\tR\x06remark\x12\x1f\n" +
+	"\vcreate_time\x18\b \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\t \x01(\tR\n" +
+	"updateTime\"`\n" +
+	"\x14ListSysNoticeRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x18\n" +
+	"\akeyword\x18\x03 \x01(\tR\akeyword\"V\n" +
+	"\x15ListSysNoticeResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12'\n" +
+	"\x04list\x18\x02 \x03(\v2\x13.user.SysNoticeItemR\x04list\"\xd0\x01\n" +
+	"\x16CreateSysNoticeRequest\x12!\n" +
+	"\fnotice_title\x18\x01 \x01(\tR\vnoticeTitle\x12\x1f\n" +
+	"\vnotice_type\x18\x02 \x01(\x03R\n" +
+	"noticeType\x12%\n" +
+	"\x0enotice_content\x18\x03 \x01(\tR\rnoticeContent\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x1b\n" +
+	"\tcreate_by\x18\x05 \x01(\tR\bcreateBy\x12\x16\n" +
+	"\x06remark\x18\x06 \x01(\tR\x06remark\"\xe0\x01\n" +
+	"\x16UpdateSysNoticeRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12!\n" +
+	"\fnotice_title\x18\x02 \x01(\tR\vnoticeTitle\x12\x1f\n" +
+	"\vnotice_type\x18\x03 \x01(\x03R\n" +
+	"noticeType\x12%\n" +
+	"\x0enotice_content\x18\x04 \x01(\tR\rnoticeContent\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x03R\x06status\x12\x1b\n" +
+	"\tcreate_by\x18\x06 \x01(\tR\bcreateBy\x12\x16\n" +
+	"\x06remark\x18\a \x01(\tR\x06remark\"\xb3\x02\n" +
+	"\x0eNoticeFeedItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12!\n" +
+	"\fnotice_title\x18\x02 \x01(\tR\vnoticeTitle\x12\x1f\n" +
+	"\vnotice_type\x18\x03 \x01(\x03R\n" +
+	"noticeType\x12%\n" +
+	"\x0enotice_content\x18\x04 \x01(\tR\rnoticeContent\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x03R\x06status\x12\x1b\n" +
+	"\tcreate_by\x18\x06 \x01(\tR\bcreateBy\x12\x16\n" +
+	"\x06remark\x18\a \x01(\tR\x06remark\x12\x1f\n" +
+	"\vcreate_time\x18\b \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\t \x01(\tR\n" +
+	"updateTime\x12\x17\n" +
+	"\ais_read\x18\n" +
+	" \x01(\bR\x06isRead\"G\n" +
+	"\x16GetMyNoticeFeedRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x03R\x05limit\"f\n" +
+	"\x17GetMyNoticeFeedResponse\x12!\n" +
+	"\ftotal_unread\x18\x01 \x01(\x03R\vtotalUnread\x12(\n" +
+	"\x04list\x18\x02 \x03(\v2\x14.user.NoticeFeedItemR\x04list\"M\n" +
+	"\x15MarkNoticeReadRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1b\n" +
+	"\tnotice_id\x18\x02 \x01(\x03R\bnoticeId\"U\n" +
+	"\x19MarkAllNoticesReadRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1f\n" +
+	"\vnotice_type\x18\x02 \x01(\x03R\n" +
+	"noticeType2\xae\x17\n" +
 	"\x04User\x126\n" +
 	"\vGetUserInfo\x12\x0f.user.IdRequest\x1a\x16.user.UserInfoResponse\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x120\n" +
@@ -4376,7 +5162,15 @@ const file_user_proto_rawDesc = "" +
 	"GetSysPost\x12\x0f.user.IdRequest\x1a\x11.user.SysPostItem\x12<\n" +
 	"\rCreateSysPost\x12\x1a.user.CreateSysPostRequest\x1a\x0f.user.IdRequest\x12@\n" +
 	"\rUpdateSysPost\x12\x1a.user.UpdateSysPostRequest\x1a\x13.user.EmptyResponse\x125\n" +
-	"\rDeleteSysPost\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponseB\x06Z\x04./pbb\x06proto3"
+	"\rDeleteSysPost\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponse\x12I\n" +
+	"\x0eListSysNotices\x12\x1a.user.ListSysNoticeRequest\x1a\x1b.user.ListSysNoticeResponse\x124\n" +
+	"\fGetSysNotice\x12\x0f.user.IdRequest\x1a\x13.user.SysNoticeItem\x12@\n" +
+	"\x0fCreateSysNotice\x12\x1c.user.CreateSysNoticeRequest\x1a\x0f.user.IdRequest\x12D\n" +
+	"\x0fUpdateSysNotice\x12\x1c.user.UpdateSysNoticeRequest\x1a\x13.user.EmptyResponse\x127\n" +
+	"\x0fDeleteSysNotice\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponse\x12N\n" +
+	"\x0fGetMyNoticeFeed\x12\x1c.user.GetMyNoticeFeedRequest\x1a\x1d.user.GetMyNoticeFeedResponse\x12B\n" +
+	"\x0eMarkNoticeRead\x12\x1b.user.MarkNoticeReadRequest\x1a\x13.user.EmptyResponse\x12J\n" +
+	"\x12MarkAllNoticesRead\x12\x1f.user.MarkAllNoticesReadRequest\x1a\x13.user.EmptyResponseB\x06Z\x04./pbb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -4390,7 +5184,7 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 55)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 65)
 var file_user_proto_goTypes = []any{
 	(*EmptyRequest)(nil),               // 0: user.EmptyRequest
 	(*EmptyResponse)(nil),              // 1: user.EmptyResponse
@@ -4447,6 +5241,16 @@ var file_user_proto_goTypes = []any{
 	(*ListSysPostResponse)(nil),        // 52: user.ListSysPostResponse
 	(*CreateSysPostRequest)(nil),       // 53: user.CreateSysPostRequest
 	(*UpdateSysPostRequest)(nil),       // 54: user.UpdateSysPostRequest
+	(*SysNoticeItem)(nil),              // 55: user.SysNoticeItem
+	(*ListSysNoticeRequest)(nil),       // 56: user.ListSysNoticeRequest
+	(*ListSysNoticeResponse)(nil),      // 57: user.ListSysNoticeResponse
+	(*CreateSysNoticeRequest)(nil),     // 58: user.CreateSysNoticeRequest
+	(*UpdateSysNoticeRequest)(nil),     // 59: user.UpdateSysNoticeRequest
+	(*NoticeFeedItem)(nil),             // 60: user.NoticeFeedItem
+	(*GetMyNoticeFeedRequest)(nil),     // 61: user.GetMyNoticeFeedRequest
+	(*GetMyNoticeFeedResponse)(nil),    // 62: user.GetMyNoticeFeedResponse
+	(*MarkNoticeReadRequest)(nil),      // 63: user.MarkNoticeReadRequest
+	(*MarkAllNoticesReadRequest)(nil),  // 64: user.MarkAllNoticesReadRequest
 }
 var file_user_proto_depIdxs = []int32{
 	13, // 0: user.AdminProfileResponse.menus:type_name -> user.MenuItem
@@ -4461,83 +5265,101 @@ var file_user_proto_depIdxs = []int32{
 	44, // 9: user.ListSysOperLogsResponse.list:type_name -> user.SysOperLogItem
 	47, // 10: user.ListSysLoginLogsResponse.list:type_name -> user.SysLoginLogItem
 	50, // 11: user.ListSysPostResponse.list:type_name -> user.SysPostItem
-	2,  // 12: user.User.GetUserInfo:input_type -> user.IdRequest
-	4,  // 13: user.User.Register:input_type -> user.RegisterRequest
-	6,  // 14: user.User.Login:input_type -> user.LoginRequest
-	8,  // 15: user.User.AdminLogin:input_type -> user.AdminLoginRequest
-	10, // 16: user.User.SyncOrCreateCasdoorUser:input_type -> user.SyncCasdoorUserRequest
-	2,  // 17: user.User.GetAdminProfile:input_type -> user.IdRequest
-	15, // 18: user.User.ListSysUsers:input_type -> user.ListSysUsersRequest
-	17, // 19: user.User.CreateSysUser:input_type -> user.CreateSysUserRequest
-	18, // 20: user.User.UpdateSysUser:input_type -> user.UpdateSysUserRequest
-	2,  // 21: user.User.DeleteSysUser:input_type -> user.IdRequest
-	20, // 22: user.User.ListSysRoles:input_type -> user.ListSysRolesRequest
-	22, // 23: user.User.CreateSysRole:input_type -> user.CreateSysRoleRequest
-	23, // 24: user.User.UpdateSysRole:input_type -> user.UpdateSysRoleRequest
-	2,  // 25: user.User.DeleteSysRole:input_type -> user.IdRequest
-	24, // 26: user.User.AssignRolePermissions:input_type -> user.AssignRolePermRequest
-	0,  // 27: user.User.GetSysMenuTree:input_type -> user.EmptyRequest
-	0,  // 28: user.User.ListSysApis:input_type -> user.EmptyRequest
-	29, // 29: user.User.ListSysDictTypes:input_type -> user.ListSysDictTypesRequest
-	31, // 30: user.User.CreateSysDictType:input_type -> user.CreateSysDictTypeRequest
-	32, // 31: user.User.UpdateSysDictType:input_type -> user.UpdateSysDictTypeRequest
-	2,  // 32: user.User.DeleteSysDictType:input_type -> user.IdRequest
-	34, // 33: user.User.ListSysDictData:input_type -> user.ListSysDictDataRequest
-	36, // 34: user.User.CreateSysDictData:input_type -> user.CreateSysDictDataRequest
-	37, // 35: user.User.UpdateSysDictData:input_type -> user.UpdateSysDictDataRequest
-	2,  // 36: user.User.DeleteSysDictData:input_type -> user.IdRequest
-	38, // 37: user.User.GetDictDataByType:input_type -> user.GetDictDataByTypeRequest
-	40, // 38: user.User.CheckApiPermission:input_type -> user.CheckApiPermissionRequest
-	42, // 39: user.User.RecordOperLog:input_type -> user.RecordOperLogRequest
-	43, // 40: user.User.RecordLoginLog:input_type -> user.RecordLoginLogRequest
-	45, // 41: user.User.ListSysOperLogs:input_type -> user.ListSysOperLogsRequest
-	48, // 42: user.User.ListSysLoginLogs:input_type -> user.ListSysLoginLogsRequest
-	51, // 43: user.User.ListSysPosts:input_type -> user.ListSysPostRequest
-	2,  // 44: user.User.GetSysPost:input_type -> user.IdRequest
-	53, // 45: user.User.CreateSysPost:input_type -> user.CreateSysPostRequest
-	54, // 46: user.User.UpdateSysPost:input_type -> user.UpdateSysPostRequest
-	2,  // 47: user.User.DeleteSysPost:input_type -> user.IdRequest
-	3,  // 48: user.User.GetUserInfo:output_type -> user.UserInfoResponse
-	5,  // 49: user.User.Register:output_type -> user.RegisterResponse
-	7,  // 50: user.User.Login:output_type -> user.LoginResponse
-	9,  // 51: user.User.AdminLogin:output_type -> user.AdminLoginResponse
-	11, // 52: user.User.SyncOrCreateCasdoorUser:output_type -> user.SyncCasdoorUserResponse
-	12, // 53: user.User.GetAdminProfile:output_type -> user.AdminProfileResponse
-	16, // 54: user.User.ListSysUsers:output_type -> user.ListSysUsersResponse
-	2,  // 55: user.User.CreateSysUser:output_type -> user.IdRequest
-	1,  // 56: user.User.UpdateSysUser:output_type -> user.EmptyResponse
-	1,  // 57: user.User.DeleteSysUser:output_type -> user.EmptyResponse
-	21, // 58: user.User.ListSysRoles:output_type -> user.ListSysRolesResponse
-	2,  // 59: user.User.CreateSysRole:output_type -> user.IdRequest
-	1,  // 60: user.User.UpdateSysRole:output_type -> user.EmptyResponse
-	1,  // 61: user.User.DeleteSysRole:output_type -> user.EmptyResponse
-	1,  // 62: user.User.AssignRolePermissions:output_type -> user.EmptyResponse
-	25, // 63: user.User.GetSysMenuTree:output_type -> user.GetSysMenuTreeResponse
-	27, // 64: user.User.ListSysApis:output_type -> user.ListSysApisResponse
-	30, // 65: user.User.ListSysDictTypes:output_type -> user.ListSysDictTypesResponse
-	2,  // 66: user.User.CreateSysDictType:output_type -> user.IdRequest
-	1,  // 67: user.User.UpdateSysDictType:output_type -> user.EmptyResponse
-	1,  // 68: user.User.DeleteSysDictType:output_type -> user.EmptyResponse
-	35, // 69: user.User.ListSysDictData:output_type -> user.ListSysDictDataResponse
-	2,  // 70: user.User.CreateSysDictData:output_type -> user.IdRequest
-	1,  // 71: user.User.UpdateSysDictData:output_type -> user.EmptyResponse
-	1,  // 72: user.User.DeleteSysDictData:output_type -> user.EmptyResponse
-	39, // 73: user.User.GetDictDataByType:output_type -> user.GetDictDataByTypeResponse
-	41, // 74: user.User.CheckApiPermission:output_type -> user.CheckApiPermissionResponse
-	1,  // 75: user.User.RecordOperLog:output_type -> user.EmptyResponse
-	1,  // 76: user.User.RecordLoginLog:output_type -> user.EmptyResponse
-	46, // 77: user.User.ListSysOperLogs:output_type -> user.ListSysOperLogsResponse
-	49, // 78: user.User.ListSysLoginLogs:output_type -> user.ListSysLoginLogsResponse
-	52, // 79: user.User.ListSysPosts:output_type -> user.ListSysPostResponse
-	50, // 80: user.User.GetSysPost:output_type -> user.SysPostItem
-	2,  // 81: user.User.CreateSysPost:output_type -> user.IdRequest
-	1,  // 82: user.User.UpdateSysPost:output_type -> user.EmptyResponse
-	1,  // 83: user.User.DeleteSysPost:output_type -> user.EmptyResponse
-	48, // [48:84] is the sub-list for method output_type
-	12, // [12:48] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	55, // 12: user.ListSysNoticeResponse.list:type_name -> user.SysNoticeItem
+	60, // 13: user.GetMyNoticeFeedResponse.list:type_name -> user.NoticeFeedItem
+	2,  // 14: user.User.GetUserInfo:input_type -> user.IdRequest
+	4,  // 15: user.User.Register:input_type -> user.RegisterRequest
+	6,  // 16: user.User.Login:input_type -> user.LoginRequest
+	8,  // 17: user.User.AdminLogin:input_type -> user.AdminLoginRequest
+	10, // 18: user.User.SyncOrCreateCasdoorUser:input_type -> user.SyncCasdoorUserRequest
+	2,  // 19: user.User.GetAdminProfile:input_type -> user.IdRequest
+	15, // 20: user.User.ListSysUsers:input_type -> user.ListSysUsersRequest
+	17, // 21: user.User.CreateSysUser:input_type -> user.CreateSysUserRequest
+	18, // 22: user.User.UpdateSysUser:input_type -> user.UpdateSysUserRequest
+	2,  // 23: user.User.DeleteSysUser:input_type -> user.IdRequest
+	20, // 24: user.User.ListSysRoles:input_type -> user.ListSysRolesRequest
+	22, // 25: user.User.CreateSysRole:input_type -> user.CreateSysRoleRequest
+	23, // 26: user.User.UpdateSysRole:input_type -> user.UpdateSysRoleRequest
+	2,  // 27: user.User.DeleteSysRole:input_type -> user.IdRequest
+	24, // 28: user.User.AssignRolePermissions:input_type -> user.AssignRolePermRequest
+	0,  // 29: user.User.GetSysMenuTree:input_type -> user.EmptyRequest
+	0,  // 30: user.User.ListSysApis:input_type -> user.EmptyRequest
+	29, // 31: user.User.ListSysDictTypes:input_type -> user.ListSysDictTypesRequest
+	31, // 32: user.User.CreateSysDictType:input_type -> user.CreateSysDictTypeRequest
+	32, // 33: user.User.UpdateSysDictType:input_type -> user.UpdateSysDictTypeRequest
+	2,  // 34: user.User.DeleteSysDictType:input_type -> user.IdRequest
+	34, // 35: user.User.ListSysDictData:input_type -> user.ListSysDictDataRequest
+	36, // 36: user.User.CreateSysDictData:input_type -> user.CreateSysDictDataRequest
+	37, // 37: user.User.UpdateSysDictData:input_type -> user.UpdateSysDictDataRequest
+	2,  // 38: user.User.DeleteSysDictData:input_type -> user.IdRequest
+	38, // 39: user.User.GetDictDataByType:input_type -> user.GetDictDataByTypeRequest
+	40, // 40: user.User.CheckApiPermission:input_type -> user.CheckApiPermissionRequest
+	42, // 41: user.User.RecordOperLog:input_type -> user.RecordOperLogRequest
+	43, // 42: user.User.RecordLoginLog:input_type -> user.RecordLoginLogRequest
+	45, // 43: user.User.ListSysOperLogs:input_type -> user.ListSysOperLogsRequest
+	48, // 44: user.User.ListSysLoginLogs:input_type -> user.ListSysLoginLogsRequest
+	51, // 45: user.User.ListSysPosts:input_type -> user.ListSysPostRequest
+	2,  // 46: user.User.GetSysPost:input_type -> user.IdRequest
+	53, // 47: user.User.CreateSysPost:input_type -> user.CreateSysPostRequest
+	54, // 48: user.User.UpdateSysPost:input_type -> user.UpdateSysPostRequest
+	2,  // 49: user.User.DeleteSysPost:input_type -> user.IdRequest
+	56, // 50: user.User.ListSysNotices:input_type -> user.ListSysNoticeRequest
+	2,  // 51: user.User.GetSysNotice:input_type -> user.IdRequest
+	58, // 52: user.User.CreateSysNotice:input_type -> user.CreateSysNoticeRequest
+	59, // 53: user.User.UpdateSysNotice:input_type -> user.UpdateSysNoticeRequest
+	2,  // 54: user.User.DeleteSysNotice:input_type -> user.IdRequest
+	61, // 55: user.User.GetMyNoticeFeed:input_type -> user.GetMyNoticeFeedRequest
+	63, // 56: user.User.MarkNoticeRead:input_type -> user.MarkNoticeReadRequest
+	64, // 57: user.User.MarkAllNoticesRead:input_type -> user.MarkAllNoticesReadRequest
+	3,  // 58: user.User.GetUserInfo:output_type -> user.UserInfoResponse
+	5,  // 59: user.User.Register:output_type -> user.RegisterResponse
+	7,  // 60: user.User.Login:output_type -> user.LoginResponse
+	9,  // 61: user.User.AdminLogin:output_type -> user.AdminLoginResponse
+	11, // 62: user.User.SyncOrCreateCasdoorUser:output_type -> user.SyncCasdoorUserResponse
+	12, // 63: user.User.GetAdminProfile:output_type -> user.AdminProfileResponse
+	16, // 64: user.User.ListSysUsers:output_type -> user.ListSysUsersResponse
+	2,  // 65: user.User.CreateSysUser:output_type -> user.IdRequest
+	1,  // 66: user.User.UpdateSysUser:output_type -> user.EmptyResponse
+	1,  // 67: user.User.DeleteSysUser:output_type -> user.EmptyResponse
+	21, // 68: user.User.ListSysRoles:output_type -> user.ListSysRolesResponse
+	2,  // 69: user.User.CreateSysRole:output_type -> user.IdRequest
+	1,  // 70: user.User.UpdateSysRole:output_type -> user.EmptyResponse
+	1,  // 71: user.User.DeleteSysRole:output_type -> user.EmptyResponse
+	1,  // 72: user.User.AssignRolePermissions:output_type -> user.EmptyResponse
+	25, // 73: user.User.GetSysMenuTree:output_type -> user.GetSysMenuTreeResponse
+	27, // 74: user.User.ListSysApis:output_type -> user.ListSysApisResponse
+	30, // 75: user.User.ListSysDictTypes:output_type -> user.ListSysDictTypesResponse
+	2,  // 76: user.User.CreateSysDictType:output_type -> user.IdRequest
+	1,  // 77: user.User.UpdateSysDictType:output_type -> user.EmptyResponse
+	1,  // 78: user.User.DeleteSysDictType:output_type -> user.EmptyResponse
+	35, // 79: user.User.ListSysDictData:output_type -> user.ListSysDictDataResponse
+	2,  // 80: user.User.CreateSysDictData:output_type -> user.IdRequest
+	1,  // 81: user.User.UpdateSysDictData:output_type -> user.EmptyResponse
+	1,  // 82: user.User.DeleteSysDictData:output_type -> user.EmptyResponse
+	39, // 83: user.User.GetDictDataByType:output_type -> user.GetDictDataByTypeResponse
+	41, // 84: user.User.CheckApiPermission:output_type -> user.CheckApiPermissionResponse
+	1,  // 85: user.User.RecordOperLog:output_type -> user.EmptyResponse
+	1,  // 86: user.User.RecordLoginLog:output_type -> user.EmptyResponse
+	46, // 87: user.User.ListSysOperLogs:output_type -> user.ListSysOperLogsResponse
+	49, // 88: user.User.ListSysLoginLogs:output_type -> user.ListSysLoginLogsResponse
+	52, // 89: user.User.ListSysPosts:output_type -> user.ListSysPostResponse
+	50, // 90: user.User.GetSysPost:output_type -> user.SysPostItem
+	2,  // 91: user.User.CreateSysPost:output_type -> user.IdRequest
+	1,  // 92: user.User.UpdateSysPost:output_type -> user.EmptyResponse
+	1,  // 93: user.User.DeleteSysPost:output_type -> user.EmptyResponse
+	57, // 94: user.User.ListSysNotices:output_type -> user.ListSysNoticeResponse
+	55, // 95: user.User.GetSysNotice:output_type -> user.SysNoticeItem
+	2,  // 96: user.User.CreateSysNotice:output_type -> user.IdRequest
+	1,  // 97: user.User.UpdateSysNotice:output_type -> user.EmptyResponse
+	1,  // 98: user.User.DeleteSysNotice:output_type -> user.EmptyResponse
+	62, // 99: user.User.GetMyNoticeFeed:output_type -> user.GetMyNoticeFeedResponse
+	1,  // 100: user.User.MarkNoticeRead:output_type -> user.EmptyResponse
+	1,  // 101: user.User.MarkAllNoticesRead:output_type -> user.EmptyResponse
+	58, // [58:102] is the sub-list for method output_type
+	14, // [14:58] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_user_proto_init() }
@@ -4551,7 +5373,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   55,
+			NumMessages:   65,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

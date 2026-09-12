@@ -60,6 +60,15 @@ type CreateSysDictTypeReq struct {
 	Remark   string `json:"remark,optional"`
 }
 
+type CreateSysNoticeReq struct {
+	NoticeTitle   string `json:"noticeTitle"`     // 公告标题
+	NoticeType    int64  `json:"noticeType"`      // 公告类型（1通知 2消息 3待办）
+	NoticeContent string `json:"noticeContent"`   // 公告内容
+	Status        int64  `json:"status"`          // 公告状态（1正常 0关闭）
+	CreateBy      string `json:"createBy"`        // 创建者
+	Remark        string `json:"remark,optional"` // 备注
+}
+
 type CreateSysPostReq struct {
 	PostCode string `json:"postCode"`        // 岗位编码
 	PostName string `json:"postName"`        // 岗位名称
@@ -102,6 +111,15 @@ type GetDictDataByTypeReq struct {
 
 type GetDictDataByTypeResp struct {
 	List []*SysDictDataItem `json:"list"`
+}
+
+type GetMyNoticeFeedReq struct {
+	Limit int64 `form:"limit,optional,default=50"`
+}
+
+type GetMyNoticeFeedResp struct {
+	TotalUnread int64             `json:"totalUnread"`
+	List        []*NoticeFeedItem `json:"list"`
 }
 
 type GetSysMenuTreeResp struct {
@@ -147,6 +165,17 @@ type ListSysLoginLogsReq struct {
 type ListSysLoginLogsResp struct {
 	Total int64              `json:"total"`
 	List  []*SysLoginLogItem `json:"list"`
+}
+
+type ListSysNoticeReq struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=10"`
+	Keyword  string `form:"keyword,optional"`
+}
+
+type ListSysNoticeResp struct {
+	Total int64            `json:"total"`
+	List  []*SysNoticeItem `json:"list"`
 }
 
 type ListSysOperLogsReq struct {
@@ -207,6 +236,27 @@ type LoginResp struct {
 	RefreshAfter int64  `json:"refreshAfter"`
 	UserId       int64  `json:"userId"`
 	Username     string `json:"username"`
+}
+
+type MarkAllNoticesReadReq struct {
+	NoticeType int64 `json:"noticeType,optional"`
+}
+
+type MarkNoticeReadReq struct {
+	NoticeId int64 `json:"noticeId"`
+}
+
+type NoticeFeedItem struct {
+	Id            int64  `json:"id"`
+	NoticeTitle   string `json:"noticeTitle"`
+	NoticeType    int64  `json:"noticeType"`
+	NoticeContent string `json:"noticeContent"`
+	Status        int64  `json:"status"`
+	CreateBy      string `json:"createBy"`
+	Remark        string `json:"remark"`
+	CreateTime    string `json:"createTime"`
+	UpdateTime    string `json:"updateTime"`
+	IsRead        bool   `json:"isRead"`
 }
 
 type OrderDetailReq struct {
@@ -300,6 +350,18 @@ type SysMenuItem struct {
 	Children       []*SysMenuItem `json:"children,omitempty"`
 }
 
+type SysNoticeItem struct {
+	Id            int64  `json:"id"`            // 公告ID
+	NoticeTitle   string `json:"noticeTitle"`   // 公告标题
+	NoticeType    int64  `json:"noticeType"`    // 公告类型（1通知 2消息 3待办）
+	NoticeContent string `json:"noticeContent"` // 公告内容
+	Status        int64  `json:"status"`        // 公告状态（1正常 0关闭）
+	CreateBy      string `json:"createBy"`      // 创建者
+	Remark        string `json:"remark"`        // 备注
+	CreateTime    string `json:"createTime"`    // 创建时间
+	UpdateTime    string `json:"updateTime"`    // 更新时间
+}
+
 type SysOperLogItem struct {
 	Id         int64  `json:"id"`
 	Title      string `json:"title"`
@@ -369,6 +431,16 @@ type UpdateSysDictTypeReq struct {
 	DictType string `json:"dictType"`
 	Status   int32  `json:"status"`
 	Remark   string `json:"remark,optional"`
+}
+
+type UpdateSysNoticeReq struct {
+	Id            int64  `json:"id"`            // 公告ID
+	NoticeTitle   string `json:"noticeTitle"`   // 公告标题
+	NoticeType    int64  `json:"noticeType"`    // 公告类型（1通知 2消息 3待办）
+	NoticeContent string `json:"noticeContent"` // 公告内容
+	Status        int64  `json:"status"`        // 公告状态（1正常 0关闭）
+	CreateBy      string `json:"createBy"`      // 创建者
+	Remark        string `json:"remark"`        // 备注
 }
 
 type UpdateSysPostReq struct {

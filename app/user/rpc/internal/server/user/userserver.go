@@ -211,3 +211,45 @@ func (s *UserServer) DeleteSysPost(ctx context.Context, in *pb.IdRequest) (*pb.E
 	l := userlogic.NewDeleteSysPostLogic(ctx, s.svcCtx)
 	return l.DeleteSysPost(in)
 }
+
+// 通知公告表
+func (s *UserServer) ListSysNotices(ctx context.Context, in *pb.ListSysNoticeRequest) (*pb.ListSysNoticeResponse, error) {
+	l := userlogic.NewListSysNoticesLogic(ctx, s.svcCtx)
+	return l.ListSysNotices(in)
+}
+
+func (s *UserServer) GetSysNotice(ctx context.Context, in *pb.IdRequest) (*pb.SysNoticeItem, error) {
+	l := userlogic.NewGetSysNoticeLogic(ctx, s.svcCtx)
+	return l.GetSysNotice(in)
+}
+
+func (s *UserServer) CreateSysNotice(ctx context.Context, in *pb.CreateSysNoticeRequest) (*pb.IdRequest, error) {
+	l := userlogic.NewCreateSysNoticeLogic(ctx, s.svcCtx)
+	return l.CreateSysNotice(in)
+}
+
+func (s *UserServer) UpdateSysNotice(ctx context.Context, in *pb.UpdateSysNoticeRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdateSysNoticeLogic(ctx, s.svcCtx)
+	return l.UpdateSysNotice(in)
+}
+
+func (s *UserServer) DeleteSysNotice(ctx context.Context, in *pb.IdRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewDeleteSysNoticeLogic(ctx, s.svcCtx)
+	return l.DeleteSysNotice(in)
+}
+
+// 员工通知中心
+func (s *UserServer) GetMyNoticeFeed(ctx context.Context, in *pb.GetMyNoticeFeedRequest) (*pb.GetMyNoticeFeedResponse, error) {
+	l := userlogic.NewGetMyNoticeFeedLogic(ctx, s.svcCtx)
+	return l.GetMyNoticeFeed(in)
+}
+
+func (s *UserServer) MarkNoticeRead(ctx context.Context, in *pb.MarkNoticeReadRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewMarkNoticeReadLogic(ctx, s.svcCtx)
+	return l.MarkNoticeRead(in)
+}
+
+func (s *UserServer) MarkAllNoticesRead(ctx context.Context, in *pb.MarkAllNoticesReadRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewMarkAllNoticesReadLogic(ctx, s.svcCtx)
+	return l.MarkAllNoticesRead(in)
+}

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Badge, Popover, Tabs, Avatar, Tag, Button, Empty, Tooltip, Space, Typography } from "antd";
+import React, { useState, useEffect, useCallback } from "react";
+import { Badge, Popover, Tabs, Avatar, Tag, Button, Empty, Tooltip, Space, Typography, App } from "antd";
 import {
   BellOutlined,
   NotificationOutlined,
@@ -9,6 +9,7 @@ import {
   ClearOutlined,
 } from "@ant-design/icons";
 import { useIntl } from "../../contexts/LocaleContext";
+import { getMyNoticeFeed, markNoticeRead, markAllNoticesRead } from "@zero/api";
 
 const { Text } = Typography;
 
@@ -22,6 +23,8 @@ export interface NoticeItem {
   tag?: string;
   tagColor?: string;
   extra?: string;
+  rawContent?: string;
+  rawType?: number;
 }
 
 const initialNotices: NoticeItem[] = [
@@ -91,8 +94,53 @@ const initialNotices: NoticeItem[] = [
 
 export const NoticeIcon: React.FC = () => {
   const { formatMessage } = useIntl();
+  const { modal } = App.useApp();
   const [notices, setNotices] = useState<NoticeItem[]>(initialNotices);
   const [open, setOpen] = useState(false);
+
+  const fetchFeed = useCallback(async () => {
+    try {
+      const res = await getMyNoticeFeed({ limit: 50 });
+      if (res && res.list && res.list.length > 0) {
+        const mapped: NoticeItem[] = res.list.map((item) => {
+          let category: "notification" | "message" | "task" = "notification";
+          let tag = "通知";
+          let tagColor = "blue";
+          if (item.noticeType === 2) {
+            category = "message";
+            tag = "消息";
+            tagColor = "green";
+          } else if (item.noticeType === 3) {
+            category = "task";
+            tag = "待办";
+            tagColor = "orange";
+          }
+          return {
+            id: String(item.id),
+            title: item.noticeTitle,
+            description:
+              item.noticeContent.length > 60
+                ? item.noticeContent.slice(0, 60) + "..."
+                : item.noticeContent,
+            datetime: item.createTime || "",
+            read: item.isRead,
+            category,
+            tag,
+            tagColor,
+            rawContent: item.noticeContent,
+            rawType: item.noticeType,
+          };
+        });
+        setNotices(mapped);
+      }
+    } catch {
+      // 保持本地状态/兜底数据
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchFeed();
+  }, [fetchFeed]);
 
   const unreadCount = notices.filter((n) => !n.read).length;
 
@@ -100,10 +148,47 @@ export const NoticeIcon: React.FC = () => {
     setNotices((prev) => prev.map((item) => (item.id === id ? { ...item, read: true } : item)));
   };
 
-  const markCategoryAsRead = (category: "notification" | "message" | "task") => {
+  const onItemClick = async (item: NoticeItem) => {
+    if (!item.read) {
+      markAsRead(item.id);
+      const numId = Number(item.id);
+      if (numId) {
+        try {
+          await markNoticeRead({ noticeId: numId });
+        } catch {
+          // ignore
+        }
+      }
+    }
+    modal.info({
+      title: item.title,
+      content: (
+        <div style={{ marginTop: 12 }}>
+          <Space style={{ marginBottom: 8 }}>
+            <Tag color={item.tagColor}>{item.tag}</Tag>
+            <span style={{ fontSize: 12, color: "#999" }}>{item.datetime}</span>
+          </Space>
+          <div style={{ fontSize: 13, lineHeight: 1.6, color: "#333", whiteSpace: "pre-wrap" }}>
+            {item.rawContent || item.description}
+          </div>
+        </div>
+      ),
+      okText: "知道了",
+    });
+  };
+
+  const markCategoryAsRead = async (category: "notification" | "message" | "task") => {
     setNotices((prev) =>
       prev.map((item) => (item.category === category ? { ...item, read: true } : item))
     );
+    let typeNum = 1;
+    if (category === "message") typeNum = 2;
+    if (category === "task") typeNum = 3;
+    try {
+      await markAllNoticesRead({ noticeType: typeNum });
+    } catch {
+      // ignore
+    }
   };
 
   const clearCategory = (category: "notification" | "message" | "task") => {
@@ -128,7 +213,7 @@ export const NoticeIcon: React.FC = () => {
           {list.map((item) => (
             <div
               key={item.id}
-              onClick={() => markAsRead(item.id)}
+              onClick={() => onItemClick(item)}
               style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -159,7 +244,7 @@ export const NoticeIcon: React.FC = () => {
                 )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <Space orientation="horizontal" size={6} wrap style={{ marginBottom: 2 }}>
+                <Space size={6} wrap style={{ marginBottom: 2 }}>
                   <Text strong={!item.read} style={{ fontSize: 13 }}>
                     {item.title}
                   </Text>
@@ -243,7 +328,12 @@ export const NoticeIcon: React.FC = () => {
       content={content}
       trigger="click"
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(visible) => {
+        setOpen(visible);
+        if (visible) {
+          fetchFeed();
+        }
+      }}
       placement="bottomRight"
       arrow={false}
       styles={{
