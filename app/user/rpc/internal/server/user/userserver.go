@@ -55,6 +55,16 @@ func (s *UserServer) GetAdminProfile(ctx context.Context, in *pb.IdRequest) (*pb
 	return l.GetAdminProfile(in)
 }
 
+func (s *UserServer) UpdatePersonalProfile(ctx context.Context, in *pb.UpdatePersonalProfileRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdatePersonalProfileLogic(ctx, s.svcCtx)
+	return l.UpdatePersonalProfile(in)
+}
+
+func (s *UserServer) ChangePersonalPassword(ctx context.Context, in *pb.ChangePersonalPasswordRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewChangePersonalPasswordLogic(ctx, s.svcCtx)
+	return l.ChangePersonalPassword(in)
+}
+
 // 员工管理
 func (s *UserServer) ListSysUsers(ctx context.Context, in *pb.ListSysUsersRequest) (*pb.ListSysUsersResponse, error) {
 	l := userlogic.NewListSysUsersLogic(ctx, s.svcCtx)

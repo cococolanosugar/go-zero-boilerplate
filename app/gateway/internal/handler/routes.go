@@ -262,10 +262,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: system.GetSysMenuTreeHandler(serverCtx),
 			},
 			{
+				// 修改当前登录员工密码
+				Method:  http.MethodPut,
+				Path:    "/personal/password",
+				Handler: system.ChangePersonalPasswordHandler(serverCtx),
+			},
+			{
 				// 获取当前登录员工画像与权限
 				Method:  http.MethodGet,
 				Path:    "/personal/profile",
 				Handler: system.GetAdminProfileHandler(serverCtx),
+			},
+			{
+				// 修改当前登录员工个人资料
+				Method:  http.MethodPut,
+				Path:    "/personal/profile",
+				Handler: system.UpdatePersonalProfileHandler(serverCtx),
 			},
 			{
 				// 获取角色列表

@@ -40,6 +40,11 @@ export interface CasdoorLoginReq {
 	state?: string
 }
 
+export interface ChangePersonalPasswordReq {
+	oldPassword: string
+	newPassword: string
+}
+
 export interface CreateSysDeptReq {
 	parentId: number
 	deptName: string
@@ -477,6 +482,13 @@ export interface SysUserItem {
 	roleNames: Array<string>
 	roleIds: Array<number>
 	createTime: string
+}
+
+export interface UpdatePersonalProfileReq {
+	realName: string
+	mobile?: string
+	email?: string
+	avatar?: string
 }
 
 export interface UpdateSysDeptReq {

@@ -264,10 +264,26 @@ export function getSysMenuTree() {
 }
 
 /**
+ * @description "修改当前登录员工密码"
+ * @param req
+ */
+export function changePersonalPassword(req: components.ChangePersonalPasswordReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/system/personal/password`, req)
+}
+
+/**
  * @description "获取当前登录员工画像与权限"
  */
 export function getAdminProfile() {
 	return webapi.get<components.AdminProfileResp>(`/api/v1/system/personal/profile`)
+}
+
+/**
+ * @description "修改当前登录员工个人资料"
+ * @param req
+ */
+export function updatePersonalProfile(req: components.UpdatePersonalProfileReq) {
+	return webapi.put<components.SysEmptyResp>(`/api/v1/system/personal/profile`, req)
 }
 
 /**

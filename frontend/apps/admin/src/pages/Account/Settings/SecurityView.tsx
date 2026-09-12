@@ -7,6 +7,7 @@ import {
   SafetyCertificateOutlined,
   DesktopOutlined,
 } from "@ant-design/icons";
+import { changePersonalPassword } from "@zero/api";
 import { useInitialState } from "../../../contexts/InitialStateContext";
 
 const { Text } = Typography;
@@ -28,14 +29,16 @@ export const SecurityView: React.FC = () => {
         return;
       }
       setPasswordLoading(true);
-      // 模拟更新密码
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      message.success("登录密码修改成功，下次登录请使用新密码！");
+      await changePersonalPassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      });
+      message.success("登录密码修改成功！请妥善保管新密码。");
       setPasswordModalOpen(false);
       form.resetFields();
     } catch (err: any) {
       if (err.errorFields) return;
-      message.error(err.message || "密码修改失败");
+      message.error(err?.message || "密码修改失败，请检查原密码是否正确");
     } finally {
       setPasswordLoading(false);
     }

@@ -227,6 +227,20 @@ type (
 		MimeType     string `json:"mimeType"`
 		Hash         string `json:"hash"`
 	}
+
+	// 个人中心修改资料请求
+	UpdatePersonalProfileReq {
+		RealName string `json:"realName"`
+		Mobile   string `json:"mobile,optional"`
+		Email    string `json:"email,optional"`
+		Avatar   string `json:"avatar,optional"`
+	}
+
+	// 个人中心修改密码请求
+	ChangePersonalPasswordReq {
+		OldPassword string `json:"oldPassword"`
+		NewPassword string `json:"newPassword"`
+	}
 )
 
 @server (
@@ -252,6 +266,14 @@ service gateway {
 	@doc "获取当前登录员工画像与权限"
 	@handler GetAdminProfile
 	get /personal/profile returns (AdminProfileResp)
+
+	@doc "修改当前登录员工个人资料"
+	@handler UpdatePersonalProfile
+	put /personal/profile (UpdatePersonalProfileReq) returns (SysEmptyResp)
+
+	@doc "修改当前登录员工密码"
+	@handler ChangePersonalPassword
+	put /personal/password (ChangePersonalPasswordReq) returns (SysEmptyResp)
 
 	@doc "获取员工列表"
 	@handler ListSysUsers

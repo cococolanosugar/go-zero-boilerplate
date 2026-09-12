@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
-import { App, Row, Col, Avatar, Button, Space, Tag, Typography } from "antd";
-import { UserOutlined, UploadOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { App, Row, Col, Avatar, Button, Tag, Typography, Upload } from "antd";
+import { UserOutlined, UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 import { ProForm, ProFormText, type ProFormInstance } from "@ant-design/pro-components";
-import { systemUsersApi } from "@zero/api";
+import { updatePersonalProfile, uploadSingleFile } from "@zero/api";
 import { useInitialState } from "../../../contexts/InitialStateContext";
 import { useIntl } from "../../../contexts/LocaleContext";
 
@@ -15,6 +15,9 @@ export const BaseView: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const currentUser = initialState.currentUser;
 
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
+  const [uploading, setUploading] = useState<boolean>(false);
+
   useEffect(() => {
     if (currentUser) {
       formRef.current?.setFieldsValue({
@@ -23,31 +26,51 @@ export const BaseView: React.FC = () => {
         mobile: currentUser.mobile || "",
         email: currentUser.email || "",
       });
+      setAvatarUrl(currentUser.avatar || "/favicon.svg");
     }
   }, [currentUser]);
 
-  const handleFinish = async (values: any) => {
-    if (!currentUser?.id) {
-      message.error("未找到当前登录用户信息");
-      return;
-    }
+  const handleAvatarUpload = async (file: File) => {
     try {
-      await systemUsersApi.update({
-        id: currentUser.id,
+      setUploading(true);
+      const res = await uploadSingleFile(file);
+      const newUrl = res?.url || "";
+      if (!newUrl) {
+        throw new Error("上传失败，未获取到图片地址");
+      }
+      setAvatarUrl(newUrl);
+
+      // 同步保存头像至个人资料
+      await updatePersonalProfile({
+        realName: formRef.current?.getFieldValue("realName") || currentUser?.realName || currentUser?.username || "",
+        mobile: formRef.current?.getFieldValue("mobile") || currentUser?.mobile || "",
+        email: formRef.current?.getFieldValue("email") || currentUser?.email || "",
+        avatar: newUrl,
+      });
+
+      message.success("头像上传并更新成功");
+      await refreshInitialState();
+    } catch (err: any) {
+      message.error(err?.message || "头像上传失败，请稍后重试");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFinish = async (values: any) => {
+    try {
+      await updatePersonalProfile({
         realName: values.realName,
         mobile: values.mobile,
         email: values.email,
-        status: 1,
+        avatar: avatarUrl,
       });
       message.success(formatMessage({ id: "common.success", defaultMessage: "基本信息更新成功" }));
       await refreshInitialState();
     } catch (err: any) {
-      message.error(err.message || "更新信息失败，请稍后重试");
+      message.error(err?.message || "更新信息失败，请稍后重试");
     }
   };
-
-  const avatarUrl =
-    currentUser?.avatar || "/favicon.svg";
 
   return (
     <div style={{ padding: "12px 0" }}>
@@ -112,10 +135,28 @@ export const BaseView: React.FC = () => {
             <Title level={5} style={{ marginBottom: 16 }}>
               用户头像
             </Title>
-            <Avatar size={104} src={avatarUrl} icon={<UserOutlined />} style={{ marginBottom: 16 }} />
-            <Button icon={<UploadOutlined />} style={{ marginBottom: 20 }}>
-              更换头像
-            </Button>
+            <Avatar
+              size={104}
+              src={avatarUrl || "/favicon.svg"}
+              icon={<UserOutlined />}
+              style={{ marginBottom: 16 }}
+            />
+            <Upload
+              showUploadList={false}
+              accept="image/*"
+              beforeUpload={(file) => {
+                handleAvatarUpload(file);
+                return false;
+              }}
+            >
+              <Button
+                icon={uploading ? <LoadingOutlined /> : <UploadOutlined />}
+                loading={uploading}
+                style={{ marginBottom: 20 }}
+              >
+                {uploading ? "正在上传..." : "更换头像"}
+              </Button>
+            </Upload>
             <div style={{ width: "100%", maxWidth: 280, textAlign: "left" }}>
               <div style={{ marginBottom: 8 }}>
                 <Text type="secondary" style={{ fontSize: 13 }}>

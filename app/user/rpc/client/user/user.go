@@ -14,76 +14,78 @@ import (
 )
 
 type (
-	AdminLoginRequest          = pb.AdminLoginRequest
-	AdminLoginResponse         = pb.AdminLoginResponse
-	AdminProfileResponse       = pb.AdminProfileResponse
-	AssignRolePermRequest      = pb.AssignRolePermRequest
-	CheckApiPermissionRequest  = pb.CheckApiPermissionRequest
-	CheckApiPermissionResponse = pb.CheckApiPermissionResponse
-	CreateSysDeptRequest       = pb.CreateSysDeptRequest
-	CreateSysDictDataRequest   = pb.CreateSysDictDataRequest
-	CreateSysDictTypeRequest   = pb.CreateSysDictTypeRequest
-	CreateSysNoticeRequest     = pb.CreateSysNoticeRequest
-	CreateSysPostRequest       = pb.CreateSysPostRequest
-	CreateSysRoleRequest       = pb.CreateSysRoleRequest
-	CreateSysUserRequest       = pb.CreateSysUserRequest
-	EmptyRequest               = pb.EmptyRequest
-	EmptyResponse              = pb.EmptyResponse
-	GetDictDataByTypeRequest   = pb.GetDictDataByTypeRequest
-	GetDictDataByTypeResponse  = pb.GetDictDataByTypeResponse
-	GetMyNoticeFeedRequest     = pb.GetMyNoticeFeedRequest
-	GetMyNoticeFeedResponse    = pb.GetMyNoticeFeedResponse
-	GetSysMenuTreeResponse     = pb.GetSysMenuTreeResponse
-	IdRequest                  = pb.IdRequest
-	ListSysApisResponse        = pb.ListSysApisResponse
-	ListSysDeptsRequest        = pb.ListSysDeptsRequest
-	ListSysDeptsResponse       = pb.ListSysDeptsResponse
-	ListSysDictDataRequest     = pb.ListSysDictDataRequest
-	ListSysDictDataResponse    = pb.ListSysDictDataResponse
-	ListSysDictTypesRequest    = pb.ListSysDictTypesRequest
-	ListSysDictTypesResponse   = pb.ListSysDictTypesResponse
-	ListSysLoginLogsRequest    = pb.ListSysLoginLogsRequest
-	ListSysLoginLogsResponse   = pb.ListSysLoginLogsResponse
-	ListSysNoticeRequest       = pb.ListSysNoticeRequest
-	ListSysNoticeResponse      = pb.ListSysNoticeResponse
-	ListSysOperLogsRequest     = pb.ListSysOperLogsRequest
-	ListSysOperLogsResponse    = pb.ListSysOperLogsResponse
-	ListSysPostRequest         = pb.ListSysPostRequest
-	ListSysPostResponse        = pb.ListSysPostResponse
-	ListSysRolesRequest        = pb.ListSysRolesRequest
-	ListSysRolesResponse       = pb.ListSysRolesResponse
-	ListSysUsersRequest        = pb.ListSysUsersRequest
-	ListSysUsersResponse       = pb.ListSysUsersResponse
-	LoginRequest               = pb.LoginRequest
-	LoginResponse              = pb.LoginResponse
-	MarkAllNoticesReadRequest  = pb.MarkAllNoticesReadRequest
-	MarkNoticeReadRequest      = pb.MarkNoticeReadRequest
-	MenuItem                   = pb.MenuItem
-	NoticeFeedItem             = pb.NoticeFeedItem
-	RecordLoginLogRequest      = pb.RecordLoginLogRequest
-	RecordOperLogRequest       = pb.RecordOperLogRequest
-	RegisterRequest            = pb.RegisterRequest
-	RegisterResponse           = pb.RegisterResponse
-	SyncCasdoorUserRequest     = pb.SyncCasdoorUserRequest
-	SyncCasdoorUserResponse    = pb.SyncCasdoorUserResponse
-	SysApiItem                 = pb.SysApiItem
-	SysDeptItem                = pb.SysDeptItem
-	SysDictDataItem            = pb.SysDictDataItem
-	SysDictTypeItem            = pb.SysDictTypeItem
-	SysLoginLogItem            = pb.SysLoginLogItem
-	SysNoticeItem              = pb.SysNoticeItem
-	SysOperLogItem             = pb.SysOperLogItem
-	SysPostItem                = pb.SysPostItem
-	SysRoleItem                = pb.SysRoleItem
-	SysUserItem                = pb.SysUserItem
-	UpdateSysDeptRequest       = pb.UpdateSysDeptRequest
-	UpdateSysDictDataRequest   = pb.UpdateSysDictDataRequest
-	UpdateSysDictTypeRequest   = pb.UpdateSysDictTypeRequest
-	UpdateSysNoticeRequest     = pb.UpdateSysNoticeRequest
-	UpdateSysPostRequest       = pb.UpdateSysPostRequest
-	UpdateSysRoleRequest       = pb.UpdateSysRoleRequest
-	UpdateSysUserRequest       = pb.UpdateSysUserRequest
-	UserInfoResponse           = pb.UserInfoResponse
+	AdminLoginRequest             = pb.AdminLoginRequest
+	AdminLoginResponse            = pb.AdminLoginResponse
+	AdminProfileResponse          = pb.AdminProfileResponse
+	AssignRolePermRequest         = pb.AssignRolePermRequest
+	ChangePersonalPasswordRequest = pb.ChangePersonalPasswordRequest
+	CheckApiPermissionRequest     = pb.CheckApiPermissionRequest
+	CheckApiPermissionResponse    = pb.CheckApiPermissionResponse
+	CreateSysDeptRequest          = pb.CreateSysDeptRequest
+	CreateSysDictDataRequest      = pb.CreateSysDictDataRequest
+	CreateSysDictTypeRequest      = pb.CreateSysDictTypeRequest
+	CreateSysNoticeRequest        = pb.CreateSysNoticeRequest
+	CreateSysPostRequest          = pb.CreateSysPostRequest
+	CreateSysRoleRequest          = pb.CreateSysRoleRequest
+	CreateSysUserRequest          = pb.CreateSysUserRequest
+	EmptyRequest                  = pb.EmptyRequest
+	EmptyResponse                 = pb.EmptyResponse
+	GetDictDataByTypeRequest      = pb.GetDictDataByTypeRequest
+	GetDictDataByTypeResponse     = pb.GetDictDataByTypeResponse
+	GetMyNoticeFeedRequest        = pb.GetMyNoticeFeedRequest
+	GetMyNoticeFeedResponse       = pb.GetMyNoticeFeedResponse
+	GetSysMenuTreeResponse        = pb.GetSysMenuTreeResponse
+	IdRequest                     = pb.IdRequest
+	ListSysApisResponse           = pb.ListSysApisResponse
+	ListSysDeptsRequest           = pb.ListSysDeptsRequest
+	ListSysDeptsResponse          = pb.ListSysDeptsResponse
+	ListSysDictDataRequest        = pb.ListSysDictDataRequest
+	ListSysDictDataResponse       = pb.ListSysDictDataResponse
+	ListSysDictTypesRequest       = pb.ListSysDictTypesRequest
+	ListSysDictTypesResponse      = pb.ListSysDictTypesResponse
+	ListSysLoginLogsRequest       = pb.ListSysLoginLogsRequest
+	ListSysLoginLogsResponse      = pb.ListSysLoginLogsResponse
+	ListSysNoticeRequest          = pb.ListSysNoticeRequest
+	ListSysNoticeResponse         = pb.ListSysNoticeResponse
+	ListSysOperLogsRequest        = pb.ListSysOperLogsRequest
+	ListSysOperLogsResponse       = pb.ListSysOperLogsResponse
+	ListSysPostRequest            = pb.ListSysPostRequest
+	ListSysPostResponse           = pb.ListSysPostResponse
+	ListSysRolesRequest           = pb.ListSysRolesRequest
+	ListSysRolesResponse          = pb.ListSysRolesResponse
+	ListSysUsersRequest           = pb.ListSysUsersRequest
+	ListSysUsersResponse          = pb.ListSysUsersResponse
+	LoginRequest                  = pb.LoginRequest
+	LoginResponse                 = pb.LoginResponse
+	MarkAllNoticesReadRequest     = pb.MarkAllNoticesReadRequest
+	MarkNoticeReadRequest         = pb.MarkNoticeReadRequest
+	MenuItem                      = pb.MenuItem
+	NoticeFeedItem                = pb.NoticeFeedItem
+	RecordLoginLogRequest         = pb.RecordLoginLogRequest
+	RecordOperLogRequest          = pb.RecordOperLogRequest
+	RegisterRequest               = pb.RegisterRequest
+	RegisterResponse              = pb.RegisterResponse
+	SyncCasdoorUserRequest        = pb.SyncCasdoorUserRequest
+	SyncCasdoorUserResponse       = pb.SyncCasdoorUserResponse
+	SysApiItem                    = pb.SysApiItem
+	SysDeptItem                   = pb.SysDeptItem
+	SysDictDataItem               = pb.SysDictDataItem
+	SysDictTypeItem               = pb.SysDictTypeItem
+	SysLoginLogItem               = pb.SysLoginLogItem
+	SysNoticeItem                 = pb.SysNoticeItem
+	SysOperLogItem                = pb.SysOperLogItem
+	SysPostItem                   = pb.SysPostItem
+	SysRoleItem                   = pb.SysRoleItem
+	SysUserItem                   = pb.SysUserItem
+	UpdatePersonalProfileRequest  = pb.UpdatePersonalProfileRequest
+	UpdateSysDeptRequest          = pb.UpdateSysDeptRequest
+	UpdateSysDictDataRequest      = pb.UpdateSysDictDataRequest
+	UpdateSysDictTypeRequest      = pb.UpdateSysDictTypeRequest
+	UpdateSysNoticeRequest        = pb.UpdateSysNoticeRequest
+	UpdateSysPostRequest          = pb.UpdateSysPostRequest
+	UpdateSysRoleRequest          = pb.UpdateSysRoleRequest
+	UpdateSysUserRequest          = pb.UpdateSysUserRequest
+	UserInfoResponse              = pb.UserInfoResponse
 
 	User interface {
 		// 原有业务接口
@@ -94,6 +96,8 @@ type (
 		AdminLogin(ctx context.Context, in *AdminLoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error)
 		SyncOrCreateCasdoorUser(ctx context.Context, in *SyncCasdoorUserRequest, opts ...grpc.CallOption) (*SyncCasdoorUserResponse, error)
 		GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error)
+		UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		ChangePersonalPassword(ctx context.Context, in *ChangePersonalPasswordRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		// 员工管理
 		ListSysUsers(ctx context.Context, in *ListSysUsersRequest, opts ...grpc.CallOption) (*ListSysUsersResponse, error)
 		CreateSysUser(ctx context.Context, in *CreateSysUserRequest, opts ...grpc.CallOption) (*IdRequest, error)
@@ -190,6 +194,16 @@ func (m *defaultUser) SyncOrCreateCasdoorUser(ctx context.Context, in *SyncCasdo
 func (m *defaultUser) GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetAdminProfile(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdatePersonalProfile(ctx, in, opts...)
+}
+
+func (m *defaultUser) ChangePersonalPassword(ctx context.Context, in *ChangePersonalPasswordRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ChangePersonalPassword(ctx, in, opts...)
 }
 
 // 员工管理

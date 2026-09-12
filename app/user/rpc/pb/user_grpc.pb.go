@@ -25,6 +25,8 @@ const (
 	User_AdminLogin_FullMethodName              = "/user.User/AdminLogin"
 	User_SyncOrCreateCasdoorUser_FullMethodName = "/user.User/SyncOrCreateCasdoorUser"
 	User_GetAdminProfile_FullMethodName         = "/user.User/GetAdminProfile"
+	User_UpdatePersonalProfile_FullMethodName   = "/user.User/UpdatePersonalProfile"
+	User_ChangePersonalPassword_FullMethodName  = "/user.User/ChangePersonalPassword"
 	User_ListSysUsers_FullMethodName            = "/user.User/ListSysUsers"
 	User_CreateSysUser_FullMethodName           = "/user.User/CreateSysUser"
 	User_UpdateSysUser_FullMethodName           = "/user.User/UpdateSysUser"
@@ -82,6 +84,8 @@ type UserClient interface {
 	AdminLogin(ctx context.Context, in *AdminLoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error)
 	SyncOrCreateCasdoorUser(ctx context.Context, in *SyncCasdoorUserRequest, opts ...grpc.CallOption) (*SyncCasdoorUserResponse, error)
 	GetAdminProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AdminProfileResponse, error)
+	UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	ChangePersonalPassword(ctx context.Context, in *ChangePersonalPasswordRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	// 员工管理
 	ListSysUsers(ctx context.Context, in *ListSysUsersRequest, opts ...grpc.CallOption) (*ListSysUsersResponse, error)
 	CreateSysUser(ctx context.Context, in *CreateSysUserRequest, opts ...grpc.CallOption) (*IdRequest, error)
@@ -199,6 +203,26 @@ func (c *userClient) GetAdminProfile(ctx context.Context, in *IdRequest, opts ..
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminProfileResponse)
 	err := c.cc.Invoke(ctx, User_GetAdminProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdatePersonalProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ChangePersonalPassword(ctx context.Context, in *ChangePersonalPasswordRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_ChangePersonalPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -647,6 +671,8 @@ type UserServer interface {
 	AdminLogin(context.Context, *AdminLoginRequest) (*AdminLoginResponse, error)
 	SyncOrCreateCasdoorUser(context.Context, *SyncCasdoorUserRequest) (*SyncCasdoorUserResponse, error)
 	GetAdminProfile(context.Context, *IdRequest) (*AdminProfileResponse, error)
+	UpdatePersonalProfile(context.Context, *UpdatePersonalProfileRequest) (*EmptyResponse, error)
+	ChangePersonalPassword(context.Context, *ChangePersonalPasswordRequest) (*EmptyResponse, error)
 	// 员工管理
 	ListSysUsers(context.Context, *ListSysUsersRequest) (*ListSysUsersResponse, error)
 	CreateSysUser(context.Context, *CreateSysUserRequest) (*IdRequest, error)
@@ -727,6 +753,12 @@ func (UnimplementedUserServer) SyncOrCreateCasdoorUser(context.Context, *SyncCas
 }
 func (UnimplementedUserServer) GetAdminProfile(context.Context, *IdRequest) (*AdminProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAdminProfile not implemented")
+}
+func (UnimplementedUserServer) UpdatePersonalProfile(context.Context, *UpdatePersonalProfileRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdatePersonalProfile not implemented")
+}
+func (UnimplementedUserServer) ChangePersonalPassword(context.Context, *ChangePersonalPasswordRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ChangePersonalPassword not implemented")
 }
 func (UnimplementedUserServer) ListSysUsers(context.Context, *ListSysUsersRequest) (*ListSysUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSysUsers not implemented")
@@ -982,6 +1014,42 @@ func _User_GetAdminProfile_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).GetAdminProfile(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdatePersonalProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonalProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdatePersonalProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdatePersonalProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdatePersonalProfile(ctx, req.(*UpdatePersonalProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ChangePersonalPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangePersonalPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ChangePersonalPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ChangePersonalPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ChangePersonalPassword(ctx, req.(*ChangePersonalPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1790,6 +1858,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAdminProfile",
 			Handler:    _User_GetAdminProfile_Handler,
+		},
+		{
+			MethodName: "UpdatePersonalProfile",
+			Handler:    _User_UpdatePersonalProfile_Handler,
+		},
+		{
+			MethodName: "ChangePersonalPassword",
+			Handler:    _User_ChangePersonalPassword_Handler,
 		},
 		{
 			MethodName: "ListSysUsers",

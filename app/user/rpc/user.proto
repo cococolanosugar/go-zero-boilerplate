@@ -85,6 +85,20 @@ message AdminProfileResponse {
   repeated MenuItem menus = 10;     // 动态菜单树 (仅包含目录与页面菜单)
 }
 
+message UpdatePersonalProfileRequest {
+  int64 userId = 1;
+  string realName = 2;
+  string mobile = 3;
+  string email = 4;
+  string avatar = 5;
+}
+
+message ChangePersonalPasswordRequest {
+  int64 userId = 1;
+  string oldPassword = 2;
+  string newPassword = 3;
+}
+
 message MenuItem {
   int64 id = 1;
   int64 parentId = 2;
@@ -398,6 +412,8 @@ service User {
   rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse);
   rpc SyncOrCreateCasdoorUser(SyncCasdoorUserRequest) returns (SyncCasdoorUserResponse);
   rpc GetAdminProfile(IdRequest) returns (AdminProfileResponse);
+  rpc UpdatePersonalProfile(UpdatePersonalProfileRequest) returns (EmptyResponse);
+  rpc ChangePersonalPassword(ChangePersonalPasswordRequest) returns (EmptyResponse);
   
   // 员工管理
   rpc ListSysUsers(ListSysUsersRequest) returns (ListSysUsersResponse);

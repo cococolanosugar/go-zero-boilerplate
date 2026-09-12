@@ -42,6 +42,11 @@ type CasdoorLoginReq struct {
 	State string `json:"state,optional"`
 }
 
+type ChangePersonalPasswordReq struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
 type CreateSysDeptReq struct {
 	ParentId int64  `json:"parentId"`
 	DeptName string `json:"deptName"`
@@ -452,6 +457,13 @@ type SysUserItem struct {
 	RoleNames  []string `json:"roleNames"`
 	RoleIds    []int64  `json:"roleIds"`
 	CreateTime string   `json:"createTime"`
+}
+
+type UpdatePersonalProfileReq struct {
+	RealName string `json:"realName"`
+	Mobile   string `json:"mobile,optional"`
+	Email    string `json:"email,optional"`
+	Avatar   string `json:"avatar,optional"`
 }
 
 type UpdateSysDeptReq struct {
