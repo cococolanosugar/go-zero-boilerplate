@@ -33,6 +33,7 @@ import {
   deleteSysDept,
   type SysDeptItem,
 } from "@zero/api";
+import { Access } from "../../../components/Access";
 import { useIntl } from "../../../contexts/LocaleContext";
 
 export const DeptPage: React.FC = () => {
@@ -201,41 +202,49 @@ export const DeptPage: React.FC = () => {
       valueType: "option",
       width: 200,
       render: (_, record) => [
-        <Button
-          key="addSub"
-          type="link"
-          size="small"
-          icon={<SubnodeOutlined />}
-          onClick={() => handleAdd(record.id)}
-        >
-          新增下级
-        </Button>,
-        <Button
-          key="edit"
-          type="link"
-          size="small"
-          icon={<EditOutlined />}
-          onClick={() => handleEdit(record)}
-        >
-          编辑
-        </Button>,
-        <Popconfirm
-          key="del"
-          title="确认删除该部门？"
-          description="如果该部门下存在子部门或员工，系统将拒绝删除。"
-          onConfirm={() => handleDelete(record.id)}
-          okText="确定"
-          cancelText="取消"
-        >
+        <Access key="addSub" permission="system:dept:add">
           <Button
             type="link"
-            danger
             size="small"
-            icon={<DeleteOutlined />}
+            icon={<SubnodeOutlined />}
+            onClick={() => handleAdd(record.id)}
           >
-            删除
+            新增下级
           </Button>
-        </Popconfirm>,
+        </Access>,
+        <Access key="edit" permission="system:dept:edit">
+          <Button
+            type="link"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          >
+            编辑
+          </Button>
+        </Access>,
+        <Access
+          key="del"
+          permission="system:dept:delete"
+          fallbackMode="disabled"
+          fallbackTooltip="暂无删除部门权限"
+        >
+          <Popconfirm
+            title="确认删除该部门？"
+            description="如果该部门下存在子部门或员工，系统将拒绝删除。"
+            onConfirm={() => handleDelete(record.id)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button
+              type="link"
+              danger
+              size="small"
+              icon={<DeleteOutlined />}
+            >
+              删除
+            </Button>
+          </Popconfirm>
+        </Access>,
       ],
     },
   ];
@@ -266,14 +275,15 @@ export const DeptPage: React.FC = () => {
           >
             {expandedKeys.length > 0 ? "全部折叠" : "全部展开"}
           </Button>,
-          <Button
-            key="addRoot"
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => handleAdd(0)}
-          >
-            新建根部门
-          </Button>,
+          <Access key="addRoot" permission="system:dept:add">
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => handleAdd(0)}
+            >
+              新建根部门
+            </Button>
+          </Access>,
         ]}
         request={async (params) => {
           try {
