@@ -49,6 +49,7 @@ export const routes: AppRouteItem[] = [
         name: "menu.form.stepform",
         locale: "menu.form.stepform",
         icon: "FormOutlined",
+        hideInMenu: true,
         component: lazy(() => import("../pages/Form/StepForm")),
       },
       {
@@ -56,6 +57,7 @@ export const routes: AppRouteItem[] = [
         name: "menu.profile.advanced",
         locale: "menu.profile.advanced",
         icon: "ProfileOutlined",
+        hideInMenu: true,
         component: lazy(() => import("../pages/Profile/Advanced")),
       },
       {

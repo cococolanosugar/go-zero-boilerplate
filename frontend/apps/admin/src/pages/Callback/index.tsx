@@ -3,12 +3,16 @@ import { App as AntdApp, Result, Button, Spin } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { casdoorLogin, setToken } from "@zero/api";
 import { parseCasdoorCallback } from "@zero/shared";
+import { useInitialState } from "../../contexts/InitialStateContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const CallbackPage: React.FC = () => {
   const { message } = AntdApp.useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
+  const { refreshInitialState } = useInitialState();
+  const { refreshProfile } = useAuth();
 
   useEffect(() => {
     const { code, state } = parseCasdoorCallback(location.search);
@@ -23,6 +27,7 @@ export const CallbackPage: React.FC = () => {
         const res = await casdoorLogin({ code, state: state || undefined });
         if (!isMounted) return;
         setToken(res.accessToken);
+        await Promise.allSettled([refreshInitialState(), refreshProfile()]);
         message.success(`SSO 登录成功，欢迎回来：${res.realName || res.username}！`);
         navigate("/dashboard", { replace: true });
       } catch (err: any) {

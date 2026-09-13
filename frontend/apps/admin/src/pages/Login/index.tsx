@@ -5,12 +5,16 @@ import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from "@ant-desi
 import { useNavigate, useLocation } from "react-router-dom";
 import { adminLogin, setToken } from "@zero/api";
 import { APP_NAME, buildCasdoorAuthUrl } from "@zero/shared";
+import { useInitialState } from "../../contexts/InitialStateContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const LoginPage: React.FC = () => {
   const { message } = AntdApp.useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
+  const { refreshInitialState } = useInitialState();
+  const { refreshProfile } = useAuth();
 
   const handleSubmit = async (values: { account: string; password: string }) => {
     setLoading(true);
@@ -20,6 +24,7 @@ export const LoginPage: React.FC = () => {
         password: values.password,
       });
       setToken(res.accessToken);
+      await Promise.allSettled([refreshInitialState(), refreshProfile()]);
       message.success(`欢迎回来，${res.realName || res.username || "管理员"}！`);
       
       const searchParams = new URLSearchParams(location.search);
