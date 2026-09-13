@@ -537,6 +537,13 @@ export function getUserInfo() {
 }
 
 /**
+ * @description "获取统一用户个人画像（双表融合聚合，支持员工与客户）"
+ */
+export function getUserProfile() {
+	return webapi.get<components.UserProfileResp>(`/api/v1/user/profile`)
+}
+
+/**
  * @description "获取当前员工个人通知流与未读数"
  * @param params
  */

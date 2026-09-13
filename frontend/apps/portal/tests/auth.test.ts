@@ -26,30 +26,20 @@ describe("Portal Authentication & Session Handling", () => {
     expect(getToken()).toBeNull();
   });
 
-  it("should correctly store and retrieve mobile user session state", () => {
-    const mobileUser = {
-      username: "13800000000",
-      realName: "张三 (业务客户)",
-      mobile: "13800000000",
-      roles: ["portal_client"],
-    };
-
+  it("should zero-fabricate local dummy profile and not store portal_mobile_user", () => {
+    // Under the new architecture, mobile login stores only token & login_type,
+    // and profile is strictly fetched from server-side getUserProfile()
     localStorage.setItem("portal_login_type", "mobile");
-    localStorage.setItem("portal_mobile_user", JSON.stringify(mobileUser));
+    setToken("mobile_jwt_token_sample");
 
-    const loginType = localStorage.getItem("portal_login_type");
-    const rawData = localStorage.getItem("portal_mobile_user");
-    const parsed = rawData ? JSON.parse(rawData) : null;
-
-    expect(loginType).toBe("mobile");
-    expect(parsed?.realName).toBe("张三 (业务客户)");
-    expect(parsed?.mobile).toBe("13800000000");
+    expect(localStorage.getItem("portal_mobile_user")).toBeNull();
+    expect(localStorage.getItem("portal_login_type")).toBe("mobile");
+    expect(getToken()).toBe("mobile_jwt_token_sample");
   });
 
-  it("should clean up tokens and dispatch custom event on logout", () => {
+  it("should clean up tokens and login type on logout without residual state", () => {
     setToken("sample_token");
     localStorage.setItem("portal_login_type", "mobile");
-    localStorage.setItem("portal_mobile_user", "{}");
 
     setToken(null);
     localStorage.removeItem("portal_login_type");

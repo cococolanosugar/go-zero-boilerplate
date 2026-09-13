@@ -29,6 +29,17 @@ type (
 		UserId       int64  `json:"userId"`
 		Username     string `json:"username"`
 	}
+	UserProfileResp {
+		UserId   int64    `json:"userId"`
+		Username string   `json:"username"`
+		RealName string   `json:"realName"`
+		Avatar   string   `json:"avatar"`
+		Mobile   string   `json:"mobile"`
+		Email    string   `json:"email"`
+		UserType string   `json:"userType"` // "employee" or "customer"
+		Roles    []string `json:"roles"`
+		DeptName string   `json:"deptName"`
+	}
 )
 
 @server (
@@ -54,6 +65,10 @@ service gateway {
 	@doc "获取当前登录用户信息（受保护路由，强制由 JWT Claims 解析身份，杜绝水平越权）"
 	@handler GetUserInfo
 	get /info returns (UserInfoResp)
+
+	@doc "获取统一用户个人画像（双表融合聚合，支持员工与客户）"
+	@handler GetUserProfile
+	get /profile returns (UserProfileResp)
 }
 
 

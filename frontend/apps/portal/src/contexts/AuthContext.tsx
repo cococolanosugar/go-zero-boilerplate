@@ -3,14 +3,14 @@ import {
   adminLogin,
   login,
   setToken,
-  type AdminProfileResp,
+  type UserProfileResp,
   type AdminLoginReq,
   type LoginReq,
 } from "@zero/api";
 import { useInitialState } from "./InitialStateContext";
 
 interface AuthContextType {
-  profile: AdminProfileResp | null;
+  profile: UserProfileResp | null;
   isLoggedIn: boolean;
   loading: boolean;
   permissions: string[];
@@ -44,13 +44,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const profile = initialState.currentUser || null;
   const roles = useMemo(() => profile?.roles || [], [profile]);
-  const permissions = useMemo(() => profile?.permissions || [], [profile]);
+  const permissions = useMemo(() => (profile as any)?.permissions || roles, [profile, roles]);
   const isSuperAdmin = useMemo(
-    () =>
-      roles.includes("ROLE_ADMIN") ||
-      roles.includes("admin") ||
-      profile?.id === 1,
-    [roles, profile]
+    () => roles.includes("ROLE_ADMIN") || roles.includes("admin"),
+    [roles]
   );
 
   const hasPermission = useCallback(
@@ -104,17 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(res.accessToken);
     if (typeof localStorage !== "undefined") {
       localStorage.setItem("portal_login_type", "mobile");
-      localStorage.setItem(
-        "portal_mobile_user",
-        JSON.stringify({
-          id: 0,
-          username: req.mobile,
-          realName: `业务用户 (${req.mobile.slice(0, 3)}****${req.mobile.slice(-4)})`,
-          deptName: "前台消费者客户",
-          roles: ["ROLE_USER"],
-          permissions: [],
-        })
-      );
+      localStorage.removeItem("portal_mobile_user");
     }
     await refreshInitialState();
   };

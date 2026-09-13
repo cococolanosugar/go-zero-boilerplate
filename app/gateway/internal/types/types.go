@@ -779,3 +779,15 @@ type UserInfoResp struct {
 	Mobile string `json:"mobile"`
 	Avatar string `json:"avatar"`
 }
+
+type UserProfileResp struct {
+	UserId   int64    `json:"userId"`
+	Username string   `json:"username"`
+	RealName string   `json:"realName"`
+	Avatar   string   `json:"avatar"`
+	Mobile   string   `json:"mobile"`
+	Email    string   `json:"email"`
+	UserType string   `json:"userType"` // "employee" or "customer"
+	Roles    []string `json:"roles"`
+	DeptName string   `json:"deptName"`
+}

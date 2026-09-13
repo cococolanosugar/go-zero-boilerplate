@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { Dropdown, Space, Tag } from "antd";
 import {
   UserOutlined,
@@ -6,11 +6,11 @@ import {
   ExportOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import type { AdminProfileResp } from "@zero/api";
+import type { UserProfileResp } from "@zero/api";
 import { useIntl } from "../../contexts/LocaleContext";
 
 export interface AvatarDropdownProps {
-  currentUser?: AdminProfileResp | null;
+  currentUser?: UserProfileResp | null;
   onOpenProfile: () => void;
   onLogout: () => void;
   children?: React.ReactNode;
@@ -28,8 +28,7 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
 
   const isSuperAdmin =
     (currentUser.roles || []).includes("ROLE_ADMIN") ||
-    (currentUser.roles || []).includes("admin") ||
-    currentUser.id === 1;
+    (currentUser.roles || []).includes("admin");
 
   const displayName =
     currentUser.realName ||

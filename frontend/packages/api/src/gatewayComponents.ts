@@ -823,3 +823,15 @@ export interface UserInfoResp {
 	avatar: string
 }
 
+export interface UserProfileResp {
+	userId: number
+	username: string
+	realName: string
+	avatar: string
+	mobile: string
+	email: string
+	userType: string // "employee" or "customer"
+	roles: Array<string>
+	deptName: string
+}
+

@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import type { AdminProfileResp } from "@zero/api";
+import type { UserProfileResp } from "@zero/api";
 
 export interface PortalInitialState {
-  currentUser?: AdminProfileResp | null;
+  currentUser?: UserProfileResp | null;
   isLoggedIn?: boolean;
   loading?: boolean;
 }

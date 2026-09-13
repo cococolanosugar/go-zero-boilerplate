@@ -7,19 +7,18 @@ import {
   ApiOutlined,
   DashboardOutlined,
   UserOutlined,
-  MenuOutlined,
+  CompassOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 import { useOutletContext } from "react-router-dom";
 import {
   getDashboardOverview,
-  getAdminProfile,
-  getSysMenuTree,
-  listSysApis,
+  getUserProfile,
+  getPortalNavList,
+  getUserInfo,
 } from "@zero/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
-import { Access } from "../../components";
 
 export const WorkbenchPage: React.FC = () => {
   const { onOpenLogin } = useOutletContext<{ onOpenLogin: () => void }>();
@@ -52,7 +51,7 @@ export const WorkbenchPage: React.FC = () => {
         error: true,
         code: err.code || 500,
         message: err.message || "请求失败",
-        tip: !isLoggedIn ? "此接口需要登录态，请先登录系统员工账号" : undefined,
+        tip: !isLoggedIn ? "此接口需要登录态，请先登录账号" : undefined,
       });
       message.error(`接口调用失败: ${err.message || "未知错误"}`);
     } finally {
@@ -92,7 +91,7 @@ export const WorkbenchPage: React.FC = () => {
           <Alert
             title={formatMessage({
               id: "workbench.alert.unlogin",
-              defaultMessage: "当前未登录企业员工账号",
+              defaultMessage: "当前处于未登录访客模式",
             })}
             description={
               <Space>
@@ -100,13 +99,13 @@ export const WorkbenchPage: React.FC = () => {
                   {formatMessage({
                     id: "workbench.alert.unlogin.desc",
                     defaultMessage:
-                      "部分受保护的系统画像与权限接口需要有效凭证，您可以先登录测试账号 (默认: admin / 123456)。",
+                      "大盘数据与网址导航等公开接口可直接调试；统一用户画像接口需要有效登录凭证。",
                   })}
                 </span>
                 <Button type="primary" size="small" onClick={onOpenLogin}>
                   {formatMessage({
                     id: "workbench.alert.unlogin.btn",
-                    defaultMessage: "立即登录员工账号",
+                    defaultMessage: "立即登录账号",
                   })}
                 </Button>
               </Space>
@@ -119,8 +118,8 @@ export const WorkbenchPage: React.FC = () => {
 
         {isLoggedIn && profile && (
           <Alert
-            title={`已作为系统员工登录: ${profile.realName || profile.username}`}
-            description={`所属部门: ${profile.deptName || "总部默认部门"} | 拥有角色: ${(profile.roles || []).join(", ") || "普通员工"}`}
+            title={`已登录画像: ${profile.realName || profile.username}`}
+            description={`主体类型: ${profile.userType === "employee" ? "企业内部员工" : "外部业务客户"} | 所属部门: ${profile.deptName || "总部默认部门"} | 拥有角色: ${(profile.roles || []).join(", ") || "普通用户"}`}
             type="success"
             showIcon
             style={{ marginBottom: 24 }}
@@ -151,43 +150,39 @@ export const WorkbenchPage: React.FC = () => {
 
                 <Button
                   block
-                  type={activeApi === "员工个人画像与权限" ? "primary" : "default"}
+                  type={activeApi === "统一用户画像" ? "primary" : "default"}
                   icon={<UserOutlined />}
                   style={{ textAlign: "left" }}
                   onClick={() =>
-                    testApi("员工个人画像与权限", () => getAdminProfile())
+                    testApi("统一用户画像", () => getUserProfile())
                   }
                 >
-                  2. 员工个人画像与权限
+                  2. 统一用户个人画像 (Dual-Identity)
                 </Button>
 
-                <Access role="ROLE_ADMIN" fallbackMode="disabled" fallbackTooltip="此接口仅限超级管理员角色调用">
-                  <Button
-                    block
-                    type={activeApi === "全量菜单权限树" ? "primary" : "default"}
-                    icon={<MenuOutlined />}
-                    style={{ textAlign: "left" }}
-                    onClick={() =>
-                      testApi("全量菜单权限树", () => getSysMenuTree())
-                    }
-                  >
-                    3. 全量系统菜单与按钮树
-                  </Button>
-                </Access>
+                <Button
+                  block
+                  type={activeApi === "门户网址导航" ? "primary" : "default"}
+                  icon={<CompassOutlined />}
+                  style={{ textAlign: "left" }}
+                  onClick={() =>
+                    testApi("门户网址导航", () => getPortalNavList({}))
+                  }
+                >
+                  3. 门户前台多环境网址导航
+                </Button>
 
-                <Access role="ROLE_ADMIN" fallbackMode="disabled" fallbackTooltip="此接口仅限超级管理员角色调用">
-                  <Button
-                    block
-                    type={activeApi === "接口字典列表" ? "primary" : "default"}
-                    icon={<ApiOutlined />}
-                    style={{ textAlign: "left" }}
-                    onClick={() =>
-                      testApi("接口字典列表", () => listSysApis())
-                    }
-                  >
-                    4. 系统 API 字典列表
-                  </Button>
-                </Access>
+                <Button
+                  block
+                  type={activeApi === "客户主体信息" ? "primary" : "default"}
+                  icon={<ApiOutlined />}
+                  style={{ textAlign: "left" }}
+                  onClick={() =>
+                    testApi("客户主体信息", () => getUserInfo())
+                  }
+                >
+                  4. 业务客户主体信息 (/user/info)
+                </Button>
               </Flex>
             </ProCard>
           </Col>

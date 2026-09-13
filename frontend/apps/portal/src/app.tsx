@@ -15,9 +15,9 @@ import {
   setErrorHandler,
   setUnauthorizedHandler,
   addRequestInterceptor,
-  getAdminProfile,
+  getUserProfile,
   getToken,
-  type AdminProfileResp,
+  type UserProfileResp,
 } from "@zero/api";
 import { APP_NAME } from "@zero/shared";
 import { type LocaleKey } from "./locales";
@@ -59,7 +59,7 @@ const getIcon = (iconName?: React.ReactNode | string) => {
 
 /**
  * 1. 门户全局运行时初始状态拉取（对齐 Ant Design Pro getInitialState 规范）
- * 支持员工账号 (SysUser) 与消费者账号 (MobileUser) 双模态身份维持
+ * 服务端权威解析画像（支持内部员工与外部客户统一解析）
  */
 export async function getInitialState(): Promise<PortalInitialState> {
   const token = getToken();
@@ -71,39 +71,15 @@ export async function getInitialState(): Promise<PortalInitialState> {
     };
   }
 
-  const loginType =
-    typeof localStorage !== "undefined"
-      ? localStorage.getItem("portal_login_type")
-      : null;
-
   try {
-    if (loginType === "mobile") {
-      const cached =
-        typeof localStorage !== "undefined"
-          ? localStorage.getItem("portal_mobile_user")
-          : null;
-      const parsed = cached ? JSON.parse(cached) : null;
-      return {
-        currentUser: parsed || {
-          id: 0,
-          username: "普通业务用户",
-          realName: "普通业务用户",
-          roles: ["ROLE_USER"],
-          permissions: [],
-        },
-        isLoggedIn: true,
-        loading: false,
-      };
-    }
-
-    const res = await getAdminProfile();
+    const res = await getUserProfile();
     return {
       currentUser: res,
       isLoggedIn: true,
       loading: false,
     };
   } catch (err) {
-    console.warn("未获取到系统员工画像（可能是普通业务用户或Token失效）:", err);
+    console.warn("获取统一用户画像失败（可能Token已失效）:", err);
     return {
       currentUser: null,
       isLoggedIn: false,
@@ -167,8 +143,7 @@ export const layout = (
 
   const isSuperAdmin =
     (currentUser?.roles || []).includes("ROLE_ADMIN") ||
-    (currentUser?.roles || []).includes("admin") ||
-    currentUser?.id === 1;
+    (currentUser?.roles || []).includes("admin");
 
   const displayName =
     currentUser?.realName ||

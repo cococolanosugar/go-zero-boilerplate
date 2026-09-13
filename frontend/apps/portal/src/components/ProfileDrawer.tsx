@@ -20,7 +20,7 @@ interface ProfileDrawerProps {
 }
 
 export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
-  const { profile, logout } = useAuth();
+  const { profile, permissions, logout } = useAuth();
   const { formatMessage } = useIntl();
 
   if (!profile) return null;
@@ -146,12 +146,12 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) =
               id: "profile.permissions",
               defaultMessage: "拥有的按钮与接口权限点",
             })}{" "}
-            ({profile.permissions?.length || 0})
+            ({permissions?.length || 0})
           </span>
         </div>
-        {profile.permissions && profile.permissions.length > 0 ? (
+        {permissions && permissions.length > 0 ? (
           <Space wrap size={[6, 8]}>
-            {profile.permissions.map((p, idx) => (
+            {permissions.map((p, idx) => (
               <Tag key={idx} color="purple">
                 {p}
               </Tag>

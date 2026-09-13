@@ -509,6 +509,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/info",
 				Handler: user.GetUserInfoHandler(serverCtx),
 			},
+			{
+				// 获取统一用户个人画像（双表融合聚合，支持员工与客户）
+				Method:  http.MethodGet,
+				Path:    "/profile",
+				Handler: user.GetUserProfileHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/user"),
