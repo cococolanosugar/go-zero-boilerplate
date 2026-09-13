@@ -83,7 +83,60 @@ export const routes: AppRouteItem[] = [
         component: lazy(() => import("../pages/Users")),
       },
 
-      // 企业级系统与权限治理模块
+      // 企业级权限与组织治理模块 (IAM & Organization)
+      {
+        path: "/permission",
+        name: "menu.permission",
+        locale: "menu.permission",
+        icon: "SafetyCertificateOutlined",
+        access: "system:manage",
+        routes: [
+          {
+            path: "/permission",
+            redirect: "/permission/dept",
+          },
+          {
+            path: "/permission/dept",
+            name: "menu.permission.dept",
+            locale: "menu.permission.dept",
+            icon: "ApartmentOutlined",
+            component: lazy(() => import("../pages/System/Dept")),
+          },
+          {
+            path: "/permission/sys-post",
+            name: "menu.permission.syspost",
+            locale: "menu.permission.syspost",
+            icon: "IdcardOutlined",
+            component: lazy(() => import("../pages/SysPost")),
+          },
+          {
+            path: "/permission/users",
+            name: "menu.permission.users",
+            locale: "menu.permission.users",
+            icon: "UserOutlined",
+            access: PERMISSIONS.USER_QUERY,
+            component: lazy(() => import("../pages/System/Users")),
+          },
+          {
+            path: "/permission/roles",
+            name: "menu.permission.roles",
+            locale: "menu.permission.roles",
+            icon: "SafetyCertificateOutlined",
+            access: PERMISSIONS.ROLE_QUERY,
+            component: lazy(() => import("../pages/System/Roles")),
+          },
+          {
+            path: "/permission/menus",
+            name: "menu.permission.menus",
+            locale: "menu.permission.menus",
+            icon: "MenuOutlined",
+            access: PERMISSIONS.MENU_QUERY,
+            component: lazy(() => import("../pages/System/Menus")),
+          },
+        ],
+      },
+
+      // 企业级系统配置与治理模块 (System Configuration & Settings)
       {
         path: "/system",
         name: "menu.system",
@@ -93,46 +146,14 @@ export const routes: AppRouteItem[] = [
         routes: [
           {
             path: "/system",
-            redirect: "/system/users",
+            redirect: "/system/config",
           },
           {
-            path: "/system/dept",
-            name: "menu.system.dept",
-            locale: "menu.system.dept",
-            icon: "ApartmentOutlined",
-            component: lazy(() => import("../pages/System/Dept")),
-          },
-          {
-            path: "/system/users",
-            name: "menu.system.users",
-            locale: "menu.system.users",
-            icon: "UserOutlined",
-            access: PERMISSIONS.USER_QUERY,
-            component: lazy(() => import("../pages/System/Users")),
-          },
-          {
-            path: "/system/roles",
-            name: "menu.system.roles",
-            locale: "menu.system.roles",
-            icon: "SafetyCertificateOutlined",
-            access: PERMISSIONS.ROLE_QUERY,
-            component: lazy(() => import("../pages/System/Roles")),
-          },
-          {
-            path: "/system/menus",
-            name: "menu.system.menus",
-            locale: "menu.system.menus",
-            icon: "MenuOutlined",
-            access: PERMISSIONS.MENU_QUERY,
-            component: lazy(() => import("../pages/System/Menus")),
-          },
-          {
-            path: "/system/apis",
-            name: "menu.system.apis",
-            locale: "menu.system.apis",
-            icon: "ApiOutlined",
-            access: PERMISSIONS.API_QUERY,
-            component: lazy(() => import("../pages/System/Apis")),
+            path: "/system/config",
+            name: "menu.system.config",
+            locale: "menu.system.config",
+            icon: "SettingOutlined",
+            component: lazy(() => import("../pages/SysConfig")),
           },
           {
             path: "/system/dicts",
@@ -143,11 +164,12 @@ export const routes: AppRouteItem[] = [
             component: lazy(() => import("../pages/System/Dicts")),
           },
           {
-            path: "/system/sys-post",
-            name: "menu.system.syspost",
-            locale: "menu.system.syspost",
-            icon: "IdcardOutlined",
-            component: lazy(() => import("../pages/SysPost")),
+            path: "/system/apis",
+            name: "menu.system.apis",
+            locale: "menu.system.apis",
+            icon: "ApiOutlined",
+            access: PERMISSIONS.API_QUERY,
+            component: lazy(() => import("../pages/System/Apis")),
           },
           {
             path: "/system/sys-notice",
@@ -156,18 +178,31 @@ export const routes: AppRouteItem[] = [
             icon: "BellOutlined",
             component: lazy(() => import("../pages/SysNotice")),
           },
+          // 兼容历史访问路径，自动平滑重定向至权限管理与系统监控
           {
-            path: "/system/config",
-            name: "menu.system.config",
-            locale: "menu.system.config",
-            icon: "SettingOutlined",
-            component: lazy(() => import("../pages/SysConfig")),
+            path: "/system/dept",
+            redirect: "/permission/dept",
+          },
+          {
+            path: "/system/sys-post",
+            redirect: "/permission/sys-post",
+          },
+          {
+            path: "/system/users",
+            redirect: "/permission/users",
+          },
+          {
+            path: "/system/roles",
+            redirect: "/permission/roles",
+          },
+          {
+            path: "/system/menus",
+            redirect: "/permission/menus",
           },
           {
             path: "/system/sys-config",
             redirect: "/system/config",
           },
-          // 兼容历史访问路径，自动重定向至系统监控
           {
             path: "/system/online",
             redirect: "/monitor/online",

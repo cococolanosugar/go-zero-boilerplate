@@ -136,9 +136,9 @@ export const WorkplacePage: React.FC = () => {
 
   const quickLinks = [
     { title: "订单管理", path: "/orders", icon: <ShoppingCartOutlined /> },
-    { title: "员工治理", path: "/system/users", icon: <TeamOutlined /> },
-    { title: "角色权限", path: "/system/roles", icon: <SafetyCertificateOutlined /> },
-    { title: "接口白名单", path: "/system/apis", icon: <ApiOutlined /> },
+    { title: "员工治理", path: "/permission/users", icon: <TeamOutlined /> },
+    { title: "角色权限", path: "/permission/roles", icon: <SafetyCertificateOutlined /> },
+    { title: "接口字典", path: "/system/apis", icon: <ApiOutlined /> },
     { title: "数据字典", path: "/system/dicts", icon: <BookOutlined /> },
     { title: "审计日志", path: "/monitor/logs", icon: <HistoryOutlined /> },
   ];
