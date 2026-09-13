@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useCallback, useMemo } from "react";
+import React, { createContext, useContext, useCallback, useMemo } from "react";
 import {
   adminLogin,
   login,
@@ -92,17 +92,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginAsSysUser = async (req: AdminLoginReq) => {
     const res = await adminLogin(req);
     setToken(res.accessToken);
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("portal_login_type", "sys");
+      localStorage.removeItem("portal_mobile_user");
+    }
     await refreshInitialState();
   };
 
   const loginAsMobile = async (req: LoginReq) => {
     const res = await login(req);
     setToken(res.accessToken);
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("portal_login_type", "mobile");
+      localStorage.setItem(
+        "portal_mobile_user",
+        JSON.stringify({
+          id: 0,
+          username: req.mobile,
+          realName: `业务用户 (${req.mobile.slice(0, 3)}****${req.mobile.slice(-4)})`,
+          deptName: "前台消费者客户",
+          roles: ["ROLE_USER"],
+          permissions: [],
+        })
+      );
+    }
     await refreshInitialState();
   };
 
   const logout = () => {
     setToken(null);
+    if (typeof localStorage !== "undefined") {
+      localStorage.removeItem("portal_login_type");
+      localStorage.removeItem("portal_mobile_user");
+    }
     setInitialState({ currentUser: null, isLoggedIn: false, loading: false });
   };
 

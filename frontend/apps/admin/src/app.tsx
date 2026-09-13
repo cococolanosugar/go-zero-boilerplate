@@ -24,6 +24,9 @@ import {
   FundProjectionScreenOutlined,
   LinkOutlined,
   ScheduleOutlined,
+  FileTextOutlined,
+  CompassOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
@@ -92,6 +95,10 @@ const getIcon = (iconName?: React.ReactNode | string) => {
       return <FileTextOutlined />;
     case "ScheduleOutlined":
       return <ScheduleOutlined />;
+    case "CompassOutlined":
+      return <CompassOutlined />;
+    case "GlobalOutlined":
+      return <GlobalOutlined />;
     default:
       return <AppstoreOutlined />;
   }
@@ -108,6 +115,7 @@ const getMenuLocaleKey = (path: string) => {
     "/task": "menu.tasks",
     "/notice": "menu.notice",
     "/sys-notice": "menu.notice",
+    "/navigation": "menu.navigation",
     "/users": "menu.users",
     "/monitor": "menu.monitor",
     "/org": "menu.org",
@@ -133,6 +141,7 @@ const getMenuLocaleKey = (path: string) => {
     "/system/config": "menu.system.config",
     "/system/online": "menu.system.online",
     "/system/openapi": "menu.system.openapi",
+    "/system/navigation": "menu.system.navigation",
     "/monitor/online": "menu.monitor.online",
     "/monitor/logs": "menu.monitor.logs",
     "/monitor/openapi": "menu.monitor.openapi",

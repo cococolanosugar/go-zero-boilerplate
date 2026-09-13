@@ -171,6 +171,20 @@ export const routes: AppRouteItem[] = [
         redirect: "/notice",
       },
 
+      // 企业网址导航中心 (Portal Navigation Hub - 独立一级路由)
+      {
+        path: "/navigation",
+        name: "menu.navigation",
+        locale: "menu.navigation",
+        icon: "CompassOutlined",
+        access: PERMISSIONS.NAV_VIEW,
+        component: lazy(() => import("../pages/System/Navigation")),
+      },
+      {
+        path: "/system/navigation",
+        redirect: "/navigation",
+      },
+
       // 企业级异步任务调度系统 (Temporal Async Task Management - 独立一级路由)
       {
         path: "/tasks",

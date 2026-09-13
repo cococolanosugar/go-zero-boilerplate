@@ -24,8 +24,8 @@ const SessionSyncBridge: React.FC = () => {
   useEffect(() => {
     return addSessionSyncListener((payload) => {
       if (payload.type === "AUTH_LOGOUT") {
-        if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
-          window.location.href = `/login?from=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("portal:open-login", { detail: { reason: "logout" } }));
         }
       } else if (payload.type === "THEME_CHANGE" && payload.data) {
         setSettings(payload.data);

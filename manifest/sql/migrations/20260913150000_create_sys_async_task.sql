@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `sys_async_task` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='异步定时与工作流任务管理表';
 
 -- 插入初始示例任务
-INSERT INTO `sys_async_task` (`id`, `task_name`, `task_key`, `task_type`, `cron_expr`, `workflow_type`, `task_queue`, `payload`, `status`, `last_run_status`, `remark`)
+INSERT IGNORE INTO `sys_async_task` (`id`, `task_name`, `task_key`, `task_type`, `cron_expr`, `workflow_type`, `task_queue`, `payload`, `status`, `last_run_status`, `remark`)
 VALUES 
   (1, 'HelloWorld 异步演示任务', 'hello_world_sample', 'CRON', '*/5 * * * *', 'HelloWorldWorkflow', 'ASYNC_TASK_QUEUE', '{"name":"Antigravity Gopher"}', 1, 'IDLE', '用于演示 Temporal 异步任务与工作流开发标准模式的示例任务'),
   (2, '系统每日报表统计', 'daily_report_generate', 'CRON', '0 2 * * *', 'DailyReportWorkflow', 'ASYNC_TASK_QUEUE', '{"scope":"all"}', 1, 'IDLE', '每日凌晨统计平台各项微服务核心指标并生成汇总报表');

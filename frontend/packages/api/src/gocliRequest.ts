@@ -169,8 +169,22 @@ export function getToken(): string | null {
     return null;
 }
 
+let customUnauthorizedHandler: (() => void) | null = null;
+
+export function setUnauthorizedHandler(handler: (() => void) | null) {
+    customUnauthorizedHandler = handler;
+}
+
 export function handleUnauthorized() {
     setToken(null);
+    if (customUnauthorizedHandler) {
+        try {
+            customUnauthorizedHandler();
+            return;
+        } catch (e) {
+            console.error('Custom unauthorized handler error:', e);
+        }
+    }
     if (typeof window !== 'undefined') {
         const currentPath = window.location.pathname;
         if (!currentPath.includes('/login')) {

@@ -75,6 +75,12 @@ const (
 	User_CreateSysConfig_FullMethodName         = "/user.User/CreateSysConfig"
 	User_UpdateSysConfig_FullMethodName         = "/user.User/UpdateSysConfig"
 	User_DeleteSysConfig_FullMethodName         = "/user.User/DeleteSysConfig"
+	User_GetPortalNavList_FullMethodName        = "/user.User/GetPortalNavList"
+	User_ListSysPortalNav_FullMethodName        = "/user.User/ListSysPortalNav"
+	User_GetSysPortalNav_FullMethodName         = "/user.User/GetSysPortalNav"
+	User_CreateSysPortalNav_FullMethodName      = "/user.User/CreateSysPortalNav"
+	User_UpdateSysPortalNav_FullMethodName      = "/user.User/UpdateSysPortalNav"
+	User_DeleteSysPortalNav_FullMethodName      = "/user.User/DeleteSysPortalNav"
 )
 
 // UserClient is the client API for User service.
@@ -150,6 +156,13 @@ type UserClient interface {
 	CreateSysConfig(ctx context.Context, in *CreateSysConfigRequest, opts ...grpc.CallOption) (*IdRequest, error)
 	UpdateSysConfig(ctx context.Context, in *UpdateSysConfigRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	DeleteSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	// 门户网址导航站点管理 (sys_portal_nav)
+	GetPortalNavList(ctx context.Context, in *GetPortalNavListRequest, opts ...grpc.CallOption) (*GetPortalNavListResponse, error)
+	ListSysPortalNav(ctx context.Context, in *ListSysPortalNavRequest, opts ...grpc.CallOption) (*ListSysPortalNavResponse, error)
+	GetSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*PortalNavItem, error)
+	CreateSysPortalNav(ctx context.Context, in *CreateSysPortalNavRequest, opts ...grpc.CallOption) (*IdRequest, error)
+	UpdateSysPortalNav(ctx context.Context, in *UpdateSysPortalNavRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	DeleteSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type userClient struct {
@@ -720,6 +733,66 @@ func (c *userClient) DeleteSysConfig(ctx context.Context, in *IdRequest, opts ..
 	return out, nil
 }
 
+func (c *userClient) GetPortalNavList(ctx context.Context, in *GetPortalNavListRequest, opts ...grpc.CallOption) (*GetPortalNavListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPortalNavListResponse)
+	err := c.cc.Invoke(ctx, User_GetPortalNavList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListSysPortalNav(ctx context.Context, in *ListSysPortalNavRequest, opts ...grpc.CallOption) (*ListSysPortalNavResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSysPortalNavResponse)
+	err := c.cc.Invoke(ctx, User_ListSysPortalNav_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*PortalNavItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PortalNavItem)
+	err := c.cc.Invoke(ctx, User_GetSysPortalNav_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CreateSysPortalNav(ctx context.Context, in *CreateSysPortalNavRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IdRequest)
+	err := c.cc.Invoke(ctx, User_CreateSysPortalNav_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateSysPortalNav(ctx context.Context, in *UpdateSysPortalNavRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_UpdateSysPortalNav_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, User_DeleteSysPortalNav_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -793,6 +866,13 @@ type UserServer interface {
 	CreateSysConfig(context.Context, *CreateSysConfigRequest) (*IdRequest, error)
 	UpdateSysConfig(context.Context, *UpdateSysConfigRequest) (*EmptyResponse, error)
 	DeleteSysConfig(context.Context, *IdRequest) (*EmptyResponse, error)
+	// 门户网址导航站点管理 (sys_portal_nav)
+	GetPortalNavList(context.Context, *GetPortalNavListRequest) (*GetPortalNavListResponse, error)
+	ListSysPortalNav(context.Context, *ListSysPortalNavRequest) (*ListSysPortalNavResponse, error)
+	GetSysPortalNav(context.Context, *IdRequest) (*PortalNavItem, error)
+	CreateSysPortalNav(context.Context, *CreateSysPortalNavRequest) (*IdRequest, error)
+	UpdateSysPortalNav(context.Context, *UpdateSysPortalNavRequest) (*EmptyResponse, error)
+	DeleteSysPortalNav(context.Context, *IdRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -970,6 +1050,24 @@ func (UnimplementedUserServer) UpdateSysConfig(context.Context, *UpdateSysConfig
 }
 func (UnimplementedUserServer) DeleteSysConfig(context.Context, *IdRequest) (*EmptyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteSysConfig not implemented")
+}
+func (UnimplementedUserServer) GetPortalNavList(context.Context, *GetPortalNavListRequest) (*GetPortalNavListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPortalNavList not implemented")
+}
+func (UnimplementedUserServer) ListSysPortalNav(context.Context, *ListSysPortalNavRequest) (*ListSysPortalNavResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSysPortalNav not implemented")
+}
+func (UnimplementedUserServer) GetSysPortalNav(context.Context, *IdRequest) (*PortalNavItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSysPortalNav not implemented")
+}
+func (UnimplementedUserServer) CreateSysPortalNav(context.Context, *CreateSysPortalNavRequest) (*IdRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSysPortalNav not implemented")
+}
+func (UnimplementedUserServer) UpdateSysPortalNav(context.Context, *UpdateSysPortalNavRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSysPortalNav not implemented")
+}
+func (UnimplementedUserServer) DeleteSysPortalNav(context.Context, *IdRequest) (*EmptyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSysPortalNav not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -2000,6 +2098,114 @@ func _User_DeleteSysConfig_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_GetPortalNavList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPortalNavListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetPortalNavList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetPortalNavList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetPortalNavList(ctx, req.(*GetPortalNavListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListSysPortalNav_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSysPortalNavRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListSysPortalNav(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListSysPortalNav_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListSysPortalNav(ctx, req.(*ListSysPortalNavRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetSysPortalNav_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetSysPortalNav(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetSysPortalNav_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetSysPortalNav(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CreateSysPortalNav_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysPortalNavRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateSysPortalNav(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateSysPortalNav_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateSysPortalNav(ctx, req.(*CreateSysPortalNavRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateSysPortalNav_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSysPortalNavRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateSysPortalNav(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateSysPortalNav_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateSysPortalNav(ctx, req.(*UpdateSysPortalNavRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteSysPortalNav_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteSysPortalNav(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteSysPortalNav_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteSysPortalNav(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2230,6 +2436,30 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteSysConfig",
 			Handler:    _User_DeleteSysConfig_Handler,
+		},
+		{
+			MethodName: "GetPortalNavList",
+			Handler:    _User_GetPortalNavList_Handler,
+		},
+		{
+			MethodName: "ListSysPortalNav",
+			Handler:    _User_ListSysPortalNav_Handler,
+		},
+		{
+			MethodName: "GetSysPortalNav",
+			Handler:    _User_GetSysPortalNav_Handler,
+		},
+		{
+			MethodName: "CreateSysPortalNav",
+			Handler:    _User_CreateSysPortalNav_Handler,
+		},
+		{
+			MethodName: "UpdateSysPortalNav",
+			Handler:    _User_UpdateSysPortalNav_Handler,
+		},
+		{
+			MethodName: "DeleteSysPortalNav",
+			Handler:    _User_DeleteSysPortalNav_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

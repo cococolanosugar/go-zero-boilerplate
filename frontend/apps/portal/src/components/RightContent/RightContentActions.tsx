@@ -9,6 +9,7 @@ import {
 import { SelectLang } from "./SelectLang";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { HeaderSearch } from "../HeaderSearch";
+import { getAdminPortalUrl } from "../../utils/env";
 import { useIntl } from "../../contexts/LocaleContext";
 
 export interface RightContentActionsProps {
@@ -37,7 +38,7 @@ export const RightContentActions: React.FC<RightContentActionsProps> = ({
           type="dashed"
           size="small"
           icon={<ExportOutlined />}
-          onClick={() => window.open("http://localhost:3001", "_blank")}
+          onClick={() => window.open(getAdminPortalUrl(), "_blank")}
         >
           {formatMessage({
             id: "portal.header.admin",

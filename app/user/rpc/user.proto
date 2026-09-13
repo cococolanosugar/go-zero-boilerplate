@@ -483,6 +483,13 @@ service User {
   rpc UpdateSysConfig(UpdateSysConfigRequest) returns (EmptyResponse);
   rpc DeleteSysConfig(IdRequest) returns (EmptyResponse);
 
+  // 门户网址导航站点管理 (sys_portal_nav)
+  rpc GetPortalNavList(GetPortalNavListRequest) returns (GetPortalNavListResponse);
+  rpc ListSysPortalNav(ListSysPortalNavRequest) returns (ListSysPortalNavResponse);
+  rpc GetSysPortalNav(IdRequest) returns (PortalNavItem);
+  rpc CreateSysPortalNav(CreateSysPortalNavRequest) returns (IdRequest);
+  rpc UpdateSysPortalNav(UpdateSysPortalNavRequest) returns (EmptyResponse);
+  rpc DeleteSysPortalNav(IdRequest) returns (EmptyResponse);
 }
 
 // =============================================================
@@ -697,3 +704,75 @@ message UpdateSysConfigRequest {
   string config_type = 5; // 系统内置（Y是 N否）
   string remark = 6; // 备注说明
 }
+
+// =============================================================
+// 门户网址导航站点表 (sys_portal_nav)
+// =============================================================
+
+message PortalNavItem {
+  int64 id = 1; // 主键ID
+  string title = 2; // 站点显示名称
+  string category = 3; // 所属分类
+  string url = 4; // 目标网址(支持 {HOST} 动态占位符)
+  string icon = 5; // 图标(Antd图标名或图片URL)
+  string description = 6; // 站点描述说明
+  string tags = 7; // 站点标签(逗号分隔)
+  int64 sort = 8; // 排序权重(越大越靠前)
+  string target = 9; // 打开方式(_blank/_self)
+  int64 status = 10; // 状态(1:启用 0:停用)
+  string create_time = 11; // 创建时间
+  string update_time = 12; // 更新时间
+  string env = 13; // 所属环境/分组(common/prod/pre/test/dev)
+}
+
+message GetPortalNavListRequest {
+  int64 status = 1; // -1 表示全部，默认 1 (启用)
+  string env = 2; // 所属环境分组筛选(空表示全部)
+}
+
+message GetPortalNavListResponse {
+  repeated PortalNavItem list = 1;
+}
+
+message ListSysPortalNavRequest {
+  int64 page = 1;
+  int64 pageSize = 2;
+  string title = 3;
+  string category = 4;
+  int64 status = 5; // -1 表示全部
+  string env = 6; // 所属环境分组筛选
+}
+
+message ListSysPortalNavResponse {
+  int64 total = 1;
+  repeated PortalNavItem list = 2;
+}
+
+message CreateSysPortalNavRequest {
+  string title = 1;
+  string category = 2;
+  string url = 3;
+  string icon = 4;
+  string description = 5;
+  string tags = 6;
+  int64 sort = 7;
+  string target = 8;
+  int64 status = 9;
+  string env = 10; // 所属环境/分组
+}
+
+message UpdateSysPortalNavRequest {
+  int64 id = 1;
+  string title = 2;
+  string category = 3;
+  string url = 4;
+  string icon = 5;
+  string description = 6;
+  string tags = 7;
+  int64 sort = 8;
+  string target = 9;
+  int64 status = 10;
+  string env = 11; // 所属环境/分组
+}
+
+

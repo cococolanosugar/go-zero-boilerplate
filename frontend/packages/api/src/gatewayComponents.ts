@@ -106,6 +106,23 @@ export interface CreateSysNoticeReq {
 	remark?: string // 备注
 }
 
+export interface CreateSysPortalNavReq {
+	title: string
+	category: string
+	url: string
+	icon?: string
+	description?: string
+	tags?: string
+	sort?: number
+	target?: string
+	status?: number
+	env?: string
+}
+
+export interface CreateSysPortalNavResp {
+	id: number
+}
+
 export interface CreateSysPostReq {
 	postCode: string // 岗位编码
 	postName: string // 岗位名称
@@ -163,6 +180,15 @@ export interface DashboardSystemStats {
 	successRate: number
 }
 
+export interface DeleteSysPortalNavReq {
+}
+export interface DeleteSysPortalNavReqParams {
+}
+
+export interface DeleteSysPortalNavResp {
+	success: boolean
+}
+
 export interface DeleteTaskReq {
 }
 export interface DeleteTaskReqParams {
@@ -206,8 +232,24 @@ export interface GetMyNoticeFeedResp {
 	list: Array<NoticeFeedItem>
 }
 
+export interface GetPortalNavListReq {
+}
+export interface GetPortalNavListReqParams {
+	status?: number
+	env?: string
+}
+
+export interface GetPortalNavListResp {
+	list: Array<PortalNavDTO>
+}
+
 export interface GetSysMenuTreeResp {
 	list: Array<SysMenuItem>
+}
+
+export interface GetSysPortalNavReq {
+}
+export interface GetSysPortalNavReqParams {
 }
 
 export interface GetTaskReq {
@@ -328,6 +370,22 @@ export interface ListSysOperLogsResp {
 	list: Array<SysOperLogItem>
 }
 
+export interface ListSysPortalNavReq {
+}
+export interface ListSysPortalNavReqParams {
+	page?: number
+	pageSize?: number
+	title?: string
+	category?: string
+	env?: string
+	status?: number
+}
+
+export interface ListSysPortalNavResp {
+	total: number
+	list: Array<PortalNavDTO>
+}
+
 export interface ListSysPostReq {
 }
 export interface ListSysPostReqParams {
@@ -429,6 +487,22 @@ export interface OnlineSessionItem {
 	os: string
 	loginTime: string
 	isCurrent: boolean
+}
+
+export interface PortalNavDTO {
+	id: number
+	title: string
+	category: string
+	url: string
+	icon: string
+	description: string
+	tags: string
+	sort: number
+	target: string
+	status: number
+	env: string
+	createTime: string
+	updateTime: string
 }
 
 export interface RegisterReq {
@@ -673,6 +747,25 @@ export interface UpdateSysNoticeReq {
 	status: number // 公告状态（1正常 0关闭）
 	createBy: string // 创建者
 	remark: string // 备注
+}
+
+export interface UpdateSysPortalNavReq {
+	title: string
+	category: string
+	url: string
+	icon?: string
+	description?: string
+	tags?: string
+	sort?: number
+	target?: string
+	status?: number
+	env?: string
+}
+export interface UpdateSysPortalNavReqParams {
+}
+
+export interface UpdateSysPortalNavResp {
+	success: boolean
 }
 
 export interface UpdateSysPostReq {

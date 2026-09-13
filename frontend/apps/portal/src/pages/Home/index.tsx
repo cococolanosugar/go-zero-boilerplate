@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Space, Tag, Typography, Row, Col, Card, Flex, theme } from "antd";
+import React, { Suspense, lazy } from "react";
+import { Button, Space, Tag, Typography, Row, Col, Card, Flex, Skeleton, theme } from "antd";
 import {
   RocketOutlined,
   ThunderboltOutlined,
@@ -12,12 +12,14 @@ import {
   LineChartOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard, StatisticCard } from "@ant-design/pro-components";
-import { Area } from "@ant-design/charts";
 import { useOutletContext } from "react-router-dom";
 import { APP_NAME } from "@zero/shared";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
 import { useLayoutSettings } from "../../contexts/LayoutSettingsContext";
+import { getAdminPortalUrl } from "../../utils/env";
+
+const TrafficChart = lazy(() => import("./components/TrafficChart"));
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -27,27 +29,6 @@ export const HomePage: React.FC = () => {
   const { formatMessage } = useIntl();
   const { isDark } = useLayoutSettings();
   const { token } = theme.useToken();
-
-  const trafficData = [
-    { time: "09-01", service: "Gateway (HTTP)", qps: 1240 },
-    { time: "09-01", service: "User RPC", qps: 820 },
-    { time: "09-01", service: "Worker RPC", qps: 420 },
-    { time: "09-02", service: "Gateway (HTTP)", qps: 1480 },
-    { time: "09-02", service: "User RPC", qps: 960 },
-    { time: "09-02", service: "Worker RPC", qps: 520 },
-    { time: "09-03", service: "Gateway (HTTP)", qps: 1890 },
-    { time: "09-03", service: "User RPC", qps: 1250 },
-    { time: "09-03", service: "Worker RPC", qps: 640 },
-    { time: "09-04", service: "Gateway (HTTP)", qps: 2100 },
-    { time: "09-04", service: "User RPC", qps: 1420 },
-    { time: "09-04", service: "Worker RPC", qps: 680 },
-    { time: "09-05", service: "Gateway (HTTP)", qps: 2650 },
-    { time: "09-05", service: "User RPC", qps: 1800 },
-    { time: "09-05", service: "Worker RPC", qps: 850 },
-    { time: "09-06", service: "Gateway (HTTP)", qps: 3120 },
-    { time: "09-06", service: "User RPC", qps: 2150 },
-    { time: "09-06", service: "Worker RPC", qps: 970 },
-  ];
 
   return (
     <PageContainer
@@ -102,7 +83,7 @@ export const HomePage: React.FC = () => {
                 size="large"
                 shape="round"
                 icon={<ExportOutlined />}
-                onClick={() => window.open("http://localhost:3001", "_blank")}
+                onClick={() => window.open(getAdminPortalUrl(), "_blank")}
                 style={{ background: "#722ed1", borderColor: "#722ed1" }}
               >
                 {formatMessage({
@@ -190,7 +171,7 @@ export const HomePage: React.FC = () => {
           />
         </StatisticCard.Group>
 
-        {/* 微服务调用与流量监控图表 (Ant Design Charts) */}
+        {/* 微服务调用与流量监控图表 (Ant Design Charts 懒加载) */}
         <ProCard
           title={
             <Space>
@@ -210,25 +191,17 @@ export const HomePage: React.FC = () => {
           headerBordered
           style={{ marginBottom: 32 }}
         >
-          <Area
-            data={trafficData}
-            xField="time"
-            yField="qps"
-            colorField="service"
-            shapeField="smooth"
-            height={260}
-            theme={isDark ? "classicDark" : "classic"}
-            scale={{
-              color: {
-                range: ["#722ed1", "#1677ff", "#52c41a"],
-              },
-            }}
-            legend={{
-              color: {
-                position: "bottom" as const,
-              },
-            }}
-          />
+          <Suspense
+            fallback={
+              <Skeleton
+                active
+                paragraph={{ rows: 6 }}
+                style={{ padding: "16px 0" }}
+              />
+            }
+          >
+            <TrafficChart isDark={isDark} />
+          </Suspense>
         </ProCard>
 
         {/* 架构核心支柱 */}
@@ -306,35 +279,67 @@ export const HomePage: React.FC = () => {
         >
           <Row gutter={[16, 16]}>
             <Col xs={24} md={6}>
-              <Card size="small" title="1. 统一对外网关" variant="borderless" style={{ background: "#f9f0ff" }}>
-                <p>• 端口: <strong>HTTP 8888</strong></p>
-                <p>• JWT Auth 鉴权中间件</p>
-                <p>• pkg/result 统一输出结构</p>
-                <p>• mr.Finish 跨微服务数据聚合</p>
+              <Card
+                size="small"
+                title={formatMessage({
+                  id: "home.topology.gateway.title",
+                  defaultMessage: "1. 统一对外网关",
+                })}
+                variant="borderless"
+                style={{ background: "#f9f0ff" }}
+              >
+                <p>• {formatMessage({ id: "home.topology.gateway.port", defaultMessage: "端口: HTTP 8888" })}</p>
+                <p>• {formatMessage({ id: "home.topology.gateway.jwt", defaultMessage: "JWT Auth 鉴权中间件" })}</p>
+                <p>• {formatMessage({ id: "home.topology.gateway.result", defaultMessage: "pkg/result 统一输出结构" })}</p>
+                <p>• {formatMessage({ id: "home.topology.gateway.finish", defaultMessage: "mr.Finish 跨微服务数据聚合" })}</p>
               </Card>
             </Col>
             <Col xs={24} md={6}>
-              <Card size="small" title="2. 用户微服务" variant="borderless" style={{ background: "#e6f4ff" }}>
-                <p>• 端口: <strong>gRPC 8080</strong></p>
-                <p>• 企业员工全生命周期管理</p>
-                <p>• 角色与数据权限范围分配</p>
-                <p>• 动态菜单树与按钮权限下发</p>
+              <Card
+                size="small"
+                title={formatMessage({
+                  id: "home.topology.user.title",
+                  defaultMessage: "2. 用户微服务",
+                })}
+                variant="borderless"
+                style={{ background: "#e6f4ff" }}
+              >
+                <p>• {formatMessage({ id: "home.topology.user.port", defaultMessage: "端口: gRPC 8080" })}</p>
+                <p>• {formatMessage({ id: "home.topology.user.life", defaultMessage: "企业员工全生命周期管理" })}</p>
+                <p>• {formatMessage({ id: "home.topology.user.scope", defaultMessage: "角色与数据权限范围分配" })}</p>
+                <p>• {formatMessage({ id: "home.topology.user.menu", defaultMessage: "动态菜单树与按钮权限下发" })}</p>
               </Card>
             </Col>
             <Col xs={24} md={6}>
-              <Card size="small" title="3. 任务微服务 (Worker)" variant="borderless" style={{ background: "#f6ffed" }}>
-                <p>• 端口: <strong>gRPC 8082</strong></p>
-                <p>• Temporal 分布式任务引擎</p>
-                <p>• 异步工作流与长耗时任务编排</p>
-                <p>• 任务调度状态实时上报</p>
+              <Card
+                size="small"
+                title={formatMessage({
+                  id: "home.topology.worker.title",
+                  defaultMessage: "3. 任务微服务 (Worker)",
+                })}
+                variant="borderless"
+                style={{ background: "#f6ffed" }}
+              >
+                <p>• {formatMessage({ id: "home.topology.worker.port", defaultMessage: "端口: gRPC 8082" })}</p>
+                <p>• {formatMessage({ id: "home.topology.worker.temporal", defaultMessage: "Temporal 分布式任务引擎" })}</p>
+                <p>• {formatMessage({ id: "home.topology.worker.saga", defaultMessage: "异步工作流与长耗时任务编排" })}</p>
+                <p>• {formatMessage({ id: "home.topology.worker.report", defaultMessage: "任务调度状态实时上报" })}</p>
               </Card>
             </Col>
             <Col xs={24} md={6}>
-              <Card size="small" title="4. 基础设施与发现" variant="borderless" style={{ background: "#fff7e6" }}>
-                <p>• <strong>MySQL 8.0</strong> 事务强一致存储</p>
-                <p>• <strong>Redis</strong> Cache-Aside 防击穿</p>
-                <p>• <strong>Nacos / Etcd</strong> 服务无缝注册</p>
-                <p>• <strong>Docker Compose</strong> 一键编排</p>
+              <Card
+                size="small"
+                title={formatMessage({
+                  id: "home.topology.infra.title",
+                  defaultMessage: "4. 基础设施与发现",
+                })}
+                variant="borderless"
+                style={{ background: "#fff7e6" }}
+              >
+                <p>• {formatMessage({ id: "home.topology.infra.mysql", defaultMessage: "MySQL 8.0 事务强一致存储" })}</p>
+                <p>• {formatMessage({ id: "home.topology.infra.redis", defaultMessage: "Redis Cache-Aside 防击穿" })}</p>
+                <p>• {formatMessage({ id: "home.topology.infra.nacos", defaultMessage: "Nacos / Etcd 服务无缝注册" })}</p>
+                <p>• {formatMessage({ id: "home.topology.infra.docker", defaultMessage: "Docker Compose 一键编排" })}</p>
               </Card>
             </Col>
           </Row>

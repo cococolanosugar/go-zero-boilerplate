@@ -17,6 +17,7 @@ export default {
   // 菜單
   'menu.account.settings': '個人設置',
   'menu.dashboard': '監控大盤',
+  'menu.navigation': '網址導航',
   'menu.orders': '訂單管理',
   'menu.users': '用戶中心',
   'menu.system': '系統與權限',
@@ -28,6 +29,7 @@ export default {
   'menu.system.dicts': '數據字典',
   'menu.system.logs': '審計日誌',
   'menu.system.online': '在線用戶',
+  'menu.system.navigation': '網址導航',
 
   // 大盤
   'pages.dashboard.title': '系統監控大盤',

@@ -108,6 +108,23 @@ type CreateSysNoticeReq struct {
 	Remark        string `json:"remark,optional"` // 备注
 }
 
+type CreateSysPortalNavReq struct {
+	Title       string `json:"title"`
+	Category    string `json:"category"`
+	Url         string `json:"url"`
+	Icon        string `json:"icon,optional"`
+	Description string `json:"description,optional"`
+	Tags        string `json:"tags,optional"`
+	Sort        int64  `json:"sort,optional"`
+	Target      string `json:"target,optional,default=_blank"`
+	Status      int64  `json:"status,optional,default=1"`
+	Env         string `json:"env,optional,default=common"`
+}
+
+type CreateSysPortalNavResp struct {
+	Id int64 `json:"id"`
+}
+
 type CreateSysPostReq struct {
 	PostCode string `json:"postCode"`        // 岗位编码
 	PostName string `json:"postName"`        // 岗位名称
@@ -163,6 +180,14 @@ type DashboardSystemStats struct {
 	SuccessRate    float64 `json:"successRate"`
 }
 
+type DeleteSysPortalNavReq struct {
+	Id int64 `path:"id"`
+}
+
+type DeleteSysPortalNavResp struct {
+	Success bool `json:"success"`
+}
+
 type DeleteTaskReq struct {
 	Id int64 `path:"id"`
 }
@@ -201,8 +226,21 @@ type GetMyNoticeFeedResp struct {
 	List        []*NoticeFeedItem `json:"list"`
 }
 
+type GetPortalNavListReq struct {
+	Status int64  `form:"status,default=1,optional"`
+	Env    string `form:"env,optional"`
+}
+
+type GetPortalNavListResp struct {
+	List []PortalNavDTO `json:"list"`
+}
+
 type GetSysMenuTreeResp struct {
 	List []*SysMenuItem `json:"list"`
+}
+
+type GetSysPortalNavReq struct {
+	Id int64 `path:"id"`
 }
 
 type GetTaskReq struct {
@@ -306,6 +344,20 @@ type ListSysOperLogsResp struct {
 	List  []*SysOperLogItem `json:"list"`
 }
 
+type ListSysPortalNavReq struct {
+	Page     int64  `form:"page,default=1,optional"`
+	PageSize int64  `form:"pageSize,default=10,optional"`
+	Title    string `form:"title,optional"`
+	Category string `form:"category,optional"`
+	Env      string `form:"env,optional"`
+	Status   int64  `form:"status,default=-1,optional"`
+}
+
+type ListSysPortalNavResp struct {
+	Total int64          `json:"total"`
+	List  []PortalNavDTO `json:"list"`
+}
+
 type ListSysPostReq struct {
 	Page     int32  `form:"page,default=1"`
 	PageSize int32  `form:"pageSize,default=10"`
@@ -399,6 +451,22 @@ type OnlineSessionItem struct {
 	Os            string `json:"os"`
 	LoginTime     string `json:"loginTime"`
 	IsCurrent     bool   `json:"isCurrent"`
+}
+
+type PortalNavDTO struct {
+	Id          int64  `json:"id"`
+	Title       string `json:"title"`
+	Category    string `json:"category"`
+	Url         string `json:"url"`
+	Icon        string `json:"icon"`
+	Description string `json:"description"`
+	Tags        string `json:"tags"`
+	Sort        int64  `json:"sort"`
+	Target      string `json:"target"`
+	Status      int64  `json:"status"`
+	Env         string `json:"env"`
+	CreateTime  string `json:"createTime"`
+	UpdateTime  string `json:"updateTime"`
 }
 
 type RegisterReq struct {
@@ -640,6 +708,24 @@ type UpdateSysNoticeReq struct {
 	Status        int64  `json:"status"`        // 公告状态（1正常 0关闭）
 	CreateBy      string `json:"createBy"`      // 创建者
 	Remark        string `json:"remark"`        // 备注
+}
+
+type UpdateSysPortalNavReq struct {
+	Id          int64  `path:"id"`
+	Title       string `json:"title"`
+	Category    string `json:"category"`
+	Url         string `json:"url"`
+	Icon        string `json:"icon,optional"`
+	Description string `json:"description,optional"`
+	Tags        string `json:"tags,optional"`
+	Sort        int64  `json:"sort,optional"`
+	Target      string `json:"target,optional,default=_blank"`
+	Status      int64  `json:"status,optional,default=1"`
+	Env         string `json:"env,optional,default=common"`
+}
+
+type UpdateSysPortalNavResp struct {
+	Success bool `json:"success"`
 }
 
 type UpdateSysPostReq struct {

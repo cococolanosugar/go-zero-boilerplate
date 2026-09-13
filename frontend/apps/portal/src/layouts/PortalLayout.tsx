@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import { App as AntdApp } from "antd";
 import { ProLayout, PageLoading } from "@ant-design/pro-components";
@@ -26,6 +26,31 @@ export const PortalLayout: React.FC = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
   const { isDark, setIsDark } = useLayoutSettings();
+
+  useEffect(() => {
+    const handleOpenLogin = (e?: any) => {
+      setLoginModalOpen(true);
+      if (e?.detail?.reason === "unauthorized") {
+        message.warning(
+          formatMessage({
+            id: "portal.login.unauthorizedTip",
+            defaultMessage: "当前操作需要登录，请先登录企业员工或业务账号",
+          })
+        );
+      }
+    };
+
+    window.addEventListener("portal:open-login", handleOpenLogin);
+
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get("action") === "login") {
+      handleOpenLogin();
+    }
+
+    return () => {
+      window.removeEventListener("portal:open-login", handleOpenLogin);
+    };
+  }, [location.search, message, formatMessage]);
 
   const layoutConfig = useMemo(() => {
     return layout({

@@ -27,6 +27,7 @@ type ServiceContext struct {
 	SysPostModel model.SysPostModel
 	SysNoticeModel model.SysNoticeModel
 	SysConfigModel model.SysConfigModel
+	SysPortalNavModel model.SysPortalNavModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -51,5 +52,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		SysPostModel: model.NewSysPostModel(conn, c.Cache),
 		SysNoticeModel: model.NewSysNoticeModel(conn, c.Cache),
 		SysConfigModel: model.NewSysConfigModel(conn, c.Cache),
+		SysPortalNavModel: model.NewSysPortalNavModel(conn, c.Cache),
 	}
 }

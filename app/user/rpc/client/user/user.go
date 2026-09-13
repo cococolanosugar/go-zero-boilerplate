@@ -26,6 +26,7 @@ type (
 	CreateSysDictDataRequest      = pb.CreateSysDictDataRequest
 	CreateSysDictTypeRequest      = pb.CreateSysDictTypeRequest
 	CreateSysNoticeRequest        = pb.CreateSysNoticeRequest
+	CreateSysPortalNavRequest     = pb.CreateSysPortalNavRequest
 	CreateSysPostRequest          = pb.CreateSysPostRequest
 	CreateSysRoleRequest          = pb.CreateSysRoleRequest
 	CreateSysUserRequest          = pb.CreateSysUserRequest
@@ -35,6 +36,8 @@ type (
 	GetDictDataByTypeResponse     = pb.GetDictDataByTypeResponse
 	GetMyNoticeFeedRequest        = pb.GetMyNoticeFeedRequest
 	GetMyNoticeFeedResponse       = pb.GetMyNoticeFeedResponse
+	GetPortalNavListRequest       = pb.GetPortalNavListRequest
+	GetPortalNavListResponse      = pb.GetPortalNavListResponse
 	GetSysMenuTreeResponse        = pb.GetSysMenuTreeResponse
 	IdRequest                     = pb.IdRequest
 	ListSysApisResponse           = pb.ListSysApisResponse
@@ -52,6 +55,8 @@ type (
 	ListSysNoticeResponse         = pb.ListSysNoticeResponse
 	ListSysOperLogsRequest        = pb.ListSysOperLogsRequest
 	ListSysOperLogsResponse       = pb.ListSysOperLogsResponse
+	ListSysPortalNavRequest       = pb.ListSysPortalNavRequest
+	ListSysPortalNavResponse      = pb.ListSysPortalNavResponse
 	ListSysPostRequest            = pb.ListSysPostRequest
 	ListSysPostResponse           = pb.ListSysPostResponse
 	ListSysRolesRequest           = pb.ListSysRolesRequest
@@ -64,6 +69,7 @@ type (
 	MarkNoticeReadRequest         = pb.MarkNoticeReadRequest
 	MenuItem                      = pb.MenuItem
 	NoticeFeedItem                = pb.NoticeFeedItem
+	PortalNavItem                 = pb.PortalNavItem
 	RecordLoginLogRequest         = pb.RecordLoginLogRequest
 	RecordOperLogRequest          = pb.RecordOperLogRequest
 	RegisterRequest               = pb.RegisterRequest
@@ -87,6 +93,7 @@ type (
 	UpdateSysDictDataRequest      = pb.UpdateSysDictDataRequest
 	UpdateSysDictTypeRequest      = pb.UpdateSysDictTypeRequest
 	UpdateSysNoticeRequest        = pb.UpdateSysNoticeRequest
+	UpdateSysPortalNavRequest     = pb.UpdateSysPortalNavRequest
 	UpdateSysPostRequest          = pb.UpdateSysPostRequest
 	UpdateSysRoleRequest          = pb.UpdateSysRoleRequest
 	UpdateSysUserRequest          = pb.UpdateSysUserRequest
@@ -162,6 +169,13 @@ type (
 		CreateSysConfig(ctx context.Context, in *CreateSysConfigRequest, opts ...grpc.CallOption) (*IdRequest, error)
 		UpdateSysConfig(ctx context.Context, in *UpdateSysConfigRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 		DeleteSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		// 门户网址导航站点管理 (sys_portal_nav)
+		GetPortalNavList(ctx context.Context, in *GetPortalNavListRequest, opts ...grpc.CallOption) (*GetPortalNavListResponse, error)
+		ListSysPortalNav(ctx context.Context, in *ListSysPortalNavRequest, opts ...grpc.CallOption) (*ListSysPortalNavResponse, error)
+		GetSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*PortalNavItem, error)
+		CreateSysPortalNav(ctx context.Context, in *CreateSysPortalNavRequest, opts ...grpc.CallOption) (*IdRequest, error)
+		UpdateSysPortalNav(ctx context.Context, in *UpdateSysPortalNavRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+		DeleteSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 	}
 
 	defaultUser struct {
@@ -466,4 +480,35 @@ func (m *defaultUser) UpdateSysConfig(ctx context.Context, in *UpdateSysConfigRe
 func (m *defaultUser) DeleteSysConfig(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.DeleteSysConfig(ctx, in, opts...)
+}
+
+// 门户网址导航站点管理 (sys_portal_nav)
+func (m *defaultUser) GetPortalNavList(ctx context.Context, in *GetPortalNavListRequest, opts ...grpc.CallOption) (*GetPortalNavListResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetPortalNavList(ctx, in, opts...)
+}
+
+func (m *defaultUser) ListSysPortalNav(ctx context.Context, in *ListSysPortalNavRequest, opts ...grpc.CallOption) (*ListSysPortalNavResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.ListSysPortalNav(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*PortalNavItem, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetSysPortalNav(ctx, in, opts...)
+}
+
+func (m *defaultUser) CreateSysPortalNav(ctx context.Context, in *CreateSysPortalNavRequest, opts ...grpc.CallOption) (*IdRequest, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CreateSysPortalNav(ctx, in, opts...)
+}
+
+func (m *defaultUser) UpdateSysPortalNav(ctx context.Context, in *UpdateSysPortalNavRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.UpdateSysPortalNav(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteSysPortalNav(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.DeleteSysPortalNav(ctx, in, opts...)
 }

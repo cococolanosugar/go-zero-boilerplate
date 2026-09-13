@@ -206,6 +206,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
             style={{ marginBottom: 16 }}
           />
           <LoginForm
+            key="mobile-login"
             loading={submitting}
             initialValues={{
               mobile: "13800000000",
@@ -223,6 +224,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
           >
             <ProFormText
               name="mobile"
+              initialValue="13800000000"
               fieldProps={{
                 size: "large",
                 prefix: <MobileOutlined style={{ color: "#722ed1" }} />,
@@ -238,6 +240,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onCancel }) => {
             />
             <ProFormText.Password
               name="password"
+              initialValue="123456"
               fieldProps={{
                 size: "large",
                 prefix: <LockOutlined style={{ color: "#722ed1" }} />,

@@ -15,11 +15,23 @@ export const routes: AppRouteItem[] = [
         redirect: "/home",
       },
       {
+        path: "/login",
+        redirect: "/home?action=login",
+        hideInMenu: true,
+      },
+      {
         path: "/home",
         name: "menu.home",
         locale: "menu.home",
         icon: "HomeOutlined",
         component: lazy(() => import("../pages/Home")),
+      },
+      {
+        path: "/navigation",
+        name: "menu.navigation",
+        locale: "menu.navigation",
+        icon: "CompassOutlined",
+        component: lazy(() => import("../pages/Navigation")),
       },
       {
         path: "/services",

@@ -62,6 +62,12 @@ export const PERMISSIONS = {
   TASK_EDIT: 'system:task:edit',
   TASK_DELETE: 'system:task:delete',
   TASK_TRIGGER: 'system:task:trigger',
+
+  // 网址导航管理
+  NAV_VIEW: 'system:navigation:list',
+  NAV_ADD: 'system:navigation:create',
+  NAV_EDIT: 'system:navigation:update',
+  NAV_DELETE: 'system:navigation:delete',
 } as const;
 
 export * from "./sessionSync";

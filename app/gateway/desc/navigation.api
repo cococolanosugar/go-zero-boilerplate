@@ -1,0 +1,137 @@
+syntax = "v1"
+
+info (
+	title:   "Navigation API"
+	desc:    "网址导航数据契约 (Portal 展示与 Admin 配置)"
+	author:  "antigravity"
+	version: "v1"
+)
+
+type (
+	// 导航单项 DTO
+	PortalNavDTO {
+		Id          int64  `json:"id"`
+		Title       string `json:"title"`
+		Category    string `json:"category"`
+		Url         string `json:"url"`
+		Icon        string `json:"icon"`
+		Description string `json:"description"`
+		Tags        string `json:"tags"`
+		Sort        int64  `json:"sort"`
+		Target      string `json:"target"`
+		Status      int64  `json:"status"`
+		Env         string `json:"env"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	// Portal 获取公开导航列表
+	GetPortalNavListReq {
+		Status int64  `form:"status,default=1,optional"`
+		Env    string `form:"env,optional"`
+	}
+	GetPortalNavListResp {
+		List []PortalNavDTO `json:"list"`
+	}
+
+	// Admin 分页查询导航列表
+	ListSysPortalNavReq {
+		Page     int64  `form:"page,default=1,optional"`
+		PageSize int64  `form:"pageSize,default=10,optional"`
+		Title    string `form:"title,optional"`
+		Category string `form:"category,optional"`
+		Env      string `form:"env,optional"`
+		Status   int64  `form:"status,default=-1,optional"`
+	}
+	ListSysPortalNavResp {
+		Total int64          `json:"total"`
+		List  []PortalNavDTO `json:"list"`
+	}
+
+	// Admin 获取导航站点详情
+	GetSysPortalNavReq {
+		Id int64 `path:"id"`
+	}
+
+	// Admin 新增导航站点
+	CreateSysPortalNavReq {
+		Title       string `json:"title"`
+		Category    string `json:"category"`
+		Url         string `json:"url"`
+		Icon        string `json:"icon,optional"`
+		Description string `json:"description,optional"`
+		Tags        string `json:"tags,optional"`
+		Sort        int64  `json:"sort,optional"`
+		Target      string `json:"target,optional,default=_blank"`
+		Status      int64  `json:"status,optional,default=1"`
+		Env         string `json:"env,optional,default=common"`
+	}
+	CreateSysPortalNavResp {
+		Id int64 `json:"id"`
+	}
+
+	// Admin 修改导航站点
+	UpdateSysPortalNavReq {
+		Id          int64  `path:"id"`
+		Title       string `json:"title"`
+		Category    string `json:"category"`
+		Url         string `json:"url"`
+		Icon        string `json:"icon,optional"`
+		Description string `json:"description,optional"`
+		Tags        string `json:"tags,optional"`
+		Sort        int64  `json:"sort,optional"`
+		Target      string `json:"target,optional,default=_blank"`
+		Status      int64  `json:"status,optional,default=1"`
+		Env         string `json:"env,optional,default=common"`
+	}
+	UpdateSysPortalNavResp {
+		Success bool `json:"success"`
+	}
+
+	// Admin 删除导航站点
+	DeleteSysPortalNavReq {
+		Id int64 `path:"id"`
+	}
+	DeleteSysPortalNavResp {
+		Success bool `json:"success"`
+	}
+)
+
+// 1. 面向技术门户 (Portal) 公开接口 (免登录)
+@server (
+	prefix: /api/v1/portal/navigation
+	group:  portal_nav
+)
+service gateway {
+	@doc "获取门户公开网址导航列表"
+	@handler GetPortalNavList
+	get /list (GetPortalNavListReq) returns (GetPortalNavListResp)
+}
+
+// 2. 面向管理后台 (Admin) 配置接口 (JWT 鉴权 + RBAC)
+@server (
+	prefix: /api/v1/system/navigation
+	group:  sys_nav
+	jwt:    Auth
+)
+service gateway {
+	@doc "分页查询系统导航配置列表"
+	@handler ListSysPortalNav
+	get /list (ListSysPortalNavReq) returns (ListSysPortalNavResp)
+
+	@doc "获取导航站点详情"
+	@handler GetSysPortalNav
+	get /:id (GetSysPortalNavReq) returns (PortalNavDTO)
+
+	@doc "创建系统导航站点"
+	@handler CreateSysPortalNav
+	post / (CreateSysPortalNavReq) returns (CreateSysPortalNavResp)
+
+	@doc "更新系统导航站点"
+	@handler UpdateSysPortalNav
+	put /:id (UpdateSysPortalNavReq) returns (UpdateSysPortalNavResp)
+
+	@doc "删除系统导航站点"
+	@handler DeleteSysPortalNav
+	delete /:id (DeleteSysPortalNavReq) returns (DeleteSysPortalNavResp)
+}

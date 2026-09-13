@@ -9,9 +9,11 @@ import {
   ClusterOutlined,
   ApiOutlined,
   RocketOutlined,
+  CompassOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
+  setUnauthorizedHandler,
   addRequestInterceptor,
   getAdminProfile,
   getToken,
@@ -24,8 +26,15 @@ import { defaultSettings } from "./config/defaultSettings";
 import type { PortalInitialState } from "./contexts/InitialStateContext";
 import { portalErrorHandler, portalRequestErrorConfig } from "./requestErrorConfig";
 
-// 注册门户网络错误拦截配置
+// 注册门户网络错误与 401 未登录拦截配置（免刷新唤起弹窗，防 404 路由雪崩）
 setErrorHandler(portalErrorHandler);
+setUnauthorizedHandler(() => {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent("portal:open-login", { detail: { reason: "unauthorized" } })
+    );
+  }
+});
 if (portalRequestErrorConfig.requestInterceptors) {
   portalRequestErrorConfig.requestInterceptors.forEach(addRequestInterceptor);
 }
@@ -41,6 +50,8 @@ const getIcon = (iconName?: React.ReactNode | string) => {
       return <ClusterOutlined />;
     case "ApiOutlined":
       return <ApiOutlined />;
+    case "CompassOutlined":
+      return <CompassOutlined />;
     default:
       return null;
   }
@@ -48,6 +59,7 @@ const getIcon = (iconName?: React.ReactNode | string) => {
 
 /**
  * 1. 门户全局运行时初始状态拉取（对齐 Ant Design Pro getInitialState 规范）
+ * 支持员工账号 (SysUser) 与消费者账号 (MobileUser) 双模态身份维持
  */
 export async function getInitialState(): Promise<PortalInitialState> {
   const token = getToken();
@@ -59,7 +71,31 @@ export async function getInitialState(): Promise<PortalInitialState> {
     };
   }
 
+  const loginType =
+    typeof localStorage !== "undefined"
+      ? localStorage.getItem("portal_login_type")
+      : null;
+
   try {
+    if (loginType === "mobile") {
+      const cached =
+        typeof localStorage !== "undefined"
+          ? localStorage.getItem("portal_mobile_user")
+          : null;
+      const parsed = cached ? JSON.parse(cached) : null;
+      return {
+        currentUser: parsed || {
+          id: 0,
+          username: "普通业务用户",
+          realName: "普通业务用户",
+          roles: ["ROLE_USER"],
+          permissions: [],
+        },
+        isLoggedIn: true,
+        loading: false,
+      };
+    }
+
     const res = await getAdminProfile();
     return {
       currentUser: res,
@@ -67,7 +103,7 @@ export async function getInitialState(): Promise<PortalInitialState> {
       loading: false,
     };
   } catch (err) {
-    console.warn("未获取到系统员工画像（可能是普通用户或Token失效）:", err);
+    console.warn("未获取到系统员工画像（可能是普通业务用户或Token失效）:", err);
     return {
       currentUser: null,
       isLoggedIn: false,

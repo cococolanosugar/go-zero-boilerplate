@@ -5626,6 +5626,618 @@ func (x *UpdateSysConfigRequest) GetRemark() string {
 	return ""
 }
 
+type PortalNavItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                   // 主键ID
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                              // 站点显示名称
+	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`                        // 所属分类
+	Url           string                 `protobuf:"bytes,4,opt,name=url,proto3" json:"url,omitempty"`                                  // 目标网址(支持 {HOST} 动态占位符)
+	Icon          string                 `protobuf:"bytes,5,opt,name=icon,proto3" json:"icon,omitempty"`                                // 图标(Antd图标名或图片URL)
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`                  // 站点描述说明
+	Tags          string                 `protobuf:"bytes,7,opt,name=tags,proto3" json:"tags,omitempty"`                                // 站点标签(逗号分隔)
+	Sort          int64                  `protobuf:"varint,8,opt,name=sort,proto3" json:"sort,omitempty"`                               // 排序权重(越大越靠前)
+	Target        string                 `protobuf:"bytes,9,opt,name=target,proto3" json:"target,omitempty"`                            // 打开方式(_blank/_self)
+	Status        int64                  `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`                          // 状态(1:启用 0:停用)
+	CreateTime    string                 `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"` // 创建时间
+	UpdateTime    string                 `protobuf:"bytes,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"` // 更新时间
+	Env           string                 `protobuf:"bytes,13,opt,name=env,proto3" json:"env,omitempty"`                                 // 所属环境/分组(common/prod/pre/test/dev)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PortalNavItem) Reset() {
+	*x = PortalNavItem{}
+	mi := &file_user_proto_msgTypes[77]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PortalNavItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PortalNavItem) ProtoMessage() {}
+
+func (x *PortalNavItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[77]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PortalNavItem.ProtoReflect.Descriptor instead.
+func (*PortalNavItem) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{77}
+}
+
+func (x *PortalNavItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *PortalNavItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetTags() string {
+	if x != nil {
+		return x.Tags
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetSort() int64 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *PortalNavItem) GetTarget() string {
+	if x != nil {
+		return x.Target
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *PortalNavItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+func (x *PortalNavItem) GetEnv() string {
+	if x != nil {
+		return x.Env
+	}
+	return ""
+}
+
+type GetPortalNavListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        int64                  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"` // -1 表示全部，默认 1 (启用)
+	Env           string                 `protobuf:"bytes,2,opt,name=env,proto3" json:"env,omitempty"`        // 所属环境分组筛选(空表示全部)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPortalNavListRequest) Reset() {
+	*x = GetPortalNavListRequest{}
+	mi := &file_user_proto_msgTypes[78]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPortalNavListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPortalNavListRequest) ProtoMessage() {}
+
+func (x *GetPortalNavListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[78]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPortalNavListRequest.ProtoReflect.Descriptor instead.
+func (*GetPortalNavListRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{78}
+}
+
+func (x *GetPortalNavListRequest) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *GetPortalNavListRequest) GetEnv() string {
+	if x != nil {
+		return x.Env
+	}
+	return ""
+}
+
+type GetPortalNavListResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*PortalNavItem       `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPortalNavListResponse) Reset() {
+	*x = GetPortalNavListResponse{}
+	mi := &file_user_proto_msgTypes[79]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPortalNavListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPortalNavListResponse) ProtoMessage() {}
+
+func (x *GetPortalNavListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[79]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPortalNavListResponse.ProtoReflect.Descriptor instead.
+func (*GetPortalNavListResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{79}
+}
+
+func (x *GetPortalNavListResponse) GetList() []*PortalNavItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type ListSysPortalNavRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Category      string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
+	Status        int64                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"` // -1 表示全部
+	Env           string                 `protobuf:"bytes,6,opt,name=env,proto3" json:"env,omitempty"`        // 所属环境分组筛选
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysPortalNavRequest) Reset() {
+	*x = ListSysPortalNavRequest{}
+	mi := &file_user_proto_msgTypes[80]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysPortalNavRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysPortalNavRequest) ProtoMessage() {}
+
+func (x *ListSysPortalNavRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[80]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysPortalNavRequest.ProtoReflect.Descriptor instead.
+func (*ListSysPortalNavRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{80}
+}
+
+func (x *ListSysPortalNavRequest) GetPage() int64 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListSysPortalNavRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSysPortalNavRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *ListSysPortalNavRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *ListSysPortalNavRequest) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *ListSysPortalNavRequest) GetEnv() string {
+	if x != nil {
+		return x.Env
+	}
+	return ""
+}
+
+type ListSysPortalNavResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*PortalNavItem       `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSysPortalNavResponse) Reset() {
+	*x = ListSysPortalNavResponse{}
+	mi := &file_user_proto_msgTypes[81]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSysPortalNavResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSysPortalNavResponse) ProtoMessage() {}
+
+func (x *ListSysPortalNavResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[81]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSysPortalNavResponse.ProtoReflect.Descriptor instead.
+func (*ListSysPortalNavResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{81}
+}
+
+func (x *ListSysPortalNavResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListSysPortalNavResponse) GetList() []*PortalNavItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type CreateSysPortalNavRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Category      string                 `protobuf:"bytes,2,opt,name=category,proto3" json:"category,omitempty"`
+	Url           string                 `protobuf:"bytes,3,opt,name=url,proto3" json:"url,omitempty"`
+	Icon          string                 `protobuf:"bytes,4,opt,name=icon,proto3" json:"icon,omitempty"`
+	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Tags          string                 `protobuf:"bytes,6,opt,name=tags,proto3" json:"tags,omitempty"`
+	Sort          int64                  `protobuf:"varint,7,opt,name=sort,proto3" json:"sort,omitempty"`
+	Target        string                 `protobuf:"bytes,8,opt,name=target,proto3" json:"target,omitempty"`
+	Status        int64                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
+	Env           string                 `protobuf:"bytes,10,opt,name=env,proto3" json:"env,omitempty"` // 所属环境/分组
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSysPortalNavRequest) Reset() {
+	*x = CreateSysPortalNavRequest{}
+	mi := &file_user_proto_msgTypes[82]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSysPortalNavRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSysPortalNavRequest) ProtoMessage() {}
+
+func (x *CreateSysPortalNavRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[82]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSysPortalNavRequest.ProtoReflect.Descriptor instead.
+func (*CreateSysPortalNavRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{82}
+}
+
+func (x *CreateSysPortalNavRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *CreateSysPortalNavRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *CreateSysPortalNavRequest) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *CreateSysPortalNavRequest) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
+func (x *CreateSysPortalNavRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *CreateSysPortalNavRequest) GetTags() string {
+	if x != nil {
+		return x.Tags
+	}
+	return ""
+}
+
+func (x *CreateSysPortalNavRequest) GetSort() int64 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *CreateSysPortalNavRequest) GetTarget() string {
+	if x != nil {
+		return x.Target
+	}
+	return ""
+}
+
+func (x *CreateSysPortalNavRequest) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *CreateSysPortalNavRequest) GetEnv() string {
+	if x != nil {
+		return x.Env
+	}
+	return ""
+}
+
+type UpdateSysPortalNavRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
+	Url           string                 `protobuf:"bytes,4,opt,name=url,proto3" json:"url,omitempty"`
+	Icon          string                 `protobuf:"bytes,5,opt,name=icon,proto3" json:"icon,omitempty"`
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Tags          string                 `protobuf:"bytes,7,opt,name=tags,proto3" json:"tags,omitempty"`
+	Sort          int64                  `protobuf:"varint,8,opt,name=sort,proto3" json:"sort,omitempty"`
+	Target        string                 `protobuf:"bytes,9,opt,name=target,proto3" json:"target,omitempty"`
+	Status        int64                  `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
+	Env           string                 `protobuf:"bytes,11,opt,name=env,proto3" json:"env,omitempty"` // 所属环境/分组
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateSysPortalNavRequest) Reset() {
+	*x = UpdateSysPortalNavRequest{}
+	mi := &file_user_proto_msgTypes[83]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateSysPortalNavRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateSysPortalNavRequest) ProtoMessage() {}
+
+func (x *UpdateSysPortalNavRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[83]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateSysPortalNavRequest.ProtoReflect.Descriptor instead.
+func (*UpdateSysPortalNavRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{83}
+}
+
+func (x *UpdateSysPortalNavRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateSysPortalNavRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *UpdateSysPortalNavRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *UpdateSysPortalNavRequest) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *UpdateSysPortalNavRequest) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
+func (x *UpdateSysPortalNavRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *UpdateSysPortalNavRequest) GetTags() string {
+	if x != nil {
+		return x.Tags
+	}
+	return ""
+}
+
+func (x *UpdateSysPortalNavRequest) GetSort() int64 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *UpdateSysPortalNavRequest) GetTarget() string {
+	if x != nil {
+		return x.Target
+	}
+	return ""
+}
+
+func (x *UpdateSysPortalNavRequest) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *UpdateSysPortalNavRequest) GetEnv() string {
+	if x != nil {
+		return x.Env
+	}
+	return ""
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
@@ -6112,7 +6724,64 @@ const file_user_proto_rawDesc = "" +
 	"\fconfig_value\x18\x04 \x01(\tR\vconfigValue\x12\x1f\n" +
 	"\vconfig_type\x18\x05 \x01(\tR\n" +
 	"configType\x12\x16\n" +
-	"\x06remark\x18\x06 \x01(\tR\x06remark2\xc6\x1d\n" +
+	"\x06remark\x18\x06 \x01(\tR\x06remark\"\xc5\x02\n" +
+	"\rPortalNavItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1a\n" +
+	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x10\n" +
+	"\x03url\x18\x04 \x01(\tR\x03url\x12\x12\n" +
+	"\x04icon\x18\x05 \x01(\tR\x04icon\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x12\n" +
+	"\x04tags\x18\a \x01(\tR\x04tags\x12\x12\n" +
+	"\x04sort\x18\b \x01(\x03R\x04sort\x12\x16\n" +
+	"\x06target\x18\t \x01(\tR\x06target\x12\x16\n" +
+	"\x06status\x18\n" +
+	" \x01(\x03R\x06status\x12\x1f\n" +
+	"\vcreate_time\x18\v \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\f \x01(\tR\n" +
+	"updateTime\x12\x10\n" +
+	"\x03env\x18\r \x01(\tR\x03env\"C\n" +
+	"\x17GetPortalNavListRequest\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\x03R\x06status\x12\x10\n" +
+	"\x03env\x18\x02 \x01(\tR\x03env\"C\n" +
+	"\x18GetPortalNavListResponse\x12'\n" +
+	"\x04list\x18\x01 \x03(\v2\x13.user.PortalNavItemR\x04list\"\xa5\x01\n" +
+	"\x17ListSysPortalNavRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\x12\x1a\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x03R\x06status\x12\x10\n" +
+	"\x03env\x18\x06 \x01(\tR\x03env\"Y\n" +
+	"\x18ListSysPortalNavResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12'\n" +
+	"\x04list\x18\x02 \x03(\v2\x13.user.PortalNavItemR\x04list\"\xff\x01\n" +
+	"\x19CreateSysPortalNavRequest\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12\x1a\n" +
+	"\bcategory\x18\x02 \x01(\tR\bcategory\x12\x10\n" +
+	"\x03url\x18\x03 \x01(\tR\x03url\x12\x12\n" +
+	"\x04icon\x18\x04 \x01(\tR\x04icon\x12 \n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x12\n" +
+	"\x04tags\x18\x06 \x01(\tR\x04tags\x12\x12\n" +
+	"\x04sort\x18\a \x01(\x03R\x04sort\x12\x16\n" +
+	"\x06target\x18\b \x01(\tR\x06target\x12\x16\n" +
+	"\x06status\x18\t \x01(\x03R\x06status\x12\x10\n" +
+	"\x03env\x18\n" +
+	" \x01(\tR\x03env\"\x8f\x02\n" +
+	"\x19UpdateSysPortalNavRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1a\n" +
+	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x10\n" +
+	"\x03url\x18\x04 \x01(\tR\x03url\x12\x12\n" +
+	"\x04icon\x18\x05 \x01(\tR\x04icon\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x12\n" +
+	"\x04tags\x18\a \x01(\tR\x04tags\x12\x12\n" +
+	"\x04sort\x18\b \x01(\x03R\x04sort\x12\x16\n" +
+	"\x06target\x18\t \x01(\tR\x06target\x12\x16\n" +
+	"\x06status\x18\n" +
+	" \x01(\x03R\x06status\x12\x10\n" +
+	"\x03env\x18\v \x01(\tR\x03env2\xf5 \n" +
 	"\x04User\x126\n" +
 	"\vGetUserInfo\x12\x0f.user.IdRequest\x1a\x16.user.UserInfoResponse\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x120\n" +
@@ -6172,7 +6841,13 @@ const file_user_proto_rawDesc = "" +
 	"\fGetSysConfig\x12\x0f.user.IdRequest\x1a\x13.user.SysConfigItem\x12@\n" +
 	"\x0fCreateSysConfig\x12\x1c.user.CreateSysConfigRequest\x1a\x0f.user.IdRequest\x12D\n" +
 	"\x0fUpdateSysConfig\x12\x1c.user.UpdateSysConfigRequest\x1a\x13.user.EmptyResponse\x127\n" +
-	"\x0fDeleteSysConfig\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponseB\x06Z\x04./pbb\x06proto3"
+	"\x0fDeleteSysConfig\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponse\x12Q\n" +
+	"\x10GetPortalNavList\x12\x1d.user.GetPortalNavListRequest\x1a\x1e.user.GetPortalNavListResponse\x12Q\n" +
+	"\x10ListSysPortalNav\x12\x1d.user.ListSysPortalNavRequest\x1a\x1e.user.ListSysPortalNavResponse\x127\n" +
+	"\x0fGetSysPortalNav\x12\x0f.user.IdRequest\x1a\x13.user.PortalNavItem\x12F\n" +
+	"\x12CreateSysPortalNav\x12\x1f.user.CreateSysPortalNavRequest\x1a\x0f.user.IdRequest\x12J\n" +
+	"\x12UpdateSysPortalNav\x12\x1f.user.UpdateSysPortalNavRequest\x1a\x13.user.EmptyResponse\x12:\n" +
+	"\x12DeleteSysPortalNav\x12\x0f.user.IdRequest\x1a\x13.user.EmptyResponseB\x06Z\x04./pbb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -6186,7 +6861,7 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 77)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 84)
 var file_user_proto_goTypes = []any{
 	(*EmptyRequest)(nil),                  // 0: user.EmptyRequest
 	(*EmptyResponse)(nil),                 // 1: user.EmptyResponse
@@ -6265,6 +6940,13 @@ var file_user_proto_goTypes = []any{
 	(*ListSysConfigResponse)(nil),         // 74: user.ListSysConfigResponse
 	(*CreateSysConfigRequest)(nil),        // 75: user.CreateSysConfigRequest
 	(*UpdateSysConfigRequest)(nil),        // 76: user.UpdateSysConfigRequest
+	(*PortalNavItem)(nil),                 // 77: user.PortalNavItem
+	(*GetPortalNavListRequest)(nil),       // 78: user.GetPortalNavListRequest
+	(*GetPortalNavListResponse)(nil),      // 79: user.GetPortalNavListResponse
+	(*ListSysPortalNavRequest)(nil),       // 80: user.ListSysPortalNavRequest
+	(*ListSysPortalNavResponse)(nil),      // 81: user.ListSysPortalNavResponse
+	(*CreateSysPortalNavRequest)(nil),     // 82: user.CreateSysPortalNavRequest
+	(*UpdateSysPortalNavRequest)(nil),     // 83: user.UpdateSysPortalNavRequest
 }
 var file_user_proto_depIdxs = []int32{
 	15, // 0: user.AdminProfileResponse.menus:type_name -> user.MenuItem
@@ -6284,123 +6966,137 @@ var file_user_proto_depIdxs = []int32{
 	67, // 14: user.SysDeptItem.children:type_name -> user.SysDeptItem
 	67, // 15: user.ListSysDeptsResponse.list:type_name -> user.SysDeptItem
 	72, // 16: user.ListSysConfigResponse.list:type_name -> user.SysConfigItem
-	2,  // 17: user.User.GetUserInfo:input_type -> user.IdRequest
-	4,  // 18: user.User.Register:input_type -> user.RegisterRequest
-	6,  // 19: user.User.Login:input_type -> user.LoginRequest
-	8,  // 20: user.User.AdminLogin:input_type -> user.AdminLoginRequest
-	10, // 21: user.User.SyncOrCreateCasdoorUser:input_type -> user.SyncCasdoorUserRequest
-	2,  // 22: user.User.GetAdminProfile:input_type -> user.IdRequest
-	13, // 23: user.User.UpdatePersonalProfile:input_type -> user.UpdatePersonalProfileRequest
-	14, // 24: user.User.ChangePersonalPassword:input_type -> user.ChangePersonalPasswordRequest
-	17, // 25: user.User.ListSysUsers:input_type -> user.ListSysUsersRequest
-	19, // 26: user.User.CreateSysUser:input_type -> user.CreateSysUserRequest
-	20, // 27: user.User.UpdateSysUser:input_type -> user.UpdateSysUserRequest
-	2,  // 28: user.User.DeleteSysUser:input_type -> user.IdRequest
-	22, // 29: user.User.ListSysRoles:input_type -> user.ListSysRolesRequest
-	24, // 30: user.User.CreateSysRole:input_type -> user.CreateSysRoleRequest
-	25, // 31: user.User.UpdateSysRole:input_type -> user.UpdateSysRoleRequest
-	2,  // 32: user.User.DeleteSysRole:input_type -> user.IdRequest
-	26, // 33: user.User.AssignRolePermissions:input_type -> user.AssignRolePermRequest
-	0,  // 34: user.User.GetSysMenuTree:input_type -> user.EmptyRequest
-	0,  // 35: user.User.ListSysApis:input_type -> user.EmptyRequest
-	31, // 36: user.User.ListSysDictTypes:input_type -> user.ListSysDictTypesRequest
-	33, // 37: user.User.CreateSysDictType:input_type -> user.CreateSysDictTypeRequest
-	34, // 38: user.User.UpdateSysDictType:input_type -> user.UpdateSysDictTypeRequest
-	2,  // 39: user.User.DeleteSysDictType:input_type -> user.IdRequest
-	36, // 40: user.User.ListSysDictData:input_type -> user.ListSysDictDataRequest
-	38, // 41: user.User.CreateSysDictData:input_type -> user.CreateSysDictDataRequest
-	39, // 42: user.User.UpdateSysDictData:input_type -> user.UpdateSysDictDataRequest
-	2,  // 43: user.User.DeleteSysDictData:input_type -> user.IdRequest
-	40, // 44: user.User.GetDictDataByType:input_type -> user.GetDictDataByTypeRequest
-	42, // 45: user.User.CheckApiPermission:input_type -> user.CheckApiPermissionRequest
-	44, // 46: user.User.RecordOperLog:input_type -> user.RecordOperLogRequest
-	45, // 47: user.User.RecordLoginLog:input_type -> user.RecordLoginLogRequest
-	47, // 48: user.User.ListSysOperLogs:input_type -> user.ListSysOperLogsRequest
-	50, // 49: user.User.ListSysLoginLogs:input_type -> user.ListSysLoginLogsRequest
-	53, // 50: user.User.ListSysPosts:input_type -> user.ListSysPostRequest
-	2,  // 51: user.User.GetSysPost:input_type -> user.IdRequest
-	55, // 52: user.User.CreateSysPost:input_type -> user.CreateSysPostRequest
-	56, // 53: user.User.UpdateSysPost:input_type -> user.UpdateSysPostRequest
-	2,  // 54: user.User.DeleteSysPost:input_type -> user.IdRequest
-	58, // 55: user.User.ListSysNotices:input_type -> user.ListSysNoticeRequest
-	2,  // 56: user.User.GetSysNotice:input_type -> user.IdRequest
-	60, // 57: user.User.CreateSysNotice:input_type -> user.CreateSysNoticeRequest
-	61, // 58: user.User.UpdateSysNotice:input_type -> user.UpdateSysNoticeRequest
-	2,  // 59: user.User.DeleteSysNotice:input_type -> user.IdRequest
-	63, // 60: user.User.GetMyNoticeFeed:input_type -> user.GetMyNoticeFeedRequest
-	65, // 61: user.User.MarkNoticeRead:input_type -> user.MarkNoticeReadRequest
-	66, // 62: user.User.MarkAllNoticesRead:input_type -> user.MarkAllNoticesReadRequest
-	68, // 63: user.User.ListSysDepts:input_type -> user.ListSysDeptsRequest
-	2,  // 64: user.User.GetSysDept:input_type -> user.IdRequest
-	70, // 65: user.User.CreateSysDept:input_type -> user.CreateSysDeptRequest
-	71, // 66: user.User.UpdateSysDept:input_type -> user.UpdateSysDeptRequest
-	2,  // 67: user.User.DeleteSysDept:input_type -> user.IdRequest
-	73, // 68: user.User.ListSysConfigs:input_type -> user.ListSysConfigRequest
-	2,  // 69: user.User.GetSysConfig:input_type -> user.IdRequest
-	75, // 70: user.User.CreateSysConfig:input_type -> user.CreateSysConfigRequest
-	76, // 71: user.User.UpdateSysConfig:input_type -> user.UpdateSysConfigRequest
-	2,  // 72: user.User.DeleteSysConfig:input_type -> user.IdRequest
-	3,  // 73: user.User.GetUserInfo:output_type -> user.UserInfoResponse
-	5,  // 74: user.User.Register:output_type -> user.RegisterResponse
-	7,  // 75: user.User.Login:output_type -> user.LoginResponse
-	9,  // 76: user.User.AdminLogin:output_type -> user.AdminLoginResponse
-	11, // 77: user.User.SyncOrCreateCasdoorUser:output_type -> user.SyncCasdoorUserResponse
-	12, // 78: user.User.GetAdminProfile:output_type -> user.AdminProfileResponse
-	1,  // 79: user.User.UpdatePersonalProfile:output_type -> user.EmptyResponse
-	1,  // 80: user.User.ChangePersonalPassword:output_type -> user.EmptyResponse
-	18, // 81: user.User.ListSysUsers:output_type -> user.ListSysUsersResponse
-	2,  // 82: user.User.CreateSysUser:output_type -> user.IdRequest
-	1,  // 83: user.User.UpdateSysUser:output_type -> user.EmptyResponse
-	1,  // 84: user.User.DeleteSysUser:output_type -> user.EmptyResponse
-	23, // 85: user.User.ListSysRoles:output_type -> user.ListSysRolesResponse
-	2,  // 86: user.User.CreateSysRole:output_type -> user.IdRequest
-	1,  // 87: user.User.UpdateSysRole:output_type -> user.EmptyResponse
-	1,  // 88: user.User.DeleteSysRole:output_type -> user.EmptyResponse
-	1,  // 89: user.User.AssignRolePermissions:output_type -> user.EmptyResponse
-	27, // 90: user.User.GetSysMenuTree:output_type -> user.GetSysMenuTreeResponse
-	29, // 91: user.User.ListSysApis:output_type -> user.ListSysApisResponse
-	32, // 92: user.User.ListSysDictTypes:output_type -> user.ListSysDictTypesResponse
-	2,  // 93: user.User.CreateSysDictType:output_type -> user.IdRequest
-	1,  // 94: user.User.UpdateSysDictType:output_type -> user.EmptyResponse
-	1,  // 95: user.User.DeleteSysDictType:output_type -> user.EmptyResponse
-	37, // 96: user.User.ListSysDictData:output_type -> user.ListSysDictDataResponse
-	2,  // 97: user.User.CreateSysDictData:output_type -> user.IdRequest
-	1,  // 98: user.User.UpdateSysDictData:output_type -> user.EmptyResponse
-	1,  // 99: user.User.DeleteSysDictData:output_type -> user.EmptyResponse
-	41, // 100: user.User.GetDictDataByType:output_type -> user.GetDictDataByTypeResponse
-	43, // 101: user.User.CheckApiPermission:output_type -> user.CheckApiPermissionResponse
-	1,  // 102: user.User.RecordOperLog:output_type -> user.EmptyResponse
-	1,  // 103: user.User.RecordLoginLog:output_type -> user.EmptyResponse
-	48, // 104: user.User.ListSysOperLogs:output_type -> user.ListSysOperLogsResponse
-	51, // 105: user.User.ListSysLoginLogs:output_type -> user.ListSysLoginLogsResponse
-	54, // 106: user.User.ListSysPosts:output_type -> user.ListSysPostResponse
-	52, // 107: user.User.GetSysPost:output_type -> user.SysPostItem
-	2,  // 108: user.User.CreateSysPost:output_type -> user.IdRequest
-	1,  // 109: user.User.UpdateSysPost:output_type -> user.EmptyResponse
-	1,  // 110: user.User.DeleteSysPost:output_type -> user.EmptyResponse
-	59, // 111: user.User.ListSysNotices:output_type -> user.ListSysNoticeResponse
-	57, // 112: user.User.GetSysNotice:output_type -> user.SysNoticeItem
-	2,  // 113: user.User.CreateSysNotice:output_type -> user.IdRequest
-	1,  // 114: user.User.UpdateSysNotice:output_type -> user.EmptyResponse
-	1,  // 115: user.User.DeleteSysNotice:output_type -> user.EmptyResponse
-	64, // 116: user.User.GetMyNoticeFeed:output_type -> user.GetMyNoticeFeedResponse
-	1,  // 117: user.User.MarkNoticeRead:output_type -> user.EmptyResponse
-	1,  // 118: user.User.MarkAllNoticesRead:output_type -> user.EmptyResponse
-	69, // 119: user.User.ListSysDepts:output_type -> user.ListSysDeptsResponse
-	67, // 120: user.User.GetSysDept:output_type -> user.SysDeptItem
-	2,  // 121: user.User.CreateSysDept:output_type -> user.IdRequest
-	1,  // 122: user.User.UpdateSysDept:output_type -> user.EmptyResponse
-	1,  // 123: user.User.DeleteSysDept:output_type -> user.EmptyResponse
-	74, // 124: user.User.ListSysConfigs:output_type -> user.ListSysConfigResponse
-	72, // 125: user.User.GetSysConfig:output_type -> user.SysConfigItem
-	2,  // 126: user.User.CreateSysConfig:output_type -> user.IdRequest
-	1,  // 127: user.User.UpdateSysConfig:output_type -> user.EmptyResponse
-	1,  // 128: user.User.DeleteSysConfig:output_type -> user.EmptyResponse
-	73, // [73:129] is the sub-list for method output_type
-	17, // [17:73] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	77, // 17: user.GetPortalNavListResponse.list:type_name -> user.PortalNavItem
+	77, // 18: user.ListSysPortalNavResponse.list:type_name -> user.PortalNavItem
+	2,  // 19: user.User.GetUserInfo:input_type -> user.IdRequest
+	4,  // 20: user.User.Register:input_type -> user.RegisterRequest
+	6,  // 21: user.User.Login:input_type -> user.LoginRequest
+	8,  // 22: user.User.AdminLogin:input_type -> user.AdminLoginRequest
+	10, // 23: user.User.SyncOrCreateCasdoorUser:input_type -> user.SyncCasdoorUserRequest
+	2,  // 24: user.User.GetAdminProfile:input_type -> user.IdRequest
+	13, // 25: user.User.UpdatePersonalProfile:input_type -> user.UpdatePersonalProfileRequest
+	14, // 26: user.User.ChangePersonalPassword:input_type -> user.ChangePersonalPasswordRequest
+	17, // 27: user.User.ListSysUsers:input_type -> user.ListSysUsersRequest
+	19, // 28: user.User.CreateSysUser:input_type -> user.CreateSysUserRequest
+	20, // 29: user.User.UpdateSysUser:input_type -> user.UpdateSysUserRequest
+	2,  // 30: user.User.DeleteSysUser:input_type -> user.IdRequest
+	22, // 31: user.User.ListSysRoles:input_type -> user.ListSysRolesRequest
+	24, // 32: user.User.CreateSysRole:input_type -> user.CreateSysRoleRequest
+	25, // 33: user.User.UpdateSysRole:input_type -> user.UpdateSysRoleRequest
+	2,  // 34: user.User.DeleteSysRole:input_type -> user.IdRequest
+	26, // 35: user.User.AssignRolePermissions:input_type -> user.AssignRolePermRequest
+	0,  // 36: user.User.GetSysMenuTree:input_type -> user.EmptyRequest
+	0,  // 37: user.User.ListSysApis:input_type -> user.EmptyRequest
+	31, // 38: user.User.ListSysDictTypes:input_type -> user.ListSysDictTypesRequest
+	33, // 39: user.User.CreateSysDictType:input_type -> user.CreateSysDictTypeRequest
+	34, // 40: user.User.UpdateSysDictType:input_type -> user.UpdateSysDictTypeRequest
+	2,  // 41: user.User.DeleteSysDictType:input_type -> user.IdRequest
+	36, // 42: user.User.ListSysDictData:input_type -> user.ListSysDictDataRequest
+	38, // 43: user.User.CreateSysDictData:input_type -> user.CreateSysDictDataRequest
+	39, // 44: user.User.UpdateSysDictData:input_type -> user.UpdateSysDictDataRequest
+	2,  // 45: user.User.DeleteSysDictData:input_type -> user.IdRequest
+	40, // 46: user.User.GetDictDataByType:input_type -> user.GetDictDataByTypeRequest
+	42, // 47: user.User.CheckApiPermission:input_type -> user.CheckApiPermissionRequest
+	44, // 48: user.User.RecordOperLog:input_type -> user.RecordOperLogRequest
+	45, // 49: user.User.RecordLoginLog:input_type -> user.RecordLoginLogRequest
+	47, // 50: user.User.ListSysOperLogs:input_type -> user.ListSysOperLogsRequest
+	50, // 51: user.User.ListSysLoginLogs:input_type -> user.ListSysLoginLogsRequest
+	53, // 52: user.User.ListSysPosts:input_type -> user.ListSysPostRequest
+	2,  // 53: user.User.GetSysPost:input_type -> user.IdRequest
+	55, // 54: user.User.CreateSysPost:input_type -> user.CreateSysPostRequest
+	56, // 55: user.User.UpdateSysPost:input_type -> user.UpdateSysPostRequest
+	2,  // 56: user.User.DeleteSysPost:input_type -> user.IdRequest
+	58, // 57: user.User.ListSysNotices:input_type -> user.ListSysNoticeRequest
+	2,  // 58: user.User.GetSysNotice:input_type -> user.IdRequest
+	60, // 59: user.User.CreateSysNotice:input_type -> user.CreateSysNoticeRequest
+	61, // 60: user.User.UpdateSysNotice:input_type -> user.UpdateSysNoticeRequest
+	2,  // 61: user.User.DeleteSysNotice:input_type -> user.IdRequest
+	63, // 62: user.User.GetMyNoticeFeed:input_type -> user.GetMyNoticeFeedRequest
+	65, // 63: user.User.MarkNoticeRead:input_type -> user.MarkNoticeReadRequest
+	66, // 64: user.User.MarkAllNoticesRead:input_type -> user.MarkAllNoticesReadRequest
+	68, // 65: user.User.ListSysDepts:input_type -> user.ListSysDeptsRequest
+	2,  // 66: user.User.GetSysDept:input_type -> user.IdRequest
+	70, // 67: user.User.CreateSysDept:input_type -> user.CreateSysDeptRequest
+	71, // 68: user.User.UpdateSysDept:input_type -> user.UpdateSysDeptRequest
+	2,  // 69: user.User.DeleteSysDept:input_type -> user.IdRequest
+	73, // 70: user.User.ListSysConfigs:input_type -> user.ListSysConfigRequest
+	2,  // 71: user.User.GetSysConfig:input_type -> user.IdRequest
+	75, // 72: user.User.CreateSysConfig:input_type -> user.CreateSysConfigRequest
+	76, // 73: user.User.UpdateSysConfig:input_type -> user.UpdateSysConfigRequest
+	2,  // 74: user.User.DeleteSysConfig:input_type -> user.IdRequest
+	78, // 75: user.User.GetPortalNavList:input_type -> user.GetPortalNavListRequest
+	80, // 76: user.User.ListSysPortalNav:input_type -> user.ListSysPortalNavRequest
+	2,  // 77: user.User.GetSysPortalNav:input_type -> user.IdRequest
+	82, // 78: user.User.CreateSysPortalNav:input_type -> user.CreateSysPortalNavRequest
+	83, // 79: user.User.UpdateSysPortalNav:input_type -> user.UpdateSysPortalNavRequest
+	2,  // 80: user.User.DeleteSysPortalNav:input_type -> user.IdRequest
+	3,  // 81: user.User.GetUserInfo:output_type -> user.UserInfoResponse
+	5,  // 82: user.User.Register:output_type -> user.RegisterResponse
+	7,  // 83: user.User.Login:output_type -> user.LoginResponse
+	9,  // 84: user.User.AdminLogin:output_type -> user.AdminLoginResponse
+	11, // 85: user.User.SyncOrCreateCasdoorUser:output_type -> user.SyncCasdoorUserResponse
+	12, // 86: user.User.GetAdminProfile:output_type -> user.AdminProfileResponse
+	1,  // 87: user.User.UpdatePersonalProfile:output_type -> user.EmptyResponse
+	1,  // 88: user.User.ChangePersonalPassword:output_type -> user.EmptyResponse
+	18, // 89: user.User.ListSysUsers:output_type -> user.ListSysUsersResponse
+	2,  // 90: user.User.CreateSysUser:output_type -> user.IdRequest
+	1,  // 91: user.User.UpdateSysUser:output_type -> user.EmptyResponse
+	1,  // 92: user.User.DeleteSysUser:output_type -> user.EmptyResponse
+	23, // 93: user.User.ListSysRoles:output_type -> user.ListSysRolesResponse
+	2,  // 94: user.User.CreateSysRole:output_type -> user.IdRequest
+	1,  // 95: user.User.UpdateSysRole:output_type -> user.EmptyResponse
+	1,  // 96: user.User.DeleteSysRole:output_type -> user.EmptyResponse
+	1,  // 97: user.User.AssignRolePermissions:output_type -> user.EmptyResponse
+	27, // 98: user.User.GetSysMenuTree:output_type -> user.GetSysMenuTreeResponse
+	29, // 99: user.User.ListSysApis:output_type -> user.ListSysApisResponse
+	32, // 100: user.User.ListSysDictTypes:output_type -> user.ListSysDictTypesResponse
+	2,  // 101: user.User.CreateSysDictType:output_type -> user.IdRequest
+	1,  // 102: user.User.UpdateSysDictType:output_type -> user.EmptyResponse
+	1,  // 103: user.User.DeleteSysDictType:output_type -> user.EmptyResponse
+	37, // 104: user.User.ListSysDictData:output_type -> user.ListSysDictDataResponse
+	2,  // 105: user.User.CreateSysDictData:output_type -> user.IdRequest
+	1,  // 106: user.User.UpdateSysDictData:output_type -> user.EmptyResponse
+	1,  // 107: user.User.DeleteSysDictData:output_type -> user.EmptyResponse
+	41, // 108: user.User.GetDictDataByType:output_type -> user.GetDictDataByTypeResponse
+	43, // 109: user.User.CheckApiPermission:output_type -> user.CheckApiPermissionResponse
+	1,  // 110: user.User.RecordOperLog:output_type -> user.EmptyResponse
+	1,  // 111: user.User.RecordLoginLog:output_type -> user.EmptyResponse
+	48, // 112: user.User.ListSysOperLogs:output_type -> user.ListSysOperLogsResponse
+	51, // 113: user.User.ListSysLoginLogs:output_type -> user.ListSysLoginLogsResponse
+	54, // 114: user.User.ListSysPosts:output_type -> user.ListSysPostResponse
+	52, // 115: user.User.GetSysPost:output_type -> user.SysPostItem
+	2,  // 116: user.User.CreateSysPost:output_type -> user.IdRequest
+	1,  // 117: user.User.UpdateSysPost:output_type -> user.EmptyResponse
+	1,  // 118: user.User.DeleteSysPost:output_type -> user.EmptyResponse
+	59, // 119: user.User.ListSysNotices:output_type -> user.ListSysNoticeResponse
+	57, // 120: user.User.GetSysNotice:output_type -> user.SysNoticeItem
+	2,  // 121: user.User.CreateSysNotice:output_type -> user.IdRequest
+	1,  // 122: user.User.UpdateSysNotice:output_type -> user.EmptyResponse
+	1,  // 123: user.User.DeleteSysNotice:output_type -> user.EmptyResponse
+	64, // 124: user.User.GetMyNoticeFeed:output_type -> user.GetMyNoticeFeedResponse
+	1,  // 125: user.User.MarkNoticeRead:output_type -> user.EmptyResponse
+	1,  // 126: user.User.MarkAllNoticesRead:output_type -> user.EmptyResponse
+	69, // 127: user.User.ListSysDepts:output_type -> user.ListSysDeptsResponse
+	67, // 128: user.User.GetSysDept:output_type -> user.SysDeptItem
+	2,  // 129: user.User.CreateSysDept:output_type -> user.IdRequest
+	1,  // 130: user.User.UpdateSysDept:output_type -> user.EmptyResponse
+	1,  // 131: user.User.DeleteSysDept:output_type -> user.EmptyResponse
+	74, // 132: user.User.ListSysConfigs:output_type -> user.ListSysConfigResponse
+	72, // 133: user.User.GetSysConfig:output_type -> user.SysConfigItem
+	2,  // 134: user.User.CreateSysConfig:output_type -> user.IdRequest
+	1,  // 135: user.User.UpdateSysConfig:output_type -> user.EmptyResponse
+	1,  // 136: user.User.DeleteSysConfig:output_type -> user.EmptyResponse
+	79, // 137: user.User.GetPortalNavList:output_type -> user.GetPortalNavListResponse
+	81, // 138: user.User.ListSysPortalNav:output_type -> user.ListSysPortalNavResponse
+	77, // 139: user.User.GetSysPortalNav:output_type -> user.PortalNavItem
+	2,  // 140: user.User.CreateSysPortalNav:output_type -> user.IdRequest
+	1,  // 141: user.User.UpdateSysPortalNav:output_type -> user.EmptyResponse
+	1,  // 142: user.User.DeleteSysPortalNav:output_type -> user.EmptyResponse
+	81, // [81:143] is the sub-list for method output_type
+	19, // [19:81] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_user_proto_init() }
@@ -6414,7 +7110,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   77,
+			NumMessages:   84,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

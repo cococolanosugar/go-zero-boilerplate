@@ -8,8 +8,10 @@ import (
 
 	dashboard "go-zero-boilerplate/app/gateway/internal/handler/dashboard"
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
+	portal_nav "go-zero-boilerplate/app/gateway/internal/handler/portal_nav"
 	sys_config "go-zero-boilerplate/app/gateway/internal/handler/sys_config"
 	sys_dept "go-zero-boilerplate/app/gateway/internal/handler/sys_dept"
+	sys_nav "go-zero-boilerplate/app/gateway/internal/handler/sys_nav"
 	sys_notice "go-zero-boilerplate/app/gateway/internal/handler/sys_notice"
 	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
@@ -99,6 +101,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 获取门户公开网址导航列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: portal_nav.GetPortalNavListHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/portal/navigation"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
 				// 获取参数配置表列表
 				Method:  http.MethodGet,
 				Path:    "/",
@@ -168,6 +182,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/user/dept"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 创建系统导航站点
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: sys_nav.CreateSysPortalNavHandler(serverCtx),
+			},
+			{
+				// 获取导航站点详情
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sys_nav.GetSysPortalNavHandler(serverCtx),
+			},
+			{
+				// 更新系统导航站点
+				Method:  http.MethodPut,
+				Path:    "/:id",
+				Handler: sys_nav.UpdateSysPortalNavHandler(serverCtx),
+			},
+			{
+				// 删除系统导航站点
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: sys_nav.DeleteSysPortalNavHandler(serverCtx),
+			},
+			{
+				// 分页查询系统导航配置列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: sys_nav.ListSysPortalNavHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/system/navigation"),
 	)
 
 	server.AddRoutes(

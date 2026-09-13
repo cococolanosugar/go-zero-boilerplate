@@ -83,6 +83,14 @@ export function deleteSysDictType(params: components.SysIdReqParams, id: number)
 }
 
 /**
+ * @description "获取门户公开网址导航列表"
+ * @param params
+ */
+export function getPortalNavList(params: components.GetPortalNavListReqParams) {
+	return webapi.get<components.GetPortalNavListResp>(`/api/v1/portal/navigation/list`, params)
+}
+
+/**
  * @description "获取参数配置表列表"
  * @param params
  */
@@ -160,6 +168,47 @@ export function getSysDept(params: components.SysIdReqParams, id: number) {
  */
 export function deleteSysDept(params: components.SysIdReqParams, id: number) {
 	return webapi.delete<components.SysEmptyResp>(`/api/v1/user/dept/${id}`, params)
+}
+
+/**
+ * @description "创建系统导航站点"
+ * @param req
+ */
+export function createSysPortalNav(req: components.CreateSysPortalNavReq) {
+	return webapi.post<components.CreateSysPortalNavResp>(`/api/v1/system/navigation`, req)
+}
+
+/**
+ * @description "获取导航站点详情"
+ * @param params
+ */
+export function getSysPortalNav(params: components.GetSysPortalNavReqParams, id: number) {
+	return webapi.get<components.PortalNavDTO>(`/api/v1/system/navigation/${id}`, params)
+}
+
+/**
+ * @description "更新系统导航站点"
+ * @param params
+ * @param req
+ */
+export function updateSysPortalNav(params: components.UpdateSysPortalNavReqParams, req: components.UpdateSysPortalNavReq, id: number) {
+	return webapi.put<components.UpdateSysPortalNavResp>(`/api/v1/system/navigation/${id}`, params, req)
+}
+
+/**
+ * @description "删除系统导航站点"
+ * @param params
+ */
+export function deleteSysPortalNav(params: components.DeleteSysPortalNavReqParams, id: number) {
+	return webapi.delete<components.DeleteSysPortalNavResp>(`/api/v1/system/navigation/${id}`, params)
+}
+
+/**
+ * @description "分页查询系统导航配置列表"
+ * @param params
+ */
+export function listSysPortalNav(params: components.ListSysPortalNavReqParams) {
+	return webapi.get<components.ListSysPortalNavResp>(`/api/v1/system/navigation/list`, params)
 }
 
 /**

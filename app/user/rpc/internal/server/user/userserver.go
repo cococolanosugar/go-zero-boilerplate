@@ -315,3 +315,34 @@ func (s *UserServer) DeleteSysConfig(ctx context.Context, in *pb.IdRequest) (*pb
 	l := userlogic.NewDeleteSysConfigLogic(ctx, s.svcCtx)
 	return l.DeleteSysConfig(in)
 }
+
+// 门户网址导航站点管理 (sys_portal_nav)
+func (s *UserServer) GetPortalNavList(ctx context.Context, in *pb.GetPortalNavListRequest) (*pb.GetPortalNavListResponse, error) {
+	l := userlogic.NewGetPortalNavListLogic(ctx, s.svcCtx)
+	return l.GetPortalNavList(in)
+}
+
+func (s *UserServer) ListSysPortalNav(ctx context.Context, in *pb.ListSysPortalNavRequest) (*pb.ListSysPortalNavResponse, error) {
+	l := userlogic.NewListSysPortalNavLogic(ctx, s.svcCtx)
+	return l.ListSysPortalNav(in)
+}
+
+func (s *UserServer) GetSysPortalNav(ctx context.Context, in *pb.IdRequest) (*pb.PortalNavItem, error) {
+	l := userlogic.NewGetSysPortalNavLogic(ctx, s.svcCtx)
+	return l.GetSysPortalNav(in)
+}
+
+func (s *UserServer) CreateSysPortalNav(ctx context.Context, in *pb.CreateSysPortalNavRequest) (*pb.IdRequest, error) {
+	l := userlogic.NewCreateSysPortalNavLogic(ctx, s.svcCtx)
+	return l.CreateSysPortalNav(in)
+}
+
+func (s *UserServer) UpdateSysPortalNav(ctx context.Context, in *pb.UpdateSysPortalNavRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewUpdateSysPortalNavLogic(ctx, s.svcCtx)
+	return l.UpdateSysPortalNav(in)
+}
+
+func (s *UserServer) DeleteSysPortalNav(ctx context.Context, in *pb.IdRequest) (*pb.EmptyResponse, error) {
+	l := userlogic.NewDeleteSysPortalNavLogic(ctx, s.svcCtx)
+	return l.DeleteSysPortalNav(in)
+}
