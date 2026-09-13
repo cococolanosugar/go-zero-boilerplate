@@ -14,10 +14,10 @@
 go-zero-boilerplate/
 ├── app/                           # 【后端 Go 微服务体系】
 │   ├── gateway/                   # 【统一对外 HTTP 网关 / BFF 层】(端口 8888)
-│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api)
 │   │   ├── etc/gateway.yaml       # 网关配置
 │   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
-│   │   └── gateway.go             # 网关 main 入口
+│   │   └── gateway.go             # 网关启动 main 入口
 │   │
 │   ├── user/                      # 【用户微服务】纯 gRPC (端口 8080)
 │   │   ├── rpc/                   # gRPC 核心服务及对外 client/user/
@@ -39,7 +39,7 @@ go-zero-boilerplate/
 │   ├── pnpm-workspace.yaml        # 工作区配置
 │   └── tsconfig.base.json         # 共享 TypeScript 配置
 │
-├── pkg/                           # 跨服务共享的 Go 通用库 (result, xerr)
+├── pkg/                           # 跨服务共享的 Go 通用库 (result, xerr, temporalx, storage, nacosx)
 ├── manifest/                      # 【交付与部署清单】
 │   └── deploy/                    # 本地开发与容器部署 (docker-compose)
 ├── hack/                          # 【开发与运维辅助工具集】
@@ -180,7 +180,7 @@ just gen-ts
 
 ---
 
-## 企业级核心能力与三大强化特性
+## 企业级核心能力与平台治理体系强化特性
 
 ### 1. 网关 RBAC 动态鉴权切面 (RBAC Middleware)
 统一网关挂载 `RbacMiddleware`，与微服务 `CheckApiPermission` RPC 协同：
@@ -204,9 +204,17 @@ just gen-ts
 * **架构隔离**：独立的 Worker 异步微服务（纯 gRPC `:8082`），同时内置 Temporal Worker 运行器，监听工作流任务队列。
 * **统一日志适配**：`pkg/temporalx` 提供连接池与 go-zero `logx` 深度适配器，确保工作流底层与后端服务日志格式完全一致。
 * **契约驱动解耦**：`app/worker/contract` 声明公共工作流契约，网关仅通过标准 gRPC 与 Worker 服务交互，杜绝网关直接暴露 Temporal SDK 依赖。
-* **可视化全链路图谱**：自带 Temporal Web 控制台（`:8233`），毫秒级可视化工作流执行历史、信号触发与活动重试。
+* **任务治理中心 (`sys_async_task`)**：全生命周期管理异步任务与状态流转（`READY`、`RUNNING`、`SUCCESS`、`FAILED`、`PAUSED`），支持基于 Temporal Schedule 的动态 Cron 周期调度、任务暂停/恢复与立即触发。
+* **前端任务管理中心 (`/system/tasks`)**：基于 Ant Design ProTable 构建可视化任务运维看板与模态表单。
+* **设计专篇**：详见 [Temporal 分布式工作流编排与异步任务治理系统设计方案](doc/design/2026-09-13-temporal-worker-and-task-management/README.md)。
 
-### 5. 脚手架一键重命名与工程定制 (Rebranding)
+### 5. 通用对象存储与安全上传服务 (Universal Storage Service & pkg/storage)
+* **插拔式驱动设计**：提供统一 `Driver` 抽象，内置本地磁盘分级目录驱动，无缝扩展云端对象存储（MinIO、阿里云 OSS、AWS S3）。
+* **内容寻址与即时秒传**：基于 SHA-256 哈希计算，对相同内容文件实行秒传与空间复用。
+* **企业级安全防线**：拦截危险可执行后缀（`.exe`、`.bat`、`.sh`、`.php` 等），限制最大尺寸，防范路径穿越。
+* **设计专篇**：详见 [通用对象存储与文件上传服务设计方案](doc/design/2026-09-12-universal-storage-service/README.md)。
+
+### 6. 脚手架一键重命名与工程定制 (Rebranding)
 只需一条命令即可将本脚手架一键定制为任意新项目名：
 ```bash
 # Windows
@@ -223,6 +231,6 @@ make rename-project NEW_MODULE=my-org/shop-system DISPLAY_NAME="Shop System"
 
 本项目在架构演进与前端工程化落地过程中，深度借鉴并融合了业界两大标杆开源项目的精髓：
 
-* **[Ant Design Pro](https://pro.ant.design)**：阿里巴巴开源的企业级中后台最佳实践。本项目深度吸收了其 **统一页面容器 (`PageContainer`)**、**多语言国际化体系 (`useIntl`)**、**ProComponents 生产力套件 (`ProTable`, `ProForm`, `ProCard`)**、**声明式权限受控组件 (`<Access />`)** 与官方图表库 (`@ant-design/charts`)。
+* **[Ant Design Pro](https://pro.ant.design)**：阿里巴巴开源的企业级中后台最佳实践。本项目深度吸收了其 **统一页面容器 (`PageContainer`)**、**多语言国际化体系 (`useIntl`)**、**ProComponents 生产力套件 (`ProTable`, `ProForm`, `ProCard`)**、**声明式权限受控组件 (`<Access />`)** 与官方图表库 (`@ant-design/charts`)。特别在侧边栏底部辅助链接设计上，完全对齐官方 `all-blocks` 规范，通过 ProLayout 原生 `links` 挂载 `<LinkOutlined /> OpenAPI 文档`，兼具优雅的自适应折叠能力。
 * **[LinaPro](https://github.com/linaproai/linapro)**：吸收 PHP 成熟中后台（FastAdmin、ThinkAdmin、Laravel-Admin）十余年演进经验的现代企业级管理中后台标杆。本项目核心参考了其 **“按钮与底层接口一石二鸟事务联动” (`sys_menu_api`)**、**操作与登录双日志审计机制 (`sys_oper_log` + `sys_login_log`)**、**全局数据字典系统 (`sys_dict_type` + `sys_dict_data`)** 与 **5 级数据权限作用域 (`sys_dept.ancestors`)**，并在 `go-zero` 全栈微服务 Monorepo 体系下实现了高并发与契约驱动的代码生成升维。
 

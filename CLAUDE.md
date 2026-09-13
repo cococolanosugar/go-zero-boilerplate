@@ -12,7 +12,7 @@
 * **前端框架**：React 18 + Vite + TypeScript + pnpm workspace（UI 库：Ant Design 6.6.2 & Ant Design Pro Components 2.8.10）
 * **网络与通信规范**：
   * **仅 `app/gateway` 对外暴露 HTTP RESTful API**（端口 8888），作为唯一的流量入口与 BFF 层。
-  * **内部所有业务微服务（`user`、`order` 等）仅暴露 gRPC 接口**，不对外提供直接的 HTTP 访问。
+  * **内部所有业务微服务（`user`、`worker` 等）仅暴露 gRPC 接口**，不对外提供直接的 HTTP 访问。
   * **前端各端应用（`admin`、`portal`）统一经由 `@zero/api` SDK 调用网关**。
 
 ---
@@ -50,7 +50,7 @@ mise install
 go-zero-boilerplate/
 ├── app/                           # 【后端 Go 微服务体系】
 │   ├── gateway/                   # 统一对外 HTTP 网关 / BFF 服务 (端口 8888)
-│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, order.api)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api)
 │   │   ├── etc/                   # 网关配置文件 (gateway.yaml)
 │   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
 │   │   └── gateway.go             # 网关启动 main 入口
@@ -85,7 +85,10 @@ go-zero-boilerplate/
 │   └── tsconfig.base.json         # 共享 TypeScript 配置
 │
 ├── pkg/                           # 跨模块全局公共库（禁止引入任何 app 业务代码）
+│   ├── nacosx/                    # Nacos 服务注册组件
 │   ├── result/                    # 统一 HTTP 返回结构封装（HttpResult / ParamErrorResult）
+│   ├── storage/                   # 通用对象存储驱动抽象 (本地存储 / S3 等)
+│   ├── temporalx/                 # Temporal 客户端连接池与 logx 统一日志适配器
 │   └── xerr/                      # 业务错误码与 CodeError 统一抽象
 │
 ├── manifest/                      # 【交付与部署清单】
@@ -109,7 +112,7 @@ go-zero-boilerplate/
 * **服务间 RPC 调用模式**：跨服务调用必须 import 目标服务的自动生成客户端：
   ```go
   import userClient "go-zero-boilerplate/app/user/rpc/client/user"
-  import orderClient "go-zero-boilerplate/app/order/rpc/client/order"
+  import workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
   ```
 * **网关核心职责**：仅负责“路由分发、参数校验、JWT 鉴权、跨 RPC 数据聚合”。**严禁在网关 Logic 中直连数据库或编写核心业务规则**，核心业务必须在各自微服务的 RPC Logic 中闭环。
 
@@ -277,8 +280,11 @@ antd doctor                           # 诊断项目级配置、依赖与环境�
 # 1. 验证用户接口 (网关透传 user-rpc)
 curl "http://127.0.0.1:8888/api/v1/user/info?id=1"
 
-# 2. 验证订单详情聚合接口 (网关内网并行聚合 user-rpc + order-rpc)
-curl "http://127.0.0.1:8888/api/v1/order/detail?orderId=1001"
+# 2. 验证大盘概览聚合接口 (网关内网并发聚合 user-rpc 与 worker-rpc)
+curl "http://127.0.0.1:8888/api/v1/dashboard/overview"
+
+# 3. 验证异步任务列表接口 (网关透传 worker-rpc)
+curl -X POST "http://127.0.0.1:8888/api/v1/system/task/list" -H "Content-Type: application/json" -d '{"page":1,"pageSize":10}'
 ```
 
 ---

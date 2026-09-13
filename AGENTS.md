@@ -179,6 +179,8 @@ go-zero-boilerplate/
    * 编写或修改前端 Ant Design 代码后，必须执行 `just lint-antd`（或 `antd lint <path>`），确保 0 警告 0 废弃项。
 5. **诊断与故障排查（Doctor & Env）**：
    * 若遇组件或依赖异常，运行 `antd doctor` 与 `antd env` 快速定位环境与 peerDependencies 问题。
+6. **侧边栏辅助链接与 OpenAPI 规范 (ProLayout links & all-blocks)**：
+   * 侧边栏底部辅助链接严格对齐官方 `ant-design/ant-design-pro (all-blocks)` 规范：严禁在 `menuFooterRender` 中注入大尺寸自定义 Card 组件破坏侧边栏留白。统一使用 ProLayout 原生 `links?: React.ReactNode[]` 挂载 `<LinkOutlined /> OpenAPI 文档`，并结合 `menuFooterRender` 自适应输出极简版权信息，保证展开与折叠态 100% 视觉协调。
 
 ### 3.7 服务注册与发现规范 (Service Discovery: Nacos & Etcd & Direct)
 本项目支持 **Nacos（当前默认）**、**Etcd** 与 **直连（Endpoints）** 三种服务发现与寻址模式，支持零代码改动通过配置文件一键切换：
@@ -286,6 +288,9 @@ go-zero-boilerplate/
   * **多步骤活动编排**：Worker 执行器顺序调度数据拉取、报表生成活动，自动具备毫秒级重试策略与状态实时回写。
 * **开发调试与可视化**：
   * 开发者访问 `http://127.0.0.1:8233` 即可获得毫秒级、端到端的 Workflow 执行轨迹、输入输出参数、Event History、活动重试详情与全链路图谱。
+* **前端全生命周期管理与设计专篇**：
+  * 管理后台 `/system/tasks` 提供任务增删改查、状态流转（`READY`/`RUNNING`/`SUCCESS`/`FAILED`/`PAUSED`）、动态 Cron 与执行详情弹窗。
+  * 完整架构设计详见设计专篇：[Temporal 分布式工作流编排与异步任务治理系统设计方案](file:///D:/work/go-zero-boilerplate/doc/design/2026-09-13-temporal-worker-and-task-management/README.md)。
 
 ---
 
