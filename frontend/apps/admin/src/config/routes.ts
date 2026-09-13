@@ -165,6 +165,19 @@ export const routes: AppRouteItem[] = [
             path: "/system/sys-config",
             redirect: "/system/config",
           },
+          // 兼容历史访问路径，自动重定向至系统监控
+          {
+            path: "/system/online",
+            redirect: "/monitor/online",
+          },
+          {
+            path: "/system/logs",
+            redirect: "/monitor/logs",
+          },
+          {
+            path: "/system/openapi",
+            redirect: "/monitor/openapi",
+          },
         ],
       },
 
@@ -177,28 +190,28 @@ export const routes: AppRouteItem[] = [
         routes: [
           {
             path: "/monitor",
-            redirect: "/system/online",
+            redirect: "/monitor/online",
           },
           {
-            path: "/system/online",
-            name: "menu.system.online",
-            locale: "menu.system.online",
+            path: "/monitor/online",
+            name: "menu.monitor.online",
+            locale: "menu.monitor.online",
             icon: "TeamOutlined",
             access: PERMISSIONS.ONLINE_QUERY,
             component: lazy(() => import("../pages/System/Online")),
           },
           {
-            path: "/system/logs",
-            name: "menu.system.logs",
-            locale: "menu.system.logs",
+            path: "/monitor/logs",
+            name: "menu.monitor.logs",
+            locale: "menu.monitor.logs",
             icon: "HistoryOutlined",
             access: PERMISSIONS.LOG_VIEW,
             component: lazy(() => import("../pages/System/Logs")),
           },
           {
-            path: "/system/openapi",
-            name: "menu.system.openapi",
-            locale: "menu.system.openapi",
+            path: "/monitor/openapi",
+            name: "menu.monitor.openapi",
+            locale: "menu.monitor.openapi",
             icon: "FileTextOutlined",
             component: lazy(() => import("../pages/System/OpenApi")),
           },

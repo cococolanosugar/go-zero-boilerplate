@@ -140,7 +140,7 @@ export const WorkplacePage: React.FC = () => {
     { title: "角色权限", path: "/system/roles", icon: <SafetyCertificateOutlined /> },
     { title: "接口白名单", path: "/system/apis", icon: <ApiOutlined /> },
     { title: "数据字典", path: "/system/dicts", icon: <BookOutlined /> },
-    { title: "审计日志", path: "/system/logs", icon: <HistoryOutlined /> },
+    { title: "审计日志", path: "/monitor/logs", icon: <HistoryOutlined /> },
   ];
 
   return (

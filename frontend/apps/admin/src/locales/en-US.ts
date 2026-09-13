@@ -43,6 +43,9 @@ export default {
   'menu.system.logs': 'Audit Logs',
   'menu.system.online': 'Online Users',
   'menu.system.openapi': 'API Docs (OpenAPI)',
+  'menu.monitor.online': 'Online Users',
+  'menu.monitor.logs': 'Audit Logs',
+  'menu.monitor.openapi': 'API Docs (OpenAPI)',
 
   // Dashboard
   'pages.dashboard.title': 'Monitoring Dashboard',

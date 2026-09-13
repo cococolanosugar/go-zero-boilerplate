@@ -43,6 +43,9 @@ export default {
   'menu.system.logs': '审计日志',
   'menu.system.online': '在线用户',
   'menu.system.openapi': '接口文档 (OpenAPI)',
+  'menu.monitor.online': '在线用户',
+  'menu.monitor.logs': '审计日志',
+  'menu.monitor.openapi': '接口文档 (OpenAPI)',
 
   // 大盘
   'pages.dashboard.title': '系统监控大盘',

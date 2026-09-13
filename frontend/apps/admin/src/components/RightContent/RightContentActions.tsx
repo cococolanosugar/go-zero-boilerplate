@@ -35,7 +35,7 @@ export const RightContentActions: React.FC<RightContentActionsProps> = (props) =
       <Tooltip title="OpenAPI / Swagger 接口契约中心">
         <span
           style={{ cursor: "pointer", padding: "0 8px", fontSize: 16 }}
-          onClick={() => navigate("/system/openapi")}
+          onClick={() => navigate("/monitor/openapi")}
         >
           <ApiOutlined />
         </span>

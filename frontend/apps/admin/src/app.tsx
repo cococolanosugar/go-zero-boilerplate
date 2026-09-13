@@ -117,6 +117,9 @@ const getMenuLocaleKey = (path: string) => {
     "/system/config": "menu.system.config",
     "/system/online": "menu.system.online",
     "/system/openapi": "menu.system.openapi",
+    "/monitor/online": "menu.monitor.online",
+    "/monitor/logs": "menu.monitor.logs",
+    "/monitor/openapi": "menu.monitor.openapi",
   };
   return map[path] || `menu.${path.replace(/^\//, "").replace(/\//g, ".")}`;
 };
