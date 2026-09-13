@@ -2,6 +2,7 @@ package activities
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -23,3 +24,11 @@ func (a *TaskActivities) GenerateReport(ctx context.Context, reportName string) 
 	logx.WithContext(ctx).Infof("[Activity] Generating report: %s at %s", reportName, time.Now().Format(time.RFC3339))
 	return "REPORT_SUCCESS", nil
 }
+
+// SayHello demonstrates a simple atomic activity in Temporal
+func (a *TaskActivities) SayHello(ctx context.Context, name string) (string, error) {
+	logx.WithContext(ctx).Infof("[Activity] SayHello invoked with name: %s", name)
+	greeting := fmt.Sprintf("Hello, %s! Temporal async workflow executed successfully at %s", name, time.Now().Format("2006-01-02 15:04:05"))
+	return greeting, nil
+}
+

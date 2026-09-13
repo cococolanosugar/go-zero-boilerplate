@@ -55,6 +55,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// Initialize Temporal Worker
 	w := worker.New(temporalClient, c.Temporal.TaskQueue, worker.Options{})
 	w.RegisterWorkflow(workflows.DailyReportWorkflow)
+	w.RegisterWorkflow(workflows.HelloWorldWorkflow)
 
 	taskActs := activities.NewTaskActivities()
 	w.RegisterActivity(taskActs)

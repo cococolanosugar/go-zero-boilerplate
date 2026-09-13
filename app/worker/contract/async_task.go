@@ -8,6 +8,7 @@ const (
 // Workflow names
 const (
 	DailyReportWorkflowName = "DailyReportWorkflow"
+	HelloWorldWorkflowName  = "HelloWorldWorkflow"
 )
 
 // Signal names

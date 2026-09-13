@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS `sys_async_task` (
 -- 插入初始示例任务
 INSERT INTO `sys_async_task` (`id`, `task_name`, `task_key`, `task_type`, `cron_expr`, `workflow_type`, `task_queue`, `payload`, `status`, `last_run_status`, `remark`)
 VALUES 
-  (1, '订单Saga巡检与超时补偿任务', 'order_saga_patrol', 'CRON', '*/10 * * * *', 'OrderSagaWorkflow', 'ORDER_TASK_QUEUE', '{"item":"巡检定时任务","amount":99.0,"timeoutSeconds":15}', 1, 'IDLE', '自动定时派发Saga工作流并执行订单状态流转'),
-  (2, '用户积分月度重置工作流', 'user_points_settle', 'CRON', '0 0 1 * *', 'OrderSagaWorkflow', 'ORDER_TASK_QUEUE', '{"item":"月度积分清算","amount":10.0,"timeoutSeconds":30}', 0, 'IDLE', '每月1号凌晨调度执行用户积分对账');
+  (1, 'HelloWorld 异步演示任务', 'hello_world_sample', 'CRON', '*/5 * * * *', 'HelloWorldWorkflow', 'ASYNC_TASK_QUEUE', '{"name":"Antigravity Gopher"}', 1, 'IDLE', '用于演示 Temporal 异步任务与工作流开发标准模式的示例任务'),
+  (2, '系统每日报表统计', 'daily_report_generate', 'CRON', '0 2 * * *', 'DailyReportWorkflow', 'ASYNC_TASK_QUEUE', '{"scope":"all"}', 1, 'IDLE', '每日凌晨统计平台各项微服务核心指标并生成汇总报表');
 
 -- 插入一级菜单：任务管理 (ID = 45, parent_id = 0, type = 2 [菜单], sort = 6)
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`, `visible`, `status`)
