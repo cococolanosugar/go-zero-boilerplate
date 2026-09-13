@@ -12,7 +12,7 @@
 * **前端框架**：React 18 + Vite + TypeScript + pnpm workspace（UI 库：Ant Design 6.6.2 & Ant Design Pro Components 2.8.10）
 * **网络与通信规范**：
   * **仅 `app/gateway` 对外暴露 HTTP RESTful API**（端口 8888），作为唯一的流量入口与 BFF 层。
-  * **内部所有业务微服务（`user`、`order` 等）仅暴露 gRPC 接口**，不对外提供直接的 HTTP 访问。
+  * **内部所有业务微服务（`user`、`worker` 等）仅暴露 gRPC 接口**，不对外提供直接的 HTTP 访问。
   * **前端各端应用（`admin`、`portal`）统一经由 `@zero/api` SDK 调用网关**。
 * **核心参考开源标杆**：
   * **[Ant Design Pro](https://pro.ant.design)**：提供前端企业级规范（`PageContainer` 页面容器、`useIntl` 多语言国际化体系、ProComponents 组件库与 `@ant-design/charts` 数据可视化）。
@@ -26,7 +26,7 @@
 go-zero-boilerplate/
 ├── app/                           # 【后端 Go 微服务体系】
 │   ├── gateway/                   # 统一对外 HTTP 网关 / BFF 服务 (端口 8888)
-│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, order.api)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api)
 │   │   ├── etc/                   # 网关配置文件 (gateway.yaml)
 │   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
 │   │   └── gateway.go             # 网关启动 main 入口
@@ -40,14 +40,14 @@ go-zero-boilerplate/
 │   │   │   └── user.go
 │   │   └── model/
 │   │
-│   └── order/                     # 【订单微服务】纯 gRPC (端口 8081)
-│       ├── rpc/
-│       │   ├── client/order/      # 供网关调用的 RPC Client
-│       │   ├── etc/order.yaml
-│       │   ├── internal/
-│       │   ├── pb/ & order.proto
-│       │   └── order.go
-│       └── model/
+│   └── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
+│       ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
+│       └── rpc/
+│           ├── client/worker/     # 供网关调用的 RPC Client
+│           ├── etc/worker.yaml
+│           ├── internal/          # activities, workflows, config, logic, server, svc
+│           ├── pb/ & worker.proto
+│           └── worker.go          # Worker RPC + Temporal 统一启动入口
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -61,7 +61,9 @@ go-zero-boilerplate/
 │   └── tsconfig.base.json         # 共享 TypeScript 配置
 │
 ├── pkg/                           # 跨模块全局公共库（禁止引入任何 app 业务代码）
+│   ├── nacosx/                    # Nacos 服务注册组件
 │   ├── result/                    # 统一 HTTP 返回结构封装（HttpResult / ParamErrorResult）
+│   ├── temporalx/                 # Temporal 客户端连接池与 logx 统一日志适配器
 │   └── xerr/                      # 业务错误码与 CodeError 统一抽象
 │
 ├── manifest/                      # 【交付与部署清单】
@@ -190,7 +192,7 @@ go-zero-boilerplate/
       Port: ${NACOS_PORT:8848}
       NamespaceId: ${NACOS_NAMESPACE:public}
     ```
-  * 服务端入口 (`user.go`, `order.go`) 调用 `pkg/nacosx.RegisterService(c.Name, c.ListenOn, c.Nacos)` 注册实例，容器退出时自动注销。
+  * 服务端入口 (`user.go`, `worker.go`) 调用 `pkg/nacosx.RegisterService(c.Name, c.ListenOn, c.Nacos)` 注册实例，容器退出时自动注销。
 * **客户端 (Gateway / BFF)**：
   * 入口 `gateway.go` 中匿名导入 `_ "github.com/zeromicro/zero-contrib/zrpc/registry/nacos"` 挂载 gRPC resolver。
   * 在 `etc/gateway.yaml` 中使用 `Target` 格式寻址：
@@ -273,6 +275,18 @@ go-zero-boilerplate/
   * 管理后台 (`apps/admin`) 与技术门户 (`apps/portal`) 统一提供一键 SSO 登录入口与独立 `/callback` 路由。
   * 默认端点自适应内网与局域网 IP（`http://192.168.31.174:8000`），支持多端局域网设备联调。
 
+### 3.12 基于 Temporal 的分布式异步编排与 Saga 事务系统 (Temporal Workflow & Saga Orchestration)
+* **架构定位**：
+  * **Temporal 服务端**：基于 Docker 轻量化集成（`temporal server start-dev`，gRPC 端口 7233，Web 控制台 8233），零外部重型依赖，内置 SQLite 持久化支持。
+  * **客户端基础库 (`pkg/temporalx`)**：提供开箱即用的连接池创建器与 go-zero `logx` 结构化日志无缝适配器（`logxAdapter`），确保工作流底层所有生命周期事件日志与后端整体日志格式 100% 统一。
+  * **异步任务 Worker 微服务 (`app/worker/rpc`)**：纯 gRPC 微服务（端口 8082），同时承载 Temporal Worker 消费执行器，监听指定 TaskQueue（如 `ASYNC_TASK_QUEUE`），承载领域长耗时异步任务、状态机流转与分布式工作流编排。**网关仅通过标准 gRPC 客户端与 worker 服务交互，杜绝网关直接直连 Temporal 服务端**。
+  * **契约解耦与类型安全 (`app/worker/contract`)**：网关与各业务服务仅依赖轻量契约定义（Workflow ID、Signal 信号、Query 状态查询、输入参数），无需直接依赖复杂的内部工作流实现代码。
+* **标杆实现：异步任务调度工作流 (`DailyReportWorkflow` & `sys_async_task`)**：
+  * **动态定时调度 (Cron Schedule)**：基于 Temporal Schedule API 将落库的异步任务记录（如每日报表 `daily_report_generate`）动态注册到 Temporal 调度器，支持暂停、恢复与立即触发运行。
+  * **多步骤活动编排**：Worker 执行器顺序调度数据拉取、报表生成活动，自动具备毫秒级重试策略与状态实时回写。
+* **开发调试与可视化**：
+  * 开发者访问 `http://127.0.0.1:8233` 即可获得毫秒级、端到端的 Workflow 执行轨迹、输入输出参数、Event History、活动重试详情与全链路图谱。
+
 ---
 
 ## 4. 常用命令速查 (Cheat Sheet)
@@ -291,7 +305,7 @@ just gen-gateway
 
 # 生成微服务 RPC 代码
 just gen-rpc user
-just gen-rpc order
+just gen-rpc worker
 
 # 生成数据库持久层 Model 代码（带 Redis 缓存支持）
 just gen-model
@@ -304,7 +318,7 @@ just gen-ts
 ```bash
 # 1. 启动微服务（本地开发直连模式）
 just run-user-rpc     # 监听 127.0.0.1:8080
-just run-order-rpc    # 监听 127.0.0.1:8081
+just run-worker-rpc   # 监听 127.0.0.1:8082 (同时启动内置 Temporal Worker)
 
 # 2. 启动统一网关
 just run-gateway      # 监听 0.0.0.0:8888

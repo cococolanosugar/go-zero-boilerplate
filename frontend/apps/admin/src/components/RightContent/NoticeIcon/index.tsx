@@ -63,11 +63,11 @@ const INITIAL_NOTICES: NoticeItem[] = [
     datetime: "2 小时前",
     type: "message",
     avatar: "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png",
-    description: "User RPC (8080) 与 Order RPC (8081) 运行平稳",
+    description: "User RPC (8080) 与 Worker RPC (8082) 运行平稳",
   },
   {
     id: "todo-1",
-    title: "审批订单 #ORD-2026-9082 退款流程",
+    title: "审批异步工作流 #TSK-2026-9082 执行计划",
     datetime: "今日 18:00 前",
     type: "event",
     extra: "即将到期",

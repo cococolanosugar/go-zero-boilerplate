@@ -2,7 +2,7 @@
 
 基于 [go-zero](https://github.com/zeromicro/go-zero) 与 **pnpm workspace** 搭建的工业级 **全栈 Monorepo（单仓多微服务 + 多端前端）** 架构。
 
-* **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`order`）收缩为纯 gRPC 通信。
+* **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`worker`）收缩为纯 gRPC 通信。
 * **前端**：采用 `pnpm workspace` 统一管理后台（`admin`，基于 Ant Design 6.6.2 + Pro Components 2.8.10）与前台门户（`portal`，基于 Ant Design 6.6.2），通过 `goctl api ts` 自动生成统一的 `@zero/api` TypeScript SDK，契约一键直通！
 * **认证**：深度集成 [Casdoor](https://casdoor.org) 企业级统一身份认证（IAM/SSO），支持 OAuth 2.0 / OIDC 授权码安全置换与微服务 JIT 即时自动拨备建档，与传统账号密码双模并存。
 
@@ -14,7 +14,7 @@
 go-zero-boilerplate/
 ├── app/                           # 【后端 Go 微服务体系】
 │   ├── gateway/                   # 【统一对外 HTTP 网关 / BFF 层】(端口 8888)
-│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, order.api)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api)
 │   │   ├── etc/gateway.yaml       # 网关配置
 │   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
 │   │   └── gateway.go             # 网关 main 入口
@@ -23,9 +23,10 @@ go-zero-boilerplate/
 │   │   ├── rpc/                   # gRPC 核心服务及对外 client/user/
 │   │   └── model/                 # 数据持久层
 │   │
-│   └── order/                     # 【订单微服务】纯 gRPC (端口 8081)
-│       ├── rpc/                   # gRPC 核心服务及对外 client/order/
-│       └── model/                 # 数据持久层
+│   └── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
+│       ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
+│       ├── rpc/                   # gRPC 核心服务及对外 client/worker/
+│       └── model/                 # 异步任务持久层
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -65,8 +66,8 @@ mise install
 # 启动用户微服务 (gRPC :8080)
 just run-user-rpc
 
-# 启动订单微服务 (gRPC :8081)
-just run-order-rpc
+# 启动异步任务微服务 (gRPC :8082，内置 Temporal Worker)
+just run-worker-rpc
 
 # 启动统一网关 (HTTP :8888)
 just run-gateway
@@ -96,14 +97,14 @@ just gen-ts
 | :--- | :--- | :--- |
 | 生成网关后端代码 | `just gen-gateway` | `make gen-gateway` |
 | 生成 user RPC | `just gen-rpc user` | `make gen-user-rpc` |
-| 生成 order RPC | `just gen-rpc order` | `make gen-order-rpc` |
+| 生成 worker RPC | `just gen-rpc worker` | `make gen-worker-rpc` |
 | **生成持久层 Model 代码** | `just gen-model` | `make gen-model` |
 | **全栈 CRUD 一键代码生成** | `just gen-crud <service> <table>` | `make gen-crud SERVICE=<service> TABLE=<table>` |
 | **数据库版本化迁移 (新建/执行/回滚/状态)** | `just migrate-(new/up/down/status)` | `make migrate-(new/up/down/status)` |
 | **同步生成前端 TS SDK** | `just gen-ts` | `make gen-ts` |
 | 启动网关 | `just run-gateway` | `make run-gateway` |
 | 启动 user-rpc | `just run-user-rpc` | `make run-user-rpc` |
-| 启动 order-rpc | `just run-order-rpc` | `make run-order-rpc` |
+| 启动 worker-rpc | `just run-worker-rpc` | `make run-worker-rpc` |
 | 启动前端 Admin | `just run-admin` | `make run-admin` |
 | 启动前端 Portal | `just run-portal` | `make run-portal` |
 | 构建前端全部产物 | `just build-frontend` | `make build-frontend` |
@@ -113,7 +114,7 @@ just gen-ts
 | 整理 Go 依赖 | `just tidy` | `make tidy` |
 | **一键启动全栈容器 (All-in-One)** | `just docker-up` | `make docker-up` |
 | 停止全栈容器 | `just docker-down` | `make docker-down` |
-| 启动开发基础设施 (MySQL/Redis/Etcd/Nacos) | `just docker-infra-up` | `make docker-infra-up` |
+| 启动开发基础设施 (MySQL/Redis/Etcd/Nacos/Temporal) | `just docker-infra-up` | `make docker-infra-up` |
 | 构建所有 Docker 镜像 | `just docker-build` | `make docker-build` |
 | **脚手架一键重命名** | `just rename-project <name>` | `make rename-project NEW_MODULE=<name>` |
 
@@ -124,7 +125,7 @@ just gen-ts
 本项目已实现 **Nacos（当前默认）**、**Etcd** 与 **直连（Endpoints）** 三种模式的即插即用切换，完全无需改动业务逻辑代码。
 
 ### 1. 默认模式：Nacos 服务注册与发现
-* **服务端**：`app/user/rpc/etc/user.yaml` 与 `app/order/rpc/etc/order.yaml` 默认开启 `Nacos` 配置，服务启动后自动通过 `pkg/nacosx` 注册到 Nacos，退出时优雅反注册。
+* **服务端**：`app/user/rpc/etc/user.yaml` 与 `app/worker/rpc/etc/worker.yaml` 默认支持 `Nacos` 配置，服务启动后自动通过 `pkg/nacosx` 注册到 Nacos，退出时优雅反注册。
   ```yaml
   Nacos:
     Host: ${NACOS_HOST:127.0.0.1}
@@ -183,7 +184,7 @@ just gen-ts
 
 ### 1. 网关 RBAC 动态鉴权切面 (RBAC Middleware)
 统一网关挂载 `RbacMiddleware`，与微服务 `CheckApiPermission` RPC 协同：
-* **智能正则路径匹配**：自动将动态 RESTful 路由（如 `/api/v1/orders/:id`）映射并匹配数据库 API 白名单与角色权限树。
+* **智能正则路径匹配**：自动将动态 RESTful 路由（如 `/api/v1/users/:id`）映射并匹配数据库 API 白名单与角色权限树。
 * **白名单与超管豁免**：登录与公开接口自动放行；超级管理员（`UserId == 1` 或 `ROLE_ADMIN`）全局豁免。
 * **统一 403 异常拦截**：未授权访问直接熔断返回标准 HTTP 403 结构体。
 * **设计专篇与三表分工哲学**：详见 [企业级全栈 RBAC 与数据权限体系设计方案](doc/design/2026-09-06-permission/README.md)（含 `sys_menu_api` 与 `sys_role_api` 分工辨析、时序图与前后端一体化联动源码剖析）。
@@ -199,7 +200,13 @@ just gen-ts
 * **微服务 JIT 即时自动拨备 (JIT Provisioning)**：新员工首次通过 SSO 登录时，用户微服务自动在本地 `sys_user` 建立档案并下发默认权限角色，免去人工建档流程。
 * **多端 Parity 体验一致**：管理后台与官方门户均内置一键 SSO 登录与独立 `/callback` 路由，默认支持内网 IP 局域网跨设备联调。
 
-### 4. 脚手架一键重命名与工程定制 (Rebranding)
+### 4. 基于 Temporal 的分布式异步编排与工作流引擎 (Temporal Workflow & Worker)
+* **架构隔离**：独立的 Worker 异步微服务（纯 gRPC `:8082`），同时内置 Temporal Worker 运行器，监听工作流任务队列。
+* **统一日志适配**：`pkg/temporalx` 提供连接池与 go-zero `logx` 深度适配器，确保工作流底层与后端服务日志格式完全一致。
+* **契约驱动解耦**：`app/worker/contract` 声明公共工作流契约，网关仅通过标准 gRPC 与 Worker 服务交互，杜绝网关直接暴露 Temporal SDK 依赖。
+* **可视化全链路图谱**：自带 Temporal Web 控制台（`:8233`），毫秒级可视化工作流执行历史、信号触发与活动重试。
+
+### 5. 脚手架一键重命名与工程定制 (Rebranding)
 只需一条命令即可将本脚手架一键定制为任意新项目名：
 ```bash
 # Windows

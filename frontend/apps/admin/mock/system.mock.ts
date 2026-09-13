@@ -94,9 +94,7 @@ const mockApis = [
   { id: 7, apiGroup: "System", title: "字典类型", path: "/api/v1/system/dict/types", method: "GET", isAutoSync: 1 },
   { id: 8, apiGroup: "System", title: "字典数据", path: "/api/v1/system/dict/data", method: "GET", isAutoSync: 1 },
   { id: 9, apiGroup: "System", title: "操作日志", path: "/api/v1/system/logs/oper", method: "GET", isAutoSync: 1 },
-  { id: 10, apiGroup: "System", title: "登录日志", path: "/api/v1/system/logs/login", method: "GET", isAutoSync: 1 },
-  { id: 11, apiGroup: "Order", title: "大盘监控", path: "/api/v1/order/dashboard", method: "GET", isAutoSync: 1 },
-  { id: 12, apiGroup: "Order", title: "订单详情", path: "/api/v1/order/detail", method: "GET", isAutoSync: 1 },
+  { id: 11, apiGroup: "Dashboard", title: "大盘监控", path: "/api/v1/dashboard/overview", method: "GET", isAutoSync: 1 },
 ];
 
 // 4. 字典类型数据集

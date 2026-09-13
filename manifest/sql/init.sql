@@ -17,29 +17,11 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 -- 订单表
-CREATE TABLE IF NOT EXISTS `orders` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
-    `order_id` bigint NOT NULL DEFAULT 0 COMMENT '业务订单号',
-    `user_id` bigint NOT NULL DEFAULT 0 COMMENT '用户ID',
-    `item` varchar(100) NOT NULL DEFAULT '' COMMENT '购买商品',
-    `amount` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT '订单金额',
-    `status` varchar(20) NOT NULL DEFAULT 'PENDING' COMMENT '状态',
-    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_order_id` (`order_id`),
-    KEY `idx_user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表';
-
 -- 初始基础数据种子
 -- 用户密码默认 123456 (使用 bcrypt 哈希值)
 INSERT INTO `user` (`id`, `mobile`, `username`, `password`, `avatar`) 
 VALUES (1, '13800000000', 'Antigravity Admin', '$2a$10$Ng7owCC4Isoz4SlkX553jOuRn0dmxrNS2CIX8p/JGBwx2bCHFHHdC', 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg')
 ON DUPLICATE KEY UPDATE `username` = VALUES(`username`);
-
-INSERT INTO `orders` (`id`, `order_id`, `user_id`, `item`, `amount`, `status`)
-VALUES (1, 1001, 1, 'Go-Zero Monorepo 实战教程', 99.90, 'PAID')
-ON DUPLICATE KEY UPDATE `item` = VALUES(`item`);
 
 
 -- ====================================================================
@@ -271,18 +253,7 @@ INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`,
 VALUES (1, 0, '监控大盘', 2, '/dashboard', 'Dashboard', 'dashboard:view', 'DashboardOutlined', 1)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
--- 2. 订单管理模块与按钮
-INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (2, 0, '订单管理', 2, '/orders', 'Orders', 'order:view', 'ShoppingCartOutlined', 2)
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
-
-INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (201, 2, '订单查询', 3, '', '', 'order:query', '', 1),
-       (202, 2, '订单核验', 3, '', '', 'order:audit', '', 2),
-       (203, 2, '订单导出', 3, '', '', 'order:export', '', 3)
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
-
--- 3. 组织管理目录 (Org 组织架构 - 人·岗·部 实体闭环)
+-- 2. 组织管理目录 (Org 组织架构 - 人·岗·部 实体闭环)
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
 VALUES (7, 0, '组织管理', 1, '/org', '', 'org:dir', 'ApartmentOutlined', 3)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `path` = VALUES(`path`), `icon` = VALUES(`icon`), `sort` = VALUES(`sort`);
@@ -375,8 +346,7 @@ ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `sort` = VALUES(`sort`);
 -- 基础 API 资源登记
 INSERT INTO `sys_api` (`id`, `api_group`, `title`, `path`, `method`)
 VALUES (1, 'user', '获取当前用户信息', '/api/v1/user/info', 'GET'),
-       (2, 'order', '获取大盘概览', '/api/v1/order/dashboard', 'GET'),
-       (3, 'order', '获取订单详情', '/api/v1/order/detail', 'GET'),
+       (2, 'dashboard', '获取系统大盘概览', '/api/v1/dashboard/overview', 'GET'),
        (4, 'system', '获取个人菜单与权限', '/api/v1/system/personal/permissions', 'GET'),
        (5, 'system', '员工列表', '/api/v1/system/users', 'GET'),
        (6, 'system', '创建员工', '/api/v1/system/users', 'POST'),
@@ -399,8 +369,7 @@ ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 按钮与 API 初始绑定 (一石二鸟联动)
 INSERT INTO `sys_menu_api` (`menu_id`, `api_id`)
-VALUES (1, 2),   -- 监控大盘 -> /api/v1/order/dashboard
-       (201, 3), -- 订单查询 -> /api/v1/order/detail
+VALUES (1, 2),   -- 监控大盘 -> /api/v1/dashboard/overview
        (31, 5),  -- 员工管理 -> /api/v1/system/users GET
        (311, 6), -- 新增员工 -> /api/v1/system/users POST
        (32, 7),  -- 角色权限 -> /api/v1/system/roles GET

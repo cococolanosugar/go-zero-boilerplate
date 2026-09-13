@@ -6,13 +6,14 @@ package handler
 import (
 	"net/http"
 
+	dashboard "go-zero-boilerplate/app/gateway/internal/handler/dashboard"
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
-	order "go-zero-boilerplate/app/gateway/internal/handler/order"
 	sys_config "go-zero-boilerplate/app/gateway/internal/handler/sys_config"
 	sys_dept "go-zero-boilerplate/app/gateway/internal/handler/sys_dept"
 	sys_notice "go-zero-boilerplate/app/gateway/internal/handler/sys_notice"
 	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
+	systemtask "go-zero-boilerplate/app/gateway/internal/handler/system/task"
 	user "go-zero-boilerplate/app/gateway/internal/handler/user"
 	user_notice "go-zero-boilerplate/app/gateway/internal/handler/user_notice"
 	"go-zero-boilerplate/app/gateway/internal/svc"
@@ -21,6 +22,19 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取系统大盘聚合信息（mr.Finish 内网并发拉取用户画像与任务统计）
+				Method:  http.MethodGet,
+				Path:    "/overview",
+				Handler: dashboard.GetDashboardOverviewHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/dashboard"),
+	)
+
 	server.AddRoutes(
 		[]rest.Route{
 			{
@@ -80,25 +94,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/system/dict"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				// 获取大盘聚合信息（mr.Finish 内网并发拉取微服务）
-				Method:  http.MethodGet,
-				Path:    "/dashboard",
-				Handler: order.GetDashboardOverviewHandler(serverCtx),
-			},
-			{
-				// 获取订单详情（聚合订单与用户信息）
-				Method:  http.MethodGet,
-				Path:    "/detail",
-				Handler: order.GetOrderDetailHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api/v1/order"),
 	)
 
 	server.AddRoutes(
@@ -386,6 +381,55 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/system"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取异步任务分页列表
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: systemtask.ListTasksHandler(serverCtx),
+			},
+			{
+				// 新增异步任务
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: systemtask.CreateTaskHandler(serverCtx),
+			},
+			{
+				// 获取异步任务详情
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: systemtask.GetTaskHandler(serverCtx),
+			},
+			{
+				// 修改异步任务
+				Method:  http.MethodPut,
+				Path:    "/:id",
+				Handler: systemtask.UpdateTaskHandler(serverCtx),
+			},
+			{
+				// 删除异步任务
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: systemtask.DeleteTaskHandler(serverCtx),
+			},
+			{
+				// 立即触发执行一次任务
+				Method:  http.MethodPost,
+				Path:    "/:id/run",
+				Handler: systemtask.RunTaskOnceHandler(serverCtx),
+			},
+			{
+				// 启停异步任务
+				Method:  http.MethodPut,
+				Path:    "/:id/status",
+				Handler: systemtask.ToggleTaskStatusHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/system/task"),
 	)
 
 	server.AddRoutes(

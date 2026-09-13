@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package worker;
+option go_package = "./pb";
+
+message GetWorkflowDetailReq {
+  string workflowId = 1;
+  string runId = 2;
+}
+
+message GetWorkflowDetailResp {
+  string workflowId = 1;
+  string runId = 2;
+  string status = 3;
+  int64 startTime = 4;
+  int64 closeTime = 5;
+  string state = 6;
+}
+
+message SignalWorkflowReq {
+  string workflowId = 1;
+  string runId = 2;
+  string signalName = 3;
+  string payload = 4;
+}
+
+message SignalWorkflowResp {
+  bool success = 1;
+  string message = 2;
+}
+
+message AsyncTaskItem {
+  int64 id = 1;
+  string taskName = 2;
+  string taskKey = 3;
+  string taskType = 4;
+  string cronExpr = 5;
+  string workflowType = 6;
+  string taskQueue = 7;
+  string payload = 8;
+  int64 status = 9;
+  string lastRunTime = 10;
+  string lastRunStatus = 11;
+  string remark = 12;
+  string createTime = 13;
+  string updateTime = 14;
+}
+
+message ListTasksReq {
+  int64 page = 1;
+  int64 pageSize = 2;
+  string taskName = 3;
+  string taskKey = 4;
+  int64 status = 5;
+}
+
+message ListTasksResp {
+  int64 total = 1;
+  repeated AsyncTaskItem list = 2;
+}
+
+message GetTaskReq {
+  int64 id = 1;
+}
+
+message CreateTaskReq {
+  string taskName = 1;
+  string taskKey = 2;
+  string taskType = 3;
+  string cronExpr = 4;
+  string workflowType = 5;
+  string taskQueue = 6;
+  string payload = 7;
+  int64 status = 8;
+  string remark = 9;
+}
+
+message UpdateTaskReq {
+  int64 id = 1;
+  string taskName = 2;
+  string taskType = 3;
+  string cronExpr = 4;
+  string workflowType = 5;
+  string taskQueue = 6;
+  string payload = 7;
+  int64 status = 8;
+  string remark = 9;
+}
+
+message DeleteTaskReq {
+  int64 id = 1;
+}
+
+message DeleteTaskResp {
+  bool success = 1;
+}
+
+message ToggleTaskStatusReq {
+  int64 id = 1;
+  int64 status = 2;
+}
+
+message ToggleTaskStatusResp {
+  bool success = 1;
+}
+
+message RunTaskOnceReq {
+  int64 id = 1;
+}
+
+message RunTaskOnceResp {
+  bool success = 1;
+  string workflowId = 2;
+  string runId = 3;
+  string message = 4;
+}
+
+service Worker {
+  rpc GetWorkflowDetail(GetWorkflowDetailReq) returns (GetWorkflowDetailResp);
+  rpc SignalWorkflow(SignalWorkflowReq) returns (SignalWorkflowResp);
+
+  // 异步任务调度与管理
+  rpc ListTasks(ListTasksReq) returns (ListTasksResp);
+  rpc GetTask(GetTaskReq) returns (AsyncTaskItem);
+  rpc CreateTask(CreateTaskReq) returns (AsyncTaskItem);
+  rpc UpdateTask(UpdateTaskReq) returns (AsyncTaskItem);
+  rpc DeleteTask(DeleteTaskReq) returns (DeleteTaskResp);
+  rpc ToggleTaskStatus(ToggleTaskStatusReq) returns (ToggleTaskStatusResp);
+  rpc RunTaskOnce(RunTaskOnceReq) returns (RunTaskOnceResp);
+}

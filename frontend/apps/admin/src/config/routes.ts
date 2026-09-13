@@ -69,13 +69,6 @@ export const routes: AppRouteItem[] = [
         component: lazy(() => import("../pages/Result/Success")),
       },
       {
-        path: "/orders",
-        name: "menu.orders",
-        locale: "menu.orders",
-        icon: "ShoppingCartOutlined",
-        component: lazy(() => import("../pages/Orders")),
-      },
-      {
         path: "/users",
         name: "menu.users",
         locale: "menu.users",
@@ -176,6 +169,20 @@ export const routes: AppRouteItem[] = [
       {
         path: "/sys-notice",
         redirect: "/notice",
+      },
+
+      // 企业级异步任务调度系统 (Temporal Async Task Management - 独立一级路由)
+      {
+        path: "/tasks",
+        name: "menu.tasks",
+        locale: "menu.tasks",
+        icon: "ScheduleOutlined",
+        access: PERMISSIONS.TASK_VIEW,
+        component: lazy(() => import("../pages/SysTask")),
+      },
+      {
+        path: "/task",
+        redirect: "/tasks",
       },
 
       // 企业级系统配置与治理模块 (System Configuration & Settings)
@@ -289,6 +296,7 @@ export const routes: AppRouteItem[] = [
             name: "menu.monitor.openapi",
             locale: "menu.monitor.openapi",
             icon: "FileTextOutlined",
+            hideInMenu: true,
             component: lazy(() => import("../pages/System/OpenApi")),
           },
         ],

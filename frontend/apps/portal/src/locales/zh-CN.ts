@@ -45,7 +45,7 @@ export default {
   'home.pillar3.title': '多端大仓 Monorepo',
   'home.pillar3.desc': 'pnpm workspace 统一管理 admin 管理后台与 portal 门户系统，跨端共享 @zero/api 自动生成 SDK 与 @zero/shared 工具包。',
   'home.chart.title': '微服务集群调用量与流量监控',
-  'home.chart.subtitle': '实时模拟 Gateway、User RPC 与 Order RPC 流量分发与链路耗时',
+  'home.chart.subtitle': '实时模拟 Gateway、User RPC 与 Worker RPC 流量分发与链路耗时',
   'home.topology.title': '全栈架构拓扑与全景数据流',
 
   // 微服务治理页

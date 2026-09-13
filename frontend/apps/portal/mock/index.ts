@@ -53,7 +53,7 @@ export const mockApis = [
   { id: 3, apiGroup: "System", title: "员工个人画像", path: "/api/v1/system/personal/profile", method: "GET", isAutoSync: 1 },
   { id: 4, apiGroup: "System", title: "全量菜单树", path: "/api/v1/system/menus/tree", method: "GET", isAutoSync: 1 },
   { id: 5, apiGroup: "System", title: "接口字典", path: "/api/v1/system/apis", method: "GET", isAutoSync: 1 },
-  { id: 6, apiGroup: "Order", title: "大盘监控", path: "/api/v1/order/dashboard", method: "GET", isAutoSync: 1 },
+  { id: 6, apiGroup: "Dashboard", title: "大盘监控", path: "/api/v1/dashboard/overview", method: "GET", isAutoSync: 1 },
 ];
 
 export const mockData = {
@@ -127,7 +127,7 @@ export const mockData = {
   },
 
   // 5. 大盘聚合（mr.Finish 模拟）
-  "GET /api/v1/order/dashboard": {
+  "GET /api/v1/dashboard/overview": {
     code: 200,
     msg: "SUCCESS",
     data: {
@@ -137,15 +137,13 @@ export const mockData = {
         mobile: "13800138000",
         avatar: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
       },
-      order: {
-        orderId: 1001,
-        item: "Go-Zero 统一对外 HTTP 网关架构套件 (Mock)",
-        amount: 666.0,
-        status: "PAID",
-        userId: 1,
-        userName: "超级管理员",
-        avatar: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+      systemStats: {
+        totalUsers: 128,
+        activeTasks: 4,
+        completedTasks: 36,
+        successRate: 99.8,
       },
+      sysTime: Date.now(),
     },
   },
 

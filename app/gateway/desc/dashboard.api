@@ -1,0 +1,29 @@
+syntax = "v1"
+
+type (
+	DashboardReq {
+		Timestamp int64 `form:"timestamp,optional"`
+	}
+	DashboardSystemStats {
+		TotalUsers     int64   `json:"totalUsers"`
+		ActiveTasks    int64   `json:"activeTasks"`
+		CompletedTasks int64   `json:"completedTasks"`
+		SuccessRate    float64 `json:"successRate"`
+	}
+	DashboardResp {
+		UserInfo    UserInfoResp         `json:"userInfo"`
+		SystemStats DashboardSystemStats `json:"systemStats"`
+		SysTime     int64                `json:"sysTime"`
+	}
+)
+
+@server (
+	prefix: /api/v1/dashboard
+	group:  dashboard
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取系统大盘聚合信息（mr.Finish 内网并发拉取用户画像与任务统计）"
+	@handler GetDashboardOverview
+	get /overview (DashboardReq) returns (DashboardResp)
+}

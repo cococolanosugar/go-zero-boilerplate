@@ -75,6 +75,18 @@ services:
     networks:
       - go-zero-net
 
+  temporal:
+    image: temporalio/admin-tools:latest
+    container_name: go-zero-temporal
+    command: temporal server start-dev --ip 0.0.0.0 --ui-ip 0.0.0.0 --db-filename /home/temporal/temporal.db
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    volumes:
+      - temporal-data:/home/temporal
+    networks:
+      - go-zero-net
+
   # -------------------------------------------------------------
   # 2. 内部微服务集群 (Internal gRPC Services)
   # -------------------------------------------------------------
@@ -99,15 +111,16 @@ services:
     networks:
       - go-zero-net
 
-  order-rpc:
+  worker-rpc:
     build:
       context: ../../../
-      dockerfile: app/order/rpc/Dockerfile
-    container_name: go-zero-order-rpc
+      dockerfile: app/worker/rpc/Dockerfile
+    container_name: go-zero-worker-rpc
     environment:
-      ORDER_RPC_LISTEN_ON: "0.0.0.0:8081"
+      WORKER_RPC_LISTEN_ON: "0.0.0.0:8082"
       MYSQL_DSN: "root:root@tcp(mysql:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
       REDIS_HOST: "redis:6379"
+      TEMPORAL_HOST: "temporal:7233"
       NACOS_HOST: "nacos"
       NACOS_PORT: 8848
     depends_on:
@@ -115,7 +128,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      nacos:
+      temporal:
         condition: service_started
     networks:
       - go-zero-net
@@ -132,14 +145,14 @@ services:
       NACOS_HOST: "nacos"
       NACOS_PORT: 8848
       USER_RPC_HOST: "user-rpc:8080"
-      ORDER_RPC_HOST: "order-rpc:8081"
+      WORKER_RPC_HOST: "worker-rpc:8082"
       GATEWAY_HOST: "0.0.0.0"
       GATEWAY_PORT: 8888
     ports:
       - "8888:8888"
     depends_on:
       - user-rpc
-      - order-rpc
+      - worker-rpc
     networks:
       - go-zero-net
 
@@ -162,3 +175,7 @@ services:
 networks:
   go-zero-net:
     driver: bridge
+
+volumes:
+  temporal-data:
+

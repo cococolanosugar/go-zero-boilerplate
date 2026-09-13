@@ -35,6 +35,23 @@ export interface AssignRolePermReq {
 	menuIds: Array<number>
 }
 
+export interface AsyncTaskItem {
+	id: number
+	taskName: string
+	taskKey: string
+	taskType: string
+	cronExpr: string
+	workflowType: string
+	taskQueue: string
+	payload: string
+	status: number
+	lastRunTime: string
+	lastRunStatus: string
+	remark: string
+	createTime: string
+	updateTime: string
+}
+
 export interface CasdoorLoginReq {
 	code: string
 	state?: string
@@ -115,16 +132,44 @@ export interface CreateSysUserReq {
 	roleIds?: Array<number>
 }
 
+export interface CreateTaskReq {
+	taskName: string
+	taskKey: string
+	taskType?: string
+	cronExpr?: string
+	workflowType?: string
+	taskQueue?: string
+	payload?: string
+	status?: number
+	remark?: string
+}
+
 export interface DashboardReq {
 }
 export interface DashboardReqParams {
-	orderId?: number
+	timestamp?: number
 }
 
 export interface DashboardResp {
 	userInfo: UserInfoResp
-	order: OrderDetailResp
+	systemStats: DashboardSystemStats
 	sysTime: number
+}
+
+export interface DashboardSystemStats {
+	totalUsers: number
+	activeTasks: number
+	completedTasks: number
+	successRate: number
+}
+
+export interface DeleteTaskReq {
+}
+export interface DeleteTaskReqParams {
+}
+
+export interface DeleteTaskResp {
+	success: boolean
 }
 
 export interface FileUploadResp {
@@ -163,6 +208,11 @@ export interface GetMyNoticeFeedResp {
 
 export interface GetSysMenuTreeResp {
 	list: Array<SysMenuItem>
+}
+
+export interface GetTaskReq {
+}
+export interface GetTaskReqParams {
 }
 
 export interface ListOnlineSessionsReq {
@@ -318,6 +368,21 @@ export interface ListSysUsersResp {
 	list: Array<SysUserItem>
 }
 
+export interface ListTasksReq {
+}
+export interface ListTasksReqParams {
+	page: number
+	pageSize: number
+	taskName?: string
+	taskKey?: string
+	status?: number
+}
+
+export interface ListTasksResp {
+	total: number
+	list: Array<AsyncTaskItem>
+}
+
 export interface LoginReq {
 	mobile: string
 	password: string
@@ -366,23 +431,6 @@ export interface OnlineSessionItem {
 	isCurrent: boolean
 }
 
-export interface OrderDetailReq {
-}
-export interface OrderDetailReqParams {
-	orderId?: number
-}
-
-export interface OrderDetailResp {
-	orderId: number
-	item: string
-	amount: number
-	status: string
-	// 聚合用户微服务信息
-	userId: number
-	userName: string
-	avatar: string
-}
-
 export interface RegisterReq {
 	username?: string
 	mobile: string
@@ -391,6 +439,18 @@ export interface RegisterReq {
 
 export interface RegisterResp {
 	id: number
+}
+
+export interface RunTaskOnceReq {
+}
+export interface RunTaskOnceReqParams {
+}
+
+export interface RunTaskOnceResp {
+	success: boolean
+	workflowId: string
+	runId: string
+	message: string
 }
 
 export interface SysApiItem {
@@ -549,6 +609,16 @@ export interface SysUserItem {
 	createTime: string
 }
 
+export interface ToggleTaskStatusReq {
+	status: number
+}
+export interface ToggleTaskStatusReqParams {
+}
+
+export interface ToggleTaskStatusResp {
+	success: boolean
+}
+
 export interface UpdatePersonalProfileReq {
 	realName: string
 	mobile?: string
@@ -632,6 +702,19 @@ export interface UpdateSysUserReq {
 	email?: string
 	status: number
 	roleIds?: Array<number>
+}
+
+export interface UpdateTaskReq {
+	taskName: string
+	taskType?: string
+	cronExpr?: string
+	workflowType?: string
+	taskQueue?: string
+	payload?: string
+	status?: number
+	remark?: string
+}
+export interface UpdateTaskReqParams {
 }
 
 export interface UserInfoReq {

@@ -5,6 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"go-zero-boilerplate/pkg/storage"
+	"go-zero-boilerplate/pkg/temporalx"
 )
 
 type Config struct {
@@ -20,8 +21,8 @@ type Config struct {
 	Redis redis.RedisConf
 
 	// 下游微服务的 gRPC 客户端配置
-	UserRpc  zrpc.RpcClientConf
-	OrderRpc zrpc.RpcClientConf
+	UserRpc   zrpc.RpcClientConf
+	WorkerRpc zrpc.RpcClientConf
 
 	// Casdoor SSO 认证配置
 	Casdoor struct {
@@ -35,4 +36,8 @@ type Config struct {
 
 	// 对象存储配置
 	Storage storage.Config
+
+	// Temporal 分布式工作流配置
+	Temporal temporalx.Config
 }
+

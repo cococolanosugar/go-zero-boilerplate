@@ -14,7 +14,7 @@ describe("CommandPalette", () => {
 
     expect(screen.getByPlaceholderText(/输入页面名称/)).toBeDefined();
     expect(screen.getByText(/工作台/)).toBeDefined();
-    expect(screen.getByText(/订单管理/)).toBeDefined();
+    expect(screen.getByText(/监控大盘/)).toBeDefined();
   });
 
   it("filters items based on user input", () => {

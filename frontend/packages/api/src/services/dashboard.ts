@@ -5,7 +5,7 @@ import {
 } from "../gateway";
 
 export const dashboardService = {
-  getOverview: getDashboardOverview,
+  getOverview: (params: DashboardReqParams = {}) => getDashboardOverview(params),
 };
 
 export default dashboardService;

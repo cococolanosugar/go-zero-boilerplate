@@ -37,6 +37,23 @@ type AssignRolePermReq struct {
 	MenuIds []int64 `json:"menuIds"`
 }
 
+type AsyncTaskItem struct {
+	Id            int64  `json:"id"`
+	TaskName      string `json:"taskName"`
+	TaskKey       string `json:"taskKey"`
+	TaskType      string `json:"taskType"`
+	CronExpr      string `json:"cronExpr"`
+	WorkflowType  string `json:"workflowType"`
+	TaskQueue     string `json:"taskQueue"`
+	Payload       string `json:"payload"`
+	Status        int64  `json:"status"`
+	LastRunTime   string `json:"lastRunTime"`
+	LastRunStatus string `json:"lastRunStatus"`
+	Remark        string `json:"remark"`
+	CreateTime    string `json:"createTime"`
+	UpdateTime    string `json:"updateTime"`
+}
+
 type CasdoorLoginReq struct {
 	Code  string `json:"code"`
 	State string `json:"state,optional"`
@@ -117,14 +134,41 @@ type CreateSysUserReq struct {
 	RoleIds  []int64 `json:"roleIds,optional"`
 }
 
+type CreateTaskReq struct {
+	TaskName     string `json:"taskName"`
+	TaskKey      string `json:"taskKey"`
+	TaskType     string `json:"taskType,optional,default=CRON"`
+	CronExpr     string `json:"cronExpr,optional"`
+	WorkflowType string `json:"workflowType,optional"`
+	TaskQueue    string `json:"taskQueue,optional"`
+	Payload      string `json:"payload,optional"`
+	Status       int64  `json:"status,optional,default=1"`
+	Remark       string `json:"remark,optional"`
+}
+
 type DashboardReq struct {
-	OrderId int64 `form:"orderId,optional"`
+	Timestamp int64 `form:"timestamp,optional"`
 }
 
 type DashboardResp struct {
-	UserInfo UserInfoResp    `json:"userInfo"`
-	Order    OrderDetailResp `json:"order"`
-	SysTime  int64           `json:"sysTime"`
+	UserInfo    UserInfoResp         `json:"userInfo"`
+	SystemStats DashboardSystemStats `json:"systemStats"`
+	SysTime     int64                `json:"sysTime"`
+}
+
+type DashboardSystemStats struct {
+	TotalUsers     int64   `json:"totalUsers"`
+	ActiveTasks    int64   `json:"activeTasks"`
+	CompletedTasks int64   `json:"completedTasks"`
+	SuccessRate    float64 `json:"successRate"`
+}
+
+type DeleteTaskReq struct {
+	Id int64 `path:"id"`
+}
+
+type DeleteTaskResp struct {
+	Success bool `json:"success"`
 }
 
 type FileUploadResp struct {
@@ -159,6 +203,10 @@ type GetMyNoticeFeedResp struct {
 
 type GetSysMenuTreeResp struct {
 	List []*SysMenuItem `json:"list"`
+}
+
+type GetTaskReq struct {
+	Id int64 `path:"id"`
 }
 
 type ListOnlineSessionsReq struct {
@@ -292,6 +340,19 @@ type ListSysUsersResp struct {
 	List  []*SysUserItem `json:"list"`
 }
 
+type ListTasksReq struct {
+	Page     int64  `form:"page,default=1"`
+	PageSize int64  `form:"pageSize,default=10"`
+	TaskName string `form:"taskName,optional"`
+	TaskKey  string `form:"taskKey,optional"`
+	Status   int64  `form:"status,default=-1,optional"`
+}
+
+type ListTasksResp struct {
+	Total int64           `json:"total"`
+	List  []AsyncTaskItem `json:"list"`
+}
+
 type LoginReq struct {
 	Mobile   string `json:"mobile"`
 	Password string `json:"password"`
@@ -340,20 +401,6 @@ type OnlineSessionItem struct {
 	IsCurrent     bool   `json:"isCurrent"`
 }
 
-type OrderDetailReq struct {
-	OrderId int64 `form:"orderId,default=1001,optional"`
-}
-
-type OrderDetailResp struct {
-	OrderId  int64   `json:"orderId"`
-	Item     string  `json:"item"`
-	Amount   float64 `json:"amount"`
-	Status   string  `json:"status"`
-	UserId   int64   `json:"userId"`
-	UserName string  `json:"userName"`
-	Avatar   string  `json:"avatar"`
-}
-
 type RegisterReq struct {
 	Username string `json:"username,optional"`
 	Mobile   string `json:"mobile"`
@@ -362,6 +409,17 @@ type RegisterReq struct {
 
 type RegisterResp struct {
 	Id int64 `json:"id"`
+}
+
+type RunTaskOnceReq struct {
+	Id int64 `path:"id"`
+}
+
+type RunTaskOnceResp struct {
+	Success    bool   `json:"success"`
+	WorkflowId string `json:"workflowId"`
+	RunId      string `json:"runId"`
+	Message    string `json:"message"`
 }
 
 type SysApiItem struct {
@@ -519,6 +577,15 @@ type SysUserItem struct {
 	CreateTime string   `json:"createTime"`
 }
 
+type ToggleTaskStatusReq struct {
+	Id     int64 `path:"id"`
+	Status int64 `json:"status"`
+}
+
+type ToggleTaskStatusResp struct {
+	Success bool `json:"success"`
+}
+
 type UpdatePersonalProfileReq struct {
 	RealName string `json:"realName"`
 	Mobile   string `json:"mobile,optional"`
@@ -602,6 +669,18 @@ type UpdateSysUserReq struct {
 	Email    string  `json:"email,optional"`
 	Status   int32   `json:"status"`
 	RoleIds  []int64 `json:"roleIds,optional"`
+}
+
+type UpdateTaskReq struct {
+	Id           int64  `path:"id"`
+	TaskName     string `json:"taskName"`
+	TaskType     string `json:"taskType,optional"`
+	CronExpr     string `json:"cronExpr,optional"`
+	WorkflowType string `json:"workflowType,optional"`
+	TaskQueue    string `json:"taskQueue,optional"`
+	Payload      string `json:"payload,optional"`
+	Status       int64  `json:"status,optional"`
+	Remark       string `json:"remark,optional"`
 }
 
 type UserInfoReq struct {

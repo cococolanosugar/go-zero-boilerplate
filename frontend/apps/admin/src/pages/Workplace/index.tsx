@@ -274,7 +274,7 @@ export const WorkplacePage: React.FC = () => {
                 <Tag color="success">RUNNING</Tag>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Text><CloudServerOutlined style={{ marginRight: 8, color: "#52c41a" }} />Order RPC (8081)</Text>
+                <Text><CloudServerOutlined style={{ marginRight: 8, color: "#52c41a" }} />Worker RPC (8082)</Text>
                 <Tag color="success">RUNNING</Tag>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>

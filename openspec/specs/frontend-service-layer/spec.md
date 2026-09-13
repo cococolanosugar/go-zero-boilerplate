@@ -11,7 +11,7 @@ The frontend API SDK SHALL organize API call methods by distinct business domain
 
 #### Scenario: Module import by business domain
 - **WHEN** a business page or component imports API functions
-- **THEN** it SHALL be able to import from domain-specific service namespaces (such as auth, user, order, and system services) as well as the root SDK package
+- **THEN** it SHALL be able to import from active domain-specific service namespaces (such as auth, user, task, and system services) as well as the root SDK package, with decommissioned order services completely removed
 
 ### Requirement: Unified Error Interception and User Feedback
 The frontend network client SHALL provide an error handling hook mechanism that automatically maps HTTP status codes and business error codes to Ant Design feedback components.

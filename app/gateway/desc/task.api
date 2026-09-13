@@ -1,0 +1,131 @@
+syntax = "v1"
+
+info (
+	title:   "Task API"
+	desc:    "异步任务管理接口"
+	author:  "antigravity"
+	version: "v1"
+)
+
+type (
+	AsyncTaskItem {
+		Id            int64  `json:"id"`
+		TaskName      string `json:"taskName"`
+		TaskKey       string `json:"taskKey"`
+		TaskType      string `json:"taskType"`
+		CronExpr      string `json:"cronExpr"`
+		WorkflowType  string `json:"workflowType"`
+		TaskQueue     string `json:"taskQueue"`
+		Payload       string `json:"payload"`
+		Status        int64  `json:"status"`
+		LastRunTime   string `json:"lastRunTime"`
+		LastRunStatus string `json:"lastRunStatus"`
+		Remark        string `json:"remark"`
+		CreateTime    string `json:"createTime"`
+		UpdateTime    string `json:"updateTime"`
+	}
+
+	ListTasksReq {
+		Page     int64  `form:"page,default=1"`
+		PageSize int64  `form:"pageSize,default=10"`
+		TaskName string `form:"taskName,optional"`
+		TaskKey  string `form:"taskKey,optional"`
+		Status   int64  `form:"status,default=-1,optional"`
+	}
+
+	ListTasksResp {
+		Total int64           `json:"total"`
+		List  []AsyncTaskItem `json:"list"`
+	}
+
+	GetTaskReq {
+		Id int64 `path:"id"`
+	}
+
+	CreateTaskReq {
+		TaskName     string `json:"taskName"`
+		TaskKey      string `json:"taskKey"`
+		TaskType     string `json:"taskType,optional,default=CRON"`
+		CronExpr     string `json:"cronExpr,optional"`
+		WorkflowType string `json:"workflowType,optional"`
+		TaskQueue    string `json:"taskQueue,optional"`
+		Payload      string `json:"payload,optional"`
+		Status       int64  `json:"status,optional,default=1"`
+		Remark       string `json:"remark,optional"`
+	}
+
+	UpdateTaskReq {
+		Id           int64  `path:"id"`
+		TaskName     string `json:"taskName"`
+		TaskType     string `json:"taskType,optional"`
+		CronExpr     string `json:"cronExpr,optional"`
+		WorkflowType string `json:"workflowType,optional"`
+		TaskQueue    string `json:"taskQueue,optional"`
+		Payload      string `json:"payload,optional"`
+		Status       int64  `json:"status,optional"`
+		Remark       string `json:"remark,optional"`
+	}
+
+	DeleteTaskReq {
+		Id int64 `path:"id"`
+	}
+
+	DeleteTaskResp {
+		Success bool `json:"success"`
+	}
+
+	ToggleTaskStatusReq {
+		Id     int64 `path:"id"`
+		Status int64 `json:"status"`
+	}
+
+	ToggleTaskStatusResp {
+		Success bool `json:"success"`
+	}
+
+	RunTaskOnceReq {
+		Id int64 `path:"id"`
+	}
+
+	RunTaskOnceResp {
+		Success    bool   `json:"success"`
+		WorkflowId string `json:"workflowId"`
+		RunId      string `json:"runId"`
+		Message    string `json:"message"`
+	}
+)
+
+@server (
+	prefix: /api/v1/system/task
+	group:  system/task
+	jwt:    Auth
+)
+service gateway {
+	@doc "获取异步任务分页列表"
+	@handler ListTasks
+	get / (ListTasksReq) returns (ListTasksResp)
+
+	@doc "获取异步任务详情"
+	@handler GetTask
+	get /:id (GetTaskReq) returns (AsyncTaskItem)
+
+	@doc "新增异步任务"
+	@handler CreateTask
+	post / (CreateTaskReq) returns (AsyncTaskItem)
+
+	@doc "修改异步任务"
+	@handler UpdateTask
+	put /:id (UpdateTaskReq) returns (AsyncTaskItem)
+
+	@doc "删除异步任务"
+	@handler DeleteTask
+	delete /:id (DeleteTaskReq) returns (DeleteTaskResp)
+
+	@doc "启停异步任务"
+	@handler ToggleTaskStatus
+	put /:id/status (ToggleTaskStatusReq) returns (ToggleTaskStatusResp)
+
+	@doc "立即触发执行一次任务"
+	@handler RunTaskOnce
+	post /:id/run (RunTaskOnceReq) returns (RunTaskOnceResp)
+}

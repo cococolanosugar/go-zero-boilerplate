@@ -29,6 +29,7 @@ export default {
   'menu.result.success': 'Success',
   'menu.orders': 'Order Management',
   'menu.notice': 'Announcements',
+  'menu.tasks': 'Task Management',
   'menu.users': 'User Center',
   'menu.monitor': 'Monitoring',
   'menu.org': 'Organization',
@@ -57,11 +58,12 @@ export default {
   'menu.system.openapi': 'API Docs (OpenAPI)',
   'menu.monitor.online': 'Online Users',
   'menu.monitor.logs': 'Audit Logs',
-  'menu.monitor.openapi': 'API Docs (OpenAPI)',
+  'menu.monitor.openapi': 'OpenAPI Docs',
+  'menu.monitor.openapi.short': 'OpenAPI Docs',
 
   // Dashboard
   'pages.dashboard.title': 'Monitoring Dashboard',
-  'pages.dashboard.subTitle': 'Internal concurrent aggregation via go-zero mr.Finish across User & Order RPCs',
+  'pages.dashboard.subTitle': 'Internal concurrent aggregation via go-zero mr.Finish across User & Worker RPCs',
   'pages.dashboard.refresh': 'Refresh Data',
   'pages.dashboard.gatewayStatus': 'HTTP Gateway Status',
   'pages.dashboard.online': '8888 Online',

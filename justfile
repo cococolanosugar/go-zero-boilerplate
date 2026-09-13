@@ -31,9 +31,9 @@ run-gateway:
 run-user-rpc:
     cd app/user/rpc && go run user.go -f etc/user.yaml
 
-# 启动 order-rpc 服务 (gRPC 8081)
-run-order-rpc:
-    cd app/order/rpc && go run order.go -f etc/order.yaml
+# 启动 worker-rpc 异步任务微服务 (gRPC 8082，内置 Temporal Worker)
+run-worker-rpc:
+    cd app/worker/rpc && go run worker.go -f etc/worker.yaml
 
 # 启动前端管理后台 (Vite 3001，默认本地 8888 网关)
 run-admin:

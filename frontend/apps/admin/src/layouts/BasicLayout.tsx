@@ -57,6 +57,7 @@ export const BasicLayout: React.FC = () => {
       setLocale,
       isFullscreen,
       toggleFullscreen,
+      currentPath: location.pathname,
     });
   }, [
     initialState,
@@ -70,6 +71,8 @@ export const BasicLayout: React.FC = () => {
     locale,
     setLocale,
     isFullscreen,
+    toggleFullscreen,
+    location.pathname,
   ]);
 
   if (initialState.loading) {

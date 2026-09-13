@@ -29,6 +29,7 @@ export default {
   'menu.result.success': '成功页面',
   'menu.orders': '订单管理',
   'menu.notice': '通知公告',
+  'menu.tasks': '任务管理',
   'menu.users': '用户中心',
   'menu.monitor': '系统监控',
   'menu.org': '组织管理',
@@ -57,11 +58,12 @@ export default {
   'menu.system.openapi': '接口文档 (OpenAPI)',
   'menu.monitor.online': '在线用户',
   'menu.monitor.logs': '审计日志',
-  'menu.monitor.openapi': '接口文档 (OpenAPI)',
+  'menu.monitor.openapi': 'OpenAPI 文档',
+  'menu.monitor.openapi.short': 'OpenAPI 文档',
 
   // 大盘
   'pages.dashboard.title': '系统监控大盘',
-  'pages.dashboard.subTitle': '基于 go-zero mr.Finish 内网并发聚合 User 与 Order 微服务数据',
+  'pages.dashboard.subTitle': '基于 go-zero mr.Finish 内网并发聚合 User 与 Worker 微服务数据',
   'pages.dashboard.refresh': '刷新数据',
   'pages.dashboard.gatewayStatus': 'HTTP 统一网关状态',
   'pages.dashboard.online': '8888 在线',

@@ -31,22 +31,22 @@ export const HomePage: React.FC = () => {
   const trafficData = [
     { time: "09-01", service: "Gateway (HTTP)", qps: 1240 },
     { time: "09-01", service: "User RPC", qps: 820 },
-    { time: "09-01", service: "Order RPC", qps: 420 },
+    { time: "09-01", service: "Worker RPC", qps: 420 },
     { time: "09-02", service: "Gateway (HTTP)", qps: 1480 },
     { time: "09-02", service: "User RPC", qps: 960 },
-    { time: "09-02", service: "Order RPC", qps: 520 },
+    { time: "09-02", service: "Worker RPC", qps: 520 },
     { time: "09-03", service: "Gateway (HTTP)", qps: 1890 },
     { time: "09-03", service: "User RPC", qps: 1250 },
-    { time: "09-03", service: "Order RPC", qps: 640 },
+    { time: "09-03", service: "Worker RPC", qps: 640 },
     { time: "09-04", service: "Gateway (HTTP)", qps: 2100 },
     { time: "09-04", service: "User RPC", qps: 1420 },
-    { time: "09-04", service: "Order RPC", qps: 680 },
+    { time: "09-04", service: "Worker RPC", qps: 680 },
     { time: "09-05", service: "Gateway (HTTP)", qps: 2650 },
     { time: "09-05", service: "User RPC", qps: 1800 },
-    { time: "09-05", service: "Order RPC", qps: 850 },
+    { time: "09-05", service: "Worker RPC", qps: 850 },
     { time: "09-06", service: "Gateway (HTTP)", qps: 3120 },
     { time: "09-06", service: "User RPC", qps: 2150 },
-    { time: "09-06", service: "Order RPC", qps: 970 },
+    { time: "09-06", service: "Worker RPC", qps: 970 },
   ];
 
   return (
@@ -151,7 +151,7 @@ export const HomePage: React.FC = () => {
               title: formatMessage({ id: "home.stat.services", defaultMessage: "核心业务微服务" }),
               value: "2",
               suffix: formatMessage({ id: "home.stat.services.unit", defaultMessage: "个服务" }),
-              description: <Text type="secondary">User (:8080) + Order (:8081)</Text>,
+              description: <Text type="secondary">User (:8080) + Worker (:8082)</Text>,
               icon: <ClusterOutlined style={{ color: "#1677ff", fontSize: 32 }} />,
             }}
           />
@@ -205,7 +205,7 @@ export const HomePage: React.FC = () => {
           }
           subTitle={formatMessage({
             id: "home.chart.subtitle",
-            defaultMessage: "实时模拟 Gateway、User RPC 与 Order RPC 流量分发与链路耗时",
+            defaultMessage: "实时模拟 Gateway、User RPC 与 Worker RPC 流量分发与链路耗时",
           })}
           headerBordered
           style={{ marginBottom: 32 }}
@@ -322,11 +322,11 @@ export const HomePage: React.FC = () => {
               </Card>
             </Col>
             <Col xs={24} md={6}>
-              <Card size="small" title="3. 订单微服务" variant="borderless" style={{ background: "#f6ffed" }}>
-                <p>• 端口: <strong>gRPC 8081</strong></p>
-                <p>• 订单状态流转与明细聚合</p>
-                <p>• 跨微服务数据契约协同</p>
-                <p>• 分布式链路追踪集成</p>
+              <Card size="small" title="3. 任务微服务 (Worker)" variant="borderless" style={{ background: "#f6ffed" }}>
+                <p>• 端口: <strong>gRPC 8082</strong></p>
+                <p>• Temporal 分布式任务引擎</p>
+                <p>• 异步工作流与长耗时任务编排</p>
+                <p>• 任务调度状态实时上报</p>
               </Card>
             </Col>
             <Col xs={24} md={6}>

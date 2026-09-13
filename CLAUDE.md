@@ -64,14 +64,14 @@ go-zero-boilerplate/
 │   │   │   └── user.go
 │   │   └── model/
 │   │
-│   └── order/                     # 【订单微服务】纯 gRPC (端口 8081)
-│       ├── rpc/
-│       │   ├── client/order/      # 供网关调用的 RPC Client
-│       │   ├── etc/order.yaml
-│       │   ├── internal/
-│       │   ├── pb/ & order.proto
-│       │   └── order.go
-│       └── model/
+│   └── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
+│       ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
+│       └── rpc/
+│           ├── client/worker/     # 供网关调用的 RPC Client
+│           ├── etc/worker.yaml
+│           ├── internal/          # activities, workflows, config, logic, server, svc
+│           ├── pb/ & worker.proto
+│           └── worker.go          # Worker RPC + Temporal 统一启动入口
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -227,8 +227,8 @@ just gen-gateway
 
 # 生成微服务 RPC 代码
 just gen-rpc user
-just gen-rpc order
-# 或：make gen-user-rpc / make gen-order-rpc
+just gen-rpc worker
+# 或：make gen-user-rpc / make gen-worker-rpc
 
 # 生成前端 TypeScript SDK
 just gen-ts
@@ -239,7 +239,7 @@ just gen-ts
 ```bash
 # 启动微服务（本地开发直连模式）
 just run-user-rpc     # 监听 127.0.0.1:8080 (或: make run-user-rpc)
-just run-order-rpc    # 监听 127.0.0.1:8081 (或: make run-order-rpc)
+just run-worker-rpc   # 监听 127.0.0.1:8082 (或: make run-worker-rpc)
 
 # 启动统一网关
 just run-gateway      # 监听 0.0.0.0:8888 (或: make run-gateway)

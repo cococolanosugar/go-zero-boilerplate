@@ -3,6 +3,14 @@ import * as components from "./gatewayComponents"
 export * from "./gatewayComponents"
 
 /**
+ * @description "获取系统大盘聚合信息（mr.Finish 内网并发拉取用户画像与任务统计）"
+ * @param params
+ */
+export function getDashboardOverview(params: components.DashboardReqParams) {
+	return webapi.get<components.DashboardResp>(`/api/v1/dashboard/overview`, params)
+}
+
+/**
  * @description "获取字典数据项列表"
  * @param params
  */
@@ -72,22 +80,6 @@ export function updateSysDictType(req: components.UpdateSysDictTypeReq) {
  */
 export function deleteSysDictType(params: components.SysIdReqParams, id: number) {
 	return webapi.delete<components.SysEmptyResp>(`/api/v1/system/dict/types/${id}`, params)
-}
-
-/**
- * @description "获取大盘聚合信息（mr.Finish 内网并发拉取微服务）"
- * @param params
- */
-export function getDashboardOverview(params: components.DashboardReqParams) {
-	return webapi.get<components.DashboardResp>(`/api/v1/order/dashboard`, params)
-}
-
-/**
- * @description "获取订单详情（聚合订单与用户信息）"
- * @param params
- */
-export function getOrderDetail(params: components.OrderDetailReqParams) {
-	return webapi.get<components.OrderDetailResp>(`/api/v1/order/detail`, params)
 }
 
 /**
@@ -412,6 +404,64 @@ export function updateSysUser(req: components.UpdateSysUserReq) {
  */
 export function deleteSysUser(params: components.SysIdReqParams, id: number) {
 	return webapi.delete<components.SysEmptyResp>(`/api/v1/system/users/${id}`, params)
+}
+
+/**
+ * @description "获取异步任务分页列表"
+ * @param params
+ */
+export function listTasks(params: components.ListTasksReqParams) {
+	return webapi.get<components.ListTasksResp>(`/api/v1/system/task`, params)
+}
+
+/**
+ * @description "新增异步任务"
+ * @param req
+ */
+export function createTask(req: components.CreateTaskReq) {
+	return webapi.post<components.AsyncTaskItem>(`/api/v1/system/task`, req)
+}
+
+/**
+ * @description "获取异步任务详情"
+ * @param params
+ */
+export function getTask(params: components.GetTaskReqParams, id: number) {
+	return webapi.get<components.AsyncTaskItem>(`/api/v1/system/task/${id}`, params)
+}
+
+/**
+ * @description "修改异步任务"
+ * @param params
+ * @param req
+ */
+export function updateTask(params: components.UpdateTaskReqParams, req: components.UpdateTaskReq, id: number) {
+	return webapi.put<components.AsyncTaskItem>(`/api/v1/system/task/${id}`, params, req)
+}
+
+/**
+ * @description "删除异步任务"
+ * @param params
+ */
+export function deleteTask(params: components.DeleteTaskReqParams, id: number) {
+	return webapi.delete<components.DeleteTaskResp>(`/api/v1/system/task/${id}`, params)
+}
+
+/**
+ * @description "立即触发执行一次任务"
+ * @param params
+ */
+export function runTaskOnce(params: components.RunTaskOnceReqParams, id: number) {
+	return webapi.post<components.RunTaskOnceResp>(`/api/v1/system/task/${id}/run`, params)
+}
+
+/**
+ * @description "启停异步任务"
+ * @param params
+ * @param req
+ */
+export function toggleTaskStatus(params: components.ToggleTaskStatusReqParams, req: components.ToggleTaskStatusReq, id: number) {
+	return webapi.put<components.ToggleTaskStatusResp>(`/api/v1/system/task/${id}/status`, params, req)
 }
 
 /**

@@ -1,6 +1,6 @@
 export default {
-  // 获取大盘聚合信息（模拟 mr.Finish 内网并发拉取 User 与 Order 微服务）
-  "GET /api/v1/order/dashboard": {
+  // 获取系统大盘聚合信息（模拟 mr.Finish 内网并发拉取用户画像与任务统计）
+  "GET /api/v1/dashboard/overview": {
     code: 200,
     msg: "SUCCESS",
     data: {
@@ -10,15 +10,13 @@ export default {
         mobile: "13800138000",
         avatar: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
       },
-      order: {
-        orderId: 1001,
-        item: "Go-Zero 高性能微服务全栈架构实操课 (Mock 仿真数据)",
-        amount: 888.0,
-        status: "PAID",
-        userId: 1,
-        userName: "超级管理员",
-        avatar: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+      systemStats: {
+        totalUsers: 128,
+        activeTasks: 4,
+        completedTasks: 36,
+        successRate: 99.8,
       },
+      sysTime: Date.now(),
     },
   },
 };

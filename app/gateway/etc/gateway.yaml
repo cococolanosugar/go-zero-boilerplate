@@ -29,19 +29,10 @@ UserRpc:
     - 127.0.0.1:8080
   NonBlock: true
 
-# 订单微服务 gRPC 客户端
-OrderRpc:
-  # 模式一：Nacos 服务发现
-  # Target: nacos://127.0.0.1:8848/order.rpc?namespaceid=public&timeout=5000s
-  # NonBlock: true
-  # 模式二：Etcd 服务发现
-  # Etcd:
-  #   Hosts:
-  #     - 127.0.0.1:2379
-  #   Key: order.rpc
-  # 模式三：直连模式（当前单机极速调试启用，无需注册中心容器）
+# Worker 任务执行微服务 gRPC 客户端 (端口 8082)
+WorkerRpc:
   Endpoints:
-    - 127.0.0.1:8081
+    - 127.0.0.1:8082
   NonBlock: true
 
 # ================= Casdoor SSO 认证配置 =================
@@ -58,4 +49,10 @@ Storage:
   Driver: local
   BasePath: ./data/uploads
   BaseUrl: /uploads
+
+# ================= Temporal 分布式工作流配置 =================
+Temporal:
+  HostPort: 127.0.0.1:7233
+  Namespace: default
+
   MaxSize: 20971520 # 20MB

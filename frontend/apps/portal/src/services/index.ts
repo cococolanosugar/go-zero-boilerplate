@@ -1,7 +1,6 @@
-﻿import {
+import {
   authService,
   userService,
-  orderService,
   dashboardService,
   systemService,
   systemUsersApi,
@@ -16,7 +15,6 @@
 export {
   authService,
   userService,
-  orderService,
   dashboardService,
   systemService,
   systemUsersApi,
@@ -31,7 +29,6 @@ export {
 export const services = {
   auth: authService,
   user: userService,
-  order: orderService,
   dashboard: dashboardService,
   system: systemService,
 };

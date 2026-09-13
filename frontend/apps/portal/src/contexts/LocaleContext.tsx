@@ -6,7 +6,7 @@ interface LocaleContextType {
   locale: LocaleKey;
   setLocale: (locale: LocaleKey) => void;
   currentConfig: LocaleConfig;
-  formatMessage: (descriptor: { id: string; defaultMessage?: string }) => string;
+  formatMessage: (descriptor: { id: string; defaultMessage?: string }, values?: Record<string, any>) => string;
 }
 
 const STORAGE_KEY = STORAGE_KEYS.LOCALE;
@@ -15,7 +15,15 @@ const LocaleContext = createContext<LocaleContextType>({
   locale: DEFAULT_LOCALE,
   setLocale: () => {},
   currentConfig: LOCALES[DEFAULT_LOCALE],
-  formatMessage: (d) => d.defaultMessage || d.id,
+  formatMessage: (d, values) => {
+    let text = d.defaultMessage || d.id;
+    if (values) {
+      Object.keys(values).forEach((k) => {
+        text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(values[k]));
+      });
+    }
+    return text;
+  },
 });
 
 export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -37,12 +45,15 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const currentConfig = LOCALES[locale] || LOCALES[DEFAULT_LOCALE];
 
   const formatMessage = useCallback(
-    ({ id, defaultMessage }: { id: string; defaultMessage?: string }): string => {
+    ({ id, defaultMessage }: { id: string; defaultMessage?: string }, values?: Record<string, any>): string => {
       const messages = currentConfig.messages;
-      if (messages && messages[id]) {
-        return messages[id];
+      let text = (messages && messages[id]) || defaultMessage || id;
+      if (values) {
+        Object.keys(values).forEach((k) => {
+          text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(values[k]));
+        });
       }
-      return defaultMessage || id;
+      return text;
     },
     [currentConfig]
   );

@@ -67,6 +67,26 @@ describe("Admin Access Control (RBAC Engine)", () => {
     expect(access.canAccess(["sys:user:create", "sys:user:delete"])).toBe(false);
   });
 
+  it("should check task management permissions correctly", () => {
+    const profile: AdminProfileResp = {
+      id: 20,
+      username: "task_operator",
+      realName: "Task Operator",
+      mobile: "13500000000",
+      email: "task@example.com",
+      avatar: "",
+      deptName: "运维部",
+      roles: ["OPERATOR"],
+      permissions: ["system:task:view", "system:task:trigger"],
+      menus: [],
+    };
+
+    const access = getAccess(profile);
+    expect(access.canAccess("system:task:view")).toBe(true);
+    expect(access.canAccess("system:task:trigger")).toBe(true);
+    expect(access.canAccess("system:task:delete")).toBe(false);
+  });
+
   it("should handle empty or undefined profile safely", () => {
     const access = getAccess(null);
     expect(access.canAdmin).toBe(false);

@@ -2,8 +2,8 @@ package svc
 
 import (
 	"go-zero-boilerplate/app/gateway/internal/config"
-	orderClient "go-zero-boilerplate/app/order/rpc/client/order"
 	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
 	"go-zero-boilerplate/pkg/session"
 	"go-zero-boilerplate/pkg/storage"
 
@@ -14,7 +14,7 @@ import (
 type ServiceContext struct {
 	Config      config.Config
 	UserRpc     userClient.User
-	OrderRpc    orderClient.Order
+	WorkerRpc   workerClient.Worker
 	Storage     storage.Driver
 	RedisClient *redis.Redis
 	SessionMgr  *session.Manager
@@ -32,10 +32,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:      c,
 		UserRpc:     userClient.NewUser(zrpc.MustNewClient(c.UserRpc)),
-		OrderRpc:    orderClient.NewOrder(zrpc.MustNewClient(c.OrderRpc)),
+		WorkerRpc:   workerClient.NewWorker(zrpc.MustNewClient(c.WorkerRpc)),
 		Storage:     storageDriver,
 		RedisClient: redisClient,
 		SessionMgr:  sessionMgr,
 	}
 }
-

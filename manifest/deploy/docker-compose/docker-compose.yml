@@ -61,6 +61,22 @@ services:
     networks:
       - go-zero-net
 
+  temporal:
+    image: temporalio/admin-tools:latest
+    container_name: go-zero-temporal
+    command: temporal server start-dev --ip 0.0.0.0 --ui-ip 0.0.0.0 --db-filename /home/temporal/temporal.db
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    volumes:
+      - temporal-data:/home/temporal
+    networks:
+      - go-zero-net
+
 networks:
   go-zero-net:
     driver: bridge
+
+volumes:
+  temporal-data:
+

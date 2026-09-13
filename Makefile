@@ -1,4 +1,4 @@
-.PHONY: gen-gateway gen-user-rpc gen-order-rpc gen-ts run-gateway run-user-rpc run-order-rpc run-admin run-portal build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project
+.PHONY: gen-gateway gen-user-rpc gen-worker-rpc gen-ts run-gateway run-user-rpc run-worker-rpc run-admin run-portal build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project
 
 # 生成网关 API 代码
 gen-gateway:
@@ -8,9 +8,9 @@ gen-gateway:
 gen-user-rpc:
 	cd app/user/rpc && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
-# 生成 order-rpc 代码
-gen-order-rpc:
-	cd app/order/rpc && goctl rpc protoc order.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+# 生成 worker-rpc 代码
+gen-worker-rpc:
+	cd app/worker/rpc && goctl rpc protoc worker.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 生成 Model 持久层代码
 gen-model:
@@ -33,9 +33,9 @@ run-gateway:
 run-user-rpc:
 	cd app/user/rpc && go run user.go -f etc/user.yaml
 
-# 启动 order-rpc 服务 (gRPC 8081)
-run-order-rpc:
-	cd app/order/rpc && go run order.go -f etc/order.yaml
+# 启动 worker-rpc 异步任务微服务 (gRPC 8082，内置 Temporal Worker)
+run-worker-rpc:
+	cd app/worker/rpc && go run worker.go -f etc/worker.yaml
 
 # 启动前端管理后台 (Vite 3001)
 run-admin:
@@ -88,7 +88,7 @@ ai-index:
 # 构建全栈所有 Docker 镜像
 docker-build:
 	docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
-	docker build -t go-zero-order-rpc:latest -f app/order/rpc/Dockerfile .
+	docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
 	docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
 	docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 

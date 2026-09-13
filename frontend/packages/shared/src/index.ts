@@ -55,6 +55,13 @@ export const PERMISSIONS = {
   NOTICE_ADD: 'system:notice:add',
   NOTICE_EDIT: 'system:notice:edit',
   NOTICE_DELETE: 'system:notice:delete',
+
+  // 异步任务管理
+  TASK_VIEW: 'system:task:view',
+  TASK_ADD: 'system:task:add',
+  TASK_EDIT: 'system:task:edit',
+  TASK_DELETE: 'system:task:delete',
+  TASK_TRIGGER: 'system:task:trigger',
 } as const;
 
 export * from "./sessionSync";

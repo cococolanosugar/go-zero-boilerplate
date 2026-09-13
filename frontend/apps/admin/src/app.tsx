@@ -22,7 +22,8 @@ import {
   BellOutlined,
   TeamOutlined,
   FundProjectionScreenOutlined,
-  FileTextOutlined,
+  LinkOutlined,
+  ScheduleOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
@@ -89,6 +90,8 @@ const getIcon = (iconName?: React.ReactNode | string) => {
       return <FundProjectionScreenOutlined />;
     case "FileTextOutlined":
       return <FileTextOutlined />;
+    case "ScheduleOutlined":
+      return <ScheduleOutlined />;
     default:
       return <AppstoreOutlined />;
   }
@@ -101,7 +104,8 @@ const getMenuLocaleKey = (path: string) => {
     "/form/step-form": "menu.form.stepform",
     "/profile/advanced": "menu.profile.advanced",
     "/result/success": "menu.result.success",
-    "/orders": "menu.orders",
+    "/tasks": "menu.tasks",
+    "/task": "menu.tasks",
     "/notice": "menu.notice",
     "/sys-notice": "menu.notice",
     "/users": "menu.users",
@@ -140,8 +144,16 @@ const formatRoutes = (
   items: SysMenuItem[],
   formatMessage: (d: { id: string; defaultMessage?: string }) => string
 ): any[] => {
-  return (items || []).map((item) => {
-    const localeKey = getMenuLocaleKey(item.path);
+  return (items || [])
+    .filter(
+      (item) =>
+        item.path !== "/monitor/openapi" &&
+        item.path !== "/system/openapi" &&
+        (item as any).visible !== 0 &&
+        (item as any).hideInMenu !== true
+    )
+    .map((item) => {
+      const localeKey = getMenuLocaleKey(item.path);
     const localizedName = formatMessage({ id: localeKey, defaultMessage: item.title });
     return {
       path: item.path,
@@ -239,6 +251,7 @@ export interface RuntimeLayoutContext {
   setLocale: (locale: LocaleKey) => void;
   isFullscreen: boolean;
   toggleFullscreen: () => void;
+  currentPath?: string;
 }
 
 /**
@@ -255,6 +268,7 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
     isDark,
     isFullscreen,
     toggleFullscreen,
+    currentPath,
   } = ctx;
 
   const { currentUser, menus } = initialState;
@@ -326,6 +340,40 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
       src: currentUser?.avatar || defaultSettings.logo,
       title: displayName,
       render: (_props, dom) => <AvatarDropdown dom={dom} />,
+    },
+    links: [
+      <a
+        key="openapi"
+        onClick={(e) => {
+          e.preventDefault();
+          navigate("/monitor/openapi");
+        }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          color: currentPath === "/monitor/openapi" ? "#1677ff" : "inherit",
+          fontWeight: currentPath === "/monitor/openapi" ? 600 : "normal",
+        }}
+      >
+        <LinkOutlined />
+        <span>{formatMessage({ id: "menu.monitor.openapi", defaultMessage: "OpenAPI 文档" })}</span>
+      </a>,
+    ],
+    menuFooterRender: (props) => {
+      if (props?.collapsed) return undefined;
+      return (
+        <div
+          style={{
+            textAlign: "center",
+            paddingBlockStart: 12,
+            fontSize: 12,
+            color: isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)",
+          }}
+        >
+          <div>© 2026 {APP_NAME}</div>
+        </div>
+      );
     },
     footerRender: () => <Footer />,
   };

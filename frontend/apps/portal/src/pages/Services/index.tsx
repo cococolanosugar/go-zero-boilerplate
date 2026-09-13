@@ -30,10 +30,10 @@ export const ServicesPage: React.FC = () => {
       tags: ["gRPC 8080", "RBAC 权限树", "Bcrypt 加密", "事务原子同步"],
     },
     {
-      title: "订单中心微服务 (Order RPC)",
+      title: "异步任务调度微服务 (Worker RPC)",
       icon: <CloudServerOutlined style={{ fontSize: 24, color: "#52c41a" }} />,
-      desc: "纯 gRPC 业务微服务（端口 8081），负责订单生命周期流转、金额计算与大盘监控数据提供，并与用户服务保持高内聚低耦合通信。",
-      tags: ["gRPC 8081", "订单流转", "跨微服务聚合"],
+      desc: "纯 gRPC 异步任务微服务（端口 8082），集成 Temporal 分布式任务引擎，承载多步骤长耗时工作流、定时调度（Cron Schedule）与状态追踪闭环。",
+      tags: ["gRPC 8082", "Temporal 引擎", "分布式工作流", "定时任务"],
     },
     {
       title: "持久层与强一致缓存 (Model & Redis)",
