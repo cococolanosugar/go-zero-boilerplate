@@ -91,7 +91,113 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dashboard"
+        ]
+      }
+    },
+    "/api/v1/portal/navigation/list": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取门户公开网址导航列表",
+        "operationId": "portalNavGetPortalNavList",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "env",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "title",
+                      "category",
+                      "url",
+                      "icon",
+                      "description",
+                      "tags",
+                      "sort",
+                      "target",
+                      "status",
+                      "env",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "category": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "env": {
+                        "type": "string"
+                      },
+                      "icon": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "tags": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "navigation"
+        ]
       }
     },
     "/api/v1/system/apis": {
@@ -147,7 +253,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/auth/casdoor/login": {
@@ -220,7 +329,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/auth/login": {
@@ -294,7 +406,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/dict/data": {
@@ -405,7 +520,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       },
       "put": {
         "consumes": [
@@ -479,7 +597,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       },
       "post": {
         "consumes": [
@@ -552,7 +673,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       }
     },
     "/api/v1/system/dict/data/type/{dictType}": {
@@ -632,7 +756,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       }
     },
     "/api/v1/system/dict/data/{id}": {
@@ -668,7 +795,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       }
     },
     "/api/v1/system/dict/types": {
@@ -757,7 +887,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       },
       "put": {
         "consumes": [
@@ -816,7 +949,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       },
       "post": {
         "consumes": [
@@ -872,7 +1008,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       }
     },
     "/api/v1/system/dict/types/{id}": {
@@ -908,7 +1047,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "dict"
+        ]
       }
     },
     "/api/v1/system/file/upload": {
@@ -948,7 +1090,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/logs/login": {
@@ -1045,7 +1190,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/logs/oper": {
@@ -1156,7 +1304,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/menus/tree": {
@@ -1280,7 +1431,425 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
+      }
+    },
+    "/api/v1/system/navigation": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建系统导航站点",
+        "operationId": "sysNavCreateSysPortalNav",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "category",
+                "url"
+              ],
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "env": {
+                  "type": "string",
+                  "default": "common",
+                  "example": "common"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string",
+                  "default": "_blank",
+                  "example": "_blank"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "navigation"
+        ]
+      }
+    },
+    "/api/v1/system/navigation/list": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "分页查询系统导航配置列表",
+        "operationId": "sysNavListSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "title",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "category",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "env",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "default": -1,
+            "example": -1,
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "title",
+                      "category",
+                      "url",
+                      "icon",
+                      "description",
+                      "tags",
+                      "sort",
+                      "target",
+                      "status",
+                      "env",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "category": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "env": {
+                        "type": "string"
+                      },
+                      "icon": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "tags": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "navigation"
+        ]
+      }
+    },
+    "/api/v1/system/navigation/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取导航站点详情",
+        "operationId": "sysNavGetSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "createTime": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "env": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "updateTime": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "navigation"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新系统导航站点",
+        "operationId": "sysNavUpdateSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "category",
+                "url"
+              ],
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "env": {
+                  "type": "string",
+                  "default": "common",
+                  "example": "common"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string",
+                  "default": "_blank",
+                  "example": "_blank"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "navigation"
+        ]
+      },
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除系统导航站点",
+        "operationId": "sysNavDeleteSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "navigation"
+        ]
       }
     },
     "/api/v1/system/online": {
@@ -1389,7 +1958,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/online/{sessionId}": {
@@ -1425,7 +1997,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/personal/password": {
@@ -1475,7 +2050,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/personal/profile": {
@@ -1632,7 +2210,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       },
       "put": {
         "consumes": [
@@ -1685,7 +2266,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/roles": {
@@ -1779,7 +2363,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       },
       "put": {
         "consumes": [
@@ -1844,7 +2431,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       },
       "post": {
         "consumes": [
@@ -1901,7 +2491,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/roles/permissions": {
@@ -1954,7 +2547,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/roles/{id}": {
@@ -1990,7 +2586,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/task": {
@@ -2002,7 +2601,7 @@
           "https"
         ],
         "summary": "获取异步任务分页列表",
-        "operationId": "system/TaskListTasks",
+        "operationId": "systemTaskListTasks",
         "parameters": [
           {
             "type": "integer",
@@ -2119,7 +2718,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "task"
+        ]
       },
       "post": {
         "consumes": [
@@ -2132,7 +2734,7 @@
           "https"
         ],
         "summary": "新增异步任务",
-        "operationId": "system/TaskCreateTask",
+        "operationId": "systemTaskCreateTask",
         "parameters": [
           {
             "name": "body",
@@ -2231,7 +2833,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "task"
+        ]
       }
     },
     "/api/v1/system/task/{id}": {
@@ -2243,7 +2848,7 @@
           "https"
         ],
         "summary": "获取异步任务详情",
-        "operationId": "system/TaskGetTask",
+        "operationId": "systemTaskGetTask",
         "parameters": [
           {
             "type": "integer",
@@ -2303,7 +2908,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "task"
+        ]
       },
       "put": {
         "consumes": [
@@ -2316,7 +2924,7 @@
           "https"
         ],
         "summary": "修改异步任务",
-        "operationId": "system/TaskUpdateTask",
+        "operationId": "systemTaskUpdateTask",
         "parameters": [
           {
             "type": "integer",
@@ -2413,7 +3021,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "task"
+        ]
       },
       "delete": {
         "consumes": [
@@ -2426,7 +3037,7 @@
           "https"
         ],
         "summary": "删除异步任务",
-        "operationId": "system/TaskDeleteTask",
+        "operationId": "systemTaskDeleteTask",
         "parameters": [
           {
             "type": "integer",
@@ -2447,7 +3058,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "task"
+        ]
       }
     },
     "/api/v1/system/task/{id}/run": {
@@ -2462,7 +3076,7 @@
           "https"
         ],
         "summary": "立即触发执行一次任务",
-        "operationId": "system/TaskRunTaskOnce",
+        "operationId": "systemTaskRunTaskOnce",
         "parameters": [
           {
             "type": "integer",
@@ -2492,7 +3106,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "task"
+        ]
       }
     },
     "/api/v1/system/task/{id}/status": {
@@ -2507,7 +3124,7 @@
           "https"
         ],
         "summary": "启停异步任务",
-        "operationId": "system/TaskToggleTaskStatus",
+        "operationId": "systemTaskToggleTaskStatus",
         "parameters": [
           {
             "type": "integer",
@@ -2544,7 +3161,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "task"
+        ]
       }
     },
     "/api/v1/system/users": {
@@ -2663,7 +3283,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       },
       "put": {
         "consumes": [
@@ -2730,7 +3353,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       },
       "post": {
         "consumes": [
@@ -2797,7 +3423,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/system/users/{id}": {
@@ -2833,7 +3462,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "system"
+        ]
       }
     },
     "/api/v1/user/dept": {
@@ -2979,7 +3611,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "put": {
         "consumes": [
@@ -3045,7 +3680,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "post": {
         "consumes": [
@@ -3107,7 +3745,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/dept/{id}": {
@@ -3275,7 +3916,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "delete": {
         "consumes": [
@@ -3309,7 +3953,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/info": {
@@ -3343,7 +3990,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/login": {
@@ -3405,7 +4055,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/notice/my-list": {
@@ -3490,7 +4143,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/notice/read": {
@@ -3536,7 +4192,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/notice/read-all": {
@@ -3579,7 +4238,66 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/profile": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取统一用户个人画像（双表融合聚合，支持员工与客户）",
+        "operationId": "userGetUserProfile",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "type": "string"
+                },
+                "deptName": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "userId": {
+                  "type": "integer"
+                },
+                "userType": {
+                  "description": "\"employee\" or \"customer\"",
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/register": {
@@ -3632,7 +4350,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/sys-config": {
@@ -3731,7 +4452,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "put": {
         "consumes": [
@@ -3801,7 +4525,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "post": {
         "consumes": [
@@ -3866,7 +4593,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/sys-config/{id}": {
@@ -3928,7 +4658,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "delete": {
         "consumes": [
@@ -3962,7 +4695,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/sys-notice": {
@@ -4066,7 +4802,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "put": {
         "consumes": [
@@ -4141,7 +4880,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "post": {
         "consumes": [
@@ -4210,7 +4952,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/sys-notice/{id}": {
@@ -4276,7 +5021,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "delete": {
         "consumes": [
@@ -4310,7 +5058,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/sys-post": {
@@ -4409,7 +5160,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "put": {
         "consumes": [
@@ -4479,7 +5233,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "post": {
         "consumes": [
@@ -4543,7 +5300,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     },
     "/api/v1/user/sys-post/{id}": {
@@ -4605,7 +5365,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       },
       "delete": {
         "consumes": [
@@ -4639,11 +5402,14 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "user"
+        ]
       }
     }
   },
-  "x-date": "2026-09-13 16:32:40",
+  "x-date": "2026-09-14 01:17:55",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",
