@@ -55,6 +55,32 @@ func TestAntiRepeatMiddleware_MultipartBypass(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
+func TestAntiRepeatMiddleware_AuthBypass(t *testing.T) {
+	r := redistest.CreateRedis(t)
+	svcCtx := &svc.ServiceContext{RedisClient: r}
+	mw := NewAntiRepeatMiddleware(svcCtx)
+
+	callCount := 0
+	handler := mw.Handle(func(w http.ResponseWriter, r *http.Request) {
+		callCount++
+		w.WriteHeader(http.StatusOK)
+	})
+
+	// 连续发出两次完全相同的 Casdoor SSO 换票请求，白名单放行，不阻断
+	body := `{"code":"casdoor_test_code_123","state":"test_state"}`
+	req1 := httptest.NewRequest(http.MethodPost, "/api/v1/system/auth/casdoor/login", bytes.NewBufferString(body))
+	w1 := httptest.NewRecorder()
+	handler(w1, req1)
+
+	req2 := httptest.NewRequest(http.MethodPost, "/api/v1/system/auth/casdoor/login", bytes.NewBufferString(body))
+	w2 := httptest.NewRecorder()
+	handler(w2, req2)
+
+	assert.Equal(t, 2, callCount)
+	assert.Equal(t, http.StatusOK, w1.Code)
+	assert.Equal(t, http.StatusOK, w2.Code)
+}
+
 func TestAntiRepeatMiddleware_NilRedisFailsOpen(t *testing.T) {
 	svcCtx := &svc.ServiceContext{RedisClient: nil}
 	mw := NewAntiRepeatMiddleware(svcCtx)

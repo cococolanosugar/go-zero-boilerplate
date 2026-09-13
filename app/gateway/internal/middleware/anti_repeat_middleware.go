@@ -47,13 +47,24 @@ func (m *AntiRepeatMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		// 2. 白名单放行检测：文件上传流 (multipart/form-data) 与 SSE 实时事件流
+		// 2. 白名单放行检测：
+		// A. 文件上传流 (multipart/form-data) 与 SSE 实时事件流
 		contentType := r.Header.Get("Content-Type")
 		if strings.HasPrefix(contentType, "multipart/form-data") {
 			next(w, r)
 			return
 		}
 		if strings.Contains(r.Header.Get("Accept"), "text/event-stream") {
+			next(w, r)
+			return
+		}
+
+		// B. 认证鉴权、OAuth/SSO 换票回调、Token 刷新等公开接口白名单
+		// 此类接口具备协议级一次性授权码 (One-Time Code) 与防暴力破解策略，豁免业务防重锁
+		path := r.URL.Path
+		if strings.HasPrefix(path, "/api/v1/system/auth/") ||
+			strings.HasPrefix(path, "/api/v1/user/login") ||
+			strings.HasPrefix(path, "/api/v1/user/register") {
 			next(w, r)
 			return
 		}

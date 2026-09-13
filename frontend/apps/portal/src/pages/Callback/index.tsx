@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { App as AntdApp, Result, Button, Spin } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { casdoorLogin, setToken } from "@zero/api";
@@ -13,6 +13,7 @@ export const CallbackPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
+  const hasRequestedRef = useRef(false);
 
   useEffect(() => {
     const { code, state } = parseCasdoorCallback(location.search);
@@ -21,11 +22,14 @@ export const CallbackPage: React.FC = () => {
       return;
     }
 
-    let isMounted = true;
+    if (hasRequestedRef.current) {
+      return;
+    }
+    hasRequestedRef.current = true;
+
     (async () => {
       try {
         const res = await casdoorLogin({ code, state: state || undefined });
-        if (!isMounted) return;
         setToken(res.accessToken);
         await refreshProfile();
         message.success(
@@ -39,14 +43,9 @@ export const CallbackPage: React.FC = () => {
         );
         navigate("/home", { replace: true });
       } catch (err: any) {
-        if (!isMounted) return;
         setError(err.message || "Casdoor SSO 登录校验失败，请重试");
       }
     })();
-
-    return () => {
-      isMounted = false;
-    };
   }, [location.search, navigate, message, refreshProfile, formatMessage]);
 
   if (error) {
