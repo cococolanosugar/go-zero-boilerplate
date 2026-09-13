@@ -102,8 +102,14 @@ const getMenuLocaleKey = (path: string) => {
     "/profile/advanced": "menu.profile.advanced",
     "/result/success": "menu.result.success",
     "/orders": "menu.orders",
+    "/notice": "menu.notice",
+    "/sys-notice": "menu.notice",
     "/users": "menu.users",
     "/monitor": "menu.monitor",
+    "/org": "menu.org",
+    "/org/users": "menu.org.users",
+    "/org/dept": "menu.org.dept",
+    "/org/post": "menu.org.post",
     "/permission": "menu.permission",
     "/permission/dept": "menu.permission.dept",
     "/permission/sys-post": "menu.permission.syspost",
@@ -288,9 +294,13 @@ export const layout = (ctx: RuntimeLayoutContext): ProLayoutProps & { routeData:
               color: isDark ? "rgba(255, 255, 255, 0.07)" : "rgba(0, 0, 0, 0.07)",
               fontSize: 14,
             },
+            fontColor: isDark ? "rgba(255, 255, 255, 0.07)" : "rgba(0, 0, 0, 0.07)",
+            fontSize: 14,
             gap: [140, 140],
+            gapX: 140,
+            gapY: 140,
             rotate: -22,
-          }
+          } as any
         : undefined,
     menuItemRender: (item, dom) => (
       <div

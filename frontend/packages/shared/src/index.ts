@@ -49,6 +49,12 @@ export const PERMISSIONS = {
   // 在线用户监控
   ONLINE_QUERY: 'system:online:query',
   ONLINE_FORCE: 'system:online:force',
+
+  // 通知公告
+  NOTICE_VIEW: 'system:notice:view',
+  NOTICE_ADD: 'system:notice:add',
+  NOTICE_EDIT: 'system:notice:edit',
+  NOTICE_DELETE: 'system:notice:delete',
 } as const;
 
 export * from "./sessionSync";

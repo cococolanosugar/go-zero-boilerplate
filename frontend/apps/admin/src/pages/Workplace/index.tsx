@@ -27,6 +27,7 @@ import {
   ApiOutlined,
   BookOutlined,
   HistoryOutlined,
+  ApartmentOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useInitialState } from "../../contexts/InitialStateContext";
@@ -135,8 +136,8 @@ export const WorkplacePage: React.FC = () => {
   ];
 
   const quickLinks = [
-    { title: "订单管理", path: "/orders", icon: <ShoppingCartOutlined /> },
-    { title: "员工治理", path: "/permission/users", icon: <TeamOutlined /> },
+    { title: "组织机构", path: "/org/dept", icon: <ApartmentOutlined /> },
+    { title: "员工治理", path: "/org/users", icon: <TeamOutlined /> },
     { title: "角色权限", path: "/permission/roles", icon: <SafetyCertificateOutlined /> },
     { title: "接口字典", path: "/system/apis", icon: <ApiOutlined /> },
     { title: "数据字典", path: "/system/dicts", icon: <BookOutlined /> },

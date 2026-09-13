@@ -282,20 +282,14 @@ VALUES (201, 2, '订单查询', 3, '', '', 'order:query', '', 1),
        (203, 2, '订单导出', 3, '', '', 'order:export', '', 3)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
--- 3. 权限管理目录 (IAM & 组织权限)
+-- 3. 组织管理目录 (Org 组织架构 - 人·岗·部 实体闭环)
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (6, 0, '权限管理', 1, '/permission', '', 'permission:dir', 'SafetyCertificateOutlined', 3)
+VALUES (7, 0, '组织管理', 1, '/org', '', 'org:dir', 'ApartmentOutlined', 3)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `path` = VALUES(`path`), `icon` = VALUES(`icon`), `sort` = VALUES(`sort`);
 
--- 3.1 部门管理及岗位管理
+-- 3.1 员工管理及按钮
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (37, 6, '部门管理', 2, '/permission/dept', 'System/Dept', 'system:dept:view', 'ApartmentOutlined', 1),
-       (38, 6, '岗位管理', 2, '/permission/sys-post', 'SysPost', 'system:post:view', 'IdcardOutlined', 2)
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `path` = VALUES(`path`), `sort` = VALUES(`sort`);
-
--- 3.2 员工管理及按钮
-INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (31, 6, '员工管理', 2, '/permission/users', 'System/Users', 'system:user:view', 'UserOutlined', 3)
+VALUES (31, 7, '员工管理', 2, '/org/users', 'System/Users', 'system:user:view', 'UserOutlined', 1)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `path` = VALUES(`path`), `sort` = VALUES(`sort`);
 
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
@@ -305,9 +299,20 @@ VALUES (311, 31, '新增员工', 3, '', '', 'system:user:add', '', 1),
        (314, 31, '分配角色', 3, '', '', 'system:user:assign', '', 4)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
--- 3.3 角色管理及按钮
+-- 3.2 部门管理及岗位管理
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (32, 6, '角色权限', 2, '/permission/roles', 'System/Roles', 'system:role:view', 'SafetyCertificateOutlined', 4)
+VALUES (37, 7, '部门管理', 2, '/org/dept', 'System/Dept', 'system:dept:view', 'ApartmentOutlined', 2),
+       (38, 7, '岗位管理', 2, '/org/post', 'SysPost', 'system:post:view', 'IdcardOutlined', 3)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `path` = VALUES(`path`), `sort` = VALUES(`sort`);
+
+-- 4. 权限管理目录 (IAM 访问控制策略层)
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
+VALUES (6, 0, '权限管理', 1, '/permission', '', 'permission:dir', 'SafetyCertificateOutlined', 4)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `path` = VALUES(`path`), `icon` = VALUES(`icon`), `sort` = VALUES(`sort`);
+
+-- 4.1 角色管理及按钮
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
+VALUES (32, 6, '角色权限', 2, '/permission/roles', 'System/Roles', 'system:role:view', 'SafetyCertificateOutlined', 1)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `path` = VALUES(`path`), `sort` = VALUES(`sort`);
 
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
@@ -316,9 +321,9 @@ VALUES (321, 32, '新增角色', 3, '', '', 'system:role:add', '', 1),
        (323, 32, '删除角色', 3, '', '', 'system:role:delete', '', 3)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
--- 3.4 菜单与按钮管理
+-- 4.2 菜单与按钮管理
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (33, 6, '菜单管理', 2, '/permission/menus', 'System/Menus', 'system:menu:view', 'MenuOutlined', 5)
+VALUES (33, 6, '菜单管理', 2, '/permission/menus', 'System/Menus', 'system:menu:view', 'MenuOutlined', 2)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `path` = VALUES(`path`), `sort` = VALUES(`sort`);
 
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
@@ -327,22 +332,24 @@ VALUES (331, 33, '新增菜单', 3, '', '', 'system:menu:add', '', 1),
        (333, 33, '删除菜单', 3, '', '', 'system:menu:delete', '', 3)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
--- 4. 系统配置管理目录
+-- 5. 通知公告独立一级路由
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (3, 0, '系统配置', 1, '/system', '', 'system:dir', 'SettingOutlined', 4)
+VALUES (39, 0, '通知公告', 2, '/notice', 'SysNotice', 'system:notice:view', 'BellOutlined', 5)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `path` = VALUES(`path`), `sort` = VALUES(`sort`);
+
+-- 6. 系统配置管理目录
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
+VALUES (3, 0, '系统配置', 1, '/system', '', 'system:dir', 'SettingOutlined', 6)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `sort` = VALUES(`sort`);
 
--- 4.1 参数设置与通知公告
+-- 6.1 参数设置与字典管理
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
 VALUES (42, 3, '参数设置', 2, '/system/config', 'SysConfig', 'system:config:view', 'SettingOutlined', 1),
-       (39, 3, '通知公告', 2, '/system/sys-notice', 'SysNotice', 'system:notice:view', 'BellOutlined', 4)
+       (35, 3, '数据字典', 2, '/system/dicts', 'System/Dicts', 'system:dict:view', 'BookOutlined', 2),
+       (34, 3, '接口字典', 2, '/system/apis', 'System/Apis', 'system:api:view', 'ApiOutlined', 3)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `sort` = VALUES(`sort`);
 
--- 4.2 数据字典管理及按钮
-INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (35, 3, '数据字典', 2, '/system/dicts', 'System/Dicts', 'system:dict:view', 'BookOutlined', 2)
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `sort` = VALUES(`sort`);
-
+-- 6.2 数据字典管理及按钮
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
 VALUES (351, 35, '新增类型', 3, '', '', 'system:dict:type:add', '', 1),
        (352, 35, '编辑类型', 3, '', '', 'system:dict:type:edit', '', 2),
@@ -352,24 +359,18 @@ VALUES (351, 35, '新增类型', 3, '', '', 'system:dict:type:add', '', 1),
        (356, 35, '删除数据', 3, '', '', 'system:dict:data:delete', '', 6)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
--- 4.3 API 资源字典
+-- 7. 系统监控目录
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (34, 3, '接口字典', 2, '/system/apis', 'System/Apis', 'system:api:view', 'ApiOutlined', 3)
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `parent_id` = VALUES(`parent_id`), `sort` = VALUES(`sort`);
-
--- 5. 系统监控目录
-INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (5, 0, '系统监控', 1, '/monitor', '', 'monitor:dir', 'FundProjectionScreenOutlined', 5),
+VALUES (5, 0, '系统监控', 1, '/monitor', '', 'monitor:dir', 'FundProjectionScreenOutlined', 7),
        (51, 5, '在线用户', 2, '/monitor/online', 'System/Online', 'system:online:view', 'TeamOutlined', 1),
        (52, 5, '审计日志', 2, '/monitor/logs', 'System/Logs', 'system:log:view', 'HistoryOutlined', 2),
        (53, 5, '接口文档', 2, '/monitor/openapi', 'System/OpenApi', 'system:openapi:view', 'FileTextOutlined', 3)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `sort` = VALUES(`sort`);
 
--- 6. 个人中心
+-- 8. 个人中心
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`)
-VALUES (4, 0, '个人中心', 2, '/users', 'Users', 'user:profile:view', 'UserOutlined', 6)
+VALUES (4, 0, '个人中心', 2, '/users', 'Users', 'user:profile:view', 'UserOutlined', 8)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `sort` = VALUES(`sort`);
-ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 基础 API 资源登记
 INSERT INTO `sys_api` (`id`, `api_group`, `title`, `path`, `method`)

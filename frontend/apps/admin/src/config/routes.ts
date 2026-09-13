@@ -83,7 +83,44 @@ export const routes: AppRouteItem[] = [
         component: lazy(() => import("../pages/Users")),
       },
 
-      // 企业级权限与组织治理模块 (IAM & Organization)
+      // 企业级组织架构治理模块 (Organization Governance - 人·岗·部 实体闭环)
+      {
+        path: "/org",
+        name: "menu.org",
+        locale: "menu.org",
+        icon: "ApartmentOutlined",
+        access: "system:manage",
+        routes: [
+          {
+            path: "/org",
+            redirect: "/org/users",
+          },
+          {
+            path: "/org/users",
+            name: "menu.org.users",
+            locale: "menu.org.users",
+            icon: "UserOutlined",
+            access: PERMISSIONS.USER_QUERY,
+            component: lazy(() => import("../pages/System/Users")),
+          },
+          {
+            path: "/org/dept",
+            name: "menu.org.dept",
+            locale: "menu.org.dept",
+            icon: "ApartmentOutlined",
+            component: lazy(() => import("../pages/System/Dept")),
+          },
+          {
+            path: "/org/post",
+            name: "menu.org.post",
+            locale: "menu.org.post",
+            icon: "IdcardOutlined",
+            component: lazy(() => import("../pages/SysPost")),
+          },
+        ],
+      },
+
+      // 企业级权限与访问控制模块 (IAM & Access Control - 角色与策略层)
       {
         path: "/permission",
         name: "menu.permission",
@@ -93,29 +130,7 @@ export const routes: AppRouteItem[] = [
         routes: [
           {
             path: "/permission",
-            redirect: "/permission/dept",
-          },
-          {
-            path: "/permission/dept",
-            name: "menu.permission.dept",
-            locale: "menu.permission.dept",
-            icon: "ApartmentOutlined",
-            component: lazy(() => import("../pages/System/Dept")),
-          },
-          {
-            path: "/permission/sys-post",
-            name: "menu.permission.syspost",
-            locale: "menu.permission.syspost",
-            icon: "IdcardOutlined",
-            component: lazy(() => import("../pages/SysPost")),
-          },
-          {
-            path: "/permission/users",
-            name: "menu.permission.users",
-            locale: "menu.permission.users",
-            icon: "UserOutlined",
-            access: PERMISSIONS.USER_QUERY,
-            component: lazy(() => import("../pages/System/Users")),
+            redirect: "/permission/roles",
           },
           {
             path: "/permission/roles",
@@ -133,7 +148,34 @@ export const routes: AppRouteItem[] = [
             access: PERMISSIONS.MENU_QUERY,
             component: lazy(() => import("../pages/System/Menus")),
           },
+          // 兼容历史与过渡访问路径，平滑重定向至组织管理
+          {
+            path: "/permission/users",
+            redirect: "/org/users",
+          },
+          {
+            path: "/permission/dept",
+            redirect: "/org/dept",
+          },
+          {
+            path: "/permission/sys-post",
+            redirect: "/org/post",
+          },
         ],
+      },
+
+      // 企业级全员协同与通知中心 (Notice & Announcement - 独立一级路由)
+      {
+        path: "/notice",
+        name: "menu.notice",
+        locale: "menu.notice",
+        icon: "BellOutlined",
+        access: PERMISSIONS.NOTICE_VIEW,
+        component: lazy(() => import("../pages/SysNotice")),
+      },
+      {
+        path: "/sys-notice",
+        redirect: "/notice",
       },
 
       // 企业级系统配置与治理模块 (System Configuration & Settings)
@@ -171,25 +213,22 @@ export const routes: AppRouteItem[] = [
             access: PERMISSIONS.API_QUERY,
             component: lazy(() => import("../pages/System/Apis")),
           },
+          // 兼容历史访问路径，自动平滑重定向至通知公告、组织管理、权限管理与系统监控
           {
             path: "/system/sys-notice",
-            name: "menu.system.sysnotice",
-            locale: "menu.system.sysnotice",
-            icon: "BellOutlined",
-            component: lazy(() => import("../pages/SysNotice")),
+            redirect: "/notice",
           },
-          // 兼容历史访问路径，自动平滑重定向至权限管理与系统监控
           {
             path: "/system/dept",
-            redirect: "/permission/dept",
+            redirect: "/org/dept",
           },
           {
             path: "/system/sys-post",
-            redirect: "/permission/sys-post",
+            redirect: "/org/post",
           },
           {
             path: "/system/users",
-            redirect: "/permission/users",
+            redirect: "/org/users",
           },
           {
             path: "/system/roles",

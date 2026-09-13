@@ -151,7 +151,7 @@ export const OnlineUsersPage: React.FC = () => {
           );
         }
         return (
-          <Access accessible={PERMISSIONS.ONLINE_FORCE}>
+          <Access permission={PERMISSIONS.ONLINE_FORCE}>
             <Popconfirm
               title="确定强制该用户下线吗？"
               description="强退后该用户的访问令牌将立即进入 Redis 黑名单并失效。"

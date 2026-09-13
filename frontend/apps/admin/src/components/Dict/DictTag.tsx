@@ -9,8 +9,10 @@ export interface DictTagProps {
   value?: string | number | null;
   /** 未匹配到字典时的兜底展示文本，默认为 '-' 或原始值 */
   defaultLabel?: string;
-  /** 变体样式：'outlined' | 'filled' | 'borderless' */
-  variant?: 'outlined' | 'filled' | 'borderless';
+  /** 变体样式：'outlined' | 'filled' | 'solid' */
+  variant?: 'outlined' | 'filled' | 'solid';
+  /** 是否有边框 */
+  bordered?: boolean;
   /** 样式 */
   style?: React.CSSProperties;
   /** 自定义类名 */
@@ -30,6 +32,7 @@ export const DictTag: React.FC<DictTagProps> = ({
   value,
   defaultLabel,
   variant,
+  bordered,
   style,
   className,
   showEmptyAsDash = true,
