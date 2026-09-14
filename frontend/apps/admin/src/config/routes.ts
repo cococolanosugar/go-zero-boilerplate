@@ -199,6 +199,42 @@ export const routes: AppRouteItem[] = [
         redirect: "/tasks",
       },
 
+      // 企业级 ITSM 服务管理与流程中心 (IT Service Management)
+      {
+        path: "/itsm",
+        name: "menu.itsm",
+        locale: "menu.itsm",
+        icon: "BranchesOutlined",
+        routes: [
+          {
+            path: "/itsm",
+            redirect: "/itsm/tickets",
+          },
+          {
+            path: "/itsm/tickets",
+            name: "menu.itsm.tickets",
+            locale: "menu.itsm.tickets",
+            icon: "AuditOutlined",
+            component: lazy(() => import("../pages/itsm/Tickets")),
+          },
+          {
+            path: "/itsm/tickets/:id",
+            name: "menu.itsm.ticket.detail",
+            locale: "menu.itsm.ticket.detail",
+            icon: "FileTextOutlined",
+            hideInMenu: true,
+            component: lazy(() => import("../pages/itsm/Tickets/Detail")),
+          },
+          {
+            path: "/itsm/process-defs",
+            name: "menu.itsm.processDefs",
+            locale: "menu.itsm.processDefs",
+            icon: "ApartmentOutlined",
+            component: lazy(() => import("../pages/itsm/ProcessDefs")),
+          },
+        ],
+      },
+
       // 企业级系统配置与治理模块 (System Configuration & Settings)
       {
         path: "/system",

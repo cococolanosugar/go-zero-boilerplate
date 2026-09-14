@@ -50,6 +50,14 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id) {
             if (id.includes("node_modules")) {
+              if (
+                id.includes("bpmn-js") ||
+                id.includes("diagram-js") ||
+                id.includes("bpmn-moddle") ||
+                id.includes("moddle")
+              ) {
+                return "vendor-bpmn";
+              }
               if (id.includes("@ant-design/charts") || id.includes("@antv")) {
                 return "vendor-charts";
               }

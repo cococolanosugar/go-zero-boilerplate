@@ -56,9 +56,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	w := worker.New(temporalClient, c.Temporal.TaskQueue, worker.Options{})
 	w.RegisterWorkflow(workflows.DailyReportWorkflow)
 	w.RegisterWorkflow(workflows.HelloWorldWorkflow)
+	w.RegisterWorkflow(workflows.ItsmSlaMonitorWorkflow)
 
 	taskActs := activities.NewTaskActivities()
 	w.RegisterActivity(taskActs)
+	w.RegisterActivity(activities.NewItsmSlaActivities(sqlConn))
 
 	return &ServiceContext{
 		Config:                c,

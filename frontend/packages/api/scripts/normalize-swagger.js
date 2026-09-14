@@ -25,6 +25,8 @@ for (const [routePath, methods] of Object.entries(swagger.paths || {})) {
       tag = 'dict';
     } else if (routePath.startsWith('/api/v1/system/task')) {
       tag = 'task';
+    } else if (routePath.startsWith('/api/v1/itsm')) {
+      tag = 'itsm';
     } else if (routePath.startsWith('/api/v1/system')) {
       tag = 'system';
     } else if (routePath.startsWith('/api/v1/user')) {
