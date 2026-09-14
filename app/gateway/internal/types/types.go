@@ -37,6 +37,15 @@ type OnlineSessionItem struct {
 	IsCurrent     bool   `json:"isCurrent"`
 }
 
+type SlaPolicyVO struct {
+	Id               int64  `json:"id"`
+	Priority         string `json:"priority"`
+	CalendarType     string `json:"calendarType"`
+	ResponseLimitMin int32  `json:"responseLimitMin"`
+	ResolveLimitMin  int32  `json:"resolveLimitMin"`
+	WarnThresholdPct int32  `json:"warnThresholdPct"`
+}
+
 type SysApiItem struct {
 	Id         int64  `json:"id"`
 	ApiGroup   string `json:"apiGroup"`
@@ -142,6 +151,51 @@ type SysUserItem struct {
 	RoleNames  []string `json:"roleNames"`
 	RoleIds    []int64  `json:"roleIds"`
 	CreateTime string   `json:"createTime"`
+}
+
+type TaskLogVO struct {
+	Id           int64  `json:"id"`
+	TaskId       int64  `json:"taskId"`
+	NodeId       string `json:"nodeId"`
+	NodeName     string `json:"nodeName"`
+	OperatorId   int64  `json:"operatorId"`
+	OperatorName string `json:"operatorName"`
+	ActionType   string `json:"actionType"`
+	Opinion      string `json:"opinion,optional"`
+	DurationSec  int32  `json:"durationSec"`
+	CreateTime   string `json:"createTime"`
+}
+
+type TaskVO struct {
+	Id           int64  `json:"id"`
+	InstId       int64  `json:"instId"`
+	NodeId       string `json:"nodeId"`
+	NodeName     string `json:"nodeName"`
+	TaskType     string `json:"taskType"`
+	ApprovalMode string `json:"approvalMode"`
+	AssigneeId   int64  `json:"assigneeId"`
+	AssigneeName string `json:"assigneeName,optional"`
+	Status       string `json:"status"`
+	ClaimAt      string `json:"claimAt,optional"`
+	CreateTime   string `json:"createTime"`
+}
+
+type TicketVO struct {
+	Id                  int64  `json:"id"`
+	TicketNo            string `json:"ticketNo"`
+	Title               string `json:"title"`
+	Priority            string `json:"priority"`
+	ProcDefId           int64  `json:"procDefId"`
+	ProcName            string `json:"procName,optional"`
+	InitiatorId         int64  `json:"initiatorId"`
+	InitiatorName       string `json:"initiatorName,optional"`
+	CurrentNodeId       string `json:"currentNodeId"`
+	CurrentNodeName     string `json:"currentNodeName"`
+	Status              string `json:"status"`
+	SlaStatus           string `json:"slaStatus"`
+	SlaResponseDeadline string `json:"slaResponseDeadline,optional"`
+	SlaResolveDeadline  string `json:"slaResolveDeadline,optional"`
+	CreateTime          string `json:"createTime"`
 }
 
 type UserInfoReq struct {

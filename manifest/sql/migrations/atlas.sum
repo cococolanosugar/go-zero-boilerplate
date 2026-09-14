@@ -1,4 +1,4 @@
-h1:z97JJHcBKCIjlt/zfXaIwCGsyUplAPfJ3RVUp9EbIEw=
+h1:35T31Pc7tUcFrTAzoC8swL5u0SH95B51Bxf6PrWOtmk=
 20260912000000_baseline.sql h1:yQgwebuFv66q7JWMVyUBlLEr2td5ClZuTovgLe7lsfI=
 20260912000001_create_sys_post.sql h1:T1UVCi4ZxWIvOCJn/e9O052EQ98c8BjApl5G5vYI/JU=
 20260912002549_create_sys_notice.sql h1:INov0+0SE4YiB4gfB5XrzeiYfOMswnvbgVoTtkzy7gc=
@@ -10,3 +10,5 @@ h1:z97JJHcBKCIjlt/zfXaIwCGsyUplAPfJ3RVUp9EbIEw=
 20260913160000_create_sys_portal_nav.sql h1:cYuqyfwdygC9LlVg50Itwepd83cwvWRlDf2tTS8pfek=
 20260913170000_separate_sys_portal_nav_top_level.sql h1:crE2XF31f0VcSm9zGJHfdKgLF9SKfDZwo/LVwqv26Ro=
 20260913180000_add_env_to_sys_portal_nav.sql h1:MNlNBgfYbnL+UYo3EuJUcKMPW7Xl0/BZiNo27EvtTs0=
+20260914000000_create_itsm_tables.sql h1:q755uTzwdH1wRUoyJQIjowR3J3+rOJPTGLAhq3mAuGI=
+20260914000001_align_itsm_timestamps.sql h1:ruZNe6YtV0wXphdmT5poxIpt4DpFVyqP4o73XR2RY2w=

@@ -20,6 +20,8 @@
     "@zero/shared": "workspace:*",
     "ahooks": "^3.10.0",
     "antd": "6.6.2",
+    "bpmn-js": "^18.28.0",
+    "diagram-js": "^15.26.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.18.3"

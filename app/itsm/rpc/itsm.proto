@@ -1,0 +1,267 @@
+syntax = "proto3";
+
+package itsm;
+option go_package="./itsm";
+
+message CommonResp {
+  int64 code = 1;
+  string msg = 2;
+}
+
+message PingReq {
+  string ping = 1;
+}
+
+message PingResp {
+  string pong = 1;
+}
+
+// 流程定义相关
+message ProcessDefItem {
+  int64 id = 1;
+  string procCode = 2;
+  string procName = 3;
+  string category = 4;
+  string bpmnXml = 5;
+  string formSchema = 6;
+  int32 version = 7;
+  int32 status = 8; // 1-草稿, 2-已发布, 3-已停用
+  string description = 9;
+  string createTime = 10;
+  string updateTime = 11;
+}
+
+message CreateProcessDefReq {
+  string procCode = 1;
+  string procName = 2;
+  string category = 3;
+  string bpmnXml = 4;
+  string formSchema = 5;
+  string description = 6;
+  int64 createdBy = 7;
+}
+
+message CreateProcessDefResp {
+  int64 id = 1;
+}
+
+message UpdateProcessDefReq {
+  int64 id = 1;
+  string procName = 2;
+  string category = 3;
+  string bpmnXml = 4;
+  string formSchema = 5;
+  string description = 6;
+  int32 status = 7;
+}
+
+message GetProcessDefReq {
+  int64 id = 1;
+  string procCode = 2;
+}
+
+message ListProcessDefReq {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string category = 3;
+  int32 status = 4;
+  string keyword = 5;
+}
+
+message ListProcessDefResp {
+  int64 total = 1;
+  repeated ProcessDefItem list = 2;
+}
+
+message DeployProcessDefReq {
+  int64 id = 1;
+}
+
+// 工单流转相关
+message TicketItem {
+  int64 id = 1;
+  string ticketNo = 2;
+  string title = 3;
+  string priority = 4;
+  int64 procDefId = 5;
+  string procName = 6;
+  int64 initiatorId = 7;
+  string initiatorName = 8;
+  string currentNodeId = 9;
+  string currentNodeName = 10;
+  string status = 11;
+  string slaStatus = 12;
+  string slaResponseDeadline = 13;
+  string slaResolveDeadline = 14;
+  string createTime = 15;
+}
+
+message CreateTicketReq {
+  int64 procDefId = 1;
+  string title = 2;
+  string priority = 3;
+  int64 initiatorId = 4;
+  string initiatorName = 5;
+  string formDataJson = 6;
+}
+
+message CreateTicketResp {
+  int64 id = 1;
+  string ticketNo = 2;
+}
+
+message GetTicketDetailReq {
+  int64 id = 1;
+  string ticketNo = 2;
+}
+
+message TaskItem {
+  int64 id = 1;
+  int64 instId = 2;
+  string nodeId = 3;
+  string nodeName = 4;
+  string taskType = 5;
+  string approvalMode = 6;
+  int64 assigneeId = 7;
+  string assigneeName = 8;
+  string status = 9;
+  string claimAt = 10;
+  string completedAt = 11;
+  string createTime = 12;
+}
+
+message TaskLogItem {
+  int64 id = 1;
+  int64 taskId = 2;
+  string nodeId = 3;
+  string nodeName = 4;
+  int64 operatorId = 5;
+  string operatorName = 6;
+  string actionType = 7;
+  string opinion = 8;
+  int32 durationSec = 9;
+  string createTime = 10;
+}
+
+message TicketDetailResp {
+  TicketItem ticket = 1;
+  string formDataJson = 2;
+  string formSchemaJson = 3;
+  string bpmnXml = 4;
+  repeated TaskItem activeTasks = 5;
+  repeated TaskLogItem logs = 6;
+}
+
+message ListTicketsReq {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string viewType = 3; // "todo", "done", "my_submitted", "all", "sla_warning"
+  int64 userId = 4;
+  string status = 5;
+  string priority = 6;
+  string keyword = 7;
+}
+
+message ListTicketsResp {
+  int64 total = 1;
+  repeated TicketItem list = 2;
+}
+
+message ClaimTaskReq {
+  int64 taskId = 1;
+  int64 userId = 2;
+  string userName = 3;
+}
+
+message ApproveTaskReq {
+  int64 taskId = 1;
+  int64 userId = 2;
+  string userName = 3;
+  string opinion = 4;
+  string updatedFormDataJson = 5;
+}
+
+message RejectTaskReq {
+  int64 taskId = 1;
+  int64 userId = 2;
+  string userName = 3;
+  string opinion = 4;
+}
+
+message TransferTaskReq {
+  int64 taskId = 1;
+  int64 userId = 2;
+  string userName = 3;
+  int64 targetUserId = 4;
+  string targetUserName = 5;
+  string opinion = 6;
+}
+
+message CancelTicketReq {
+  int64 ticketId = 1;
+  int64 userId = 2;
+  string userName = 3;
+  string reason = 4;
+}
+
+// 轨迹图相关
+message GetTicketTrajectoryReq {
+  int64 ticketId = 1;
+}
+
+message TicketTrajectoryResp {
+  string bpmnXml = 1;
+  repeated string completedNodeIds = 2;
+  repeated string activeNodeIds = 3;
+  repeated string rejectedNodeIds = 4;
+  repeated TaskLogItem logs = 5;
+}
+
+// SLA 策略相关
+message SlaPolicyItem {
+  int64 id = 1;
+  string priority = 2;
+  string calendarType = 3;
+  int32 responseLimitMin = 4;
+  int32 resolveLimitMin = 5;
+  int32 warnThresholdPct = 6;
+}
+
+message ListSlaPoliciesReq {}
+
+message ListSlaPoliciesResp {
+  repeated SlaPolicyItem list = 1;
+}
+
+message UpdateSlaPolicyReq {
+  int64 id = 1;
+  int32 responseLimitMin = 2;
+  int32 resolveLimitMin = 3;
+  int32 warnThresholdPct = 4;
+}
+
+service Itsm {
+  rpc Ping(PingReq) returns(PingResp);
+  
+  // 流程定义
+  rpc CreateProcessDef(CreateProcessDefReq) returns(CreateProcessDefResp);
+  rpc UpdateProcessDef(UpdateProcessDefReq) returns(CommonResp);
+  rpc GetProcessDef(GetProcessDefReq) returns(ProcessDefItem);
+  rpc ListProcessDef(ListProcessDefReq) returns(ListProcessDefResp);
+  rpc DeployProcessDef(DeployProcessDefReq) returns(CommonResp);
+  
+  // 工单全生命周期
+  rpc CreateTicket(CreateTicketReq) returns(CreateTicketResp);
+  rpc GetTicketDetail(GetTicketDetailReq) returns(TicketDetailResp);
+  rpc ListTickets(ListTicketsReq) returns(ListTicketsResp);
+  rpc ClaimTask(ClaimTaskReq) returns(CommonResp);
+  rpc ApproveTask(ApproveTaskReq) returns(CommonResp);
+  rpc RejectTask(RejectTaskReq) returns(CommonResp);
+  rpc TransferTask(TransferTaskReq) returns(CommonResp);
+  rpc CancelTicket(CancelTicketReq) returns(CommonResp);
+  
+  // 轨迹与 SLA
+  rpc GetTicketTrajectory(GetTicketTrajectoryReq) returns(TicketTrajectoryResp);
+  rpc ListSlaPolicies(ListSlaPoliciesReq) returns(ListSlaPoliciesResp);
+  rpc UpdateSlaPolicy(UpdateSlaPolicyReq) returns(CommonResp);
+}

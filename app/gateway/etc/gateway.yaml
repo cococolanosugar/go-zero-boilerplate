@@ -39,6 +39,12 @@ WorkerRpc:
     - 127.0.0.1:8082
   NonBlock: true
 
+# ITSM 微服务 gRPC 客户端 (端口 8084)
+ItsmRpc:
+  Endpoints:
+    - 127.0.0.1:8084
+  NonBlock: true
+
 # ================= Casdoor SSO 认证配置 =================
 Casdoor:
   Endpoint: http://127.0.0.1:8000
