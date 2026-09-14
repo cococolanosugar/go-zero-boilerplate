@@ -14,6 +14,24 @@ gen-rpc service="user":
 gen-model table="all":
     pwsh -File ./hack/scripts/gen-model.ps1 -Table {{table}}
 
+# 创建新微服务 RPC 模块 (例如: just new-rpc order)
+[windows]
+new-rpc service:
+    pwsh -File ./hack/scripts/new-rpc.ps1 -Service {{service}}
+
+[unix]
+new-rpc service:
+    bash ./hack/scripts/new-rpc.sh {{service}}
+
+# 创建新微服务 API 模块 (例如: just new-api order)
+[windows]
+new-api service:
+    pwsh -File ./hack/scripts/new-api.ps1 -Service {{service}}
+
+[unix]
+new-api service:
+    bash ./hack/scripts/new-api.sh {{service}}
+
 # 基于网关契约生成前端 TypeScript SDK (OpenAPI + Orval 模块化切分及完整兼容定义)
 gen-ts:
     goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway

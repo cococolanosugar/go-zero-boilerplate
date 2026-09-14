@@ -1,8 +1,8 @@
-.PHONY: gen-gateway gen-user-rpc gen-worker-rpc gen-ts run-gateway run-user-rpc run-worker-rpc run-admin run-portal build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project
+.PHONY: gen-gateway gen-user-rpc gen-worker-rpc gen-ts new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-portal build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project
 
 # 生成网关 API 代码
 gen-gateway:
-	goctl api go -api app/gateway/desc/gateway.api -dir app/gateway -style go_zero
+	goctl api go -api app/gateway/desc/gateway.api -dir app/gateway -style go_zero --type-group
 
 # 生成 user-rpc 代码
 gen-user-rpc:
@@ -11,6 +11,14 @@ gen-user-rpc:
 # 生成 worker-rpc 代码
 gen-worker-rpc:
 	cd app/worker/rpc && goctl rpc protoc worker.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+
+# 创建新微服务 RPC 模块 (例如: make new-rpc SERVICE=order)
+new-rpc:
+	bash ./hack/scripts/new-rpc.sh $(SERVICE)
+
+# 创建新微服务 API 模块 (例如: make new-api SERVICE=order)
+new-api:
+	bash ./hack/scripts/new-api.sh $(SERVICE)
 
 # 生成 Model 持久层代码
 gen-model:

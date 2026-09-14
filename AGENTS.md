@@ -312,6 +312,12 @@ just gen-gateway
 just gen-rpc user
 just gen-rpc worker
 
+# 创建新微服务 RPC 模块 (自动应用项目模板并置入 app/<service>/rpc)
+just new-rpc <service>
+
+# 创建新微服务 API 模块 (自动应用项目模板并置入 app/<service>/api)
+just new-api <service>
+
 # 生成数据库持久层 Model 代码（带 Redis 缓存支持）
 just gen-model
 

@@ -98,6 +98,8 @@ just gen-ts
 | 生成网关后端代码 | `just gen-gateway` | `make gen-gateway` |
 | 生成 user RPC | `just gen-rpc user` | `make gen-user-rpc` |
 | 生成 worker RPC | `just gen-rpc worker` | `make gen-worker-rpc` |
+| **创建新微服务 RPC 模块** | `just new-rpc <service>` | `make new-rpc SERVICE=<service>` |
+| **创建新微服务 API 模块** | `just new-api <service>` | `make new-api SERVICE=<service>` |
 | **生成持久层 Model 代码** | `just gen-model` | `make gen-model` |
 | **全栈 CRUD 一键代码生成** | `just gen-crud <service> <table>` | `make gen-crud SERVICE=<service> TABLE=<table>` |
 | **数据库版本化迁移 (新建/执行/回滚/状态)** | `just migrate-(new/up/down/status)` | `make migrate-(new/up/down/status)` |
