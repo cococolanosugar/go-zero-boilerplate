@@ -1,5 +1,6 @@
-.PHONY: gen-gateway gen-user-rpc gen-worker-rpc gen-ts gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
+.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-ts gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
 
+SERVICE ?= user
 TABLE ?= all
 AMOUNT ?= 1
 
@@ -20,6 +21,10 @@ endif
 # 生成网关 API 代码
 gen-gateway:
 	goctl api go -api app/gateway/desc/gateway.api -dir app/gateway -style go_zero --type-group
+
+# 生成指定服务 RPC 代码 (例如: make gen-rpc SERVICE=user)
+gen-rpc:
+	cd app/$(SERVICE)/rpc && goctl rpc protoc $(SERVICE).proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 生成 user-rpc 代码
 gen-user-rpc:
