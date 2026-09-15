@@ -11,8 +11,13 @@ gen-rpc service="user":
     cd app/{{service}}/rpc && goctl rpc protoc {{service}}.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 生成指定微服务 Model 持久层代码 (例如: just gen-model all / just gen-model user)
+[windows]
 gen-model table="all":
     pwsh -File ./hack/scripts/gen-model.ps1 -Table {{table}}
+
+[unix]
+gen-model table="all":
+    bash ./hack/scripts/gen-model.sh {{table}}
 
 # 创建新微服务 RPC 模块 (例如: just new-rpc order)
 [windows]
@@ -101,8 +106,13 @@ tidy:
     go mod tidy
 
 # 脚手架一键重命名 (例如: just rename-project my-app "My Awesome App")
+[windows]
 rename-project new_module="my-app" display_name="":
     pwsh -File ./hack/scripts/rename-project.ps1 -NewModule {{new_module}} -DisplayName "{{display_name}}"
+
+[unix]
+rename-project new_module="my-app" display_name="":
+    bash ./hack/scripts/rename-project.sh "{{new_module}}" "{{display_name}}"
 
 # 对前端应用进行 Ant Design 语法与弃用 API 静态诊断
 lint-antd:
@@ -117,25 +127,25 @@ ai-index:
 # 构建全栈所有 Docker 镜像
 docker-build:
     docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
-    docker build -t go-zero-order-rpc:latest -f app/order/rpc/Dockerfile .
+    docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
     docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
     docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 
 # 一键启动全栈所有容器 (基础设施 + 微服务 + 网关 + 前端)
 docker-up:
-    docker-compose -f manifest/deploy/docker-compose/docker-compose.all.yml up -d --build
+    docker compose -f manifest/deploy/docker-compose/docker-compose.all.yml up -d --build
 
 # 停止全栈所有容器
 docker-down:
-    docker-compose -f manifest/deploy/docker-compose/docker-compose.all.yml down
+    docker compose -f manifest/deploy/docker-compose/docker-compose.all.yml down
 
 # 仅启动本地开发所需的中间件容器 (MySQL, Redis, Etcd, Nacos)
 docker-infra-up:
-    docker-compose -f manifest/deploy/docker-compose/docker-compose.yml up -d
+    docker compose -f manifest/deploy/docker-compose/docker-compose.yml up -d
 
 # 停止本地开发中间件容器
 docker-infra-down:
-    docker-compose -f manifest/deploy/docker-compose/docker-compose.yml down
+    docker compose -f manifest/deploy/docker-compose/docker-compose.yml down
 
 # ================= 数据库版本迁移流水线 (Atlas Migrations) =================
 
@@ -159,7 +169,12 @@ migrate-status:
 # ================= 全栈 CRUD 代码生成器 =================
 
 # 全栈一体化 CRUD 代码生成器 (例如: just gen-crud user sys_post)
+[windows]
 gen-crud service table:
     pwsh -File ./hack/scripts/gen-crud.ps1 -Service {{service}} -Table {{table}}
+
+[unix]
+gen-crud service table:
+    bash ./hack/scripts/gen-crud.sh "{{service}}" "{{table}}"
 
 

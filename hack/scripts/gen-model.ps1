@@ -7,11 +7,6 @@ if ($Table -eq "all" -or $Table -eq "user") {
     goctl model mysql ddl -src manifest/sql/user.sql -dir app/user/model -c --style go_zero
 }
 
-if ($Table -eq "all" -or $Table -eq "order") {
-    Write-Host "Generating orders model from manifest/sql/order.sql..." -ForegroundColor Cyan
-    goctl model mysql ddl -src manifest/sql/order.sql -dir app/order/model -c --style go_zero
-}
-
 if ($Table -eq "all" -or $Table -eq "rbac" -or $Table -eq "system") {
     Write-Host "Generating RBAC and system models from manifest/sql/rbac_schema.sql..." -ForegroundColor Cyan
     goctl model mysql ddl -src manifest/sql/rbac_schema.sql -dir app/user/model -c --style go_zero

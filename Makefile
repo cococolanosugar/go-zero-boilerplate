@@ -1,4 +1,21 @@
-.PHONY: gen-gateway gen-user-rpc gen-worker-rpc gen-ts new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-portal build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project
+.PHONY: gen-gateway gen-user-rpc gen-worker-rpc gen-ts gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
+
+TABLE ?= all
+AMOUNT ?= 1
+
+ifeq ($(OS),Windows_NT)
+NEW_RPC = pwsh -File ./hack/scripts/new-rpc.ps1 -Service
+NEW_API = pwsh -File ./hack/scripts/new-api.ps1 -Service
+GEN_MODEL = pwsh -File ./hack/scripts/gen-model.ps1 -Table
+RENAME_PROJECT = pwsh -File ./hack/scripts/rename-project.ps1 -NewModule
+GEN_CRUD = pwsh -File ./hack/scripts/gen-crud.ps1 -Service
+else
+NEW_RPC = bash ./hack/scripts/new-rpc.sh
+NEW_API = bash ./hack/scripts/new-api.sh
+GEN_MODEL = bash ./hack/scripts/gen-model.sh
+RENAME_PROJECT = bash ./hack/scripts/rename-project.sh
+GEN_CRUD = bash ./hack/scripts/gen-crud.sh
+endif
 
 # 生成网关 API 代码
 gen-gateway:
@@ -14,18 +31,21 @@ gen-worker-rpc:
 
 # 创建新微服务 RPC 模块 (例如: make new-rpc SERVICE=order)
 new-rpc:
-	bash ./hack/scripts/new-rpc.sh $(SERVICE)
+	$(NEW_RPC) "$(SERVICE)"
 
 # 创建新微服务 API 模块 (例如: make new-api SERVICE=order)
 new-api:
-	bash ./hack/scripts/new-api.sh $(SERVICE)
+	$(NEW_API) "$(SERVICE)"
 
 # 生成 Model 持久层代码
 gen-model:
-	bash ./hack/scripts/gen-model.sh all
+	$(GEN_MODEL) "$(TABLE)"
 
-# 生成前端 TS SDK
+# 基于网关契约生成前端 TypeScript SDK
 gen-ts:
+	goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway
+	node frontend/packages/api/scripts/normalize-swagger.js
+	cd frontend && pnpm --filter @zero/api codegen
 	goctl api ts --api app/gateway/desc/gateway.api --dir frontend/packages/api/src
 
 # 基于网关契约生成 OpenAPI / Swagger 契约
@@ -53,6 +73,14 @@ run-admin:
 run-admin-mock:
 	cd frontend && pnpm dev:admin:mock
 
+# 启动前端管理后台 (连接远程测试环境网关)
+run-admin-test:
+	cd frontend && pnpm dev:admin:test
+
+# 启动前端管理后台 (连接预发布环境网关)
+run-admin-pre:
+	cd frontend && pnpm dev:admin:pre
+
 # 启动前端门户 (Vite 3000)
 run-portal:
 	cd frontend && pnpm dev:portal
@@ -60,6 +88,14 @@ run-portal:
 # 启动前端门户 (离线 Mock 纯前端开发模式)
 run-portal-mock:
 	cd frontend && pnpm dev:portal:mock
+
+# 启动前端门户 (连接远程测试环境网关)
+run-portal-test:
+	cd frontend && pnpm dev:portal:test
+
+# 启动前端门户 (连接预发布环境网关)
+run-portal-pre:
+	cd frontend && pnpm dev:portal:pre
 
 # 构建前端产物
 build-frontend:
@@ -77,7 +113,7 @@ tidy:
 
 # 脚手架一键重命名 (例如: make rename-project NEW_MODULE=my-app DISPLAY_NAME="My App")
 rename-project:
-	bash ./hack/scripts/rename-project.sh $(NEW_MODULE) "$(DISPLAY_NAME)"
+	$(RENAME_PROJECT) "$(NEW_MODULE)" "$(DISPLAY_NAME)"
 
 # 运行测试
 test:
@@ -102,19 +138,19 @@ docker-build:
 
 # 一键启动全栈所有容器 (基础设施 + 微服务 + 网关 + 前端)
 docker-up:
-	docker-compose -f manifest/deploy/docker-compose/docker-compose.all.yml up -d --build
+	docker compose -f manifest/deploy/docker-compose/docker-compose.all.yml up -d --build
 
 # 停止全栈所有容器
 docker-down:
-	docker-compose -f manifest/deploy/docker-compose/docker-compose.all.yml down
+	docker compose -f manifest/deploy/docker-compose/docker-compose.all.yml down
 
 # 仅启动本地开发所需的中间件容器 (MySQL, Redis, Etcd, Nacos)
 docker-infra-up:
-	docker-compose -f manifest/deploy/docker-compose/docker-compose.yml up -d
+	docker compose -f manifest/deploy/docker-compose/docker-compose.yml up -d
 
 # 停止本地开发中间件容器
 docker-infra-down:
-	docker-compose -f manifest/deploy/docker-compose/docker-compose.yml down
+	docker compose -f manifest/deploy/docker-compose/docker-compose.yml down
 
 # ================= 数据库版本迁移流水线 (Atlas Migrations) =================
 
@@ -139,7 +175,7 @@ migrate-status:
 
 # 全栈一体化 CRUD 代码生成器 (例如: make gen-crud SERVICE=user TABLE=sys_post)
 gen-crud:
-	bash ./hack/scripts/gen-crud.sh $(SERVICE) $(TABLE)
+	$(GEN_CRUD) "$(SERVICE)" "$(TABLE)"
 
 
 

@@ -8,11 +8,6 @@ if [ "$TABLE" = "all" ] || [ "$TABLE" = "user" ]; then
     goctl model mysql ddl -src manifest/sql/user.sql -dir app/user/model -c --style go_zero
 fi
 
-if [ "$TABLE" = "all" ] || [ "$TABLE" = "order" ]; then
-    echo "Generating orders model from manifest/sql/order.sql..."
-    goctl model mysql ddl -src manifest/sql/order.sql -dir app/order/model -c --style go_zero
-fi
-
 if [ "$TABLE" = "all" ] || [ "$TABLE" = "rbac" ] || [ "$TABLE" = "system" ]; then
     echo "Generating RBAC and system models from manifest/sql/rbac_schema.sql..."
     goctl model mysql ddl -src manifest/sql/rbac_schema.sql -dir app/user/model -c --style go_zero
