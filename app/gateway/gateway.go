@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 
 	_ "github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
@@ -33,7 +34,13 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 	openApiSpecBytes, err := os.ReadFile(c.OpenApi.FilePath)
 	if err != nil {
-		panic(fmt.Errorf("failed to load OpenAPI spec from %s: %w", c.OpenApi.FilePath, err))
+		if fallbackBytes, fallbackErr := os.ReadFile("manifest/openapi/openapi.json"); fallbackErr == nil {
+			openApiSpecBytes = fallbackBytes
+			err = nil
+		}
+	}
+	if err != nil {
+		logx.Errorf("failed to load OpenAPI spec from %s: %v", c.OpenApi.FilePath, err)
 	}
 
 	// 挂载静态文件目录服务（支持 /uploads/* 访问本地上传资源）

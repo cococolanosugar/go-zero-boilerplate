@@ -1,5 +1,5 @@
 # 多阶段构建：Gateway 统一接入网关
-FROM golang:1.24-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /build
 
@@ -13,8 +13,8 @@ RUN go env -w GOPROXY="https://goproxy.cn,direct" && go mod download
 COPY pkg/ pkg/
 COPY app/user/rpc/client/ app/user/rpc/client/
 COPY app/user/rpc/pb/ app/user/rpc/pb/
-COPY app/order/rpc/client/ app/order/rpc/client/
-COPY app/order/rpc/pb/ app/order/rpc/pb/
+COPY app/worker/rpc/client/ app/worker/rpc/client/
+COPY app/worker/rpc/pb/ app/worker/rpc/pb/
 COPY app/gateway/ app/gateway/
 
 # 静态交叉编译 Linux 二进制产物
@@ -30,6 +30,7 @@ ENV TZ=Asia/Shanghai
 
 COPY --from=builder /app/gateway /app/gateway
 COPY --from=builder /build/app/gateway/etc /app/etc
+COPY manifest/openapi/ /app/manifest/openapi/
 
 EXPOSE 8888
 
