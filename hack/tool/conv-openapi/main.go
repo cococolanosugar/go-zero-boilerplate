@@ -61,8 +61,6 @@ func main() {
 
 func tagForPath(routePath string) string {
 	switch {
-	case strings.HasPrefix(routePath, "/api/v1/dashboard"):
-		return "dashboard"
 	case strings.HasPrefix(routePath, "/api/v1/portal/navigation"),
 		strings.HasPrefix(routePath, "/api/v1/system/navigation"):
 		return "navigation"
@@ -70,13 +68,14 @@ func tagForPath(routePath string) string {
 		return "dict"
 	case strings.HasPrefix(routePath, "/api/v1/system/task"):
 		return "task"
-	case strings.HasPrefix(routePath, "/api/v1/system"):
-		return "system"
-	case strings.HasPrefix(routePath, "/api/v1/user"):
-		return "user"
-	default:
-		return "other"
 	}
+
+	parts := strings.Split(strings.TrimPrefix(routePath, "/"), "/")
+	if len(parts) >= 3 && parts[0] == "api" && parts[1] == "v1" && parts[2] != "" {
+		return parts[2]
+	}
+
+	return "other"
 }
 
 func cleanOperationID(operationID string) string {
