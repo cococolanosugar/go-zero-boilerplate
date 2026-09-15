@@ -8,7 +8,7 @@ NEW_RPC = pwsh -File ./hack/scripts/new-rpc.ps1 -Service
 NEW_API = pwsh -File ./hack/scripts/new-api.ps1 -Service
 GEN_MODEL = pwsh -File ./hack/scripts/gen-model.ps1 -Table
 RENAME_PROJECT = pwsh -File ./hack/scripts/rename-project.ps1 -NewModule
-GEN_CRUD = pwsh -File ./hack/scripts/gen-crud.ps1 -Service
+GEN_CRUD = pwsh -File ./hack/scripts/gen-crud.ps1
 else
 NEW_RPC = bash ./hack/scripts/new-rpc.sh
 NEW_API = bash ./hack/scripts/new-api.sh
@@ -51,7 +51,7 @@ gen-ts:
 # 基于网关契约生成 OpenAPI / Swagger 契约
 gen-swagger:
 	goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway
-	node -e "const fs = require('fs'); fs.copyFileSync('manifest/swagger/gateway.json', 'frontend/apps/admin/public/openapi.json');"
+	node frontend/packages/api/scripts/normalize-swagger.js
 
 # 启动网关服务 (HTTP 8888)
 run-gateway:
