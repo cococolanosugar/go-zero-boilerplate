@@ -1,0 +1,5204 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "title": "API Gateway",
+    "version": "v1"
+  },
+  "basePath": "/",
+  "paths": {
+    "/api/v1/dashboard/overview": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取系统大盘聚合信息（mr.Finish 内网并发拉取用户画像与任务统计）",
+        "operationId": "dashboardGetDashboardOverview",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "timestamp",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sysTime": {
+                  "type": "integer"
+                },
+                "systemStats": {
+                  "type": "object",
+                  "required": [
+                    "totalUsers",
+                    "activeTasks",
+                    "completedTasks",
+                    "successRate"
+                  ],
+                  "properties": {
+                    "activeTasks": {
+                      "type": "integer"
+                    },
+                    "completedTasks": {
+                      "type": "integer"
+                    },
+                    "successRate": {
+                      "type": "number"
+                    },
+                    "totalUsers": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "userInfo": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "name",
+                    "mobile",
+                    "avatar"
+                  ],
+                  "properties": {
+                    "avatar": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "mobile": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/portal/navigation/list": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取门户公开网址导航列表",
+        "operationId": "portalNavGetPortalNavList",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "env",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "title",
+                      "category",
+                      "url",
+                      "icon",
+                      "description",
+                      "tags",
+                      "sort",
+                      "target",
+                      "status",
+                      "env",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "category": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "env": {
+                        "type": "string"
+                      },
+                      "icon": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "tags": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/apis": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取系统 API 字典列表",
+        "operationId": "systemListSysApis",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "apiGroup",
+                      "title",
+                      "path",
+                      "method",
+                      "isAutoSync"
+                    ],
+                    "properties": {
+                      "apiGroup": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "isAutoSync": {
+                        "type": "integer"
+                      },
+                      "method": {
+                        "type": "string"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/auth/casdoor/login": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "Casdoor SSO 统一身份登录",
+        "operationId": "systemCasdoorLogin",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "code"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessExpire": {
+                  "type": "integer"
+                },
+                "accessToken": {
+                  "type": "string"
+                },
+                "avatar": {
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "refreshAfter": {
+                  "type": "integer"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "userId": {
+                  "type": "integer"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/auth/login": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "管理员账号登录",
+        "operationId": "systemAdminLogin",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "account",
+                "password"
+              ],
+              "properties": {
+                "account": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessExpire": {
+                  "type": "integer"
+                },
+                "accessToken": {
+                  "type": "string"
+                },
+                "avatar": {
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "refreshAfter": {
+                  "type": "integer"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "userId": {
+                  "type": "integer"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/dict/data": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取字典数据项列表",
+        "operationId": "dictListSysDictData",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "dictType",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "dictType",
+                      "dictLabel",
+                      "dictValue",
+                      "dictSort",
+                      "listClass",
+                      "isDefault",
+                      "status",
+                      "remark",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "dictLabel": {
+                        "type": "string"
+                      },
+                      "dictSort": {
+                        "type": "integer"
+                      },
+                      "dictType": {
+                        "type": "string"
+                      },
+                      "dictValue": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "isDefault": {
+                        "type": "integer"
+                      },
+                      "listClass": {
+                        "type": "string"
+                      },
+                      "remark": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新字典数据项",
+        "operationId": "dictUpdateSysDictData",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "dictType",
+                "dictLabel",
+                "dictValue",
+                "dictSort",
+                "isDefault",
+                "status"
+              ],
+              "properties": {
+                "dictLabel": {
+                  "type": "string"
+                },
+                "dictSort": {
+                  "type": "integer"
+                },
+                "dictType": {
+                  "type": "string"
+                },
+                "dictValue": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "isDefault": {
+                  "type": "integer"
+                },
+                "listClass": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建字典数据项",
+        "operationId": "dictCreateSysDictData",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "dictType",
+                "dictLabel",
+                "dictValue"
+              ],
+              "properties": {
+                "dictLabel": {
+                  "type": "string"
+                },
+                "dictSort": {
+                  "type": "integer",
+                  "default": 0,
+                  "example": 0
+                },
+                "dictType": {
+                  "type": "string"
+                },
+                "dictValue": {
+                  "type": "string"
+                },
+                "isDefault": {
+                  "type": "integer",
+                  "default": 0,
+                  "example": 0
+                },
+                "listClass": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/dict/data/type/{dictType}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "根据字典类型查询数据项列表",
+        "operationId": "dictGetDictDataByType",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "dictType",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "dictType",
+                      "dictLabel",
+                      "dictValue",
+                      "dictSort",
+                      "listClass",
+                      "isDefault",
+                      "status",
+                      "remark",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "dictLabel": {
+                        "type": "string"
+                      },
+                      "dictSort": {
+                        "type": "integer"
+                      },
+                      "dictType": {
+                        "type": "string"
+                      },
+                      "dictValue": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "isDefault": {
+                        "type": "integer"
+                      },
+                      "listClass": {
+                        "type": "string"
+                      },
+                      "remark": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/dict/data/{id}": {
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除字典数据项",
+        "operationId": "dictDeleteSysDictData",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/dict/types": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取字典类型列表",
+        "operationId": "dictListSysDictTypes",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "dictName",
+                      "dictType",
+                      "status",
+                      "remark",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "dictName": {
+                        "type": "string"
+                      },
+                      "dictType": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "remark": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新字典类型",
+        "operationId": "dictUpdateSysDictType",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "dictName",
+                "dictType",
+                "status"
+              ],
+              "properties": {
+                "dictName": {
+                  "type": "string"
+                },
+                "dictType": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建字典类型",
+        "operationId": "dictCreateSysDictType",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "dictName",
+                "dictType"
+              ],
+              "properties": {
+                "dictName": {
+                  "type": "string"
+                },
+                "dictType": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/dict/types/{id}": {
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除字典类型",
+        "operationId": "dictDeleteSysDictType",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/file/upload": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "通用文件上传",
+        "operationId": "systemUploadFile",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "filename": {
+                  "type": "string"
+                },
+                "hash": {
+                  "type": "string"
+                },
+                "mimeType": {
+                  "type": "string"
+                },
+                "originalName": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "integer"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/logs/login": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取登录日志列表",
+        "operationId": "systemListSysLoginLogs",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "username",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "username",
+                      "loginIp",
+                      "browser",
+                      "os",
+                      "status",
+                      "msg",
+                      "loginTime"
+                    ],
+                    "properties": {
+                      "browser": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "loginIp": {
+                        "type": "string"
+                      },
+                      "loginTime": {
+                        "type": "string"
+                      },
+                      "msg": {
+                        "type": "string"
+                      },
+                      "os": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/logs/oper": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取操作日志列表",
+        "operationId": "systemListSysOperLogs",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "operName",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "title",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "title",
+                      "operName",
+                      "operUrl",
+                      "operMethod",
+                      "operIp",
+                      "status",
+                      "errorMsg",
+                      "costTime",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "costTime": {
+                        "type": "integer"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "errorMsg": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "operIp": {
+                        "type": "string"
+                      },
+                      "operMethod": {
+                        "type": "string"
+                      },
+                      "operName": {
+                        "type": "string"
+                      },
+                      "operUrl": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/menus/tree": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取全量菜单与按钮树",
+        "operationId": "systemGetSysMenuTree",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "parentId",
+                      "title",
+                      "type",
+                      "path",
+                      "component",
+                      "permissionCode",
+                      "icon",
+                      "sort",
+                      "children"
+                    ],
+                    "properties": {
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "parentId",
+                            "title",
+                            "type",
+                            "path",
+                            "component",
+                            "permissionCode",
+                            "icon",
+                            "sort",
+                            "children"
+                          ],
+                          "properties": {
+                            "children": {
+                              "type": "array",
+                              "items": {
+                                "type": "object"
+                              }
+                            },
+                            "component": {
+                              "type": "string"
+                            },
+                            "icon": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "integer"
+                            },
+                            "parentId": {
+                              "type": "integer"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "permissionCode": {
+                              "type": "string"
+                            },
+                            "sort": {
+                              "type": "integer"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "1:目录 2:菜单 3:按钮",
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      },
+                      "component": {
+                        "type": "string"
+                      },
+                      "icon": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "parentId": {
+                        "type": "integer"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "permissionCode": {
+                        "type": "string"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "1:目录 2:菜单 3:按钮",
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/navigation": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建系统导航站点",
+        "operationId": "sysNavCreateSysPortalNav",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "category",
+                "url"
+              ],
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "env": {
+                  "type": "string",
+                  "default": "common",
+                  "example": "common"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string",
+                  "default": "_blank",
+                  "example": "_blank"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/navigation/list": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "分页查询系统导航配置列表",
+        "operationId": "sysNavListSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "title",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "category",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "env",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "default": -1,
+            "example": -1,
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "title",
+                      "category",
+                      "url",
+                      "icon",
+                      "description",
+                      "tags",
+                      "sort",
+                      "target",
+                      "status",
+                      "env",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "category": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "env": {
+                        "type": "string"
+                      },
+                      "icon": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "tags": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/navigation/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取导航站点详情",
+        "operationId": "sysNavGetSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "createTime": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "env": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "updateTime": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新系统导航站点",
+        "operationId": "sysNavUpdateSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "category",
+                "url"
+              ],
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "env": {
+                  "type": "string",
+                  "default": "common",
+                  "example": "common"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string",
+                  "default": "_blank",
+                  "example": "_blank"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除系统导航站点",
+        "operationId": "sysNavDeleteSysPortalNav",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/online": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取当前在线用户会话列表",
+        "operationId": "systemListOnlineSessions",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "username",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "loginIp",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "sessionId",
+                      "userId",
+                      "username",
+                      "realName",
+                      "deptName",
+                      "loginIp",
+                      "loginLocation",
+                      "browser",
+                      "os",
+                      "loginTime",
+                      "isCurrent"
+                    ],
+                    "properties": {
+                      "browser": {
+                        "type": "string"
+                      },
+                      "deptName": {
+                        "type": "string"
+                      },
+                      "isCurrent": {
+                        "type": "boolean"
+                      },
+                      "loginIp": {
+                        "type": "string"
+                      },
+                      "loginLocation": {
+                        "type": "string"
+                      },
+                      "loginTime": {
+                        "type": "string"
+                      },
+                      "os": {
+                        "type": "string"
+                      },
+                      "realName": {
+                        "type": "string"
+                      },
+                      "sessionId": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/online/{sessionId}": {
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "强退指定在线用户会话",
+        "operationId": "systemForceLogoutOnlineSession",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "sessionId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/personal/password": {
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "修改当前登录员工密码",
+        "operationId": "systemChangePersonalPassword",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "oldPassword",
+                "newPassword"
+              ],
+              "properties": {
+                "newPassword": {
+                  "type": "string"
+                },
+                "oldPassword": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/personal/profile": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取当前登录员工画像与权限",
+        "operationId": "systemGetAdminProfile",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "type": "string"
+                },
+                "deptName": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "menus": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "parentId",
+                      "title",
+                      "type",
+                      "path",
+                      "component",
+                      "permissionCode",
+                      "icon",
+                      "sort",
+                      "children"
+                    ],
+                    "properties": {
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "parentId",
+                            "title",
+                            "type",
+                            "path",
+                            "component",
+                            "permissionCode",
+                            "icon",
+                            "sort",
+                            "children"
+                          ],
+                          "properties": {
+                            "children": {
+                              "type": "array",
+                              "items": {
+                                "type": "object"
+                              }
+                            },
+                            "component": {
+                              "type": "string"
+                            },
+                            "icon": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "integer"
+                            },
+                            "parentId": {
+                              "type": "integer"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "permissionCode": {
+                              "type": "string"
+                            },
+                            "sort": {
+                              "type": "integer"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "1:目录 2:菜单 3:按钮",
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      },
+                      "component": {
+                        "type": "string"
+                      },
+                      "icon": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "parentId": {
+                        "type": "integer"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "permissionCode": {
+                        "type": "string"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "1:目录 2:菜单 3:按钮",
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "修改当前登录员工个人资料",
+        "operationId": "systemUpdatePersonalProfile",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "realName"
+              ],
+              "properties": {
+                "avatar": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/roles": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取角色列表",
+        "operationId": "systemListSysRoles",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "name",
+                      "code",
+                      "status",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "dataScope": {
+                        "type": "integer"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "menuIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新角色",
+        "operationId": "systemUpdateSysRole",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "code",
+                "status"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "dataScope": {
+                  "type": "integer"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建角色",
+        "operationId": "systemCreateSysRole",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "name",
+                "code"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "dataScope": {
+                  "type": "integer"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/roles/permissions": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "分配角色菜单与按钮权限",
+        "operationId": "systemAssignRolePermissions",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "roleId",
+                "menuIds"
+              ],
+              "properties": {
+                "menuIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "roleId": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/roles/{id}": {
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除角色",
+        "operationId": "systemDeleteSysRole",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/task": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取异步任务分页列表",
+        "operationId": "system/TaskListTasks",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "taskName",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "taskKey",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "default": -1,
+            "example": -1,
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "taskName",
+                      "taskKey",
+                      "taskType",
+                      "cronExpr",
+                      "workflowType",
+                      "taskQueue",
+                      "payload",
+                      "status",
+                      "lastRunTime",
+                      "lastRunStatus",
+                      "remark",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "cronExpr": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "lastRunStatus": {
+                        "type": "string"
+                      },
+                      "lastRunTime": {
+                        "type": "string"
+                      },
+                      "payload": {
+                        "type": "string"
+                      },
+                      "remark": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "taskKey": {
+                        "type": "string"
+                      },
+                      "taskName": {
+                        "type": "string"
+                      },
+                      "taskQueue": {
+                        "type": "string"
+                      },
+                      "taskType": {
+                        "type": "string"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      },
+                      "workflowType": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "新增异步任务",
+        "operationId": "system/TaskCreateTask",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "taskName",
+                "taskKey"
+              ],
+              "properties": {
+                "cronExpr": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                },
+                "taskKey": {
+                  "type": "string"
+                },
+                "taskName": {
+                  "type": "string"
+                },
+                "taskQueue": {
+                  "type": "string"
+                },
+                "taskType": {
+                  "type": "string",
+                  "default": "CRON",
+                  "example": "CRON"
+                },
+                "workflowType": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createTime": {
+                  "type": "string"
+                },
+                "cronExpr": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "lastRunStatus": {
+                  "type": "string"
+                },
+                "lastRunTime": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "taskKey": {
+                  "type": "string"
+                },
+                "taskName": {
+                  "type": "string"
+                },
+                "taskQueue": {
+                  "type": "string"
+                },
+                "taskType": {
+                  "type": "string"
+                },
+                "updateTime": {
+                  "type": "string"
+                },
+                "workflowType": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/task/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取异步任务详情",
+        "operationId": "system/TaskGetTask",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createTime": {
+                  "type": "string"
+                },
+                "cronExpr": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "lastRunStatus": {
+                  "type": "string"
+                },
+                "lastRunTime": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "taskKey": {
+                  "type": "string"
+                },
+                "taskName": {
+                  "type": "string"
+                },
+                "taskQueue": {
+                  "type": "string"
+                },
+                "taskType": {
+                  "type": "string"
+                },
+                "updateTime": {
+                  "type": "string"
+                },
+                "workflowType": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "修改异步任务",
+        "operationId": "system/TaskUpdateTask",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "taskName"
+              ],
+              "properties": {
+                "cronExpr": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "taskName": {
+                  "type": "string"
+                },
+                "taskQueue": {
+                  "type": "string"
+                },
+                "taskType": {
+                  "type": "string"
+                },
+                "workflowType": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createTime": {
+                  "type": "string"
+                },
+                "cronExpr": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "lastRunStatus": {
+                  "type": "string"
+                },
+                "lastRunTime": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "string"
+                },
+                "remark": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "taskKey": {
+                  "type": "string"
+                },
+                "taskName": {
+                  "type": "string"
+                },
+                "taskQueue": {
+                  "type": "string"
+                },
+                "taskType": {
+                  "type": "string"
+                },
+                "updateTime": {
+                  "type": "string"
+                },
+                "workflowType": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除异步任务",
+        "operationId": "system/TaskDeleteTask",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/task/{id}/run": {
+      "post": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "立即触发执行一次任务",
+        "operationId": "system/TaskRunTaskOnce",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "runId": {
+                  "type": "string"
+                },
+                "success": {
+                  "type": "boolean"
+                },
+                "workflowId": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/task/{id}/status": {
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "启停异步任务",
+        "operationId": "system/TaskToggleTaskStatus",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "status"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/users": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取员工列表",
+        "operationId": "systemListSysUsers",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "name": "deptId",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "deptId",
+                      "deptName",
+                      "username",
+                      "realName",
+                      "mobile",
+                      "email",
+                      "avatar",
+                      "status",
+                      "roleNames",
+                      "roleIds",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "avatar": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "deptId": {
+                        "type": "integer"
+                      },
+                      "deptName": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "mobile": {
+                        "type": "string"
+                      },
+                      "realName": {
+                        "type": "string"
+                      },
+                      "roleIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "roleNames": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新员工信息",
+        "operationId": "systemUpdateSysUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "realName",
+                "status"
+              ],
+              "properties": {
+                "deptId": {
+                  "type": "integer"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "roleIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建新员工",
+        "operationId": "systemCreateSysUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password",
+                "realName"
+              ],
+              "properties": {
+                "deptId": {
+                  "type": "integer"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "roleIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/users/{id}": {
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除员工",
+        "operationId": "systemDeleteSysUser",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/dept": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取部门树形列表",
+        "operationId": "sysDeptListSysDept",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "default": -1,
+            "example": -1,
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "parentId",
+                      "ancestors",
+                      "deptName",
+                      "sort",
+                      "leader",
+                      "phone",
+                      "status",
+                      "createTime",
+                      "updateTime",
+                      "children"
+                    ],
+                    "properties": {
+                      "ancestors": {
+                        "type": "string"
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "parentId",
+                            "ancestors",
+                            "deptName",
+                            "sort",
+                            "leader",
+                            "phone",
+                            "status",
+                            "createTime",
+                            "updateTime",
+                            "children"
+                          ],
+                          "properties": {
+                            "ancestors": {
+                              "type": "string"
+                            },
+                            "children": {
+                              "type": "array",
+                              "items": {
+                                "type": "object"
+                              }
+                            },
+                            "createTime": {
+                              "type": "string"
+                            },
+                            "deptName": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "integer"
+                            },
+                            "leader": {
+                              "type": "string"
+                            },
+                            "parentId": {
+                              "type": "integer"
+                            },
+                            "phone": {
+                              "type": "string"
+                            },
+                            "sort": {
+                              "type": "integer"
+                            },
+                            "status": {
+                              "type": "integer"
+                            },
+                            "updateTime": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "deptName": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "leader": {
+                        "type": "string"
+                      },
+                      "parentId": {
+                        "type": "integer"
+                      },
+                      "phone": {
+                        "type": "string"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新部门",
+        "operationId": "sysDeptUpdateSysDept",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "parentId",
+                "deptName",
+                "sort",
+                "status"
+              ],
+              "properties": {
+                "deptName": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "leader": {
+                  "type": "string"
+                },
+                "parentId": {
+                  "type": "integer"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建新部门",
+        "operationId": "sysDeptCreateSysDept",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "parentId",
+                "deptName"
+              ],
+              "properties": {
+                "deptName": {
+                  "type": "string"
+                },
+                "leader": {
+                  "type": "string"
+                },
+                "parentId": {
+                  "type": "integer"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/dept/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取部门详情",
+        "operationId": "sysDeptGetSysDept",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ancestors": {
+                  "type": "string"
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "parentId",
+                      "ancestors",
+                      "deptName",
+                      "sort",
+                      "leader",
+                      "phone",
+                      "status",
+                      "createTime",
+                      "updateTime",
+                      "children"
+                    ],
+                    "properties": {
+                      "ancestors": {
+                        "type": "string"
+                      },
+                      "children": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "parentId",
+                            "ancestors",
+                            "deptName",
+                            "sort",
+                            "leader",
+                            "phone",
+                            "status",
+                            "createTime",
+                            "updateTime",
+                            "children"
+                          ],
+                          "properties": {
+                            "ancestors": {
+                              "type": "string"
+                            },
+                            "children": {
+                              "type": "array",
+                              "items": {
+                                "type": "object"
+                              }
+                            },
+                            "createTime": {
+                              "type": "string"
+                            },
+                            "deptName": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "integer"
+                            },
+                            "leader": {
+                              "type": "string"
+                            },
+                            "parentId": {
+                              "type": "integer"
+                            },
+                            "phone": {
+                              "type": "string"
+                            },
+                            "sort": {
+                              "type": "integer"
+                            },
+                            "status": {
+                              "type": "integer"
+                            },
+                            "updateTime": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "deptName": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "leader": {
+                        "type": "string"
+                      },
+                      "parentId": {
+                        "type": "integer"
+                      },
+                      "phone": {
+                        "type": "string"
+                      },
+                      "sort": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "createTime": {
+                  "type": "string"
+                },
+                "deptName": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "leader": {
+                  "type": "string"
+                },
+                "parentId": {
+                  "type": "integer"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "updateTime": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除部门",
+        "operationId": "sysDeptDeleteSysDept",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/info": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取当前登录用户信息（受保护路由，强制由 JWT Claims 解析身份，杜绝水平越权）",
+        "operationId": "userGetUserInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/login": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "用户登录",
+        "operationId": "userLogin",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "mobile",
+                "password"
+              ],
+              "properties": {
+                "mobile": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessExpire": {
+                  "type": "integer"
+                },
+                "accessToken": {
+                  "type": "string"
+                },
+                "refreshAfter": {
+                  "type": "integer"
+                },
+                "userId": {
+                  "type": "integer"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/notice/my-list": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取当前员工个人通知流与未读数",
+        "operationId": "userNoticeGetMyNoticeFeed",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 50,
+            "example": 50,
+            "name": "limit",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "noticeTitle",
+                      "noticeType",
+                      "noticeContent",
+                      "status",
+                      "createBy",
+                      "remark",
+                      "createTime",
+                      "updateTime",
+                      "isRead"
+                    ],
+                    "properties": {
+                      "createBy": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "isRead": {
+                        "type": "boolean"
+                      },
+                      "noticeContent": {
+                        "type": "string"
+                      },
+                      "noticeTitle": {
+                        "type": "string"
+                      },
+                      "noticeType": {
+                        "type": "integer"
+                      },
+                      "remark": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "totalUnread": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/notice/read": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "标记单条通知已读",
+        "operationId": "userNoticeMarkNoticeRead",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "noticeId"
+              ],
+              "properties": {
+                "noticeId": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/notice/read-all": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "全部标记已读",
+        "operationId": "userNoticeMarkAllNoticesRead",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "noticeType": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/profile": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取统一用户个人画像（双表融合聚合，支持员工与客户）",
+        "operationId": "userGetUserProfile",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "type": "string"
+                },
+                "deptName": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "userId": {
+                  "type": "integer"
+                },
+                "userType": {
+                  "description": "\"employee\" or \"customer\"",
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/register": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "用户注册",
+        "operationId": "userRegister",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "mobile",
+                "password"
+              ],
+              "properties": {
+                "mobile": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/sys-config": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取参数配置表列表",
+        "operationId": "sysConfigListSysConfig",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "configName",
+                      "configKey",
+                      "configValue",
+                      "configType",
+                      "remark",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "configKey": {
+                        "description": "参数键名",
+                        "type": "string"
+                      },
+                      "configName": {
+                        "description": "参数名称",
+                        "type": "string"
+                      },
+                      "configType": {
+                        "description": "系统内置（Y是 N否）",
+                        "type": "string"
+                      },
+                      "configValue": {
+                        "description": "参数键值",
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "description": "创建时间",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "参数主键",
+                        "type": "integer"
+                      },
+                      "remark": {
+                        "description": "备注说明",
+                        "type": "string"
+                      },
+                      "updateTime": {
+                        "description": "更新时间",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新参数配置表",
+        "operationId": "sysConfigUpdateSysConfig",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "configName",
+                "configKey",
+                "configValue",
+                "configType",
+                "remark"
+              ],
+              "properties": {
+                "configKey": {
+                  "description": "参数键名",
+                  "type": "string"
+                },
+                "configName": {
+                  "description": "参数名称",
+                  "type": "string"
+                },
+                "configType": {
+                  "description": "系统内置（Y是 N否）",
+                  "type": "string"
+                },
+                "configValue": {
+                  "description": "参数键值",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "参数主键",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注说明",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建参数配置表",
+        "operationId": "sysConfigCreateSysConfig",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "configName",
+                "configKey",
+                "configValue",
+                "configType",
+                "remark"
+              ],
+              "properties": {
+                "configKey": {
+                  "description": "参数键名",
+                  "type": "string"
+                },
+                "configName": {
+                  "description": "参数名称",
+                  "type": "string"
+                },
+                "configType": {
+                  "description": "系统内置（Y是 N否）",
+                  "type": "string"
+                },
+                "configValue": {
+                  "description": "参数键值",
+                  "type": "string"
+                },
+                "remark": {
+                  "description": "备注说明",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/sys-config/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取参数配置表详情",
+        "operationId": "sysConfigGetSysConfig",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "configKey": {
+                  "description": "参数键名",
+                  "type": "string"
+                },
+                "configName": {
+                  "description": "参数名称",
+                  "type": "string"
+                },
+                "configType": {
+                  "description": "系统内置（Y是 N否）",
+                  "type": "string"
+                },
+                "configValue": {
+                  "description": "参数键值",
+                  "type": "string"
+                },
+                "createTime": {
+                  "description": "创建时间",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "参数主键",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注说明",
+                  "type": "string"
+                },
+                "updateTime": {
+                  "description": "更新时间",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除参数配置表",
+        "operationId": "sysConfigDeleteSysConfig",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/sys-notice": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取通知公告表列表",
+        "operationId": "sysNoticeListSysNotice",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "noticeTitle",
+                      "noticeType",
+                      "noticeContent",
+                      "status",
+                      "createBy",
+                      "remark",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "createBy": {
+                        "description": "创建者",
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "description": "创建时间",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "公告ID",
+                        "type": "integer"
+                      },
+                      "noticeContent": {
+                        "description": "公告内容",
+                        "type": "string"
+                      },
+                      "noticeTitle": {
+                        "description": "公告标题",
+                        "type": "string"
+                      },
+                      "noticeType": {
+                        "description": "公告类型（1通知 2消息 3待办）",
+                        "type": "integer"
+                      },
+                      "remark": {
+                        "description": "备注",
+                        "type": "string"
+                      },
+                      "status": {
+                        "description": "公告状态（1正常 0关闭）",
+                        "type": "integer"
+                      },
+                      "updateTime": {
+                        "description": "更新时间",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新通知公告表",
+        "operationId": "sysNoticeUpdateSysNotice",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "noticeTitle",
+                "noticeType",
+                "noticeContent",
+                "status",
+                "createBy",
+                "remark"
+              ],
+              "properties": {
+                "createBy": {
+                  "description": "创建者",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "公告ID",
+                  "type": "integer"
+                },
+                "noticeContent": {
+                  "description": "公告内容",
+                  "type": "string"
+                },
+                "noticeTitle": {
+                  "description": "公告标题",
+                  "type": "string"
+                },
+                "noticeType": {
+                  "description": "公告类型（1通知 2消息 3待办）",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "公告状态（1正常 0关闭）",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建通知公告表",
+        "operationId": "sysNoticeCreateSysNotice",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "noticeTitle",
+                "noticeType",
+                "noticeContent",
+                "status",
+                "createBy"
+              ],
+              "properties": {
+                "createBy": {
+                  "description": "创建者",
+                  "type": "string"
+                },
+                "noticeContent": {
+                  "description": "公告内容",
+                  "type": "string"
+                },
+                "noticeTitle": {
+                  "description": "公告标题",
+                  "type": "string"
+                },
+                "noticeType": {
+                  "description": "公告类型（1通知 2消息 3待办）",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "公告状态（1正常 0关闭）",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/sys-notice/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取通知公告表详情",
+        "operationId": "sysNoticeGetSysNotice",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createBy": {
+                  "description": "创建者",
+                  "type": "string"
+                },
+                "createTime": {
+                  "description": "创建时间",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "公告ID",
+                  "type": "integer"
+                },
+                "noticeContent": {
+                  "description": "公告内容",
+                  "type": "string"
+                },
+                "noticeTitle": {
+                  "description": "公告标题",
+                  "type": "string"
+                },
+                "noticeType": {
+                  "description": "公告类型（1通知 2消息 3待办）",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "公告状态（1正常 0关闭）",
+                  "type": "integer"
+                },
+                "updateTime": {
+                  "description": "更新时间",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除通知公告表",
+        "operationId": "sysNoticeDeleteSysNotice",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/sys-post": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取岗位信息表列表",
+        "operationId": "sysPostListSysPost",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "postCode",
+                      "postName",
+                      "postSort",
+                      "status",
+                      "remark",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "createTime": {
+                        "description": "创建时间",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "岗位ID",
+                        "type": "integer"
+                      },
+                      "postCode": {
+                        "description": "岗位编码",
+                        "type": "string"
+                      },
+                      "postName": {
+                        "description": "岗位名称",
+                        "type": "string"
+                      },
+                      "postSort": {
+                        "description": "显示顺序",
+                        "type": "integer"
+                      },
+                      "remark": {
+                        "description": "备注",
+                        "type": "string"
+                      },
+                      "status": {
+                        "description": "状态（1正常 0停用）",
+                        "type": "integer"
+                      },
+                      "updateTime": {
+                        "description": "更新时间",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "更新岗位信息表",
+        "operationId": "sysPostUpdateSysPost",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "postCode",
+                "postName",
+                "postSort",
+                "status",
+                "remark"
+              ],
+              "properties": {
+                "id": {
+                  "description": "岗位ID",
+                  "type": "integer"
+                },
+                "postCode": {
+                  "description": "岗位编码",
+                  "type": "string"
+                },
+                "postName": {
+                  "description": "岗位名称",
+                  "type": "string"
+                },
+                "postSort": {
+                  "description": "显示顺序",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "状态（1正常 0停用）",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "创建岗位信息表",
+        "operationId": "sysPostCreateSysPost",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "postCode",
+                "postName",
+                "postSort",
+                "status"
+              ],
+              "properties": {
+                "postCode": {
+                  "description": "岗位编码",
+                  "type": "string"
+                },
+                "postName": {
+                  "description": "岗位名称",
+                  "type": "string"
+                },
+                "postSort": {
+                  "description": "显示顺序",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "状态（1正常 0停用）",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/sys-post/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取岗位信息表详情",
+        "operationId": "sysPostGetSysPost",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createTime": {
+                  "description": "创建时间",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "岗位ID",
+                  "type": "integer"
+                },
+                "postCode": {
+                  "description": "岗位编码",
+                  "type": "string"
+                },
+                "postName": {
+                  "description": "岗位名称",
+                  "type": "string"
+                },
+                "postSort": {
+                  "description": "显示顺序",
+                  "type": "integer"
+                },
+                "remark": {
+                  "description": "备注",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "状态（1正常 0停用）",
+                  "type": "integer"
+                },
+                "updateTime": {
+                  "description": "更新时间",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "删除岗位信息表",
+        "operationId": "sysPostDeleteSysPost",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-date": "2026-09-15 07:48:19",
+  "x-description": "This is a goctl generated swagger file.",
+  "x-github": "https://github.com/zeromicro/go-zero",
+  "x-go-zero-doc": "https://go-zero.dev/",
+  "x-goctl-version": "1.10.2"
+}

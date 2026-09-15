@@ -175,7 +175,7 @@ export const OpenApiPage: React.FC = () => {
         <ProCard gutter={16} ghost>
           <ProCard title="OpenAPI 规范版本" bordered colSpan={{ xs: 24, sm: 8 }}>
             <Text strong style={{ fontSize: 20, color: "#1677ff" }}>
-              {swaggerData?.swagger ? `Swagger ${swaggerData.swagger}` : "v2.0 / OpenAPI"}
+              {swaggerData?.openapi ? `OpenAPI ${swaggerData.openapi}` : "OpenAPI"}
             </Text>
           </ProCard>
           <ProCard title="网关基础路由前缀" bordered colSpan={{ xs: 24, sm: 8 }}>
