@@ -39,14 +39,14 @@ new-api service:
 
 # 基于网关契约生成前端 TypeScript SDK (OpenAPI + Orval 模块化切分及完整兼容定义)
 gen-ts:
-    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename openapi
+    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename swagger
     go run ./hack/tool/conv-openapi
     cd frontend && pnpm --filter @zero/api codegen
     goctl api ts --api app/gateway/desc/gateway.api --dir frontend/packages/api/src
 
-# 基于网关契约生成唯一 OpenAPI 契约
+# 基于网关契约生成 OpenAPI 契约
 gen-openapi:
-    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename openapi
+    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename swagger
     go run ./hack/tool/conv-openapi
 
 # 兼容旧命令名

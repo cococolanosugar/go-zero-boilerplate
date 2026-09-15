@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	inputPath  = flag.String("input", "manifest/openapi/openapi.json", "Swagger 2.0 input file")
+	inputPath  = flag.String("input", "manifest/openapi/swagger.json", "Swagger 2.0 input file")
 	outputPath = flag.String("output", "manifest/openapi/openapi.json", "OpenAPI 3 output file")
 )
 
