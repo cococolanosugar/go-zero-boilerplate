@@ -127,6 +127,7 @@ func (m *RbacMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 
 func isPublicRoute(path string) bool {
 	publicPaths := []string{
+		"/openapi.json",
 		"/api/v1/user/login",
 		"/api/v1/user/register",
 		"/api/v1/system/auth/login",

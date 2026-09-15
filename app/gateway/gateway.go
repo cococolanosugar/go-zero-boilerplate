@@ -31,6 +31,10 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+	openApiSpecBytes, err := os.ReadFile(c.OpenApi.FilePath)
+	if err != nil {
+		panic(fmt.Errorf("failed to load OpenAPI spec from %s: %w", c.OpenApi.FilePath, err))
+	}
 
 	// 挂载静态文件目录服务（支持 /uploads/* 访问本地上传资源）
 	uploadPrefix := strings.TrimRight(c.Storage.BaseUrl, "/") + "/"
@@ -55,6 +59,19 @@ func main() {
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
+	ctx.OpenApiSpecBytes = openApiSpecBytes
+
+	// 提供无需鉴权的内存 OpenAPI 契约接口
+	server.AddRoute(rest.Route{
+		Method: http.MethodGet,
+		Path:   "/openapi.json",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write(ctx.OpenApiSpecBytes)
+		},
+	})
 
 	// 启用请求上下文注入中间件（注入真实客户端 IP 与 User-Agent 供在线会话与审计分析）
 	server.Use(func(next http.HandlerFunc) http.HandlerFunc {

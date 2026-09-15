@@ -12,12 +12,13 @@ import (
 )
 
 type ServiceContext struct {
-	Config      config.Config
-	UserRpc     userClient.User
-	WorkerRpc   workerClient.Worker
-	Storage     storage.Driver
-	RedisClient *redis.Redis
-	SessionMgr  *session.Manager
+	Config           config.Config
+	UserRpc          userClient.User
+	WorkerRpc        workerClient.Worker
+	Storage          storage.Driver
+	RedisClient      *redis.Redis
+	SessionMgr       *session.Manager
+	OpenApiSpecBytes []byte
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {

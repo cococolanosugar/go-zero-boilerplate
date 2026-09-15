@@ -3,7 +3,7 @@ import { defineConfig } from 'orval';
 export default defineConfig({
   gateway: {
     input: {
-      target: '../../../manifest/swagger/gateway.json',
+      target: '../../../manifest/openapi/openapi.json',
       unsafeDisableValidation: true,
     },
     output: {

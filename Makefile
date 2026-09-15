@@ -1,4 +1,4 @@
-.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-ts gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
+.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-ts gen-openapi gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
 
 SERVICE ?= user
 TABLE ?= all
@@ -48,15 +48,18 @@ gen-model:
 
 # 基于网关契约生成前端 TypeScript SDK
 gen-ts:
-	goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway
-	node frontend/packages/api/scripts/normalize-swagger.js
+	goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename openapi
+	node frontend/packages/api/scripts/normalize-openapi.js
 	cd frontend && pnpm --filter @zero/api codegen
 	goctl api ts --api app/gateway/desc/gateway.api --dir frontend/packages/api/src
 
-# 基于网关契约生成 OpenAPI / Swagger 契约
-gen-swagger:
-	goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway
-	node frontend/packages/api/scripts/normalize-swagger.js
+# 基于网关契约生成唯一 OpenAPI 契约
+gen-openapi:
+	goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename openapi
+	node frontend/packages/api/scripts/normalize-openapi.js
+
+# 兼容旧命令名
+gen-swagger: gen-openapi
 
 # 启动网关服务 (HTTP 8888)
 run-gateway:

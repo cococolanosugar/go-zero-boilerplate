@@ -82,7 +82,7 @@ The system SHALL automate Swagger/OpenAPI contract generation from gateway IDL s
 
 #### Scenario: Generating OpenAPI specification
 - **WHEN** developer runs `just gen-swagger`
-- **THEN** the toolchain SHALL invoke `goctl api swagger` to output a valid OpenAPI contract at `manifest/swagger/gateway.json`
+- **THEN** the toolchain SHALL invoke `goctl api swagger` to output a valid OpenAPI contract at `manifest/openapi/openapi.json`
 
 #### Scenario: Accessing API documentation from header
 - **WHEN** developer clicks the "API 文档" button in the header toolbar

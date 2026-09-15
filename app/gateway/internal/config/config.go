@@ -11,6 +11,11 @@ import (
 type Config struct {
 	rest.RestConf
 
+	// OpenAPI 契约文件配置
+	OpenApi struct {
+		FilePath string
+	}
+
 	// JWT 鉴权配置
 	Auth struct {
 		AccessSecret string
@@ -40,4 +45,3 @@ type Config struct {
 	// Temporal 分布式工作流配置
 	Temporal temporalx.Config
 }
-

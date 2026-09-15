@@ -39,15 +39,18 @@ new-api service:
 
 # 基于网关契约生成前端 TypeScript SDK (OpenAPI + Orval 模块化切分及完整兼容定义)
 gen-ts:
-    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway
-    node frontend/packages/api/scripts/normalize-swagger.js
+    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename openapi
+    node frontend/packages/api/scripts/normalize-openapi.js
     cd frontend && pnpm --filter @zero/api codegen
     goctl api ts --api app/gateway/desc/gateway.api --dir frontend/packages/api/src
 
-# 基于网关契约生成 OpenAPI / Swagger 规范契约并同步至前端静态目录
-gen-swagger:
-    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/swagger -filename gateway
-    node frontend/packages/api/scripts/normalize-swagger.js
+# 基于网关契约生成唯一 OpenAPI 契约
+gen-openapi:
+    goctl api swagger -api app/gateway/desc/gateway.api -dir manifest/openapi -filename openapi
+    node frontend/packages/api/scripts/normalize-openapi.js
+
+# 兼容旧命令名
+gen-swagger: gen-openapi
 
 # 启动网关服务 (HTTP 8888)
 run-gateway:

@@ -2,6 +2,10 @@ Name: gateway
 Host: 0.0.0.0
 Port: 8888
 
+# OpenAPI 契约文件
+OpenApi:
+  FilePath: ${OPENAPI_SPEC_PATH:../../manifest/openapi/openapi.json}
+
 # JWT 鉴权配置
 Auth:
   AccessSecret: go-zero-boilerplate-secret-key-2026

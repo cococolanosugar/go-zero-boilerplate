@@ -10,6 +10,10 @@ export const proxyConfig: Record<EnvType, Record<string, ProxyOptions>> = {
       changeOrigin: true,
       ws: true,
     },
+    "/openapi.json": {
+      target: "http://127.0.0.1:8888",
+      changeOrigin: true,
+    },
   },
   // 2. 远程联调 / 测试环境 (无需拉起本地 Go 微服务)
   test: {
@@ -19,6 +23,11 @@ export const proxyConfig: Record<EnvType, Record<string, ProxyOptions>> = {
       secure: false,
       ws: true,
     },
+    "/openapi.json": {
+      target: "https://test-api.go-zero-boilerplate.dev",
+      changeOrigin: true,
+      secure: false,
+    },
   },
   // 3. 预发布验证环境
   pre: {
@@ -27,6 +36,11 @@ export const proxyConfig: Record<EnvType, Record<string, ProxyOptions>> = {
       changeOrigin: true,
       secure: true,
       ws: true,
+    },
+    "/openapi.json": {
+      target: "https://pre-api.go-zero-boilerplate.dev",
+      changeOrigin: true,
+      secure: true,
     },
   },
 };
@@ -44,8 +58,10 @@ export function getProxyConfig(appEnv?: string, customTarget?: string): Record<s
     resolved[prefix] = { ...options };
   }
 
-  if (customTarget && resolved["/api"]) {
-    resolved["/api"].target = customTarget;
+  if (customTarget) {
+    for (const options of Object.values(resolved)) {
+      options.target = customTarget;
+    }
   }
 
   return resolved;
