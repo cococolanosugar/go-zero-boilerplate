@@ -4,7 +4,6 @@ export default defineConfig({
   gateway: {
     input: {
       target: '../../../manifest/openapi/openapi.json',
-      unsafeDisableValidation: true,
     },
     output: {
       mode: 'tags-split',
