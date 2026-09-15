@@ -97,6 +97,10 @@ build-frontend:
 test-frontend:
     cd frontend && pnpm test
 
+# 运行后端全量自动化测试
+test:
+    go test ./...
+
 # 兼容别名
 build-web:
     @just build-frontend
