@@ -2,10 +2,10 @@ package itsmlogic
 
 import (
 	"context"
-	"errors"
 
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,12 +27,12 @@ func NewGetTicketTrajectoryLogic(ctx context.Context, svcCtx *svc.ServiceContext
 func (l *GetTicketTrajectoryLogic) GetTicketTrajectory(in *itsm.GetTicketTrajectoryReq) (*itsm.TicketTrajectoryResp, error) {
 	inst, err := l.svcCtx.ProcessInstModel.FindOne(l.ctx, in.TicketId)
 	if err != nil {
-		return nil, errors.New("ticket not found")
+		return nil, xerr.NewErrCode(xerr.ItsmTicketNotFound)
 	}
 
 	procDef, err := l.svcCtx.ProcessDefModel.FindOne(l.ctx, inst.ProcDefId)
 	if err != nil {
-		return nil, errors.New("process definition not found")
+		return nil, xerr.NewErrCode(xerr.ItsmProcessDefNotFound)
 	}
 
 	logs, _ := l.svcCtx.TaskLogModel.FindByInstId(l.ctx, inst.Id)

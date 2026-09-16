@@ -2,12 +2,11 @@ package itsmlogic
 
 import (
 	"context"
-	"errors"
-	"fmt"
 
 	"go-zero-boilerplate/app/itsm/model"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -35,11 +34,11 @@ func (l *GetTicketDetailLogic) GetTicketDetail(in *itsm.GetTicketDetailReq) (*it
 	} else if in.TicketNo != "" {
 		inst, err = l.svcCtx.ProcessInstModel.FindOneByTicketNo(l.ctx, in.TicketNo)
 	} else {
-		return nil, errors.New("id or ticketNo is required")
+		return nil, xerr.NewErrCode(xerr.RequestParamError)
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("ticket not found: %w", err)
+		return nil, xerr.NewErrCode(xerr.ItsmTicketNotFound)
 	}
 
 	// 获取关联流程定义

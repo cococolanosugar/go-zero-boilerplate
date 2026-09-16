@@ -2,11 +2,11 @@ package itsmlogic
 
 import (
 	"context"
-	"errors"
 
 	"go-zero-boilerplate/app/itsm/model"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -34,7 +34,7 @@ func (l *GetProcessDefLogic) GetProcessDef(in *itsm.GetProcessDefReq) (*itsm.Pro
 	} else if in.ProcCode != "" {
 		record, err = l.svcCtx.ProcessDefModel.FindLatestByProcCode(l.ctx, in.ProcCode)
 	} else {
-		return nil, errors.New("id or procCode is required")
+		return nil, xerr.NewErrCode(xerr.RequestParamError)
 	}
 
 	if err != nil {

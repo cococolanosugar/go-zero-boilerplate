@@ -3,13 +3,13 @@ package itsmlogic
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"time"
 
 	"go-zero-boilerplate/app/itsm/model"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,7 +31,7 @@ func NewTransferTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Tran
 func (l *TransferTaskLogic) TransferTask(in *itsm.TransferTaskReq) (*itsm.CommonResp, error) {
 	task, err := l.svcCtx.TaskModel.FindOne(l.ctx, in.TaskId)
 	if err != nil {
-		return nil, errors.New("task not found")
+		return nil, xerr.NewErrCode(xerr.ItsmTaskNotFound)
 	}
 
 	now := time.Now()

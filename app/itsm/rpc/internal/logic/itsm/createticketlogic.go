@@ -3,7 +3,6 @@ package itsmlogic
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -12,6 +11,7 @@ import (
 	"go-zero-boilerplate/app/itsm/rpc/internal/engine"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,26 +32,26 @@ func NewCreateTicketLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Crea
 
 func (l *CreateTicketLogic) CreateTicket(in *itsm.CreateTicketReq) (*itsm.CreateTicketResp, error) {
 	if in.ProcDefId <= 0 {
-		return nil, errors.New("procDefId is required")
+		return nil, xerr.NewErrCode(xerr.RequestParamError)
 	}
 	if in.Title == "" {
-		return nil, errors.New("ticket title is required")
+		return nil, xerr.NewErrCode(xerr.RequestParamError)
 	}
 
 	procDef, err := l.svcCtx.ProcessDefModel.FindOne(l.ctx, in.ProcDefId)
 	if err != nil {
-		return nil, fmt.Errorf("process definition not found: %w", err)
+		return nil, xerr.NewErrCode(xerr.ItsmProcessDefNotFound)
 	}
 
 	// 解析 BPMN 流程图计算第一个激活节点
 	graph, err := engine.ParseBPMNXML(procDef.BpmnXml)
 	if err != nil {
-		return nil, fmt.Errorf("invalid process bpmn xml: %w", err)
+		return nil, xerr.NewErrCode(xerr.ItsmInvalidBpmnXml)
 	}
 
 	firstNodes, err := graph.GetNextNodes(graph.StartNode.ID, nil)
 	if err != nil || len(firstNodes) == 0 {
-		return nil, errors.New("failed to identify initial task node from start event")
+		return nil, xerr.NewErrCode(xerr.ItsmInvalidBpmnXml)
 	}
 	initialNode := firstNodes[0]
 
@@ -100,7 +100,7 @@ func (l *CreateTicketLogic) CreateTicket(in *itsm.CreateTicketReq) (*itsm.Create
 
 	instRes, err := l.svcCtx.ProcessInstModel.Insert(l.ctx, instData)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create process instance: %w", err)
+		return nil, xerr.NewErrCode(xerr.ItsmCreateFailed)
 	}
 	instId, err := instRes.LastInsertId()
 	if err != nil {
@@ -126,7 +126,7 @@ func (l *CreateTicketLogic) CreateTicket(in *itsm.CreateTicketReq) (*itsm.Create
 		CreateTime:   now,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create initial task: %w", err)
+		return nil, xerr.NewErrCode(xerr.ItsmCreateFailed)
 	}
 	taskId, _ := taskRes.LastInsertId()
 

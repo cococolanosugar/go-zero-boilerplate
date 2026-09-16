@@ -2,11 +2,11 @@ package itsmlogic
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewUpdateSlaPolicyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 func (l *UpdateSlaPolicyLogic) UpdateSlaPolicy(in *itsm.UpdateSlaPolicyReq) (*itsm.CommonResp, error) {
 	record, err := l.svcCtx.SlaPolicyModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return nil, errors.New("sla policy not found")
+		return nil, xerr.NewErrCode(xerr.ItsmSlaPolicyNotFound)
 	}
 
 	if in.ResponseLimitMin > 0 {

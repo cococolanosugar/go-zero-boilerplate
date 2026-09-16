@@ -15,6 +15,9 @@ COPY app/user/rpc/client/ app/user/rpc/client/
 COPY app/user/rpc/pb/ app/user/rpc/pb/
 COPY app/worker/rpc/client/ app/worker/rpc/client/
 COPY app/worker/rpc/pb/ app/worker/rpc/pb/
+COPY app/worker/contract/ app/worker/contract/
+COPY app/itsm/rpc/client/ app/itsm/rpc/client/
+COPY app/itsm/rpc/itsm/ app/itsm/rpc/itsm/
 COPY app/gateway/ app/gateway/
 
 # 静态交叉编译 Linux 二进制产物

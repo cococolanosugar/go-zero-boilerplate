@@ -2,13 +2,13 @@ package itsmlogic
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"go-zero-boilerplate/app/itsm/model"
 	"go-zero-boilerplate/app/itsm/rpc/internal/engine"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,7 +29,7 @@ func NewCreateProcessDefLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *CreateProcessDefLogic) CreateProcessDef(in *itsm.CreateProcessDefReq) (*itsm.CreateProcessDefResp, error) {
 	if in.ProcCode == "" || in.ProcName == "" {
-		return nil, errors.New("procCode and procName are required")
+		return nil, xerr.NewErrCode(xerr.RequestParamError)
 	}
 
 	// 校验 BPMN XML 拓扑结构合法性

@@ -2,12 +2,12 @@ package itsmlogic
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"go-zero-boilerplate/app/itsm/rpc/internal/engine"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *DeployProcessDefLogic) DeployProcessDef(in *itsm.DeployProcessDefReq) (
 	}
 
 	if record.BpmnXml == "" {
-		return nil, errors.New("cannot deploy process definition with empty bpmn xml")
+		return nil, xerr.NewErrCode(xerr.ItsmInvalidBpmnXml)
 	}
 
 	// 部署前严格校验 BPMN 图形拓扑连通性

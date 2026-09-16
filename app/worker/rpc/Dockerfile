@@ -1,5 +1,5 @@
 # 多阶段构建：Worker 微服务 (gRPC + Temporal Worker)
-FROM golang:1.24-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /build
 

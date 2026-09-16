@@ -3,12 +3,12 @@ package itsmlogic
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"time"
 
 	"go-zero-boilerplate/app/itsm/model"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,12 +30,12 @@ func NewRejectTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Reject
 func (l *RejectTaskLogic) RejectTask(in *itsm.RejectTaskReq) (*itsm.CommonResp, error) {
 	task, err := l.svcCtx.TaskModel.FindOne(l.ctx, in.TaskId)
 	if err != nil {
-		return nil, errors.New("task not found")
+		return nil, xerr.NewErrCode(xerr.ItsmTaskNotFound)
 	}
 
 	inst, err := l.svcCtx.ProcessInstModel.FindOne(l.ctx, task.InstId)
 	if err != nil {
-		return nil, errors.New("ticket instance not found")
+		return nil, xerr.NewErrCode(xerr.ItsmInstanceNotFound)
 	}
 
 	now := time.Now()

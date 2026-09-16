@@ -3,12 +3,12 @@ package itsmlogic
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"time"
 
 	"go-zero-boilerplate/app/itsm/model"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,7 +30,7 @@ func NewCancelTicketLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Canc
 func (l *CancelTicketLogic) CancelTicket(in *itsm.CancelTicketReq) (*itsm.CommonResp, error) {
 	inst, err := l.svcCtx.ProcessInstModel.FindOne(l.ctx, in.TicketId)
 	if err != nil {
-		return nil, errors.New("ticket not found")
+		return nil, xerr.NewErrCode(xerr.ItsmTicketNotFound)
 	}
 
 	now := time.Now()

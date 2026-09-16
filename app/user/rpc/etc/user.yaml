@@ -1,24 +1,24 @@
 Name: user.rpc
-ListenOn: 0.0.0.0:8080
+ListenOn: ${USER_RPC_LISTEN_ON:0.0.0.0:8080}
 
 # 数据库持久层配置
-DataSource: root:root@tcp(127.0.0.1:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+DataSource: ${MYSQL_DSN:root:root@tcp(127.0.0.1:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai}
 
 # Redis 缓存集群配置
 Cache:
-  - Host: 127.0.0.1:6379
+  - Host: ${REDIS_HOST:127.0.0.1:6379}
 
 # ================= 服务注册与发现配置 =================
 # 模式一：Nacos 注册发现
 # Nacos:
-#   Host: 127.0.0.1
-#   Port: 8848
-#   NamespaceId: public
+#   Host: ${NACOS_HOST:127.0.0.1}
+#   Port: ${NACOS_PORT:8848}
+#   NamespaceId: ${NACOS_NAMESPACE:public}
 
 # 模式二：Etcd 注册发现
 # Etcd:
 #   Hosts:
-#     - 127.0.0.1:2379
+#     - ${ETCD_HOST:127.0.0.1:2379}
 #   Key: user.rpc
 
 # 模式三：直连模式（当前单机极速调试启用，无需注册中心容器）
