@@ -2,6 +2,7 @@ export default {
   // Navigation & Header
   'menu.home': 'Portal Home',
   'menu.navigation': 'Navigation Hub',
+  'menu.desk': 'Service Desk',
   'menu.services': 'Services Governance',
   'menu.workbench': 'API Workbench',
   'nav.title': 'Enterprise Navigation Hub',
