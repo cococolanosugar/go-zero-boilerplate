@@ -26,10 +26,12 @@ func NewClaimTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ClaimTa
 
 func (l *ClaimTaskLogic) ClaimTask(req *types.ClaimTaskReqVO) error {
 	userId := getUserIdFromCtx(l.ctx)
+	userName := getUserNameFromCtx(l.ctx)
 
 	_, err := l.svcCtx.ItsmRpc.ClaimTask(l.ctx, &itsm.ClaimTaskReq{
-		TaskId: req.TaskId,
-		UserId: userId,
+		TaskId:   req.TaskId,
+		UserId:   userId,
+		UserName: userName,
 	})
 	return err
 }

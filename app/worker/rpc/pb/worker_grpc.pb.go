@@ -19,15 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Worker_GetWorkflowDetail_FullMethodName = "/worker.Worker/GetWorkflowDetail"
-	Worker_SignalWorkflow_FullMethodName    = "/worker.Worker/SignalWorkflow"
-	Worker_ListTasks_FullMethodName         = "/worker.Worker/ListTasks"
-	Worker_GetTask_FullMethodName           = "/worker.Worker/GetTask"
-	Worker_CreateTask_FullMethodName        = "/worker.Worker/CreateTask"
-	Worker_UpdateTask_FullMethodName        = "/worker.Worker/UpdateTask"
-	Worker_DeleteTask_FullMethodName        = "/worker.Worker/DeleteTask"
-	Worker_ToggleTaskStatus_FullMethodName  = "/worker.Worker/ToggleTaskStatus"
-	Worker_RunTaskOnce_FullMethodName       = "/worker.Worker/RunTaskOnce"
+	Worker_GetWorkflowDetail_FullMethodName    = "/worker.Worker/GetWorkflowDetail"
+	Worker_SignalWorkflow_FullMethodName       = "/worker.Worker/SignalWorkflow"
+	Worker_ListTasks_FullMethodName            = "/worker.Worker/ListTasks"
+	Worker_GetTask_FullMethodName              = "/worker.Worker/GetTask"
+	Worker_CreateTask_FullMethodName           = "/worker.Worker/CreateTask"
+	Worker_UpdateTask_FullMethodName           = "/worker.Worker/UpdateTask"
+	Worker_DeleteTask_FullMethodName           = "/worker.Worker/DeleteTask"
+	Worker_ToggleTaskStatus_FullMethodName     = "/worker.Worker/ToggleTaskStatus"
+	Worker_RunTaskOnce_FullMethodName          = "/worker.Worker/RunTaskOnce"
+	Worker_StartItsmSlaWorkflow_FullMethodName = "/worker.Worker/StartItsmSlaWorkflow"
 )
 
 // WorkerClient is the client API for Worker service.
@@ -44,6 +45,8 @@ type WorkerClient interface {
 	DeleteTask(ctx context.Context, in *DeleteTaskReq, opts ...grpc.CallOption) (*DeleteTaskResp, error)
 	ToggleTaskStatus(ctx context.Context, in *ToggleTaskStatusReq, opts ...grpc.CallOption) (*ToggleTaskStatusResp, error)
 	RunTaskOnce(ctx context.Context, in *RunTaskOnceReq, opts ...grpc.CallOption) (*RunTaskOnceResp, error)
+	// ITSM SLA 分布式工作流调度
+	StartItsmSlaWorkflow(ctx context.Context, in *StartItsmSlaWorkflowReq, opts ...grpc.CallOption) (*StartItsmSlaWorkflowResp, error)
 }
 
 type workerClient struct {
@@ -144,6 +147,16 @@ func (c *workerClient) RunTaskOnce(ctx context.Context, in *RunTaskOnceReq, opts
 	return out, nil
 }
 
+func (c *workerClient) StartItsmSlaWorkflow(ctx context.Context, in *StartItsmSlaWorkflowReq, opts ...grpc.CallOption) (*StartItsmSlaWorkflowResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StartItsmSlaWorkflowResp)
+	err := c.cc.Invoke(ctx, Worker_StartItsmSlaWorkflow_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WorkerServer is the server API for Worker service.
 // All implementations must embed UnimplementedWorkerServer
 // for forward compatibility.
@@ -158,6 +171,8 @@ type WorkerServer interface {
 	DeleteTask(context.Context, *DeleteTaskReq) (*DeleteTaskResp, error)
 	ToggleTaskStatus(context.Context, *ToggleTaskStatusReq) (*ToggleTaskStatusResp, error)
 	RunTaskOnce(context.Context, *RunTaskOnceReq) (*RunTaskOnceResp, error)
+	// ITSM SLA 分布式工作流调度
+	StartItsmSlaWorkflow(context.Context, *StartItsmSlaWorkflowReq) (*StartItsmSlaWorkflowResp, error)
 	mustEmbedUnimplementedWorkerServer()
 }
 
@@ -194,6 +209,9 @@ func (UnimplementedWorkerServer) ToggleTaskStatus(context.Context, *ToggleTaskSt
 }
 func (UnimplementedWorkerServer) RunTaskOnce(context.Context, *RunTaskOnceReq) (*RunTaskOnceResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RunTaskOnce not implemented")
+}
+func (UnimplementedWorkerServer) StartItsmSlaWorkflow(context.Context, *StartItsmSlaWorkflowReq) (*StartItsmSlaWorkflowResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method StartItsmSlaWorkflow not implemented")
 }
 func (UnimplementedWorkerServer) mustEmbedUnimplementedWorkerServer() {}
 func (UnimplementedWorkerServer) testEmbeddedByValue()                {}
@@ -378,6 +396,24 @@ func _Worker_RunTaskOnce_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Worker_StartItsmSlaWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartItsmSlaWorkflowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorkerServer).StartItsmSlaWorkflow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Worker_StartItsmSlaWorkflow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorkerServer).StartItsmSlaWorkflow(ctx, req.(*StartItsmSlaWorkflowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Worker_ServiceDesc is the grpc.ServiceDesc for Worker service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -420,6 +456,10 @@ var Worker_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RunTaskOnce",
 			Handler:    _Worker_RunTaskOnce_Handler,
+		},
+		{
+			MethodName: "StartItsmSlaWorkflow",
+			Handler:    _Worker_StartItsmSlaWorkflow_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

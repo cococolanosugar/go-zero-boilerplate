@@ -23,4 +23,9 @@ if [ "$TABLE" = "all" ] || [ "$TABLE" = "log" ]; then
     goctl model mysql ddl -src manifest/sql/log_schema.sql -dir app/user/model -c --style go_zero
 fi
 
+if [ "$TABLE" = "all" ] || [ "$TABLE" = "itsm" ]; then
+    echo "Generating ITSM models from manifest/sql/itsm_schema.sql..."
+    goctl model mysql ddl -src manifest/sql/itsm_schema.sql -dir app/itsm/model -c --style go_zero
+fi
+
 echo "Done generating database models!"

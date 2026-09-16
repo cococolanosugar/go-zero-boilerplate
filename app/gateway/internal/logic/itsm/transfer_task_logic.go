@@ -26,10 +26,12 @@ func NewTransferTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Tran
 
 func (l *TransferTaskLogic) TransferTask(req *types.TransferTaskReqVO) error {
 	userId := getUserIdFromCtx(l.ctx)
+	userName := getUserNameFromCtx(l.ctx)
 
 	_, err := l.svcCtx.ItsmRpc.TransferTask(l.ctx, &itsm.TransferTaskReq{
 		TaskId:       req.TaskId,
 		UserId:       userId,
+		UserName:     userName,
 		TargetUserId: req.TargetUserId,
 		Opinion:      req.Opinion,
 	})

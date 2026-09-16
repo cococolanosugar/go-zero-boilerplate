@@ -43,8 +43,12 @@ func (l *AdminLoginLogic) AdminLogin(req *types.AdminLoginReq) (resp *types.Admi
 	accessExpire := l.svcCtx.Config.Auth.AccessExpire
 	claims := make(jwt.MapClaims)
 	claims["exp"] = now + accessExpire
-	claims["iat"] = now
+	userName := rpcResp.RealName
+	if userName == "" {
+		userName = rpcResp.Username
+	}
 	claims["userId"] = rpcResp.Id
+	claims["userName"] = userName
 	claims["jti"] = session.GenerateSessionId()
 
 	token := jwt.New(jwt.SigningMethodHS256)

@@ -68,3 +68,9 @@ func (s *WorkerServer) RunTaskOnce(ctx context.Context, in *pb.RunTaskOnceReq) (
 	l := workerlogic.NewRunTaskOnceLogic(ctx, s.svcCtx)
 	return l.RunTaskOnce(in)
 }
+
+// ITSM SLA 分布式工作流调度
+func (s *WorkerServer) StartItsmSlaWorkflow(ctx context.Context, in *pb.StartItsmSlaWorkflowReq) (*pb.StartItsmSlaWorkflowResp, error) {
+	l := workerlogic.NewStartItsmSlaWorkflowLogic(ctx, s.svcCtx)
+	return l.StartItsmSlaWorkflow(in)
+}

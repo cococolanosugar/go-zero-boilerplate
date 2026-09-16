@@ -54,6 +54,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	claims["exp"] = now + accessExpire
 	claims["iat"] = now
 	claims["userId"] = loginResp.Id
+	claims["userName"] = username
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims

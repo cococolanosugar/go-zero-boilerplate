@@ -26,10 +26,12 @@ func NewCancelTicketLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Canc
 
 func (l *CancelTicketLogic) CancelTicket(req *types.CancelTicketReqVO) error {
 	userId := getUserIdFromCtx(l.ctx)
+	userName := getUserNameFromCtx(l.ctx)
 
 	_, err := l.svcCtx.ItsmRpc.CancelTicket(l.ctx, &itsm.CancelTicketReq{
 		TicketId: req.Id,
 		UserId:   userId,
+		UserName: userName,
 		Reason:   req.Reason,
 	})
 	return err

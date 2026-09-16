@@ -3,6 +3,7 @@ package itsmlogic
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"time"
 
 	"go-zero-boilerplate/app/itsm/model"
@@ -110,14 +111,33 @@ func (l *ApproveTaskLogic) ApproveTask(in *itsm.ApproveTaskReq) (*itsm.CommonRes
 		inst.CurrentNodeId = nextNode.ID
 		inst.CurrentNodeName = nextNode.Name
 
+		approvalMode := "SINGLE"
+		if nextNode.ApprovalMode != "" {
+			approvalMode = nextNode.ApprovalMode
+		}
+		candidateUsersStr := ""
+		if len(nextNode.CandidateUsers) > 0 {
+			if b, err := json.Marshal(nextNode.CandidateUsers); err == nil {
+				candidateUsersStr = string(b)
+			}
+		}
+		candidateRolesStr := ""
+		if len(nextNode.CandidateRoles) > 0 {
+			if b, err := json.Marshal(nextNode.CandidateRoles); err == nil {
+				candidateRolesStr = string(b)
+			}
+		}
+
 		_, err = l.svcCtx.TaskModel.Insert(l.ctx, &model.ItsmTask{
-			InstId:       inst.Id,
-			NodeId:       nextNode.ID,
-			NodeName:     nextNode.Name,
-			TaskType:     "USER_TASK",
-			ApprovalMode: "SINGLE",
-			Status:       "READY",
-			CreateTime:   now,
+			InstId:         inst.Id,
+			NodeId:         nextNode.ID,
+			NodeName:       nextNode.Name,
+			TaskType:       "USER_TASK",
+			ApprovalMode:   approvalMode,
+			CandidateUsers: sql.NullString{String: candidateUsersStr, Valid: candidateUsersStr != ""},
+			CandidateRoles: sql.NullString{String: candidateRolesStr, Valid: candidateRolesStr != ""},
+			Status:         "READY",
+			CreateTime:     now,
 		})
 		if err != nil {
 			return nil, err

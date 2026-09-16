@@ -230,6 +230,7 @@ export const routes: AppRouteItem[] = [
             name: "menu.itsm.processDefs",
             locale: "menu.itsm.processDefs",
             icon: "ApartmentOutlined",
+            access: "system:manage",
             component: lazy(() => import("../pages/itsm/ProcessDefs")),
           },
         ],

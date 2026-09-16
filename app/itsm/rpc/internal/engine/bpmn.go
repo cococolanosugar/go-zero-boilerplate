@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -28,12 +29,17 @@ type ProcessGraph struct {
 
 // BPMNNode 抽象流程节点
 type BPMNNode struct {
-	ID           string
-	Name         string
-	Type         string // startEvent, endEvent, userTask, exclusiveGateway, parallelGateway
-	IncomingFlow []string
-	OutgoingFlow []string
-	Extensions   map[string]string // 自定义扩展属性键值
+	ID               string
+	Name             string
+	Type             string // startEvent, endEvent, userTask, exclusiveGateway, parallelGateway
+	IncomingFlow     []string
+	OutgoingFlow     []string
+	ApprovalMode     string            // SINGLE, COUNTER_SIGN, OR_SIGN
+	CandidateRoles   []string          // e.g. ["ROLE_ADMIN"]
+	CandidateUsers   []int64           // e.g. [1, 2]
+	PassRate         int               // 0-100
+	FieldPermissions map[string]string // 字段权限映射
+	Extensions       map[string]string // 自定义扩展属性键值
 }
 
 // BPMNFlow 流程流转连线
@@ -75,10 +81,15 @@ type xmlEndEvent struct {
 }
 
 type xmlUserTask struct {
-	ID       string   `xml:"id,attr"`
-	Name     string   `xml:"name,attr"`
-	Incoming []string `xml:"incoming"`
-	Outgoing []string `xml:"outgoing"`
+	ID            string             `xml:"id,attr"`
+	Name          string             `xml:"name,attr"`
+	Incoming      []string           `xml:"incoming"`
+	Outgoing      []string           `xml:"outgoing"`
+	Documentation []xmlDocumentation `xml:"documentation"`
+}
+
+type xmlDocumentation struct {
+	Text string `xml:",chardata"`
 }
 
 type xmlExclusiveGateway struct {
@@ -165,14 +176,43 @@ func ParseBPMNXML(xmlContent string) (*ProcessGraph, error) {
 
 	// 4. 提取 UserTasks
 	for _, u := range proc.UserTasks {
-		graph.Nodes[u.ID] = &BPMNNode{
-			ID:           u.ID,
-			Name:         u.Name,
-			Type:         ElementTypeUserTask,
-			IncomingFlow: u.Incoming,
-			OutgoingFlow: u.Outgoing,
-			Extensions:   make(map[string]string),
+		node := &BPMNNode{
+			ID:               u.ID,
+			Name:             u.Name,
+			Type:             ElementTypeUserTask,
+			IncomingFlow:     u.Incoming,
+			OutgoingFlow:     u.Outgoing,
+			ApprovalMode:     "SINGLE",
+			FieldPermissions: make(map[string]string),
+			Extensions:       make(map[string]string),
 		}
+
+		if len(u.Documentation) > 0 {
+			rawText := strings.TrimSpace(u.Documentation[0].Text)
+			if strings.HasPrefix(rawText, "{") && strings.HasSuffix(rawText, "}") {
+				var docData struct {
+					AssigneeType     string            `json:"assigneeType"`
+					CandidateRoles   []string          `json:"candidateRoles"`
+					CandidateUsers   []int64           `json:"candidateUsers"`
+					ApprovalMode     string            `json:"approvalMode"`
+					PassRate         int               `json:"passRate"`
+					FieldPermissions map[string]string `json:"fieldPermissions"`
+				}
+				if err := json.Unmarshal([]byte(rawText), &docData); err == nil {
+					if docData.ApprovalMode != "" {
+						node.ApprovalMode = docData.ApprovalMode
+					}
+					node.CandidateRoles = docData.CandidateRoles
+					node.CandidateUsers = docData.CandidateUsers
+					node.PassRate = docData.PassRate
+					if docData.FieldPermissions != nil {
+						node.FieldPermissions = docData.FieldPermissions
+					}
+				}
+			}
+		}
+
+		graph.Nodes[u.ID] = node
 	}
 
 	// 5. 提取 Gateways

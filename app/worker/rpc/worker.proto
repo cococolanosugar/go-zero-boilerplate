@@ -115,6 +115,20 @@ message RunTaskOnceResp {
   string message = 4;
 }
 
+message StartItsmSlaWorkflowReq {
+  int64 ticketId = 1;
+  string ticketNo = 2;
+  int32 responseDurationSec = 3;
+  int32 resolveDurationSec = 4;
+}
+
+message StartItsmSlaWorkflowResp {
+  bool success = 1;
+  string workflowId = 2;
+  string runId = 3;
+  string message = 4;
+}
+
 service Worker {
   rpc GetWorkflowDetail(GetWorkflowDetailReq) returns (GetWorkflowDetailResp);
   rpc SignalWorkflow(SignalWorkflowReq) returns (SignalWorkflowResp);
@@ -127,4 +141,7 @@ service Worker {
   rpc DeleteTask(DeleteTaskReq) returns (DeleteTaskResp);
   rpc ToggleTaskStatus(ToggleTaskStatusReq) returns (ToggleTaskStatusResp);
   rpc RunTaskOnce(RunTaskOnceReq) returns (RunTaskOnceResp);
+
+  // ITSM SLA 分布式工作流调度
+  rpc StartItsmSlaWorkflow(StartItsmSlaWorkflowReq) returns (StartItsmSlaWorkflowResp);
 }

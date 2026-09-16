@@ -2,6 +2,7 @@ package itsmlogic
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"time"
@@ -106,9 +107,25 @@ func (l *CreateTicketLogic) CreateTicket(in *itsm.CreateTicketReq) (*itsm.Create
 			return err
 		}
 
-		// 3. 创建首个待办节点任务
-		taskQuery := `INSERT INTO itsm_task (inst_id, node_id, node_name, task_type, approval_mode, status, create_time) VALUES (?, ?, ?, ?, ?, ?, ?)`
-		taskRes, err := session.ExecCtx(ctx, taskQuery, instId, initialNode.ID, initialNode.Name, "USER_TASK", "SINGLE", "READY", now)
+		// 3. 创建首个待办节点任务 (携带 BPMN 设计器配置的审批模式与候选人/角色)
+		approvalMode := "SINGLE"
+		if initialNode.ApprovalMode != "" {
+			approvalMode = initialNode.ApprovalMode
+		}
+		var candidateUsersJson, candidateRolesJson interface{}
+		if len(initialNode.CandidateUsers) > 0 {
+			if b, err := json.Marshal(initialNode.CandidateUsers); err == nil {
+				candidateUsersJson = string(b)
+			}
+		}
+		if len(initialNode.CandidateRoles) > 0 {
+			if b, err := json.Marshal(initialNode.CandidateRoles); err == nil {
+				candidateRolesJson = string(b)
+			}
+		}
+
+		taskQuery := `INSERT INTO itsm_task (inst_id, node_id, node_name, task_type, approval_mode, candidate_users, candidate_roles, status, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		taskRes, err := session.ExecCtx(ctx, taskQuery, instId, initialNode.ID, initialNode.Name, "USER_TASK", approvalMode, candidateUsersJson, candidateRolesJson, "READY", now)
 		if err != nil {
 			return err
 		}

@@ -26,10 +26,12 @@ func NewApproveTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Appro
 
 func (l *ApproveTaskLogic) ApproveTask(req *types.ApproveTaskReqVO) error {
 	userId := getUserIdFromCtx(l.ctx)
+	userName := getUserNameFromCtx(l.ctx)
 
 	_, err := l.svcCtx.ItsmRpc.ApproveTask(l.ctx, &itsm.ApproveTaskReq{
 		TaskId:              req.TaskId,
 		UserId:              userId,
+		UserName:            userName,
 		Opinion:             req.Opinion,
 		UpdatedFormDataJson: req.UpdatedFormDataJson,
 	})

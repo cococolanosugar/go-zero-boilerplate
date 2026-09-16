@@ -14,22 +14,24 @@ import (
 )
 
 type (
-	AsyncTaskItem         = pb.AsyncTaskItem
-	CreateTaskReq         = pb.CreateTaskReq
-	DeleteTaskReq         = pb.DeleteTaskReq
-	DeleteTaskResp        = pb.DeleteTaskResp
-	GetTaskReq            = pb.GetTaskReq
-	GetWorkflowDetailReq  = pb.GetWorkflowDetailReq
-	GetWorkflowDetailResp = pb.GetWorkflowDetailResp
-	ListTasksReq          = pb.ListTasksReq
-	ListTasksResp         = pb.ListTasksResp
-	RunTaskOnceReq        = pb.RunTaskOnceReq
-	RunTaskOnceResp       = pb.RunTaskOnceResp
-	SignalWorkflowReq     = pb.SignalWorkflowReq
-	SignalWorkflowResp    = pb.SignalWorkflowResp
-	ToggleTaskStatusReq   = pb.ToggleTaskStatusReq
-	ToggleTaskStatusResp  = pb.ToggleTaskStatusResp
-	UpdateTaskReq         = pb.UpdateTaskReq
+	AsyncTaskItem            = pb.AsyncTaskItem
+	CreateTaskReq            = pb.CreateTaskReq
+	DeleteTaskReq            = pb.DeleteTaskReq
+	DeleteTaskResp           = pb.DeleteTaskResp
+	GetTaskReq               = pb.GetTaskReq
+	GetWorkflowDetailReq     = pb.GetWorkflowDetailReq
+	GetWorkflowDetailResp    = pb.GetWorkflowDetailResp
+	ListTasksReq             = pb.ListTasksReq
+	ListTasksResp            = pb.ListTasksResp
+	RunTaskOnceReq           = pb.RunTaskOnceReq
+	RunTaskOnceResp          = pb.RunTaskOnceResp
+	SignalWorkflowReq        = pb.SignalWorkflowReq
+	SignalWorkflowResp       = pb.SignalWorkflowResp
+	StartItsmSlaWorkflowReq  = pb.StartItsmSlaWorkflowReq
+	StartItsmSlaWorkflowResp = pb.StartItsmSlaWorkflowResp
+	ToggleTaskStatusReq      = pb.ToggleTaskStatusReq
+	ToggleTaskStatusResp     = pb.ToggleTaskStatusResp
+	UpdateTaskReq            = pb.UpdateTaskReq
 
 	Worker interface {
 		GetWorkflowDetail(ctx context.Context, in *GetWorkflowDetailReq, opts ...grpc.CallOption) (*GetWorkflowDetailResp, error)
@@ -42,6 +44,8 @@ type (
 		DeleteTask(ctx context.Context, in *DeleteTaskReq, opts ...grpc.CallOption) (*DeleteTaskResp, error)
 		ToggleTaskStatus(ctx context.Context, in *ToggleTaskStatusReq, opts ...grpc.CallOption) (*ToggleTaskStatusResp, error)
 		RunTaskOnce(ctx context.Context, in *RunTaskOnceReq, opts ...grpc.CallOption) (*RunTaskOnceResp, error)
+		// ITSM SLA 分布式工作流调度
+		StartItsmSlaWorkflow(ctx context.Context, in *StartItsmSlaWorkflowReq, opts ...grpc.CallOption) (*StartItsmSlaWorkflowResp, error)
 	}
 
 	defaultWorker struct {
@@ -99,4 +103,10 @@ func (m *defaultWorker) ToggleTaskStatus(ctx context.Context, in *ToggleTaskStat
 func (m *defaultWorker) RunTaskOnce(ctx context.Context, in *RunTaskOnceReq, opts ...grpc.CallOption) (*RunTaskOnceResp, error) {
 	client := pb.NewWorkerClient(m.cli.Conn())
 	return client.RunTaskOnce(ctx, in, opts...)
+}
+
+// ITSM SLA 分布式工作流调度
+func (m *defaultWorker) StartItsmSlaWorkflow(ctx context.Context, in *StartItsmSlaWorkflowReq, opts ...grpc.CallOption) (*StartItsmSlaWorkflowResp, error) {
+	client := pb.NewWorkerClient(m.cli.Conn())
+	return client.StartItsmSlaWorkflow(ctx, in, opts...)
 }

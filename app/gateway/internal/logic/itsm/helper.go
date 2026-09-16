@@ -18,3 +18,13 @@ func getUserIdFromCtx(ctx context.Context) int64 {
 	}
 	return userId
 }
+
+func getUserNameFromCtx(ctx context.Context) string {
+	if nameVal := ctx.Value("userName"); nameVal != nil {
+		if nameStr, ok := nameVal.(string); ok && nameStr != "" {
+			return nameStr
+		}
+	}
+	return ""
+}
+

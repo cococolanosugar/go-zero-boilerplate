@@ -2,6 +2,7 @@ package itsmlogic
 
 import (
 	"context"
+	"fmt"
 
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
@@ -40,6 +41,16 @@ func (l *ListTicketsLogic) ListTickets(in *itsm.ListTicketsReq) (*itsm.ListTicke
 		return nil, err
 	}
 
+	// 批量拉取流程定义名称映射
+	procNameMap := make(map[int64]string)
+	for _, item := range list {
+		if _, ok := procNameMap[item.ProcDefId]; !ok {
+			if def, err := l.svcCtx.ProcessDefModel.FindOne(l.ctx, item.ProcDefId); err == nil && def != nil {
+				procNameMap[item.ProcDefId] = def.ProcName
+			}
+		}
+	}
+
 	var items []*itsm.TicketItem
 	for _, item := range list {
 		respDeadline := ""
@@ -57,7 +68,9 @@ func (l *ListTicketsLogic) ListTickets(in *itsm.ListTicketsReq) (*itsm.ListTicke
 			Title:               item.Title,
 			Priority:            item.Priority,
 			ProcDefId:           item.ProcDefId,
+			ProcName:            procNameMap[item.ProcDefId],
 			InitiatorId:         item.InitiatorId,
+			InitiatorName:       fmt.Sprintf("用户%d", item.InitiatorId),
 			CurrentNodeId:       item.CurrentNodeId,
 			CurrentNodeName:     item.CurrentNodeName,
 			Status:              item.Status,

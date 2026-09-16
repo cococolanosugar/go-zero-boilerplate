@@ -40,6 +40,7 @@ import {
   itsmRejectTask,
   itsmTransferTask,
   itsmCancelTicket,
+  listSysUsers,
   type ItsmGetTicketDetail200,
   type ItsmGetTicketTrajectory200,
 } from '@zero/api';
@@ -95,8 +96,20 @@ export const TicketDetailPage: React.FC = () => {
     }
   };
 
+  const [userOptions, setUserOptions] = useState<{ label: string; value: number }[]>([]);
+
   useEffect(() => {
     loadData();
+    // 加载可供转派的目标员工候选列表
+    listSysUsers({ page: 1, pageSize: 100 })
+      .then((res: any) => {
+        const options = (res.list || []).map((u: any) => ({
+          label: `${u.realName || u.username} (${u.username})`,
+          value: u.id,
+        }));
+        setUserOptions(options);
+      })
+      .catch(() => {});
   }, [ticketId]);
 
   const activeTask = detail?.activeTasks && detail.activeTasks.length > 0 ? detail.activeTasks[0] : null;
@@ -521,11 +534,16 @@ export const TicketDetailPage: React.FC = () => {
       >
         <Form form={transferForm} layout="vertical">
           <Form.Item
-            label="转派目标员工 (用户ID)"
+            label="转派目标员工"
             name="targetUserId"
-            rules={[{ required: true, message: '请输入目标员工用户ID' }]}
+            rules={[{ required: true, message: '请选择目标员工' }]}
           >
-            <Input placeholder="输入员工工号/用户ID，如 2" />
+            <Select
+              showSearch
+              placeholder="请搜索或选择目标转派员工"
+              optionFilterProp="label"
+              options={userOptions}
+            />
           </Form.Item>
           <Form.Item
             label="转派原因"

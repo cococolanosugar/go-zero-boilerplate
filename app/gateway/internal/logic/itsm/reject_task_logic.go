@@ -26,11 +26,13 @@ func NewRejectTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Reject
 
 func (l *RejectTaskLogic) RejectTask(req *types.RejectTaskReqVO) error {
 	userId := getUserIdFromCtx(l.ctx)
+	userName := getUserNameFromCtx(l.ctx)
 
 	_, err := l.svcCtx.ItsmRpc.RejectTask(l.ctx, &itsm.RejectTaskReq{
-		TaskId:  req.TaskId,
-		UserId:  userId,
-		Opinion: req.Opinion,
+		TaskId:   req.TaskId,
+		UserId:   userId,
+		UserName: userName,
+		Opinion:  req.Opinion,
 	})
 	return err
 }
