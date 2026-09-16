@@ -45,10 +45,14 @@ func (m *customItsmProcessInstModel) FindPageList(ctx context.Context, page, pag
 		whereClauses = append(whereClauses, "initiator_id = ?")
 		args = append(args, userId)
 	case "sla_warning":
-		whereClauses = append(whereClauses, "sla_status IN ('WARNING', 'BREACHED')")
+		whereClauses = append(whereClauses, "sla_status IN ('WARNING', 'BREACHED', 'TIMEOUT')")
 	case "todo":
-		whereClauses = append(whereClauses, "id IN (SELECT inst_id FROM itsm_task WHERE status IN ('READY', 'CLAIMED') AND (assignee_id = ? OR JSON_CONTAINS(candidate_users, CAST(? AS JSON))))")
-		args = append(args, userId, userId)
+		if userId == 1 {
+			whereClauses = append(whereClauses, "id IN (SELECT inst_id FROM itsm_task WHERE status IN ('READY', 'CLAIMED'))")
+		} else {
+			whereClauses = append(whereClauses, "id IN (SELECT inst_id FROM itsm_task WHERE status IN ('READY', 'CLAIMED') AND (assignee_id = ? OR (status = 'READY' AND assignee_id IS NULL AND candidate_users IS NULL) OR (candidate_users IS NOT NULL AND JSON_CONTAINS(candidate_users, CAST(? AS JSON)))))")
+			args = append(args, userId, userId)
+		}
 	case "done":
 		whereClauses = append(whereClauses, "id IN (SELECT inst_id FROM itsm_task_log WHERE operator_id = ?)")
 		args = append(args, userId)

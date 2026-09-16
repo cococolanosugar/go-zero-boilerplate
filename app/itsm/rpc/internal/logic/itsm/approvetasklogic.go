@@ -37,6 +37,11 @@ func (l *ApproveTaskLogic) ApproveTask(in *itsm.ApproveTaskReq) (*itsm.CommonRes
 		return nil, xerr.NewErrCode(xerr.ItsmTaskAlreadyDone)
 	}
 
+	// 越权防护：若任务已被指定/认领办理人，仅该办理人或超级管理员(ID: 1)可执行审批
+	if task.Status == "CLAIMED" && task.AssigneeId.Valid && task.AssigneeId.Int64 != in.UserId && in.UserId != 1 {
+		return nil, xerr.NewErrCode(xerr.Forbidden)
+	}
+
 	inst, err := l.svcCtx.ProcessInstModel.FindOne(l.ctx, task.InstId)
 	if err != nil {
 		return nil, xerr.NewErrCode(xerr.ItsmInstanceNotFound)

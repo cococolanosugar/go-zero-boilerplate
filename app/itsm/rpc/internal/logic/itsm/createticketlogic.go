@@ -2,18 +2,17 @@ package itsmlogic
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"math/rand"
 	"time"
 
-	"go-zero-boilerplate/app/itsm/model"
 	"go-zero-boilerplate/app/itsm/rpc/internal/engine"
 	"go-zero-boilerplate/app/itsm/rpc/internal/svc"
 	"go-zero-boilerplate/app/itsm/rpc/itsm"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type CreateTicketLogic struct {
@@ -41,6 +40,9 @@ func (l *CreateTicketLogic) CreateTicket(in *itsm.CreateTicketReq) (*itsm.Create
 	procDef, err := l.svcCtx.ProcessDefModel.FindOne(l.ctx, in.ProcDefId)
 	if err != nil {
 		return nil, xerr.NewErrCode(xerr.ItsmProcessDefNotFound)
+	}
+	if procDef.Status != 2 {
+		return nil, xerr.NewErrMsg("该服务流程尚未发布上线或已停用，无法发起工单")
 	}
 
 	// 解析 BPMN 流程图计算第一个激活节点
@@ -73,7 +75,6 @@ func (l *CreateTicketLogic) CreateTicket(in *itsm.CreateTicketReq) (*itsm.Create
 	resolveDeadline := now.Add(time.Duration(resolveLimit) * time.Minute)
 
 	// 生成唯一流水单号
-	rand.Seed(time.Now().UnixNano())
 	ticketNo := fmt.Sprintf("INC%s%04d", now.Format("20060102150405"), rand.Intn(10000))
 
 	formData := in.FormDataJson
@@ -81,68 +82,54 @@ func (l *CreateTicketLogic) CreateTicket(in *itsm.CreateTicketReq) (*itsm.Create
 		formData = "{}"
 	}
 
-	// 1. 创建流程实例
-	instData := &model.ItsmProcessInst{
-		ProcDefId:           procDef.Id,
-		TicketNo:            ticketNo,
-		Title:               in.Title,
-		Priority:            priority,
-		InitiatorId:         in.InitiatorId,
-		CurrentNodeId:       initialNode.ID,
-		CurrentNodeName:     initialNode.Name,
-		Status:              "RUNNING",
-		SlaStatus:           "NORMAL",
-		SlaResponseDeadline: sql.NullTime{Time: respDeadline, Valid: true},
-		SlaResolveDeadline:  sql.NullTime{Time: resolveDeadline, Valid: true},
-		CreateTime:          now,
-		UpdateTime:          now,
+	initiatorName := in.InitiatorName
+	if initiatorName == "" {
+		initiatorName = fmt.Sprintf("用户%d", in.InitiatorId)
 	}
 
-	instRes, err := l.svcCtx.ProcessInstModel.Insert(l.ctx, instData)
+	var instId int64
+	err = l.svcCtx.SqlConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
+		// 1. 创建流程实例
+		instQuery := `INSERT INTO itsm_process_inst (proc_def_id, ticket_no, title, priority, initiator_id, current_node_id, current_node_name, status, sla_status, sla_response_deadline, sla_resolve_deadline, create_time, update_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		instRes, err := session.ExecCtx(ctx, instQuery, procDef.Id, ticketNo, in.Title, priority, in.InitiatorId, initialNode.ID, initialNode.Name, "RUNNING", "NORMAL", respDeadline, resolveDeadline, now, now)
+		if err != nil {
+			return err
+		}
+		instId, err = instRes.LastInsertId()
+		if err != nil {
+			return err
+		}
+
+		// 2. 创建动态表单数据快照
+		dataQuery := `INSERT INTO itsm_ticket_data (inst_id, form_data, create_time, update_time) VALUES (?, ?, ?, ?)`
+		if _, err := session.ExecCtx(ctx, dataQuery, instId, formData, now, now); err != nil {
+			return err
+		}
+
+		// 3. 创建首个待办节点任务
+		taskQuery := `INSERT INTO itsm_task (inst_id, node_id, node_name, task_type, approval_mode, status, create_time) VALUES (?, ?, ?, ?, ?, ?, ?)`
+		taskRes, err := session.ExecCtx(ctx, taskQuery, instId, initialNode.ID, initialNode.Name, "USER_TASK", "SINGLE", "READY", now)
+		if err != nil {
+			return err
+		}
+		taskId, err := taskRes.LastInsertId()
+		if err != nil {
+			return err
+		}
+
+		// 4. 记录发起流转审计日志
+		logQuery := `INSERT INTO itsm_task_log (inst_id, task_id, node_id, node_name, operator_id, operator_name, action_type, opinion, duration_sec, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		if _, err := session.ExecCtx(ctx, logQuery, instId, taskId, graph.StartNode.ID, graph.StartNode.Name, in.InitiatorId, initiatorName, "CREATE", "发起提报工单", 0, now); err != nil {
+			return err
+		}
+
+		return nil
+	})
+
 	if err != nil {
+		l.Logger.Errorf("CreateTicket transaction failed: %v", err)
 		return nil, xerr.NewErrCode(xerr.ItsmCreateFailed)
 	}
-	instId, err := instRes.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
-
-	// 2. 创建动态表单数据快照
-	_, _ = l.svcCtx.TicketDataModel.Insert(l.ctx, &model.ItsmTicketData{
-		InstId:     instId,
-		FormData:   formData,
-		CreateTime: now,
-		UpdateTime: now,
-	})
-
-	// 3. 创建首个待办节点任务
-	taskRes, err := l.svcCtx.TaskModel.Insert(l.ctx, &model.ItsmTask{
-		InstId:       instId,
-		NodeId:       initialNode.ID,
-		NodeName:     initialNode.Name,
-		TaskType:     "USER_TASK",
-		ApprovalMode: "SINGLE",
-		Status:       "READY",
-		CreateTime:   now,
-	})
-	if err != nil {
-		return nil, xerr.NewErrCode(xerr.ItsmCreateFailed)
-	}
-	taskId, _ := taskRes.LastInsertId()
-
-	// 4. 记录发起流转审计日志
-	_, _ = l.svcCtx.TaskLogModel.Insert(l.ctx, &model.ItsmTaskLog{
-		InstId:       instId,
-		TaskId:       sql.NullInt64{Int64: taskId, Valid: true},
-		NodeId:       graph.StartNode.ID,
-		NodeName:     graph.StartNode.Name,
-		OperatorId:   in.InitiatorId,
-		OperatorName: in.InitiatorName,
-		ActionType:   "CREATE",
-		Opinion:      sql.NullString{String: "发起提报工单", Valid: true},
-		DurationSec:  0,
-		CreateTime:   now,
-	})
 
 	return &itsm.CreateTicketResp{
 		Id:       instId,

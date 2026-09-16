@@ -35,6 +35,9 @@ func (l *ClaimTaskLogic) ClaimTask(in *itsm.ClaimTaskReq) (*itsm.CommonResp, err
 	if task.Status != "READY" {
 		return nil, xerr.NewErrCode(xerr.ItsmTaskAlreadyClaimed)
 	}
+	if task.AssigneeId.Valid && task.AssigneeId.Int64 != in.UserId && in.UserId != 1 {
+		return nil, xerr.NewErrMsg("该任务已指定给其他人员，无法认领")
+	}
 
 	now := time.Now()
 	task.Status = "CLAIMED"

@@ -56,12 +56,12 @@ func (a *ItsmSlaActivities) CheckResolveSla(ctx context.Context, ticketId int64)
 		return "ERROR", err
 	}
 
-	// 若超过解决时限仍在流转中，标记 SLA 为 BREACHED 违约
+	// 若超过解决时限仍在流转中，标记 SLA 为 TIMEOUT 超时违约
 	if status == "RUNNING" {
-		logx.WithContext(ctx).Infof("[ITSM SLA Activity] Ticket %d breached resolve SLA, marking as BREACHED", ticketId)
-		updateQuery := "UPDATE itsm_process_inst SET sla_status = 'BREACHED' WHERE id = ?"
+		logx.WithContext(ctx).Infof("[ITSM SLA Activity] Ticket %d breached resolve SLA, marking as TIMEOUT", ticketId)
+		updateQuery := "UPDATE itsm_process_inst SET sla_status = 'TIMEOUT' WHERE id = ?"
 		_, _ = a.conn.ExecCtx(ctx, updateQuery, ticketId)
-		return "RESOLVE_BREACHED", nil
+		return "RESOLVE_TIMEOUT", nil
 	}
 
 	return "RESOLVE_OK", nil

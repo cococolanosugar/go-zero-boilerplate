@@ -32,7 +32,14 @@ func (l *RejectTaskLogic) RejectTask(in *itsm.RejectTaskReq) (*itsm.CommonResp, 
 	if err != nil {
 		return nil, xerr.NewErrCode(xerr.ItsmTaskNotFound)
 	}
+	if task.Status != "READY" && task.Status != "CLAIMED" {
+		return nil, xerr.NewErrCode(xerr.ItsmTaskAlreadyDone)
+	}
 
+	// 越权防护：若任务已被指定/认领办理人，仅该办理人或超级管理员(ID: 1)可执行驳回
+	if task.Status == "CLAIMED" && task.AssigneeId.Valid && task.AssigneeId.Int64 != in.UserId && in.UserId != 1 {
+		return nil, xerr.NewErrCode(xerr.Forbidden)
+	}
 	inst, err := l.svcCtx.ProcessInstModel.FindOne(l.ctx, task.InstId)
 	if err != nil {
 		return nil, xerr.NewErrCode(xerr.ItsmInstanceNotFound)

@@ -207,7 +207,7 @@ export const TicketsPage: React.FC = () => {
       dataIndex: 'slaStatus',
       width: 120,
       render: (_, record) => {
-        if (record.slaStatus === 'TIMEOUT') {
+        if (record.slaStatus === 'TIMEOUT' || record.slaStatus === 'BREACHED') {
           return <Badge status="error" text="SLA 已超时" />;
         }
         if (record.slaStatus === 'WARNING') {

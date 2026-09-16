@@ -255,7 +255,7 @@ export const TicketDetailPage: React.FC = () => {
         <Tag
           key="sla"
           color={
-            ticket.slaStatus === 'TIMEOUT'
+            ticket.slaStatus === 'TIMEOUT' || ticket.slaStatus === 'BREACHED'
               ? 'error'
               : ticket.slaStatus === 'WARNING'
               ? 'warning'
