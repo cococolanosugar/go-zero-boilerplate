@@ -28,4 +28,9 @@ if [ "$TABLE" = "all" ] || [ "$TABLE" = "itsm" ]; then
     goctl model mysql ddl -src manifest/sql/itsm_schema.sql -dir app/itsm/model -c --style go_zero
 fi
 
+if [ "$TABLE" = "all" ] || [ "$TABLE" = "devops" ] || [ "$TABLE" = "titan" ]; then
+    echo "Generating Titan DevOps models from manifest/sql/devops_schema.sql..."
+    goctl model mysql ddl -src manifest/sql/devops_schema.sql -dir app/devops/model -c --style go_zero
+fi
+
 echo "Done generating database models!"

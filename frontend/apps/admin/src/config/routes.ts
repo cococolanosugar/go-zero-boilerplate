@@ -236,6 +236,74 @@ export const routes: AppRouteItem[] = [
         ],
       },
 
+      // Titan 研发交付平台 (CI/CD DevOps Engine)
+      {
+        path: "/titan",
+        name: "menu.titan",
+        locale: "menu.titan",
+        icon: "DeploymentUnitOutlined",
+        routes: [
+          {
+            path: "/titan",
+            redirect: "/titan/pipelines",
+          },
+          {
+            path: "/titan/pipelines",
+            name: "menu.titan.pipelines",
+            locale: "menu.titan.pipelines",
+            icon: "PlayCircleOutlined",
+            component: lazy(() => import("../pages/Titan/Pipelines")),
+          },
+          {
+            path: "/titan/pipelines/exec/:id",
+            name: "menu.titan.pipeline.detail",
+            locale: "menu.titan.pipeline.detail",
+            icon: "BranchesOutlined",
+            hideInMenu: true,
+            component: lazy(() => import("../pages/Titan/Pipelines/ExecutionDetail")),
+          },
+          {
+            path: "/titan/clusters",
+            name: "menu.titan.clusters",
+            locale: "menu.titan.clusters",
+            icon: "ClusterOutlined",
+            component: lazy(() => import("../pages/Titan/Clusters")),
+          },
+          {
+            path: "/titan/integrations",
+            name: "menu.titan.integrations",
+            locale: "menu.titan.integrations",
+            icon: "ApiOutlined",
+            component: lazy(() => import("../pages/Titan/Integrations")),
+          },
+        ],
+      },
+      // 兼容 /devops/* 访问路径
+      {
+        path: "/devops",
+        redirect: "/titan/pipelines",
+      },
+      {
+        path: "/devops/pipelines",
+        redirect: "/titan/pipelines",
+      },
+      {
+        path: "/devops/clusters",
+        redirect: "/titan/clusters",
+      },
+      {
+        path: "/devops/integrations",
+        redirect: "/titan/integrations",
+      },
+      {
+        path: "/devops/pipelines/exec/:id",
+        name: "menu.titan.pipeline.detail",
+        locale: "menu.titan.pipeline.detail",
+        icon: "BranchesOutlined",
+        hideInMenu: true,
+        component: lazy(() => import("../pages/Titan/Pipelines/ExecutionDetail")),
+      },
+
       // 企业级系统配置与治理模块 (System Configuration & Settings)
       {
         path: "/system",

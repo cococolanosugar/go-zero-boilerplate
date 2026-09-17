@@ -11,6 +11,187 @@ export function getDashboardOverview(params: components.DashboardReqParams) {
 }
 
 /**
+ * @description 
+ * @param params
+ */
+export function listClusters(params: components.ListClustersReqVOParams) {
+	return webapi.get<components.ListClustersRespVO>(`/api/v1/devops/clusters`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createCluster(req: components.CreateClusterReqVO) {
+	return webapi.post<components.CreateClusterRespVO>(`/api/v1/devops/clusters`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateCluster(params: components.UpdateClusterReqVOParams, req: components.UpdateClusterReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/devops/clusters/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deleteCluster(params: components.DeleteClusterReqVOParams, id: number) {
+	return webapi.delete<null>(`/api/v1/devops/clusters/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listNamespaces(params: components.ListNamespacesReqVOParams, id: number) {
+	return webapi.get<components.ListNamespacesRespVO>(`/api/v1/devops/clusters/${id}/namespaces`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function testCluster(params: components.TestClusterReqVOParams, id: number) {
+	return webapi.post<components.TestClusterRespVO>(`/api/v1/devops/clusters/${id}/test`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listExecutions(params: components.ListExecutionsReqVOParams) {
+	return webapi.get<components.ListExecutionsRespVO>(`/api/v1/devops/executions`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getExecutionDetail(params: components.GetExecutionDetailReqVOParams, id: number) {
+	return webapi.get<components.ExecutionDetailRespVO>(`/api/v1/devops/executions/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function cancelExecution(params: components.CancelExecutionReqVOParams, id: number) {
+	return webapi.post<null>(`/api/v1/devops/executions/${id}/cancel`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listIntegrations(params: components.ListIntegrationsReqVOParams) {
+	return webapi.get<components.ListIntegrationsRespVO>(`/api/v1/devops/integrations`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createIntegration(req: components.CreateIntegrationReqVO) {
+	return webapi.post<components.CreateIntegrationRespVO>(`/api/v1/devops/integrations`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateIntegration(params: components.UpdateIntegrationReqVOParams, req: components.UpdateIntegrationReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/devops/integrations/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deleteIntegration(params: components.DeleteIntegrationReqVOParams, id: number) {
+	return webapi.delete<null>(`/api/v1/devops/integrations/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function testIntegration(params: components.TestIntegrationReqVOParams, id: number) {
+	return webapi.post<components.TestIntegrationRespVO>(`/api/v1/devops/integrations/${id}/test`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listPipelines(params: components.ListPipelinesReqVOParams) {
+	return webapi.get<components.ListPipelinesRespVO>(`/api/v1/devops/pipelines`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createPipeline(req: components.CreatePipelineReqVO) {
+	return webapi.post<components.CreatePipelineRespVO>(`/api/v1/devops/pipelines`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getPipeline(params: components.GetPipelineReqVOParams, id: number) {
+	return webapi.get<components.PipelineVO>(`/api/v1/devops/pipelines/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updatePipeline(params: components.UpdatePipelineReqVOParams, req: components.UpdatePipelineReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/devops/pipelines/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deletePipeline(params: components.DeletePipelineReqVOParams, id: number) {
+	return webapi.delete<null>(`/api/v1/devops/pipelines/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function triggerPipeline(params: components.TriggerPipelineReqVOParams, req: components.TriggerPipelineReqVO, id: number) {
+	return webapi.post<components.TriggerPipelineRespVO>(`/api/v1/devops/pipelines/${id}/trigger`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function approveStep(params: components.ApproveStepReqVOParams, req: components.ApproveStepReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/devops/steps/${id}/approve`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getStepLog(params: components.GetStepLogReqVOParams, id: number) {
+	return webapi.get<components.GetStepLogRespVO>(`/api/v1/devops/steps/${id}/log`, params)
+}
+
+/**
  * @description "获取字典数据项列表"
  * @param params
  */

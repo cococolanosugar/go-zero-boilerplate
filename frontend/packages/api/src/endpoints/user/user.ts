@@ -70,19 +70,6 @@ export const sysDeptListSysDept = (
       options);
     }
   /**
- * @summary 更新部门
- */
-export const sysDeptUpdateSysDept = (
-    sysDeptUpdateSysDeptBody: SysDeptUpdateSysDeptBody,
- options?: SecondParameter<typeof customInstance<SysDeptUpdateSysDept200>>,) => {
-      return customInstance<SysDeptUpdateSysDept200>(
-      {url: `/api/v1/user/dept`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: sysDeptUpdateSysDeptBody
-    },
-      options);
-    }
-  /**
  * @summary 创建新部门
  */
 export const sysDeptCreateSysDept = (
@@ -96,13 +83,15 @@ export const sysDeptCreateSysDept = (
       options);
     }
   /**
- * @summary 获取部门详情
+ * @summary 更新部门
  */
-export const sysDeptGetSysDept = (
-    id: number,
- options?: SecondParameter<typeof customInstance<SysDeptGetSysDept200>>,) => {
-      return customInstance<SysDeptGetSysDept200>(
-      {url: `/api/v1/user/dept/${id}`, method: 'GET'
+export const sysDeptUpdateSysDept = (
+    sysDeptUpdateSysDeptBody: SysDeptUpdateSysDeptBody,
+ options?: SecondParameter<typeof customInstance<SysDeptUpdateSysDept200>>,) => {
+      return customInstance<SysDeptUpdateSysDept200>(
+      {url: `/api/v1/user/dept`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sysDeptUpdateSysDeptBody
     },
       options);
     }
@@ -114,6 +103,17 @@ export const sysDeptDeleteSysDept = (
  options?: SecondParameter<typeof customInstance<SysDeptDeleteSysDept200>>,) => {
       return customInstance<SysDeptDeleteSysDept200>(
       {url: `/api/v1/user/dept/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  /**
+ * @summary 获取部门详情
+ */
+export const sysDeptGetSysDept = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<SysDeptGetSysDept200>>,) => {
+      return customInstance<SysDeptGetSysDept200>(
+      {url: `/api/v1/user/dept/${id}`, method: 'GET'
     },
       options);
     }
@@ -216,19 +216,6 @@ export const sysConfigListSysConfig = (
       options);
     }
   /**
- * @summary 更新参数配置表
- */
-export const sysConfigUpdateSysConfig = (
-    sysConfigUpdateSysConfigBody: SysConfigUpdateSysConfigBody,
- options?: SecondParameter<typeof customInstance<SysConfigUpdateSysConfig200>>,) => {
-      return customInstance<SysConfigUpdateSysConfig200>(
-      {url: `/api/v1/user/sys-config`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: sysConfigUpdateSysConfigBody
-    },
-      options);
-    }
-  /**
  * @summary 创建参数配置表
  */
 export const sysConfigCreateSysConfig = (
@@ -242,13 +229,15 @@ export const sysConfigCreateSysConfig = (
       options);
     }
   /**
- * @summary 获取参数配置表详情
+ * @summary 更新参数配置表
  */
-export const sysConfigGetSysConfig = (
-    id: number,
- options?: SecondParameter<typeof customInstance<SysConfigGetSysConfig200>>,) => {
-      return customInstance<SysConfigGetSysConfig200>(
-      {url: `/api/v1/user/sys-config/${id}`, method: 'GET'
+export const sysConfigUpdateSysConfig = (
+    sysConfigUpdateSysConfigBody: SysConfigUpdateSysConfigBody,
+ options?: SecondParameter<typeof customInstance<SysConfigUpdateSysConfig200>>,) => {
+      return customInstance<SysConfigUpdateSysConfig200>(
+      {url: `/api/v1/user/sys-config`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sysConfigUpdateSysConfigBody
     },
       options);
     }
@@ -264,6 +253,17 @@ export const sysConfigDeleteSysConfig = (
       options);
     }
   /**
+ * @summary 获取参数配置表详情
+ */
+export const sysConfigGetSysConfig = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<SysConfigGetSysConfig200>>,) => {
+      return customInstance<SysConfigGetSysConfig200>(
+      {url: `/api/v1/user/sys-config/${id}`, method: 'GET'
+    },
+      options);
+    }
+  /**
  * @summary 获取通知公告表列表
  */
 export const sysNoticeListSysNotice = (
@@ -272,19 +272,6 @@ export const sysNoticeListSysNotice = (
       return customInstance<SysNoticeListSysNotice200>(
       {url: `/api/v1/user/sys-notice`, method: 'GET',
         params
-    },
-      options);
-    }
-  /**
- * @summary 更新通知公告表
- */
-export const sysNoticeUpdateSysNotice = (
-    sysNoticeUpdateSysNoticeBody: SysNoticeUpdateSysNoticeBody,
- options?: SecondParameter<typeof customInstance<SysNoticeUpdateSysNotice200>>,) => {
-      return customInstance<SysNoticeUpdateSysNotice200>(
-      {url: `/api/v1/user/sys-notice`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: sysNoticeUpdateSysNoticeBody
     },
       options);
     }
@@ -302,13 +289,15 @@ export const sysNoticeCreateSysNotice = (
       options);
     }
   /**
- * @summary 获取通知公告表详情
+ * @summary 更新通知公告表
  */
-export const sysNoticeGetSysNotice = (
-    id: number,
- options?: SecondParameter<typeof customInstance<SysNoticeGetSysNotice200>>,) => {
-      return customInstance<SysNoticeGetSysNotice200>(
-      {url: `/api/v1/user/sys-notice/${id}`, method: 'GET'
+export const sysNoticeUpdateSysNotice = (
+    sysNoticeUpdateSysNoticeBody: SysNoticeUpdateSysNoticeBody,
+ options?: SecondParameter<typeof customInstance<SysNoticeUpdateSysNotice200>>,) => {
+      return customInstance<SysNoticeUpdateSysNotice200>(
+      {url: `/api/v1/user/sys-notice`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sysNoticeUpdateSysNoticeBody
     },
       options);
     }
@@ -324,6 +313,17 @@ export const sysNoticeDeleteSysNotice = (
       options);
     }
   /**
+ * @summary 获取通知公告表详情
+ */
+export const sysNoticeGetSysNotice = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<SysNoticeGetSysNotice200>>,) => {
+      return customInstance<SysNoticeGetSysNotice200>(
+      {url: `/api/v1/user/sys-notice/${id}`, method: 'GET'
+    },
+      options);
+    }
+  /**
  * @summary 获取岗位信息表列表
  */
 export const sysPostListSysPost = (
@@ -332,19 +332,6 @@ export const sysPostListSysPost = (
       return customInstance<SysPostListSysPost200>(
       {url: `/api/v1/user/sys-post`, method: 'GET',
         params
-    },
-      options);
-    }
-  /**
- * @summary 更新岗位信息表
- */
-export const sysPostUpdateSysPost = (
-    sysPostUpdateSysPostBody: SysPostUpdateSysPostBody,
- options?: SecondParameter<typeof customInstance<SysPostUpdateSysPost200>>,) => {
-      return customInstance<SysPostUpdateSysPost200>(
-      {url: `/api/v1/user/sys-post`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: sysPostUpdateSysPostBody
     },
       options);
     }
@@ -362,13 +349,15 @@ export const sysPostCreateSysPost = (
       options);
     }
   /**
- * @summary 获取岗位信息表详情
+ * @summary 更新岗位信息表
  */
-export const sysPostGetSysPost = (
-    id: number,
- options?: SecondParameter<typeof customInstance<SysPostGetSysPost200>>,) => {
-      return customInstance<SysPostGetSysPost200>(
-      {url: `/api/v1/user/sys-post/${id}`, method: 'GET'
+export const sysPostUpdateSysPost = (
+    sysPostUpdateSysPostBody: SysPostUpdateSysPostBody,
+ options?: SecondParameter<typeof customInstance<SysPostUpdateSysPost200>>,) => {
+      return customInstance<SysPostUpdateSysPost200>(
+      {url: `/api/v1/user/sys-post`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sysPostUpdateSysPostBody
     },
       options);
     }
@@ -383,16 +372,27 @@ export const sysPostDeleteSysPost = (
     },
       options);
     }
+  /**
+ * @summary 获取岗位信息表详情
+ */
+export const sysPostGetSysPost = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<SysPostGetSysPost200>>,) => {
+      return customInstance<SysPostGetSysPost200>(
+      {url: `/api/v1/user/sys-post/${id}`, method: 'GET'
+    },
+      options);
+    }
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
     type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 export type SysDeptListSysDeptResult = NonNullable<Awaited<ReturnType<typeof sysDeptListSysDept>>>
-export type SysDeptUpdateSysDeptResult = NonNullable<Awaited<ReturnType<typeof sysDeptUpdateSysDept>>>
 export type SysDeptCreateSysDeptResult = NonNullable<Awaited<ReturnType<typeof sysDeptCreateSysDept>>>
-export type SysDeptGetSysDeptResult = NonNullable<Awaited<ReturnType<typeof sysDeptGetSysDept>>>
+export type SysDeptUpdateSysDeptResult = NonNullable<Awaited<ReturnType<typeof sysDeptUpdateSysDept>>>
 export type SysDeptDeleteSysDeptResult = NonNullable<Awaited<ReturnType<typeof sysDeptDeleteSysDept>>>
+export type SysDeptGetSysDeptResult = NonNullable<Awaited<ReturnType<typeof sysDeptGetSysDept>>>
 export type UserGetUserInfoResult = NonNullable<Awaited<ReturnType<typeof userGetUserInfo>>>
 export type UserLoginResult = NonNullable<Awaited<ReturnType<typeof userLogin>>>
 export type UserNoticeGetMyNoticeFeedResult = NonNullable<Awaited<ReturnType<typeof userNoticeGetMyNoticeFeed>>>
@@ -401,17 +401,17 @@ export type UserNoticeMarkAllNoticesReadResult = NonNullable<Awaited<ReturnType<
 export type UserGetUserProfileResult = NonNullable<Awaited<ReturnType<typeof userGetUserProfile>>>
 export type UserRegisterResult = NonNullable<Awaited<ReturnType<typeof userRegister>>>
 export type SysConfigListSysConfigResult = NonNullable<Awaited<ReturnType<typeof sysConfigListSysConfig>>>
-export type SysConfigUpdateSysConfigResult = NonNullable<Awaited<ReturnType<typeof sysConfigUpdateSysConfig>>>
 export type SysConfigCreateSysConfigResult = NonNullable<Awaited<ReturnType<typeof sysConfigCreateSysConfig>>>
-export type SysConfigGetSysConfigResult = NonNullable<Awaited<ReturnType<typeof sysConfigGetSysConfig>>>
+export type SysConfigUpdateSysConfigResult = NonNullable<Awaited<ReturnType<typeof sysConfigUpdateSysConfig>>>
 export type SysConfigDeleteSysConfigResult = NonNullable<Awaited<ReturnType<typeof sysConfigDeleteSysConfig>>>
+export type SysConfigGetSysConfigResult = NonNullable<Awaited<ReturnType<typeof sysConfigGetSysConfig>>>
 export type SysNoticeListSysNoticeResult = NonNullable<Awaited<ReturnType<typeof sysNoticeListSysNotice>>>
-export type SysNoticeUpdateSysNoticeResult = NonNullable<Awaited<ReturnType<typeof sysNoticeUpdateSysNotice>>>
 export type SysNoticeCreateSysNoticeResult = NonNullable<Awaited<ReturnType<typeof sysNoticeCreateSysNotice>>>
-export type SysNoticeGetSysNoticeResult = NonNullable<Awaited<ReturnType<typeof sysNoticeGetSysNotice>>>
+export type SysNoticeUpdateSysNoticeResult = NonNullable<Awaited<ReturnType<typeof sysNoticeUpdateSysNotice>>>
 export type SysNoticeDeleteSysNoticeResult = NonNullable<Awaited<ReturnType<typeof sysNoticeDeleteSysNotice>>>
+export type SysNoticeGetSysNoticeResult = NonNullable<Awaited<ReturnType<typeof sysNoticeGetSysNotice>>>
 export type SysPostListSysPostResult = NonNullable<Awaited<ReturnType<typeof sysPostListSysPost>>>
-export type SysPostUpdateSysPostResult = NonNullable<Awaited<ReturnType<typeof sysPostUpdateSysPost>>>
 export type SysPostCreateSysPostResult = NonNullable<Awaited<ReturnType<typeof sysPostCreateSysPost>>>
-export type SysPostGetSysPostResult = NonNullable<Awaited<ReturnType<typeof sysPostGetSysPost>>>
+export type SysPostUpdateSysPostResult = NonNullable<Awaited<ReturnType<typeof sysPostUpdateSysPost>>>
 export type SysPostDeleteSysPostResult = NonNullable<Awaited<ReturnType<typeof sysPostDeleteSysPost>>>
+export type SysPostGetSysPostResult = NonNullable<Awaited<ReturnType<typeof sysPostGetSysPost>>>

@@ -57,10 +57,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	w.RegisterWorkflow(workflows.DailyReportWorkflow)
 	w.RegisterWorkflow(workflows.HelloWorldWorkflow)
 	w.RegisterWorkflow(workflows.ItsmSlaMonitorWorkflow)
+	w.RegisterWorkflow(workflows.TitanPipelineWorkflow)
 
 	taskActs := activities.NewTaskActivities()
 	w.RegisterActivity(taskActs)
 	w.RegisterActivity(activities.NewItsmSlaActivities(sqlConn))
+	w.RegisterActivity(activities.NewDevopsPipelineActivities(sqlConn))
 
 	return &ServiceContext{
 		Config:                c,

@@ -30,6 +30,13 @@ export interface AdminProfileResp {
 	menus: Array<SysMenuItem>
 }
 
+export interface ApproveStepReqVO {
+	approved: boolean
+	comment?: string
+}
+export interface ApproveStepReqVOParams {
+}
+
 export interface ApproveTaskReqVO {
 	taskId: number
 	opinion?: string
@@ -60,6 +67,11 @@ export interface AsyncTaskItem {
 	updateTime: string
 }
 
+export interface CancelExecutionReqVO {
+}
+export interface CancelExecutionReqVOParams {
+}
+
 export interface CancelTicketReqVO {
 	reason?: string
 }
@@ -80,6 +92,59 @@ export interface ClaimTaskReqVO {
 	taskId: number
 }
 export interface ClaimTaskReqVOParams {
+}
+
+export interface ClusterVO {
+	id: number
+	name: string
+	env: string
+	apiEndpoint: string
+	status: string
+	version: string
+	description: string
+	createdBy: number
+	createTime: string
+	updateTime: string
+}
+
+export interface CreateClusterReqVO {
+	name: string
+	env: string
+	apiEndpoint?: string
+	kubeconfig: string
+	description?: string
+}
+
+export interface CreateClusterRespVO {
+	id: number
+}
+
+export interface CreateIntegrationReqVO {
+	name: string
+	category: string
+	authType: string
+	config: string
+	description?: string
+}
+
+export interface CreateIntegrationRespVO {
+	id: number
+}
+
+export interface CreatePipelineReqVO {
+	name: string
+	displayName: string
+	category?: string
+	gitRepo?: string
+	gitBranch?: string
+	stages: string
+	params?: string
+	triggers?: string
+	description?: string
+}
+
+export interface CreatePipelineRespVO {
+	id: number
 }
 
 export interface CreateProcessDefReqVO {
@@ -221,6 +286,21 @@ export interface DashboardSystemStats {
 	successRate: number
 }
 
+export interface DeleteClusterReqVO {
+}
+export interface DeleteClusterReqVOParams {
+}
+
+export interface DeleteIntegrationReqVO {
+}
+export interface DeleteIntegrationReqVOParams {
+}
+
+export interface DeletePipelineReqVO {
+}
+export interface DeletePipelineReqVOParams {
+}
+
 export interface DeleteSysPortalNavReq {
 }
 export interface DeleteSysPortalNavReqParams {
@@ -242,6 +322,30 @@ export interface DeleteTaskResp {
 export interface DeployProcessDefReqVO {
 }
 export interface DeployProcessDefReqVOParams {
+}
+
+export interface ExecutionDetailRespVO {
+	execution: ExecutionVO
+	steps: Array<StepExecVO>
+}
+
+export interface ExecutionVO {
+	id: number
+	pipelineId: number
+	pipelineName: string
+	execNo: string
+	triggerType: string
+	triggerBy: number
+	gitBranch: string
+	gitCommit: string
+	runtimeParams: string
+	status: string
+	workflowId: string
+	startTime: string
+	endTime: string
+	durationMs: number
+	artifacts: string
+	createTime: string
 }
 
 export interface FileUploadResp {
@@ -267,6 +371,11 @@ export interface GetDictDataByTypeResp {
 	list: Array<SysDictDataItem>
 }
 
+export interface GetExecutionDetailReqVO {
+}
+export interface GetExecutionDetailReqVOParams {
+}
+
 export interface GetMyNoticeFeedReq {
 }
 export interface GetMyNoticeFeedReqParams {
@@ -276,6 +385,11 @@ export interface GetMyNoticeFeedReqParams {
 export interface GetMyNoticeFeedResp {
 	totalUnread: number
 	list: Array<NoticeFeedItem>
+}
+
+export interface GetPipelineReqVO {
+}
+export interface GetPipelineReqVOParams {
 }
 
 export interface GetPortalNavListReq {
@@ -292,6 +406,18 @@ export interface GetPortalNavListResp {
 export interface GetProcessDefReq {
 }
 export interface GetProcessDefReqParams {
+}
+
+export interface GetStepLogReqVO {
+}
+export interface GetStepLogReqVOParams {
+	offset: number
+}
+
+export interface GetStepLogRespVO {
+	content: string
+	nextOffset: number
+	isEnd: boolean
 }
 
 export interface GetSysMenuTreeResp {
@@ -318,6 +444,68 @@ export interface GetTicketTrajectoryReqVO {
 export interface GetTicketTrajectoryReqVOParams {
 }
 
+export interface IntegrationVO {
+	id: number
+	name: string
+	category: string
+	authType: string
+	config: string
+	status: number
+	description: string
+	createdBy: number
+	createTime: string
+	updateTime: string
+}
+
+export interface ListClustersReqVO {
+}
+export interface ListClustersReqVOParams {
+	env?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListClustersRespVO {
+	total: number
+	list: Array<ClusterVO>
+}
+
+export interface ListExecutionsReqVO {
+}
+export interface ListExecutionsReqVOParams {
+	pipelineId?: number
+	status?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListExecutionsRespVO {
+	total: number
+	list: Array<ExecutionVO>
+}
+
+export interface ListIntegrationsReqVO {
+}
+export interface ListIntegrationsReqVOParams {
+	category?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListIntegrationsRespVO {
+	total: number
+	list: Array<IntegrationVO>
+}
+
+export interface ListNamespacesReqVO {
+}
+export interface ListNamespacesReqVOParams {
+}
+
+export interface ListNamespacesRespVO {
+	namespaces: Array<string>
+}
+
 export interface ListOnlineSessionsReq {
 }
 export interface ListOnlineSessionsReqParams {
@@ -330,6 +518,20 @@ export interface ListOnlineSessionsReqParams {
 export interface ListOnlineSessionsResp {
 	total: number
 	list: Array<OnlineSessionItem>
+}
+
+export interface ListPipelinesReqVO {
+}
+export interface ListPipelinesReqVOParams {
+	category?: string
+	keyword?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListPipelinesRespVO {
+	total: number
+	list: Array<PipelineVO>
 }
 
 export interface ListProcessDefsReq {
@@ -585,6 +787,23 @@ export interface OnlineSessionItem {
 	isCurrent: boolean
 }
 
+export interface PipelineVO {
+	id: number
+	name: string
+	displayName: string
+	category: string
+	gitRepo: string
+	gitBranch: string
+	stages: string
+	params: string
+	triggers: string
+	status: number
+	description: string
+	createdBy: number
+	createTime: string
+	updateTime: string
+}
+
 export interface PortalNavDTO {
 	id: number
 	title: string
@@ -651,6 +870,21 @@ export interface SlaPolicyVO {
 	responseLimitMin: number
 	resolveLimitMin: number
 	warnThresholdPct: number
+}
+
+export interface StepExecVO {
+	id: number
+	execId: number
+	stageId: string
+	stepId: string
+	stepName: string
+	stepType: string
+	status: string
+	logPath: string
+	errorMsg: string
+	startTime: string
+	endTime: string
+	durationMs: number
 }
 
 export interface SysApiItem {
@@ -836,6 +1070,27 @@ export interface TaskVO {
 	createTime: string
 }
 
+export interface TestClusterReqVO {
+}
+export interface TestClusterReqVOParams {
+}
+
+export interface TestClusterRespVO {
+	success: boolean
+	version: string
+	message: string
+}
+
+export interface TestIntegrationReqVO {
+}
+export interface TestIntegrationReqVOParams {
+}
+
+export interface TestIntegrationRespVO {
+	success: boolean
+	message: string
+}
+
 export interface TicketDetailRespVO {
 	ticket: TicketVO
 	formDataJson: string
@@ -889,11 +1144,59 @@ export interface TransferTaskReqVO {
 export interface TransferTaskReqVOParams {
 }
 
+export interface TriggerPipelineReqVO {
+	triggerType?: string
+	gitBranch?: string
+	gitCommit?: string
+	runtimeParams?: string
+}
+export interface TriggerPipelineReqVOParams {
+}
+
+export interface TriggerPipelineRespVO {
+	execId: number
+	execNo: string
+}
+
+export interface UpdateClusterReqVO {
+	name?: string
+	env?: string
+	apiEndpoint?: string
+	kubeconfig?: string
+	description?: string
+}
+export interface UpdateClusterReqVOParams {
+}
+
+export interface UpdateIntegrationReqVO {
+	name?: string
+	authType?: string
+	config?: string
+	status?: number
+	description?: string
+}
+export interface UpdateIntegrationReqVOParams {
+}
+
 export interface UpdatePersonalProfileReq {
 	realName: string
 	mobile?: string
 	email?: string
 	avatar?: string
+}
+
+export interface UpdatePipelineReqVO {
+	displayName?: string
+	category?: string
+	gitRepo?: string
+	gitBranch?: string
+	stages?: string
+	params?: string
+	triggers?: string
+	status?: number
+	description?: string
+}
+export interface UpdatePipelineReqVOParams {
 }
 
 export interface UpdateProcessDefReqVO {

@@ -50,6 +50,17 @@ export const systemTaskCreateTask = (
       options);
     }
   /**
+ * @summary 删除异步任务
+ */
+export const systemTaskDeleteTask = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<SystemTaskDeleteTask200>>,) => {
+      return customInstance<SystemTaskDeleteTask200>(
+      {url: `/api/v1/system/task/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  /**
  * @summary 获取异步任务详情
  */
 export const systemTaskGetTask = (
@@ -71,17 +82,6 @@ export const systemTaskUpdateTask = (
       {url: `/api/v1/system/task/${id}`, method: 'PUT',
       headers: {'Content-Type': 'application/json', },
       data: systemTaskUpdateTaskBody
-    },
-      options);
-    }
-  /**
- * @summary 删除异步任务
- */
-export const systemTaskDeleteTask = (
-    id: number,
- options?: SecondParameter<typeof customInstance<SystemTaskDeleteTask200>>,) => {
-      return customInstance<SystemTaskDeleteTask200>(
-      {url: `/api/v1/system/task/${id}`, method: 'DELETE'
     },
       options);
     }
@@ -117,8 +117,8 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 
 export type SystemTaskListTasksResult = NonNullable<Awaited<ReturnType<typeof systemTaskListTasks>>>
 export type SystemTaskCreateTaskResult = NonNullable<Awaited<ReturnType<typeof systemTaskCreateTask>>>
+export type SystemTaskDeleteTaskResult = NonNullable<Awaited<ReturnType<typeof systemTaskDeleteTask>>>
 export type SystemTaskGetTaskResult = NonNullable<Awaited<ReturnType<typeof systemTaskGetTask>>>
 export type SystemTaskUpdateTaskResult = NonNullable<Awaited<ReturnType<typeof systemTaskUpdateTask>>>
-export type SystemTaskDeleteTaskResult = NonNullable<Awaited<ReturnType<typeof systemTaskDeleteTask>>>
 export type SystemTaskRunTaskOnceResult = NonNullable<Awaited<ReturnType<typeof systemTaskRunTaskOnce>>>
 export type SystemTaskToggleTaskStatusResult = NonNullable<Awaited<ReturnType<typeof systemTaskToggleTaskStatus>>>

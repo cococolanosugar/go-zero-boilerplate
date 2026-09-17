@@ -1,4 +1,5 @@
 export * from './dashboard/dashboard';
+export * from './devops/devops';
 export * from './dict/dict';
 export * from './itsm/itsm';
 export * from './navigation/navigation';

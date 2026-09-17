@@ -1,0 +1,379 @@
+syntax = "v1"
+
+info (
+	title:   "Titan DevOps API"
+	desc:    "Titan 研发交付平台、流水线编排、K8s 集群与 Jenkins 集成接口"
+	author:  "antigravity"
+	version: "v1"
+)
+
+type (
+	// ----------------------
+	// 1. 集成凭证 VO
+	// ----------------------
+	IntegrationVO {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		Category    string `json:"category"`
+		AuthType    string `json:"authType"`
+		Config      string `json:"config"`
+		Status      int32  `json:"status"`
+		Description string `json:"description"`
+		CreatedBy   int64  `json:"createdBy"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListIntegrationsReqVO {
+		Category string `form:"category,optional"`
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=20"`
+	}
+
+	ListIntegrationsRespVO {
+		Total int64           `json:"total"`
+		List  []IntegrationVO `json:"list"`
+	}
+
+	CreateIntegrationReqVO {
+		Name        string `json:"name"`
+		Category    string `json:"category"`
+		AuthType    string `json:"authType"`
+		Config      string `json:"config"`
+		Description string `json:"description,optional"`
+	}
+
+	CreateIntegrationRespVO {
+		Id int64 `json:"id"`
+	}
+
+	UpdateIntegrationReqVO {
+		Id          int64  `path:"id"`
+		Name        string `json:"name,optional"`
+		AuthType    string `json:"authType,optional"`
+		Config      string `json:"config,optional"`
+		Status      int32  `json:"status,optional"`
+		Description string `json:"description,optional"`
+	}
+
+	DeleteIntegrationReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestIntegrationReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestIntegrationRespVO {
+		Success bool   `json:"success"`
+		Message string `json:"message"`
+	}
+
+	// ----------------------
+	// 2. K8s 集群 VO
+	// ----------------------
+	ClusterVO {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		Env         string `json:"env"`
+		ApiEndpoint string `json:"apiEndpoint"`
+		Status      string `json:"status"`
+		Version     string `json:"version"`
+		Description string `json:"description"`
+		CreatedBy   int64  `json:"createdBy"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListClustersReqVO {
+		Env      string `form:"env,optional"`
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=20"`
+	}
+
+	ListClustersRespVO {
+		Total int64       `json:"total"`
+		List  []ClusterVO `json:"list"`
+	}
+
+	CreateClusterReqVO {
+		Name        string `json:"name"`
+		Env         string `json:"env"`
+		ApiEndpoint string `json:"apiEndpoint,optional"`
+		Kubeconfig  string `json:"kubeconfig"`
+		Description string `json:"description,optional"`
+	}
+
+	CreateClusterRespVO {
+		Id int64 `json:"id"`
+	}
+
+	UpdateClusterReqVO {
+		Id          int64  `path:"id"`
+		Name        string `json:"name,optional"`
+		Env         string `json:"env,optional"`
+		ApiEndpoint string `json:"apiEndpoint,optional"`
+		Kubeconfig  string `json:"kubeconfig,optional"`
+		Description string `json:"description,optional"`
+	}
+
+	DeleteClusterReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestClusterReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestClusterRespVO {
+		Success bool   `json:"success"`
+		Version string `json:"version"`
+		Message string `json:"message"`
+	}
+
+	ListNamespacesReqVO {
+		Id int64 `path:"id"`
+	}
+
+	ListNamespacesRespVO {
+		Namespaces []string `json:"namespaces"`
+	}
+
+	// ----------------------
+	// 3. 流水线定义 VO
+	// ----------------------
+	PipelineVO {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		DisplayName string `json:"displayName"`
+		Category    string `json:"category"`
+		GitRepo     string `json:"gitRepo"`
+		GitBranch   string `json:"gitBranch"`
+		Stages      string `json:"stages"`
+		Params      string `json:"params"`
+		Triggers    string `json:"triggers"`
+		Status      int32  `json:"status"`
+		Description string `json:"description"`
+		CreatedBy   int64  `json:"createdBy"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListPipelinesReqVO {
+		Category string `form:"category,optional"`
+		Keyword  string `form:"keyword,optional"`
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=20"`
+	}
+
+	ListPipelinesRespVO {
+		Total int64        `json:"total"`
+		List  []PipelineVO `json:"list"`
+	}
+
+	GetPipelineReqVO {
+		Id int64 `path:"id"`
+	}
+
+	CreatePipelineReqVO {
+		Name        string `json:"name"`
+		DisplayName string `json:"displayName"`
+		Category    string `json:"category,optional,default=microservice"`
+		GitRepo     string `json:"gitRepo,optional"`
+		GitBranch   string `json:"gitBranch,optional,default=master"`
+		Stages      string `json:"stages"`
+		Params      string `json:"params,optional,default=[]"`
+		Triggers    string `json:"triggers,optional,default={}"`
+		Description string `json:"description,optional"`
+	}
+
+	CreatePipelineRespVO {
+		Id int64 `json:"id"`
+	}
+
+	UpdatePipelineReqVO {
+		Id          int64  `path:"id"`
+		DisplayName string `json:"displayName,optional"`
+		Category    string `json:"category,optional"`
+		GitRepo     string `json:"gitRepo,optional"`
+		GitBranch   string `json:"gitBranch,optional"`
+		Stages      string `json:"stages,optional"`
+		Params      string `json:"params,optional"`
+		Triggers    string `json:"triggers,optional"`
+		Status      int32  `json:"status,optional"`
+		Description string `json:"description,optional"`
+	}
+
+	DeletePipelineReqVO {
+		Id int64 `path:"id"`
+	}
+
+	// ----------------------
+	// 4. 执行控制 VO
+	// ----------------------
+	TriggerPipelineReqVO {
+		Id            int64  `path:"id"`
+		TriggerType   string `json:"triggerType,optional,default=MANUAL"`
+		GitBranch     string `json:"gitBranch,optional"`
+		GitCommit     string `json:"gitCommit,optional"`
+		RuntimeParams string `json:"runtimeParams,optional,default={}"`
+	}
+
+	TriggerPipelineRespVO {
+		ExecId int64  `json:"execId"`
+		ExecNo string `json:"execNo"`
+	}
+
+	ExecutionVO {
+		Id            int64  `json:"id"`
+		PipelineId    int64  `json:"pipelineId"`
+		PipelineName  string `json:"pipelineName"`
+		ExecNo        string `json:"execNo"`
+		TriggerType   string `json:"triggerType"`
+		TriggerBy     int64  `json:"triggerBy"`
+		GitBranch     string `json:"gitBranch"`
+		GitCommit     string `json:"gitCommit"`
+		RuntimeParams string `json:"runtimeParams"`
+		Status        string `json:"status"`
+		WorkflowId    string `json:"workflowId"`
+		StartTime     string `json:"startTime"`
+		EndTime       string `json:"endTime"`
+		DurationMs    int64  `json:"durationMs"`
+		Artifacts     string `json:"artifacts"`
+		CreateTime    string `json:"createTime"`
+	}
+
+	StepExecVO {
+		Id         int64  `json:"id"`
+		ExecId     int64  `json:"execId"`
+		StageId    string `json:"stageId"`
+		StepId     string `json:"stepId"`
+		StepName   string `json:"stepName"`
+		StepType   string `json:"stepType"`
+		Status     string `json:"status"`
+		LogPath    string `json:"logPath"`
+		ErrorMsg   string `json:"errorMsg"`
+		StartTime  string `json:"startTime"`
+		EndTime    string `json:"endTime"`
+		DurationMs int64  `json:"durationMs"`
+	}
+
+	ListExecutionsReqVO {
+		PipelineId int64  `form:"pipelineId,optional"`
+		Status     string `form:"status,optional"`
+		Page       int32  `form:"page,default=1"`
+		PageSize   int32  `form:"pageSize,default=20"`
+	}
+
+	ListExecutionsRespVO {
+		Total int64         `json:"total"`
+		List  []ExecutionVO `json:"list"`
+	}
+
+	GetExecutionDetailReqVO {
+		Id int64 `path:"id"`
+	}
+
+	ExecutionDetailRespVO {
+		Execution ExecutionVO  `json:"execution"`
+		Steps     []StepExecVO `json:"steps"`
+	}
+
+	GetStepLogReqVO {
+		Id     int64 `path:"id"`
+		Offset int64 `form:"offset,default=0"`
+	}
+
+	GetStepLogRespVO {
+		Content    string `json:"content"`
+		NextOffset int64  `json:"nextOffset"`
+		IsEnd      bool   `json:"isEnd"`
+	}
+
+	ApproveStepReqVO {
+		Id       int64  `path:"id"`
+		Approved bool   `json:"approved"`
+		Comment  string `json:"comment,optional"`
+	}
+
+	CancelExecutionReqVO {
+		Id int64 `path:"id"`
+	}
+)
+
+@server (
+	jwt:    Auth
+	group:  devops
+	prefix: /api/v1/devops
+)
+service gateway {
+	// 集成管理
+	@handler listIntegrations
+	get /integrations (ListIntegrationsReqVO) returns (ListIntegrationsRespVO)
+
+	@handler createIntegration
+	post /integrations (CreateIntegrationReqVO) returns (CreateIntegrationRespVO)
+
+	@handler updateIntegration
+	put /integrations/:id (UpdateIntegrationReqVO)
+
+	@handler deleteIntegration
+	delete /integrations/:id (DeleteIntegrationReqVO)
+
+	@handler testIntegration
+	post /integrations/:id/test (TestIntegrationReqVO) returns (TestIntegrationRespVO)
+
+	// K8s 集群治理
+	@handler listClusters
+	get /clusters (ListClustersReqVO) returns (ListClustersRespVO)
+
+	@handler createCluster
+	post /clusters (CreateClusterReqVO) returns (CreateClusterRespVO)
+
+	@handler updateCluster
+	put /clusters/:id (UpdateClusterReqVO)
+
+	@handler deleteCluster
+	delete /clusters/:id (DeleteClusterReqVO)
+
+	@handler testCluster
+	post /clusters/:id/test (TestClusterReqVO) returns (TestClusterRespVO)
+
+	@handler listNamespaces
+	get /clusters/:id/namespaces (ListNamespacesReqVO) returns (ListNamespacesRespVO)
+
+	// 流水线模型定义
+	@handler listPipelines
+	get /pipelines (ListPipelinesReqVO) returns (ListPipelinesRespVO)
+
+	@handler getPipeline
+	get /pipelines/:id (GetPipelineReqVO) returns (PipelineVO)
+
+	@handler createPipeline
+	post /pipelines (CreatePipelineReqVO) returns (CreatePipelineRespVO)
+
+	@handler updatePipeline
+	put /pipelines/:id (UpdatePipelineReqVO)
+
+	@handler deletePipeline
+	delete /pipelines/:id (DeletePipelineReqVO)
+
+	// 运行实例与执行控制
+	@handler triggerPipeline
+	post /pipelines/:id/trigger (TriggerPipelineReqVO) returns (TriggerPipelineRespVO)
+
+	@handler listExecutions
+	get /executions (ListExecutionsReqVO) returns (ListExecutionsRespVO)
+
+	@handler getExecutionDetail
+	get /executions/:id (GetExecutionDetailReqVO) returns (ExecutionDetailRespVO)
+
+	@handler getStepLog
+	get /steps/:id/log (GetStepLogReqVO) returns (GetStepLogRespVO)
+
+	@handler approveStep
+	post /steps/:id/approve (ApproveStepReqVO)
+
+	@handler cancelExecution
+	post /executions/:id/cancel (CancelExecutionReqVO)
+}

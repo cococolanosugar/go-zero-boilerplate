@@ -3,11 +3,56 @@
 
 package types
 
+type ClusterVO struct {
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Env         string `json:"env"`
+	ApiEndpoint string `json:"apiEndpoint"`
+	Status      string `json:"status"`
+	Version     string `json:"version"`
+	Description string `json:"description"`
+	CreatedBy   int64  `json:"createdBy"`
+	CreateTime  string `json:"createTime"`
+	UpdateTime  string `json:"updateTime"`
+}
+
 type DashboardSystemStats struct {
 	TotalUsers     int64   `json:"totalUsers"`
 	ActiveTasks    int64   `json:"activeTasks"`
 	CompletedTasks int64   `json:"completedTasks"`
 	SuccessRate    float64 `json:"successRate"`
+}
+
+type ExecutionVO struct {
+	Id            int64  `json:"id"`
+	PipelineId    int64  `json:"pipelineId"`
+	PipelineName  string `json:"pipelineName"`
+	ExecNo        string `json:"execNo"`
+	TriggerType   string `json:"triggerType"`
+	TriggerBy     int64  `json:"triggerBy"`
+	GitBranch     string `json:"gitBranch"`
+	GitCommit     string `json:"gitCommit"`
+	RuntimeParams string `json:"runtimeParams"`
+	Status        string `json:"status"`
+	WorkflowId    string `json:"workflowId"`
+	StartTime     string `json:"startTime"`
+	EndTime       string `json:"endTime"`
+	DurationMs    int64  `json:"durationMs"`
+	Artifacts     string `json:"artifacts"`
+	CreateTime    string `json:"createTime"`
+}
+
+type IntegrationVO struct {
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Category    string `json:"category"`
+	AuthType    string `json:"authType"`
+	Config      string `json:"config"`
+	Status      int32  `json:"status"`
+	Description string `json:"description"`
+	CreatedBy   int64  `json:"createdBy"`
+	CreateTime  string `json:"createTime"`
+	UpdateTime  string `json:"updateTime"`
 }
 
 type NoticeFeedItem struct {
@@ -44,6 +89,21 @@ type SlaPolicyVO struct {
 	ResponseLimitMin int32  `json:"responseLimitMin"`
 	ResolveLimitMin  int32  `json:"resolveLimitMin"`
 	WarnThresholdPct int32  `json:"warnThresholdPct"`
+}
+
+type StepExecVO struct {
+	Id         int64  `json:"id"`
+	ExecId     int64  `json:"execId"`
+	StageId    string `json:"stageId"`
+	StepId     string `json:"stepId"`
+	StepName   string `json:"stepName"`
+	StepType   string `json:"stepType"`
+	Status     string `json:"status"`
+	LogPath    string `json:"logPath"`
+	ErrorMsg   string `json:"errorMsg"`
+	StartTime  string `json:"startTime"`
+	EndTime    string `json:"endTime"`
+	DurationMs int64  `json:"durationMs"`
 }
 
 type SysApiItem struct {

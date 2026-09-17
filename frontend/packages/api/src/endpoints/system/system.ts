@@ -204,19 +204,6 @@ export const systemListSysRoles = (
       options);
     }
   /**
- * @summary 更新角色
- */
-export const systemUpdateSysRole = (
-    systemUpdateSysRoleBody: SystemUpdateSysRoleBody,
- options?: SecondParameter<typeof customInstance<SystemUpdateSysRole200>>,) => {
-      return customInstance<SystemUpdateSysRole200>(
-      {url: `/api/v1/system/roles`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: systemUpdateSysRoleBody
-    },
-      options);
-    }
-  /**
  * @summary 创建角色
  */
 export const systemCreateSysRole = (
@@ -226,6 +213,19 @@ export const systemCreateSysRole = (
       {url: `/api/v1/system/roles`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: systemCreateSysRoleBody
+    },
+      options);
+    }
+  /**
+ * @summary 更新角色
+ */
+export const systemUpdateSysRole = (
+    systemUpdateSysRoleBody: SystemUpdateSysRoleBody,
+ options?: SecondParameter<typeof customInstance<SystemUpdateSysRole200>>,) => {
+      return customInstance<SystemUpdateSysRole200>(
+      {url: `/api/v1/system/roles`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: systemUpdateSysRoleBody
     },
       options);
     }
@@ -266,19 +266,6 @@ export const systemListSysUsers = (
       options);
     }
   /**
- * @summary 更新员工信息
- */
-export const systemUpdateSysUser = (
-    systemUpdateSysUserBody: SystemUpdateSysUserBody,
- options?: SecondParameter<typeof customInstance<SystemUpdateSysUser200>>,) => {
-      return customInstance<SystemUpdateSysUser200>(
-      {url: `/api/v1/system/users`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: systemUpdateSysUserBody
-    },
-      options);
-    }
-  /**
  * @summary 创建新员工
  */
 export const systemCreateSysUser = (
@@ -288,6 +275,19 @@ export const systemCreateSysUser = (
       {url: `/api/v1/system/users`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: systemCreateSysUserBody
+    },
+      options);
+    }
+  /**
+ * @summary 更新员工信息
+ */
+export const systemUpdateSysUser = (
+    systemUpdateSysUserBody: SystemUpdateSysUserBody,
+ options?: SecondParameter<typeof customInstance<SystemUpdateSysUser200>>,) => {
+      return customInstance<SystemUpdateSysUser200>(
+      {url: `/api/v1/system/users`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: systemUpdateSysUserBody
     },
       options);
     }
@@ -320,11 +320,11 @@ export type SystemChangePersonalPasswordResult = NonNullable<Awaited<ReturnType<
 export type SystemGetAdminProfileResult = NonNullable<Awaited<ReturnType<typeof systemGetAdminProfile>>>
 export type SystemUpdatePersonalProfileResult = NonNullable<Awaited<ReturnType<typeof systemUpdatePersonalProfile>>>
 export type SystemListSysRolesResult = NonNullable<Awaited<ReturnType<typeof systemListSysRoles>>>
-export type SystemUpdateSysRoleResult = NonNullable<Awaited<ReturnType<typeof systemUpdateSysRole>>>
 export type SystemCreateSysRoleResult = NonNullable<Awaited<ReturnType<typeof systemCreateSysRole>>>
+export type SystemUpdateSysRoleResult = NonNullable<Awaited<ReturnType<typeof systemUpdateSysRole>>>
 export type SystemAssignRolePermissionsResult = NonNullable<Awaited<ReturnType<typeof systemAssignRolePermissions>>>
 export type SystemDeleteSysRoleResult = NonNullable<Awaited<ReturnType<typeof systemDeleteSysRole>>>
 export type SystemListSysUsersResult = NonNullable<Awaited<ReturnType<typeof systemListSysUsers>>>
-export type SystemUpdateSysUserResult = NonNullable<Awaited<ReturnType<typeof systemUpdateSysUser>>>
 export type SystemCreateSysUserResult = NonNullable<Awaited<ReturnType<typeof systemCreateSysUser>>>
+export type SystemUpdateSysUserResult = NonNullable<Awaited<ReturnType<typeof systemUpdateSysUser>>>
 export type SystemDeleteSysUserResult = NonNullable<Awaited<ReturnType<typeof systemDeleteSysUser>>>

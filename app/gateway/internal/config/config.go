@@ -29,6 +29,7 @@ type Config struct {
 	UserRpc   zrpc.RpcClientConf
 	WorkerRpc zrpc.RpcClientConf
 	ItsmRpc   zrpc.RpcClientConf
+	DevopsRpc zrpc.RpcClientConf
 
 	// Casdoor SSO 认证配置
 	Casdoor struct {

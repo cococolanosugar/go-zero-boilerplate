@@ -68,6 +68,14 @@ run-worker-rpc:
 run-itsm-rpc:
     cd app/itsm/rpc && go run itsm.go -f etc/itsm.yaml
 
+# 启动 devops-rpc 研发交付微服务 (gRPC 8086，Titan CI/CD 引擎)
+run-devops-rpc:
+    cd app/devops/rpc && go run devops.go -f etc/devops.yaml
+
+# 生成 devops-rpc 代码
+gen-devops-rpc:
+    cd app/devops/rpc && goctl rpc protoc devops.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+
 # 启动前端管理后台 (Vite 3001，默认本地 8888 网关)
 run-admin:
     cd frontend && pnpm dev:admin

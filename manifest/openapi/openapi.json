@@ -87,6 +87,1442 @@
         ]
       }
     },
+    "/api/v1/devops/clusters": {
+      "get": {
+        "operationId": "devopsListClusters",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "env",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "apiEndpoint": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "env": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "env",
+                          "apiEndpoint",
+                          "status",
+                          "version",
+                          "description",
+                          "createdBy",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listClusters",
+        "tags": [
+          "devops"
+        ]
+      },
+      "post": {
+        "operationId": "devopsCreateCluster",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "apiEndpoint": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "env": {
+                    "type": "string"
+                  },
+                  "kubeconfig": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "env",
+                  "kubeconfig"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createCluster",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/clusters/{id}": {
+      "delete": {
+        "operationId": "devopsDeleteCluster",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deleteCluster",
+        "tags": [
+          "devops"
+        ]
+      },
+      "put": {
+        "operationId": "devopsUpdateCluster",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "apiEndpoint": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "env": {
+                    "type": "string"
+                  },
+                  "kubeconfig": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateCluster",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/clusters/{id}/namespaces": {
+      "get": {
+        "operationId": "devopsListNamespaces",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "namespaces": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listNamespaces",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/clusters/{id}/test": {
+      "post": {
+        "operationId": "devopsTestCluster",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "version": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "testCluster",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/executions": {
+      "get": {
+        "operationId": "devopsListExecutions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pipelineId",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "artifacts": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "durationMs": {
+                            "type": "integer"
+                          },
+                          "endTime": {
+                            "type": "string"
+                          },
+                          "execNo": {
+                            "type": "string"
+                          },
+                          "gitBranch": {
+                            "type": "string"
+                          },
+                          "gitCommit": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "pipelineId": {
+                            "type": "integer"
+                          },
+                          "pipelineName": {
+                            "type": "string"
+                          },
+                          "runtimeParams": {
+                            "type": "string"
+                          },
+                          "startTime": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "triggerBy": {
+                            "type": "integer"
+                          },
+                          "triggerType": {
+                            "type": "string"
+                          },
+                          "workflowId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "pipelineId",
+                          "pipelineName",
+                          "execNo",
+                          "triggerType",
+                          "triggerBy",
+                          "gitBranch",
+                          "gitCommit",
+                          "runtimeParams",
+                          "status",
+                          "workflowId",
+                          "startTime",
+                          "endTime",
+                          "durationMs",
+                          "artifacts",
+                          "createTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listExecutions",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/executions/{id}": {
+      "get": {
+        "operationId": "devopsGetExecutionDetail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "execution": {
+                      "properties": {
+                        "artifacts": {
+                          "type": "string"
+                        },
+                        "createTime": {
+                          "type": "string"
+                        },
+                        "durationMs": {
+                          "type": "integer"
+                        },
+                        "endTime": {
+                          "type": "string"
+                        },
+                        "execNo": {
+                          "type": "string"
+                        },
+                        "gitBranch": {
+                          "type": "string"
+                        },
+                        "gitCommit": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "pipelineId": {
+                          "type": "integer"
+                        },
+                        "pipelineName": {
+                          "type": "string"
+                        },
+                        "runtimeParams": {
+                          "type": "string"
+                        },
+                        "startTime": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "triggerBy": {
+                          "type": "integer"
+                        },
+                        "triggerType": {
+                          "type": "string"
+                        },
+                        "workflowId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "pipelineId",
+                        "pipelineName",
+                        "execNo",
+                        "triggerType",
+                        "triggerBy",
+                        "gitBranch",
+                        "gitCommit",
+                        "runtimeParams",
+                        "status",
+                        "workflowId",
+                        "startTime",
+                        "endTime",
+                        "durationMs",
+                        "artifacts",
+                        "createTime"
+                      ],
+                      "type": "object"
+                    },
+                    "steps": {
+                      "items": {
+                        "properties": {
+                          "durationMs": {
+                            "type": "integer"
+                          },
+                          "endTime": {
+                            "type": "string"
+                          },
+                          "errorMsg": {
+                            "type": "string"
+                          },
+                          "execId": {
+                            "type": "integer"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "logPath": {
+                            "type": "string"
+                          },
+                          "stageId": {
+                            "type": "string"
+                          },
+                          "startTime": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "stepId": {
+                            "type": "string"
+                          },
+                          "stepName": {
+                            "type": "string"
+                          },
+                          "stepType": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "execId",
+                          "stageId",
+                          "stepId",
+                          "stepName",
+                          "stepType",
+                          "status",
+                          "logPath",
+                          "errorMsg",
+                          "startTime",
+                          "endTime",
+                          "durationMs"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getExecutionDetail",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/executions/{id}/cancel": {
+      "post": {
+        "operationId": "devopsCancelExecution",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "cancelExecution",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/integrations": {
+      "get": {
+        "operationId": "devopsListIntegrations",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "authType": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "config": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "category",
+                          "authType",
+                          "config",
+                          "status",
+                          "description",
+                          "createdBy",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listIntegrations",
+        "tags": [
+          "devops"
+        ]
+      },
+      "post": {
+        "operationId": "devopsCreateIntegration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "authType": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "config": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "category",
+                  "authType",
+                  "config"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createIntegration",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/integrations/{id}": {
+      "delete": {
+        "operationId": "devopsDeleteIntegration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deleteIntegration",
+        "tags": [
+          "devops"
+        ]
+      },
+      "put": {
+        "operationId": "devopsUpdateIntegration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "authType": {
+                    "type": "string"
+                  },
+                  "config": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateIntegration",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/integrations/{id}/test": {
+      "post": {
+        "operationId": "devopsTestIntegration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "testIntegration",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/pipelines": {
+      "get": {
+        "operationId": "devopsListPipelines",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "category": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "gitBranch": {
+                            "type": "string"
+                          },
+                          "gitRepo": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "params": {
+                            "type": "string"
+                          },
+                          "stages": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "triggers": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "displayName",
+                          "category",
+                          "gitRepo",
+                          "gitBranch",
+                          "stages",
+                          "params",
+                          "triggers",
+                          "status",
+                          "description",
+                          "createdBy",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listPipelines",
+        "tags": [
+          "devops"
+        ]
+      },
+      "post": {
+        "operationId": "devopsCreatePipeline",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "category": {
+                    "default": "microservice",
+                    "example": "microservice",
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "gitBranch": {
+                    "default": "master",
+                    "example": "master",
+                    "type": "string"
+                  },
+                  "gitRepo": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "params": {
+                    "default": "[]",
+                    "example": "[]",
+                    "type": "string"
+                  },
+                  "stages": {
+                    "type": "string"
+                  },
+                  "triggers": {
+                    "default": "{}",
+                    "example": "{}",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "displayName",
+                  "stages"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createPipeline",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/pipelines/{id}": {
+      "delete": {
+        "operationId": "devopsDeletePipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deletePipeline",
+        "tags": [
+          "devops"
+        ]
+      },
+      "get": {
+        "operationId": "devopsGetPipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "category": {
+                      "type": "string"
+                    },
+                    "createTime": {
+                      "type": "string"
+                    },
+                    "createdBy": {
+                      "type": "integer"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "gitBranch": {
+                      "type": "string"
+                    },
+                    "gitRepo": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "params": {
+                      "type": "string"
+                    },
+                    "stages": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "triggers": {
+                      "type": "string"
+                    },
+                    "updateTime": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getPipeline",
+        "tags": [
+          "devops"
+        ]
+      },
+      "put": {
+        "operationId": "devopsUpdatePipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "gitBranch": {
+                    "type": "string"
+                  },
+                  "gitRepo": {
+                    "type": "string"
+                  },
+                  "params": {
+                    "type": "string"
+                  },
+                  "stages": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "integer"
+                  },
+                  "triggers": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updatePipeline",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/pipelines/{id}/trigger": {
+      "post": {
+        "operationId": "devopsTriggerPipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "gitBranch": {
+                    "type": "string"
+                  },
+                  "gitCommit": {
+                    "type": "string"
+                  },
+                  "runtimeParams": {
+                    "default": "{}",
+                    "example": "{}",
+                    "type": "string"
+                  },
+                  "triggerType": {
+                    "default": "MANUAL",
+                    "example": "MANUAL",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "execId": {
+                      "type": "integer"
+                    },
+                    "execNo": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "triggerPipeline",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/steps/{id}/approve": {
+      "post": {
+        "operationId": "devopsApproveStep",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "approved": {
+                    "type": "boolean"
+                  },
+                  "comment": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "approved"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "approveStep",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
+    "/api/v1/devops/steps/{id}/log": {
+      "get": {
+        "operationId": "devopsGetStepLog",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": true,
+            "schema": {
+              "default": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "isEnd": {
+                      "type": "boolean"
+                    },
+                    "nextOffset": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getStepLog",
+        "tags": [
+          "devops"
+        ]
+      }
+    },
     "/api/v1/itsm/process-defs": {
       "get": {
         "operationId": "itsmListProcessDefs",
@@ -6429,7 +7865,7 @@
       }
     }
   },
-  "x-date": "2026-09-16 00:19:15",
+  "x-date": "2026-09-18 00:50:10",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

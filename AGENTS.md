@@ -49,14 +49,23 @@ go-zero-boilerplate/
 │   │       ├── pb/ & worker.proto
 │   │       └── worker.go          # Worker RPC + Temporal 统一启动入口
 │   │
-│   └── itsm/                      # 【ITSM 流程微服务】纯 gRPC (端口 8084，BPMN 2.0 + SLA 策略中心)
+│   ├── itsm/                      # 【ITSM 流程微服务】纯 gRPC (端口 8084，BPMN 2.0 + SLA 策略中心)
+│   │   ├── rpc/
+│   │   │   ├── client/itsm/       # 供网关调用的 RPC Client
+│   │   │   ├── etc/itsm.yaml
+│   │   │   ├── internal/          # engine (BPMN 2.0 解析), config, logic, server, svc
+│   │   │   ├── pb/ & itsm.proto
+│   │   │   └── itsm.go            # ITSM RPC 统一启动入口
+│   │   └── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
+│   │
+│   └── devops/                    # 【DevOps 交付微服务】纯 gRPC (端口 8086，Titan CI/CD 引擎、K8s & Helm 编排)
 │       ├── rpc/
-│       │   ├── client/itsm/       # 供网关调用的 RPC Client
-│       │   ├── etc/itsm.yaml
-│       │   ├── internal/          # engine (BPMN 2.0 解析), config, logic, server, svc
-│       │   ├── pb/ & itsm.proto
-│       │   └── itsm.go            # ITSM RPC 统一启动入口
-│       └── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
+│       │   ├── client/devops/     # 供网关调用的 RPC Client
+│       │   ├── etc/devops.yaml
+│       │   ├── internal/          # jenkins, k8s, config, logic, server, svc
+│       │   ├── pb/ & devops.proto
+│       │   └── devops.go          # DevOps RPC 统一启动入口
+│       └── model/                 # DevOps 5 张数据表持久层 (integration, cluster, pipeline, pipeline_exec, step_exec)
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -310,6 +319,24 @@ go-zero-boilerplate/
   * **管理员后台 (`apps/admin`)**：`/itsm/process-defs`（基于 BPMN.js 2.0 的可视化拖拽设计器、生命周期发布与 Schema 绑定）与 `/itsm/tickets`（ProTable 全量大盘、待办认领池、转派员工检索器与工单审批台）。
   * **员工自助服务台 (`apps/portal`)**：`/desk`（面向全体普通员工的一站式服务目录大厅、自适应即时提单抽屉、我的申请进度看板、流转轨迹时间线与主管快捷审批）。
 
+### 3.14 基于 Titan 的云原生研发交付与 CI/CD 自动化编排 (Titan DevOps Engine & Multi-Cluster Delivery)
+* **架构定位与设计哲学**：
+  * **DevOps 核心微服务 (`app/devops/rpc`)**：纯 gRPC 微服务（端口 8086），承载凭证纳管（Git/Jenkins/Harbor）、Kubernetes 多集群状态与命名空间发现、流水线模型定义与执行调度。
+  * **数据持久层 (`app/devops/model`)**：承载 `devops_integration`、`devops_cluster`、`devops_pipeline`、`devops_pipeline_exec`、`devops_pipeline_step_exec` 5 张核心数据表。
+  * **AES-GCM 工业级密钥安全 (`pkg/cryptox`)**：所有外部系统 API Token、Jenkins 密码、Kubeconfig 凭据入库均强制通过 SHA-256 派生密钥进行 256 位 GCM 认证加密存储；对外接口与审计日志统一执行星号脱敏防护。
+* **双模部署与发布引擎 (Dual Release Engine: Helm & Server-Side Apply)**：
+  * **Helm 3 Release Engine (`internal/k8s/helm.go`)**：基于官方 Helm Go SDK 动态加载内存级 `RESTClientGetter`，支持 Chart 升级、回滚、Values 字典深度合并（MergeValues）与幂等安装（`UpgradeInstall`）。
+  * **原生 YAML 模板与动态 Apply (`internal/k8s/cluster.go` & `template.go`)**：基于 `text/template` 动态渲染变量占位符，通过 client-go dynamic client 进行 Dry-run 预校验与 Server-Side Apply（`FieldManager = "titan-devops"`），并深度探测 Pod / Deployment 就绪探针状态。
+* **Jenkins 委托调度与实时增量日志流 (`internal/jenkins`)**：
+  * 支持对已有 Jenkins 存量资产的无缝兼容：CrumbIssuer 认证、携带动态参数触发 Job、Queue 队列等待转 Build 编号、轮询构建状态与基于 Byte Offset 的 Progressive 控制台增量日志流拉取。
+* **Temporal 分布式流水线 DAG 与人工质量门禁 (`app/worker/rpc/internal/workflows`)**：
+  * 流水线编排基于 `TitanPipelineWorkflow` 驱动，顺序拓扑调度 Stage 与 Step，遇到 `APPROVAL` 门禁节点时通过 Temporal Signal 信号挂起等待（支持超时自动驳回与快速审批），保障生产发布质量防线。
+* **前端可视化管理与控制台 (`apps/admin`)**：
+  * `/titan/clusters`：Kubernetes 多集群纳管、健康心跳探测与命名空间动态浏览抽屉。
+  * `/titan/integrations`：GitLab/Jenkins/Harbor/SonarQube 凭据纳管与连通性自测。
+  * `/titan/pipelines`：流水线 DAG 可视化设计器（Stages & Steps 增删拖拽）、一键运行（Branch/Commit/Params 参数传递）与全局执行流水大盘。
+  * `/titan/pipelines/exec/:id`：执行拓扑步骤卡片、暗黑实时终端日志流与人工审批卡点决策。
+
 ---
 
 ## 4. 常用命令速查 (Cheat Sheet)
@@ -330,6 +357,7 @@ just gen-gateway
 just gen-rpc user
 just gen-rpc worker
 just gen-rpc itsm
+just gen-rpc devops
 
 # 创建新微服务 RPC 模块 (自动应用项目模板并置入 app/<service>/rpc)
 just new-rpc <service>
@@ -350,6 +378,7 @@ just gen-ts
 just run-user-rpc     # 监听 127.0.0.1:8080
 just run-worker-rpc   # 监听 127.0.0.1:8082 (同时启动内置 Temporal Worker)
 just run-itsm-rpc     # 监听 127.0.0.1:8084 (ITSM BPMN 流程引擎)
+just run-devops-rpc   # 监听 127.0.0.1:8086 (Titan CI/CD 研发交付微服务)
 
 # 2. 启动统一网关
 just run-gateway      # 监听 0.0.0.0:8888
