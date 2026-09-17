@@ -29,6 +29,10 @@ import {
   DatabaseOutlined,
   ClusterOutlined,
   AppstoreOutlined,
+  DeploymentUnitOutlined,
+  CustomerServiceOutlined,
+  AuditOutlined,
+  FundProjectionScreenOutlined,
 } from "@ant-design/icons";
 import {
   ProTable,
@@ -71,6 +75,10 @@ const ICON_OPTIONS = [
   { label: "Setting (系统配置)", value: "SettingOutlined", icon: <SettingOutlined /> },
   { label: "Database (数据库/持久化)", value: "DatabaseOutlined", icon: <DatabaseOutlined /> },
   { label: "Cluster (集群/分布式)", value: "ClusterOutlined", icon: <ClusterOutlined /> },
+  { label: "DeploymentUnit (研发交付/CI/CD)", value: "DeploymentUnitOutlined", icon: <DeploymentUnitOutlined /> },
+  { label: "CustomerService (服务台/ITSM)", value: "CustomerServiceOutlined", icon: <CustomerServiceOutlined /> },
+  { label: "Audit (流程工单/审核)", value: "AuditOutlined", icon: <AuditOutlined /> },
+  { label: "FundProjectionScreen (监控大盘/指标)", value: "FundProjectionScreenOutlined", icon: <FundProjectionScreenOutlined /> },
   { label: "Appstore (应用中心/默认)", value: "AppstoreOutlined", icon: <AppstoreOutlined /> },
 ];
 
@@ -118,6 +126,14 @@ export const renderNavIcon = (icon?: string, size = 18) => {
       return <DatabaseOutlined style={{ fontSize: size }} />;
     case "ClusterOutlined":
       return <ClusterOutlined style={{ fontSize: size }} />;
+    case "DeploymentUnitOutlined":
+      return <DeploymentUnitOutlined style={{ fontSize: size }} />;
+    case "CustomerServiceOutlined":
+      return <CustomerServiceOutlined style={{ fontSize: size }} />;
+    case "AuditOutlined":
+      return <AuditOutlined style={{ fontSize: size }} />;
+    case "FundProjectionScreenOutlined":
+      return <FundProjectionScreenOutlined style={{ fontSize: size }} />;
     default:
       return <AppstoreOutlined style={{ fontSize: size }} />;
   }

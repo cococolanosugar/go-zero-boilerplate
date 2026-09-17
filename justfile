@@ -148,6 +148,7 @@ docker-build:
     docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
     docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
     docker build -t go-zero-itsm-rpc:latest -f app/itsm/rpc/Dockerfile .
+    docker build -t go-zero-devops-rpc:latest -f app/devops/rpc/Dockerfile .
     docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
     docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 

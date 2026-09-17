@@ -152,6 +152,25 @@ services:
     networks:
       - go-zero-net
 
+  devops-rpc:
+    build:
+      context: ../../../
+      dockerfile: app/devops/rpc/Dockerfile
+    container_name: go-zero-devops-rpc
+    environment:
+      DEVOPS_RPC_LISTEN_ON: "0.0.0.0:8086"
+      MYSQL_DSN: "root:root@tcp(mysql:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+      REDIS_HOST: "redis:6379"
+      NACOS_HOST: "nacos"
+      NACOS_PORT: 8848
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - go-zero-net
+
   # -------------------------------------------------------------
   # 3. 统一接入网关 (HTTP Gateway / BFF)
   # -------------------------------------------------------------
@@ -166,6 +185,7 @@ services:
       USER_RPC_HOST: "user-rpc:8080"
       WORKER_RPC_HOST: "worker-rpc:8082"
       ITSM_RPC_HOST: "itsm-rpc:8084"
+      DEVOPS_RPC_HOST: "devops-rpc:8086"
       GATEWAY_HOST: "0.0.0.0"
       GATEWAY_PORT: 8888
     ports:
@@ -174,6 +194,7 @@ services:
       - user-rpc
       - worker-rpc
       - itsm-rpc
+      - devops-rpc
     networks:
       - go-zero-net
 

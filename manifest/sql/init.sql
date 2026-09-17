@@ -450,6 +450,7 @@ CREATE TABLE IF NOT EXISTS `sys_portal_nav` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `title` varchar(64) NOT NULL DEFAULT '' COMMENT '站点显示名称',
   `category` varchar(32) NOT NULL DEFAULT 'default' COMMENT '所属分类',
+  `env` varchar(32) NOT NULL DEFAULT 'common' COMMENT '部署环境/分组: common(通用), prod(生产), pre(预发), test(测试), dev(开发)',
   `url` varchar(512) NOT NULL DEFAULT '' COMMENT '目标网址(支持 {HOST} 动态占位符)',
   `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '图标(Antd图标名或图片URL)',
   `description` varchar(255) NOT NULL DEFAULT '' COMMENT '站点描述说明',
@@ -461,19 +462,24 @@ CREATE TABLE IF NOT EXISTS `sys_portal_nav` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_category_status_sort` (`category`, `status`, `sort`),
+  KEY `idx_env_status_sort` (`env`, `status`, `sort`),
   KEY `idx_status_sort` (`status`, `sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='门户网址导航站点数据源配置表';
 
-INSERT IGNORE INTO `sys_portal_nav` (`id`, `title`, `category`, `url`, `icon`, `description`, `tags`, `sort`, `target`, `status`)
+INSERT IGNORE INTO `sys_portal_nav` (`id`, `title`, `category`, `env`, `url`, `icon`, `description`, `tags`, `sort`, `target`, `status`)
 VALUES
-  (1, 'Temporal Web 控制台', '任务引擎', 'http://{HOST}:8233', 'CloudServerOutlined', '分布式工作流与异步任务编排执行可视化监控面板', 'Temporal,Saga,Cron', 100, '_blank', 1),
-  (2, 'Nacos 服务注册与配置中心', '服务治理', 'http://{HOST}:8848/nacos', 'SafetyCertificateOutlined', '微服务注册、健康心跳探测与动态配置下发管理控制台', 'Nacos,gRPC,Registry', 90, '_blank', 1),
-  (3, 'Casdoor 统一身份认证中心', '身份认证', 'http://{HOST}:8000', 'KeyOutlined', '企业级 OAuth 2.0 / OIDC 单点登录与统一账号通行证管理中心', 'IAM,OIDC,SSO', 80, '_blank', 1),
-  (4, '网关 Swagger / OpenAPI 文档', '开发文档', 'http://{HOST}:8888/swagger', 'BookOutlined', '微服务统一网关对外暴露的全部 HTTP RESTful 接口契约与在线交互文档', 'BFF,RESTful,API', 70, '_blank', 1),
-  (5, '企业管理后台 (Admin)', '核心门户', 'http://{HOST}:3001', 'DashboardOutlined', '基于 Ant Design Pro 规范构建的企业级中后台高密系统治理工作台', 'React,Admin,RBAC', 60, '_blank', 1),
-  (6, '官方技术门户 (Portal)', '核心门户', 'http://{HOST}:3000', 'RocketOutlined', '面向全体开发者与客户的全栈技术门户、微服务全景与联调工作台', 'Portal,TopNav,Vite', 50, '_blank', 1),
-  (7, '企业 IT 自助服务台', '核心门户', 'http://{HOST}:3000/desk', 'CustomerServiceOutlined', '面向全体企业员工的一站式服务目录大厅、自助提单与审批流转时间线跟踪', 'ITSM,BPMN,SLA', 45, '_self', 1),
-  (8, 'BPMN 流程设计与工单治理中心', '核心门户', 'http://{HOST}:3001/itsm/tickets', 'AuditOutlined', '企业级 BPMN 2.0 流程模型可视化建模设计、服务目录发布与全量工单运维工作台', 'BPMN,Process,Admin', 40, '_blank', 1);
+  (1, 'Temporal Web 控制台', '任务引擎', 'dev', 'http://{HOST}:8233', 'CloudServerOutlined', '分布式工作流与异步任务编排执行可视化监控面板', 'Temporal,Saga,Cron', 100, '_blank', 1),
+  (2, 'Nacos 服务注册与配置中心', '服务治理', 'dev', 'http://{HOST}:8848/nacos', 'SafetyCertificateOutlined', '微服务注册、健康心跳探测与动态配置下发管理控制台', 'Nacos,gRPC,Registry', 90, '_blank', 1),
+  (3, 'Casdoor 统一身份认证中心', '身份认证', 'common', 'http://{HOST}:8000', 'KeyOutlined', '企业级 OAuth 2.0 / OIDC 单点登录与统一账号通行证管理中心', 'IAM,OIDC,SSO', 80, '_blank', 1),
+  (4, '网关 Swagger / OpenAPI 文档', '开发文档', 'dev', 'http://{HOST}:8888/swagger', 'BookOutlined', '微服务统一网关对外暴露的全部 HTTP RESTful 接口契约与在线交互文档', 'BFF,RESTful,API', 70, '_blank', 1),
+  (5, '企业管理后台 (Admin)', '核心门户', 'common', 'http://{HOST}:3001', 'DashboardOutlined', '基于 Ant Design Pro 规范构建的企业级中后台高密系统治理工作台', 'React,Admin,RBAC', 60, '_blank', 1),
+  (6, '官方技术门户 (Portal)', '核心门户', 'common', 'http://{HOST}:3000', 'RocketOutlined', '面向全体开发者与客户的全栈技术门户、微服务全景与联调工作台', 'Portal,TopNav,Vite', 50, '_blank', 1),
+  (7, '企业 IT 自助服务台', '核心门户', 'common', 'http://{HOST}:3000/desk', 'CustomerServiceOutlined', '面向全体企业员工的一站式服务目录大厅、自助提单与审批流转时间线跟踪', 'ITSM,BPMN,SLA', 45, '_self', 1),
+  (8, 'BPMN 流程设计与工单治理中心', '核心门户', 'common', 'http://{HOST}:3001/itsm/tickets', 'AuditOutlined', '企业级 BPMN 2.0 流程模型可视化建模设计、服务目录发布与全量工单运维工作台', 'BPMN,Process,Admin', 40, '_blank', 1),
+  (9, 'Titan 研发交付平台 (CI/CD)', '核心门户', 'common', 'http://{HOST}:3001/titan/pipelines', 'DeploymentUnitOutlined', '云原生持续交付、源码构建、镜像制作与 Kubernetes Helm/YAML 自动化发布引擎', 'DevOps,CI/CD,K8s,Helm,Jenkins', 38, '_blank', 1),
+  (10, 'Nacos 生产配置中心 (Prod)', '服务治理', 'prod', 'https://nacos.prod.example.com', 'SafetyCertificateOutlined', '生产微服务配置热更新与核心注册心跳高可用集群', 'Nacos,Prod,HA', 95, '_blank', 1),
+  (11, 'Temporal 任务中心 (Test)', '任务引擎', 'test', 'http://temporal.test.example.com:8233', 'CloudServerOutlined', '测试环境分布式异步编排与 Saga 联调控制台', 'Temporal,Test,Workflow', 85, '_blank', 1),
+  (12, 'Prometheus 生产监控 (Prod)', '监控运维', 'prod', 'https://prometheus.prod.example.com', 'FundProjectionScreenOutlined', '生产微服务指标采集、报警看板与运行态监控大盘', 'Monitor,Prometheus,Alert', 75, '_blank', 1);
 
 -- ====================================================================
 -- 14. ITSM 服务管理与 BPMN 流程引擎数据表 (itsm_*)

@@ -1,4 +1,4 @@
-.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-itsm-rpc gen-ts gen-openapi gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-itsm-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
+.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-itsm-rpc gen-devops-rpc gen-ts gen-openapi gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-itsm-rpc run-devops-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
 
 SERVICE ?= user
 TABLE ?= all
@@ -157,6 +157,8 @@ ai-index:
 docker-build:
 	docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
 	docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
+	docker build -t go-zero-itsm-rpc:latest -f app/itsm/rpc/Dockerfile .
+	docker build -t go-zero-devops-rpc:latest -f app/devops/rpc/Dockerfile .
 	docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
 	docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 

@@ -35,6 +35,9 @@ import {
   AppstoreOutlined,
   ExportOutlined,
   ReloadOutlined,
+  DeploymentUnitOutlined,
+  CustomerServiceOutlined,
+  AuditOutlined,
 } from "@ant-design/icons";
 import { PageContainer } from "@ant-design/pro-components";
 import { getPortalNavList, type PortalNavDTO } from "@zero/api";
@@ -129,6 +132,12 @@ const renderNavIcon = (icon?: string, category = "", size = 22) => {
       return <DatabaseOutlined style={iconStyle} />;
     case "ClusterOutlined":
       return <ClusterOutlined style={iconStyle} />;
+    case "DeploymentUnitOutlined":
+      return <DeploymentUnitOutlined style={iconStyle} />;
+    case "CustomerServiceOutlined":
+      return <CustomerServiceOutlined style={iconStyle} />;
+    case "AuditOutlined":
+      return <AuditOutlined style={iconStyle} />;
     default:
       return <AppstoreOutlined style={iconStyle} />;
   }
