@@ -2,7 +2,7 @@
 
 基于 [go-zero](https://github.com/zeromicro/go-zero) 与 **pnpm workspace** 搭建的工业级 **全栈 Monorepo（单仓多微服务 + 多端前端）** 架构。
 
-* **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`worker`）收缩为纯 gRPC 通信。
+* **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`worker`、`itsm`）收缩为纯 gRPC 通信。
 * **前端**：采用 `pnpm workspace` 统一管理后台（`admin`，基于 Ant Design 6.6.2 + Pro Components 2.8.10）与前台门户（`portal`，基于 Ant Design 6.6.2），通过 `goctl api ts` 自动生成统一的 `@zero/api` TypeScript SDK，契约一键直通！
 * **认证**：深度集成 [Casdoor](https://casdoor.org) 企业级统一身份认证（IAM/SSO），支持 OAuth 2.0 / OIDC 授权码安全置换与微服务 JIT 即时自动拨备建档，与传统账号密码双模并存。
 
@@ -14,7 +14,7 @@
 go-zero-boilerplate/
 ├── app/                           # 【后端 Go 微服务体系】
 │   ├── gateway/                   # 【统一对外 HTTP 网关 / BFF 层】(端口 8888)
-│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api, itsm.api)
 │   │   ├── etc/gateway.yaml       # 网关配置
 │   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
 │   │   └── gateway.go             # 网关启动 main 入口
@@ -23,10 +23,14 @@ go-zero-boilerplate/
 │   │   ├── rpc/                   # gRPC 核心服务及对外 client/user/
 │   │   └── model/                 # 数据持久层
 │   │
-│   └── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
-│       ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
-│       ├── rpc/                   # gRPC 核心服务及对外 client/worker/
-│       └── model/                 # 异步任务持久层
+│   ├── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
+│   │   ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
+│   │   ├── rpc/                   # gRPC 核心服务及对外 client/worker/
+│   │   └── model/                 # 异步任务持久层
+│   │
+│   └── itsm/                      # 【ITSM 流程与工单微服务】纯 gRPC (端口 8084，BPMN 2.0 引擎与 SLA 调度)
+│       ├── rpc/                   # gRPC 核心服务及对外 client/itsm/
+│       └── model/                 # 流程定义、动态表单、工单流转持久层
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -69,6 +73,9 @@ just run-user-rpc
 # 启动异步任务微服务 (gRPC :8082，内置 Temporal Worker)
 just run-worker-rpc
 
+# 启动 ITSM 流程微服务 (gRPC :8084，工单与审批流引擎)
+just run-itsm-rpc
+
 # 启动统一网关 (HTTP :8888)
 just run-gateway
 ```
@@ -98,6 +105,7 @@ just gen-ts
 | 生成网关后端代码 | `just gen-gateway` | `make gen-gateway` |
 | 生成 user RPC | `just gen-rpc user` | `make gen-user-rpc` |
 | 生成 worker RPC | `just gen-rpc worker` | `make gen-worker-rpc` |
+| 生成 itsm RPC | `just gen-rpc itsm` | `make gen-itsm-rpc` |
 | **创建新微服务 RPC 模块** | `just new-rpc <service>` | `make new-rpc SERVICE=<service>` |
 | **创建新微服务 API 模块** | `just new-api <service>` | `make new-api SERVICE=<service>` |
 | **生成持久层 Model 代码** | `just gen-model` | `make gen-model` |
@@ -107,6 +115,7 @@ just gen-ts
 | 启动网关 | `just run-gateway` | `make run-gateway` |
 | 启动 user-rpc | `just run-user-rpc` | `make run-user-rpc` |
 | 启动 worker-rpc | `just run-worker-rpc` | `make run-worker-rpc` |
+| 启动 itsm-rpc | `just run-itsm-rpc` | `make run-itsm-rpc` |
 | 启动前端 Admin | `just run-admin` | `make run-admin` |
 | 启动前端 Portal | `just run-portal` | `make run-portal` |
 | 构建前端全部产物 | `just build-frontend` | `make build-frontend` |
@@ -216,7 +225,14 @@ just gen-ts
 * **企业级安全防线**：拦截危险可执行后缀（`.exe`、`.bat`、`.sh`、`.php` 等），限制最大尺寸，防范路径穿越。
 * **设计专篇**：详见 [通用对象存储与文件上传服务设计方案](doc/design/2026-09-12-universal-storage-service/README.md)。
 
-### 6. 脚手架一键重命名与工程定制 (Rebranding)
+### 6. 企业级 ITSM 流程与工单治理引擎 (ITSM Process & Service Desk Engine)
+* **微服务纯 gRPC 隔离**：`app/itsm/rpc`（端口 `:8084`），支持高并发任务审批、工单流转、委派转办（TransferTask）与会签流转。
+* **双端协同体验（Dual Persona）**：
+  * **管理后台 (`apps/admin`)**：面向流程管理员与服务台坐席（`/itsm/process-defs` 流程设计编排、`/itsm/tickets` 全局工单监管运维大盘）。
+  * **前台门户 (`apps/portal`)**：面向全员普通员工的企业 IT 自助服务台（`/desk`），提供服务目录卡片检索、动态表单即时申请、工单进度时间轴与催办/撤单。
+* **设计专篇**：详见 [企业级 ITSM 流程与工单治理系统架构设计方案](doc/design/2026-09-17-itsm/README.md)。
+
+### 7. 脚手架一键重命名与工程定制 (Rebranding)
 只需一条命令即可将本脚手架一键定制为任意新项目名：
 ```bash
 # Windows

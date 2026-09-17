@@ -34,6 +34,13 @@ func (l *TransferTaskLogic) TransferTask(in *itsm.TransferTaskReq) (*itsm.Common
 		return nil, xerr.NewErrCode(xerr.ItsmTaskNotFound)
 	}
 
+	if task.Status != "READY" && task.Status != "CLAIMED" {
+		return nil, xerr.NewErrMsg("当前任务已处于办结或终止状态，不可转派")
+	}
+	if task.Status == "CLAIMED" && task.AssigneeId.Valid && task.AssigneeId.Int64 != in.UserId && in.UserId != 1 {
+		return nil, xerr.NewErrCode(xerr.Forbidden)
+	}
+
 	now := time.Now()
 	task.AssigneeId = sql.NullInt64{Int64: in.TargetUserId, Valid: true}
 	task.Status = "READY" // 转办后处于待目标人认领/办理状态

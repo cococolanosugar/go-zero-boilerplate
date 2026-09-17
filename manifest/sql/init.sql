@@ -471,7 +471,9 @@ VALUES
   (3, 'Casdoor 统一身份认证中心', '身份认证', 'http://{HOST}:8000', 'KeyOutlined', '企业级 OAuth 2.0 / OIDC 单点登录与统一账号通行证管理中心', 'IAM,OIDC,SSO', 80, '_blank', 1),
   (4, '网关 Swagger / OpenAPI 文档', '开发文档', 'http://{HOST}:8888/swagger', 'BookOutlined', '微服务统一网关对外暴露的全部 HTTP RESTful 接口契约与在线交互文档', 'BFF,RESTful,API', 70, '_blank', 1),
   (5, '企业管理后台 (Admin)', '核心门户', 'http://{HOST}:3001', 'DashboardOutlined', '基于 Ant Design Pro 规范构建的企业级中后台高密系统治理工作台', 'React,Admin,RBAC', 60, '_blank', 1),
-  (6, '官方技术门户 (Portal)', '核心门户', 'http://{HOST}:3000', 'RocketOutlined', '面向全体开发者与客户的全栈技术门户、微服务全景与联调工作台', 'Portal,TopNav,Vite', 50, '_blank', 1);
+  (6, '官方技术门户 (Portal)', '核心门户', 'http://{HOST}:3000', 'RocketOutlined', '面向全体开发者与客户的全栈技术门户、微服务全景与联调工作台', 'Portal,TopNav,Vite', 50, '_blank', 1),
+  (7, '企业 IT 自助服务台', '核心门户', 'http://{HOST}:3000/desk', 'CustomerServiceOutlined', '面向全体企业员工的一站式服务目录大厅、自助提单与审批流转时间线跟踪', 'ITSM,BPMN,SLA', 45, '_self', 1),
+  (8, 'BPMN 流程设计与工单治理中心', '核心门户', 'http://{HOST}:3001/itsm/tickets', 'AuditOutlined', '企业级 BPMN 2.0 流程模型可视化建模设计、服务目录发布与全量工单运维工作台', 'BPMN,Process,Admin', 40, '_blank', 1);
 
 -- ====================================================================
 -- 14. ITSM 服务管理与 BPMN 流程引擎数据表 (itsm_*)

@@ -7,6 +7,7 @@ import {
   CloudServerOutlined,
   DatabaseOutlined,
   ToolOutlined,
+  AuditOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 import { useIntl } from "../../contexts/LocaleContext";
@@ -55,6 +56,12 @@ export const ServicesPage: React.FC = () => {
           "纯 gRPC 异步任务微服务（端口 8082），集成 Temporal 分布式任务引擎，承载多步骤长耗时工作流、定时调度（Cron Schedule）与状态追踪闭环。",
       }),
       tags: ["gRPC 8082", "Temporal 引擎", "分布式工作流", "定时任务"],
+    },
+    {
+      title: "ITSM 流程与服务引擎 (ITSM RPC)",
+      icon: <AuditOutlined style={{ fontSize: 24, color: "#fa8c16" }} />,
+      desc: "纯 gRPC 流程与服务管理微服务（端口 8084），内置 BPMN 2.0 工业级流程引擎、多节点流转状态机与 Temporal 分布式 SLA 履约超时监控。",
+      tags: ["gRPC 8084", "BPMN 2.0 引擎", "Temporal SLA", "动态表单"],
     },
     {
       title: formatMessage({

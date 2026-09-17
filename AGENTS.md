@@ -12,7 +12,7 @@
 * **前端框架**：React 18 + Vite + TypeScript + pnpm workspace（UI 库：Ant Design 6.6.2 & Ant Design Pro Components 2.8.10）
 * **网络与通信规范**：
   * **仅 `app/gateway` 对外暴露 HTTP RESTful API**（端口 8888），作为唯一的流量入口与 BFF 层。
-  * **内部所有业务微服务（`user`、`worker` 等）仅暴露 gRPC 接口**，不对外提供直接的 HTTP 访问。
+  * **内部所有业务微服务（`user`、`worker`、`itsm` 等）仅暴露 gRPC 接口**，不对外提供直接的 HTTP 访问。
   * **前端各端应用（`admin`、`portal`）统一经由 `@zero/api` SDK 调用网关**。
 * **核心参考开源标杆**：
   * **[Ant Design Pro](https://pro.ant.design)**：提供前端企业级规范（`PageContainer` 页面容器、`useIntl` 多语言国际化体系、ProComponents 组件库与 `@ant-design/charts` 数据可视化）。
@@ -26,7 +26,7 @@
 go-zero-boilerplate/
 ├── app/                           # 【后端 Go 微服务体系】
 │   ├── gateway/                   # 统一对外 HTTP 网关 / BFF 服务 (端口 8888)
-│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api, itsm.api)
 │   │   ├── etc/                   # 网关配置文件 (gateway.yaml)
 │   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
 │   │   └── gateway.go             # 网关启动 main 入口
@@ -40,14 +40,23 @@ go-zero-boilerplate/
 │   │   │   └── user.go
 │   │   └── model/
 │   │
-│   └── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
-│       ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
-│       └── rpc/
-│           ├── client/worker/     # 供网关调用的 RPC Client
-│           ├── etc/worker.yaml
-│           ├── internal/          # activities, workflows, config, logic, server, svc
-│           ├── pb/ & worker.proto
-│           └── worker.go          # Worker RPC + Temporal 统一启动入口
+│   ├── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
+│   │   ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
+│   │   └── rpc/
+│   │       ├── client/worker/     # 供网关调用的 RPC Client
+│   │       ├── etc/worker.yaml
+│   │       ├── internal/          # activities, workflows, config, logic, server, svc
+│   │       ├── pb/ & worker.proto
+│   │       └── worker.go          # Worker RPC + Temporal 统一启动入口
+│   │
+│   └── itsm/                      # 【ITSM 流程微服务】纯 gRPC (端口 8084，BPMN 2.0 + SLA 策略中心)
+│       ├── rpc/
+│       │   ├── client/itsm/       # 供网关调用的 RPC Client
+│       │   ├── etc/itsm.yaml
+│       │   ├── internal/          # engine (BPMN 2.0 解析), config, logic, server, svc
+│       │   ├── pb/ & itsm.proto
+│       │   └── itsm.go            # ITSM RPC 统一启动入口
+│       └── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -292,6 +301,15 @@ go-zero-boilerplate/
   * 管理后台 `/system/tasks` 提供任务增删改查、状态流转（`READY`/`RUNNING`/`SUCCESS`/`FAILED`/`PAUSED`）、动态 Cron 与执行详情弹窗。
   * 完整架构设计详见设计专篇：[Temporal 分布式工作流编排与异步任务治理系统设计方案](file:///D:/work/go-zero-boilerplate/doc/design/2026-09-13-temporal-worker-and-task-management/README.md)。
 
+### 3.13 基于 BPMN 2.0 与 Temporal SLA 的工单流程治理与双模服务台 (ITSM & Service Desk)
+* **架构模式与微服务职责**：
+  * **ITSM 核心微服务 (`app/itsm/rpc`)**：纯 gRPC 微服务（端口 8084），内置轻量级 BPMN 2.0 拓扑解析引擎（支持泳道设计、会签/或签模式、候选角色与用户池提取、表单 Schema 校验）。
+  * **数据持久层 (`app/itsm/model`)**：承载 `itsm_process_def`、`itsm_process_inst`、`itsm_task`、`itsm_task_log`、`itsm_ticket_data`、`itsm_sla_policy` 6 张数据表，提单流转严格由 `TransactCtx` 事务保障原子性。
+  * **Temporal SLA 分布式履约监控**：网关在工单创建后异步触发 `WorkerRpc.StartItsmSlaWorkflow`，拉起分布式超时轮询监控，实现 SLA 逾期自动翻转与警报，网关与 Temporal 服务端保持绝对物理隔离。
+* **双模角色界面 (Dual Persona Interfaces)**：
+  * **管理员后台 (`apps/admin`)**：`/itsm/process-defs`（基于 BPMN.js 2.0 的可视化拖拽设计器、生命周期发布与 Schema 绑定）与 `/itsm/tickets`（ProTable 全量大盘、待办认领池、转派员工检索器与工单审批台）。
+  * **员工自助服务台 (`apps/portal`)**：`/desk`（面向全体普通员工的一站式服务目录大厅、自适应即时提单抽屉、我的申请进度看板、流转轨迹时间线与主管快捷审批）。
+
 ---
 
 ## 4. 常用命令速查 (Cheat Sheet)
@@ -311,6 +329,7 @@ just gen-gateway
 # 生成微服务 RPC 代码
 just gen-rpc user
 just gen-rpc worker
+just gen-rpc itsm
 
 # 创建新微服务 RPC 模块 (自动应用项目模板并置入 app/<service>/rpc)
 just new-rpc <service>
@@ -330,6 +349,7 @@ just gen-ts
 # 1. 启动微服务（本地开发直连模式）
 just run-user-rpc     # 监听 127.0.0.1:8080
 just run-worker-rpc   # 监听 127.0.0.1:8082 (同时启动内置 Temporal Worker)
+just run-itsm-rpc     # 监听 127.0.0.1:8084 (ITSM BPMN 流程引擎)
 
 # 2. 启动统一网关
 just run-gateway      # 监听 0.0.0.0:8888
