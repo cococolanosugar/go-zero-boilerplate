@@ -1109,6 +1109,142 @@ func (x *RunTaskOnceResp) GetMessage() string {
 	return ""
 }
 
+type StartItsmSlaWorkflowReq struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	TicketId            int64                  `protobuf:"varint,1,opt,name=ticketId,proto3" json:"ticketId,omitempty"`
+	TicketNo            string                 `protobuf:"bytes,2,opt,name=ticketNo,proto3" json:"ticketNo,omitempty"`
+	ResponseDurationSec int32                  `protobuf:"varint,3,opt,name=responseDurationSec,proto3" json:"responseDurationSec,omitempty"`
+	ResolveDurationSec  int32                  `protobuf:"varint,4,opt,name=resolveDurationSec,proto3" json:"resolveDurationSec,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *StartItsmSlaWorkflowReq) Reset() {
+	*x = StartItsmSlaWorkflowReq{}
+	mi := &file_worker_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StartItsmSlaWorkflowReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StartItsmSlaWorkflowReq) ProtoMessage() {}
+
+func (x *StartItsmSlaWorkflowReq) ProtoReflect() protoreflect.Message {
+	mi := &file_worker_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StartItsmSlaWorkflowReq.ProtoReflect.Descriptor instead.
+func (*StartItsmSlaWorkflowReq) Descriptor() ([]byte, []int) {
+	return file_worker_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *StartItsmSlaWorkflowReq) GetTicketId() int64 {
+	if x != nil {
+		return x.TicketId
+	}
+	return 0
+}
+
+func (x *StartItsmSlaWorkflowReq) GetTicketNo() string {
+	if x != nil {
+		return x.TicketNo
+	}
+	return ""
+}
+
+func (x *StartItsmSlaWorkflowReq) GetResponseDurationSec() int32 {
+	if x != nil {
+		return x.ResponseDurationSec
+	}
+	return 0
+}
+
+func (x *StartItsmSlaWorkflowReq) GetResolveDurationSec() int32 {
+	if x != nil {
+		return x.ResolveDurationSec
+	}
+	return 0
+}
+
+type StartItsmSlaWorkflowResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	WorkflowId    string                 `protobuf:"bytes,2,opt,name=workflowId,proto3" json:"workflowId,omitempty"`
+	RunId         string                 `protobuf:"bytes,3,opt,name=runId,proto3" json:"runId,omitempty"`
+	Message       string                 `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StartItsmSlaWorkflowResp) Reset() {
+	*x = StartItsmSlaWorkflowResp{}
+	mi := &file_worker_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StartItsmSlaWorkflowResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StartItsmSlaWorkflowResp) ProtoMessage() {}
+
+func (x *StartItsmSlaWorkflowResp) ProtoReflect() protoreflect.Message {
+	mi := &file_worker_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StartItsmSlaWorkflowResp.ProtoReflect.Descriptor instead.
+func (*StartItsmSlaWorkflowResp) Descriptor() ([]byte, []int) {
+	return file_worker_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *StartItsmSlaWorkflowResp) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *StartItsmSlaWorkflowResp) GetWorkflowId() string {
+	if x != nil {
+		return x.WorkflowId
+	}
+	return ""
+}
+
+func (x *StartItsmSlaWorkflowResp) GetRunId() string {
+	if x != nil {
+		return x.RunId
+	}
+	return ""
+}
+
+func (x *StartItsmSlaWorkflowResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_worker_proto protoreflect.FileDescriptor
 
 const file_worker_proto_rawDesc = "" +
@@ -1209,7 +1345,19 @@ const file_worker_proto_rawDesc = "" +
 	"workflowId\x18\x02 \x01(\tR\n" +
 	"workflowId\x12\x14\n" +
 	"\x05runId\x18\x03 \x01(\tR\x05runId\x12\x18\n" +
-	"\amessage\x18\x04 \x01(\tR\amessage2\xd7\x04\n" +
+	"\amessage\x18\x04 \x01(\tR\amessage\"\xb3\x01\n" +
+	"\x17StartItsmSlaWorkflowReq\x12\x1a\n" +
+	"\bticketId\x18\x01 \x01(\x03R\bticketId\x12\x1a\n" +
+	"\bticketNo\x18\x02 \x01(\tR\bticketNo\x120\n" +
+	"\x13responseDurationSec\x18\x03 \x01(\x05R\x13responseDurationSec\x12.\n" +
+	"\x12resolveDurationSec\x18\x04 \x01(\x05R\x12resolveDurationSec\"\x84\x01\n" +
+	"\x18StartItsmSlaWorkflowResp\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x1e\n" +
+	"\n" +
+	"workflowId\x18\x02 \x01(\tR\n" +
+	"workflowId\x12\x14\n" +
+	"\x05runId\x18\x03 \x01(\tR\x05runId\x12\x18\n" +
+	"\amessage\x18\x04 \x01(\tR\amessage2\xb2\x05\n" +
 	"\x06Worker\x12P\n" +
 	"\x11GetWorkflowDetail\x12\x1c.worker.GetWorkflowDetailReq\x1a\x1d.worker.GetWorkflowDetailResp\x12G\n" +
 	"\x0eSignalWorkflow\x12\x19.worker.SignalWorkflowReq\x1a\x1a.worker.SignalWorkflowResp\x128\n" +
@@ -1222,7 +1370,8 @@ const file_worker_proto_rawDesc = "" +
 	"\n" +
 	"DeleteTask\x12\x15.worker.DeleteTaskReq\x1a\x16.worker.DeleteTaskResp\x12M\n" +
 	"\x10ToggleTaskStatus\x12\x1b.worker.ToggleTaskStatusReq\x1a\x1c.worker.ToggleTaskStatusResp\x12>\n" +
-	"\vRunTaskOnce\x12\x16.worker.RunTaskOnceReq\x1a\x17.worker.RunTaskOnceRespB\x06Z\x04./pbb\x06proto3"
+	"\vRunTaskOnce\x12\x16.worker.RunTaskOnceReq\x1a\x17.worker.RunTaskOnceResp\x12Y\n" +
+	"\x14StartItsmSlaWorkflow\x12\x1f.worker.StartItsmSlaWorkflowReq\x1a .worker.StartItsmSlaWorkflowRespB\x06Z\x04./pbb\x06proto3"
 
 var (
 	file_worker_proto_rawDescOnce sync.Once
@@ -1236,24 +1385,26 @@ func file_worker_proto_rawDescGZIP() []byte {
 	return file_worker_proto_rawDescData
 }
 
-var file_worker_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_worker_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_worker_proto_goTypes = []any{
-	(*GetWorkflowDetailReq)(nil),  // 0: worker.GetWorkflowDetailReq
-	(*GetWorkflowDetailResp)(nil), // 1: worker.GetWorkflowDetailResp
-	(*SignalWorkflowReq)(nil),     // 2: worker.SignalWorkflowReq
-	(*SignalWorkflowResp)(nil),    // 3: worker.SignalWorkflowResp
-	(*AsyncTaskItem)(nil),         // 4: worker.AsyncTaskItem
-	(*ListTasksReq)(nil),          // 5: worker.ListTasksReq
-	(*ListTasksResp)(nil),         // 6: worker.ListTasksResp
-	(*GetTaskReq)(nil),            // 7: worker.GetTaskReq
-	(*CreateTaskReq)(nil),         // 8: worker.CreateTaskReq
-	(*UpdateTaskReq)(nil),         // 9: worker.UpdateTaskReq
-	(*DeleteTaskReq)(nil),         // 10: worker.DeleteTaskReq
-	(*DeleteTaskResp)(nil),        // 11: worker.DeleteTaskResp
-	(*ToggleTaskStatusReq)(nil),   // 12: worker.ToggleTaskStatusReq
-	(*ToggleTaskStatusResp)(nil),  // 13: worker.ToggleTaskStatusResp
-	(*RunTaskOnceReq)(nil),        // 14: worker.RunTaskOnceReq
-	(*RunTaskOnceResp)(nil),       // 15: worker.RunTaskOnceResp
+	(*GetWorkflowDetailReq)(nil),     // 0: worker.GetWorkflowDetailReq
+	(*GetWorkflowDetailResp)(nil),    // 1: worker.GetWorkflowDetailResp
+	(*SignalWorkflowReq)(nil),        // 2: worker.SignalWorkflowReq
+	(*SignalWorkflowResp)(nil),       // 3: worker.SignalWorkflowResp
+	(*AsyncTaskItem)(nil),            // 4: worker.AsyncTaskItem
+	(*ListTasksReq)(nil),             // 5: worker.ListTasksReq
+	(*ListTasksResp)(nil),            // 6: worker.ListTasksResp
+	(*GetTaskReq)(nil),               // 7: worker.GetTaskReq
+	(*CreateTaskReq)(nil),            // 8: worker.CreateTaskReq
+	(*UpdateTaskReq)(nil),            // 9: worker.UpdateTaskReq
+	(*DeleteTaskReq)(nil),            // 10: worker.DeleteTaskReq
+	(*DeleteTaskResp)(nil),           // 11: worker.DeleteTaskResp
+	(*ToggleTaskStatusReq)(nil),      // 12: worker.ToggleTaskStatusReq
+	(*ToggleTaskStatusResp)(nil),     // 13: worker.ToggleTaskStatusResp
+	(*RunTaskOnceReq)(nil),           // 14: worker.RunTaskOnceReq
+	(*RunTaskOnceResp)(nil),          // 15: worker.RunTaskOnceResp
+	(*StartItsmSlaWorkflowReq)(nil),  // 16: worker.StartItsmSlaWorkflowReq
+	(*StartItsmSlaWorkflowResp)(nil), // 17: worker.StartItsmSlaWorkflowResp
 }
 var file_worker_proto_depIdxs = []int32{
 	4,  // 0: worker.ListTasksResp.list:type_name -> worker.AsyncTaskItem
@@ -1266,17 +1417,19 @@ var file_worker_proto_depIdxs = []int32{
 	10, // 7: worker.Worker.DeleteTask:input_type -> worker.DeleteTaskReq
 	12, // 8: worker.Worker.ToggleTaskStatus:input_type -> worker.ToggleTaskStatusReq
 	14, // 9: worker.Worker.RunTaskOnce:input_type -> worker.RunTaskOnceReq
-	1,  // 10: worker.Worker.GetWorkflowDetail:output_type -> worker.GetWorkflowDetailResp
-	3,  // 11: worker.Worker.SignalWorkflow:output_type -> worker.SignalWorkflowResp
-	6,  // 12: worker.Worker.ListTasks:output_type -> worker.ListTasksResp
-	4,  // 13: worker.Worker.GetTask:output_type -> worker.AsyncTaskItem
-	4,  // 14: worker.Worker.CreateTask:output_type -> worker.AsyncTaskItem
-	4,  // 15: worker.Worker.UpdateTask:output_type -> worker.AsyncTaskItem
-	11, // 16: worker.Worker.DeleteTask:output_type -> worker.DeleteTaskResp
-	13, // 17: worker.Worker.ToggleTaskStatus:output_type -> worker.ToggleTaskStatusResp
-	15, // 18: worker.Worker.RunTaskOnce:output_type -> worker.RunTaskOnceResp
-	10, // [10:19] is the sub-list for method output_type
-	1,  // [1:10] is the sub-list for method input_type
+	16, // 10: worker.Worker.StartItsmSlaWorkflow:input_type -> worker.StartItsmSlaWorkflowReq
+	1,  // 11: worker.Worker.GetWorkflowDetail:output_type -> worker.GetWorkflowDetailResp
+	3,  // 12: worker.Worker.SignalWorkflow:output_type -> worker.SignalWorkflowResp
+	6,  // 13: worker.Worker.ListTasks:output_type -> worker.ListTasksResp
+	4,  // 14: worker.Worker.GetTask:output_type -> worker.AsyncTaskItem
+	4,  // 15: worker.Worker.CreateTask:output_type -> worker.AsyncTaskItem
+	4,  // 16: worker.Worker.UpdateTask:output_type -> worker.AsyncTaskItem
+	11, // 17: worker.Worker.DeleteTask:output_type -> worker.DeleteTaskResp
+	13, // 18: worker.Worker.ToggleTaskStatus:output_type -> worker.ToggleTaskStatusResp
+	15, // 19: worker.Worker.RunTaskOnce:output_type -> worker.RunTaskOnceResp
+	17, // 20: worker.Worker.StartItsmSlaWorkflow:output_type -> worker.StartItsmSlaWorkflowResp
+	11, // [11:21] is the sub-list for method output_type
+	1,  // [1:11] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name
@@ -1293,7 +1446,7 @@ func file_worker_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_worker_proto_rawDesc), len(file_worker_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -4,6 +4,12 @@
 .cursor
 .agents
 .ai-context
+.codegraph
+.gitnexus
+.pnpm-store
+doc
+openspec
+manifest/sql
 **/node_modules
 **/dist
 bin
@@ -11,3 +17,4 @@ bin
 *.test
 *.out
 *.log
+debug.log

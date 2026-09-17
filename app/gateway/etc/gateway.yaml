@@ -8,12 +8,12 @@ OpenApi:
 
 # JWT 鉴权配置
 Auth:
-  AccessSecret: go-zero-boilerplate-secret-key-2026
-  AccessExpire: 86400
+  AccessSecret: ${JWT_SECRET:go-zero-boilerplate-secret-key-2026}
+  AccessExpire: ${JWT_EXPIRE:86400}
 
 # Redis 缓存配置 (用于在线会话与 Token 黑名单)
 Redis:
-  Host: 127.0.0.1:6379
+  Host: ${REDIS_HOST:127.0.0.1:6379}
   Type: node
 
 # ================= 下游微服务客户端连接配置 =================
@@ -21,42 +21,48 @@ Redis:
 # 用户微服务 gRPC 客户端
 UserRpc:
   # 模式一：Nacos 服务发现
-  # Target: nacos://127.0.0.1:8848/user.rpc?namespaceid=public&timeout=5000s
+  # Target: nacos://${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}/user.rpc?namespaceid=${NACOS_NAMESPACE:public}&timeout=5000s
   # NonBlock: true
   # 模式二：Etcd 服务发现
   # Etcd:
   #   Hosts:
-  #     - 127.0.0.1:2379
+  #     - ${ETCD_HOST:127.0.0.1:2379}
   #   Key: user.rpc
   # 模式三：直连模式（当前单机极速调试启用，无需注册中心容器）
   Endpoints:
-    - 127.0.0.1:8080
+    - ${USER_RPC_HOST:127.0.0.1:8080}
   NonBlock: true
 
 # Worker 任务执行微服务 gRPC 客户端 (端口 8082)
 WorkerRpc:
   Endpoints:
-    - 127.0.0.1:8082
+    - ${WORKER_RPC_HOST:127.0.0.1:8082}
+  NonBlock: true
+
+# ITSM 微服务 gRPC 客户端 (端口 8084)
+ItsmRpc:
+  Endpoints:
+    - ${ITSM_RPC_HOST:127.0.0.1:8084}
   NonBlock: true
 
 # ================= Casdoor SSO 认证配置 =================
 Casdoor:
-  Endpoint: http://127.0.0.1:8000
-  ClientId: d795c3b1a7b960bd0b61
-  ClientSecret: 2cc190e9c43e9659f45ad233cf0bec3038f59b46
+  Endpoint: ${CASDOOR_ENDPOINT:http://127.0.0.1:8000}
+  ClientId: ${CASDOOR_CLIENT_ID:d795c3b1a7b960bd0b61}
+  ClientSecret: ${CASDOOR_CLIENT_SECRET:2cc190e9c43e9659f45ad233cf0bec3038f59b46}
   Certificate: ""
-  OrganizationName: built-in
-  ApplicationName: app-built-in
+  OrganizationName: ${CASDOOR_ORG:built-in}
+  ApplicationName: ${CASDOOR_APP:app-built-in}
 
 # ================= 对象存储配置 =================
 Storage:
-  Driver: local
-  BasePath: ./data/uploads
-  BaseUrl: /uploads
+  Driver: ${STORAGE_DRIVER:local}
+  BasePath: ${STORAGE_BASE_PATH:./data/uploads}
+  BaseUrl: ${STORAGE_BASE_URL:/uploads}
 
 # ================= Temporal 分布式工作流配置 =================
 Temporal:
-  HostPort: 127.0.0.1:7233
-  Namespace: default
+  HostPort: ${TEMPORAL_HOST:127.0.0.1:7233}
+  Namespace: ${TEMPORAL_NAMESPACE:default}
 
   MaxSize: 20971520 # 20MB

@@ -8,6 +8,7 @@ import (
 
 	dashboard "go-zero-boilerplate/app/gateway/internal/handler/dashboard"
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
+	itsm "go-zero-boilerplate/app/gateway/internal/handler/itsm"
 	portal_nav "go-zero-boilerplate/app/gateway/internal/handler/portal_nav"
 	sys_config "go-zero-boilerplate/app/gateway/internal/handler/sys_config"
 	sys_dept "go-zero-boilerplate/app/gateway/internal/handler/sys_dept"
@@ -96,6 +97,93 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/system/dict"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/process-defs",
+				Handler: itsm.ListProcessDefsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/process-defs",
+				Handler: itsm.CreateProcessDefHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/process-defs/:id",
+				Handler: itsm.GetProcessDefHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/process-defs/:id",
+				Handler: itsm.UpdateProcessDefHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/process-defs/:id/deploy",
+				Handler: itsm.DeployProcessDefHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/sla-policies",
+				Handler: itsm.ListSlaPoliciesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/sla-policies/:id",
+				Handler: itsm.UpdateSlaPolicyHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/tickets",
+				Handler: itsm.ListTicketsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tickets",
+				Handler: itsm.CreateTicketHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/tickets/:id",
+				Handler: itsm.GetTicketDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tickets/:id/approve",
+				Handler: itsm.ApproveTaskHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tickets/:id/cancel",
+				Handler: itsm.CancelTicketHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tickets/:id/claim",
+				Handler: itsm.ClaimTaskHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tickets/:id/reject",
+				Handler: itsm.RejectTaskHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/tickets/:id/trajectory",
+				Handler: itsm.GetTicketTrajectoryHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tickets/:id/transfer",
+				Handler: itsm.TransferTaskHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/itsm"),
 	)
 
 	server.AddRoutes(

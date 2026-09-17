@@ -8,6 +8,8 @@ import {
   DashboardOutlined,
   UserOutlined,
   CompassOutlined,
+  AuditOutlined,
+  CustomerServiceOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 import { useOutletContext } from "react-router-dom";
@@ -16,6 +18,8 @@ import {
   getUserProfile,
   getPortalNavList,
   getUserInfo,
+  itsmListProcessDefs,
+  itsmListTickets,
 } from "@zero/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
@@ -182,6 +186,30 @@ export const WorkbenchPage: React.FC = () => {
                   }
                 >
                   4. 业务客户主体信息 (/user/info)
+                </Button>
+
+                <Button
+                  block
+                  type={activeApi === "流程服务目录" ? "primary" : "default"}
+                  icon={<AuditOutlined />}
+                  style={{ textAlign: "left" }}
+                  onClick={() =>
+                    testApi("流程服务目录", () => itsmListProcessDefs({ page: 1, pageSize: 20 }))
+                  }
+                >
+                  5. ITSM 流程服务目录 (/itsm/process-defs)
+                </Button>
+
+                <Button
+                  block
+                  type={activeApi === "我的申请工单" ? "primary" : "default"}
+                  icon={<CustomerServiceOutlined />}
+                  style={{ textAlign: "left" }}
+                  onClick={() =>
+                    testApi("我的申请工单", () => itsmListTickets({ viewType: "my_created", page: 1, pageSize: 10 }))
+                  }
+                >
+                  6. 我的服务申请工单 (/itsm/tickets)
                 </Button>
               </Flex>
             </ProCard>

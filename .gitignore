@@ -51,6 +51,7 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # AI Code Intelligence Indexes
 .codegraph/
@@ -60,3 +61,8 @@ Thumbs.db
 # Uploaded Files & Local Persistent Storage
 data/
 app/gateway/data/
+
+# Scratch & Coverage
+scratch/
+coverage/
+debug.log

@@ -21,6 +21,17 @@ const (
 	FileUploadError    uint32 = 300001
 	FileTooLargeError  uint32 = 300002
 	FileForbiddenError uint32 = 300003
+
+	// ITSM 工单模块错误码 (400000 - 499999)
+	ItsmProcessDefNotFound uint32 = 400001
+	ItsmInvalidBpmnXml     uint32 = 400002
+	ItsmTicketNotFound     uint32 = 400003
+	ItsmTaskNotFound       uint32 = 400004
+	ItsmTaskAlreadyClaimed uint32 = 400005
+	ItsmTaskAlreadyDone    uint32 = 400006
+	ItsmSlaPolicyNotFound  uint32 = 400007
+	ItsmCreateFailed       uint32 = 400008
+	ItsmInstanceNotFound   uint32 = 400009
 )
 
 var message = map[uint32]string{
@@ -41,6 +52,16 @@ var message = map[uint32]string{
 	FileUploadError:    "文件上传失败",
 	FileTooLargeError:  "文件大小超出允许范围",
 	FileForbiddenError: "禁止上传可执行或危险脚本文件",
+
+	ItsmProcessDefNotFound: "流程定义不存在",
+	ItsmInvalidBpmnXml:     "无效的 BPMN XML 流程定义",
+	ItsmTicketNotFound:     "工单不存在",
+	ItsmTaskNotFound:       "任务节点不存在",
+	ItsmTaskAlreadyClaimed: "任务已被认领或已处理",
+	ItsmTaskAlreadyDone:    "任务已完成处理",
+	ItsmSlaPolicyNotFound:  "SLA 策略不存在",
+	ItsmCreateFailed:       "创建工单/流程实例失败",
+	ItsmInstanceNotFound:   "流程实例不存在",
 }
 
 // MapErrMsg 根据错误码返回预设的错误描述

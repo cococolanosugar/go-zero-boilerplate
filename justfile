@@ -64,6 +64,10 @@ run-user-rpc:
 run-worker-rpc:
     cd app/worker/rpc && go run worker.go -f etc/worker.yaml
 
+# 启动 itsm-rpc 工单引擎微服务 (gRPC 8084，BPMN 2.0 + SLA)
+run-itsm-rpc:
+    cd app/itsm/rpc && go run itsm.go -f etc/itsm.yaml
+
 # 启动前端管理后台 (Vite 3001，默认本地 8888 网关)
 run-admin:
     cd frontend && pnpm dev:admin
@@ -135,6 +139,7 @@ ai-index:
 docker-build:
     docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
     docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
+    docker build -t go-zero-itsm-rpc:latest -f app/itsm/rpc/Dockerfile .
     docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
     docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 

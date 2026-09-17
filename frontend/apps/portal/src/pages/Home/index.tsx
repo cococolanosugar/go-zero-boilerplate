@@ -10,9 +10,10 @@ import {
   ExportOutlined,
   LaptopOutlined,
   LineChartOutlined,
+  CustomerServiceOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard, StatisticCard } from "@ant-design/pro-components";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import { APP_NAME } from "@zero/shared";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
@@ -24,6 +25,7 @@ const TrafficChart = lazy(() => import("./components/TrafficChart"));
 const { Title, Paragraph, Text } = Typography;
 
 export const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const { onOpenLogin } = useOutletContext<{ onOpenLogin: () => void }>();
   const { profile, isLoggedIn } = useAuth();
   const { formatMessage } = useIntl();
@@ -91,6 +93,18 @@ export const HomePage: React.FC = () => {
                   defaultMessage: "进入管理后台 (:3001)",
                 })}
               </Button>
+              <Button
+                size="large"
+                shape="round"
+                icon={<CustomerServiceOutlined />}
+                onClick={() => navigate("/desk")}
+                style={{ background: "#52c41a", borderColor: "#52c41a", color: "#fff" }}
+              >
+                {formatMessage({
+                  id: "menu.desk",
+                  defaultMessage: "IT 自助服务台",
+                })}
+              </Button>
               {!isLoggedIn && (
                 <Button size="large" shape="round" icon={<LaptopOutlined />} onClick={onOpenLogin}>
                   {formatMessage({
@@ -130,9 +144,9 @@ export const HomePage: React.FC = () => {
           <StatisticCard
             statistic={{
               title: formatMessage({ id: "home.stat.services", defaultMessage: "核心业务微服务" }),
-              value: "2",
+              value: "3",
               suffix: formatMessage({ id: "home.stat.services.unit", defaultMessage: "个服务" }),
-              description: <Text type="secondary">User (:8080) + Worker (:8082)</Text>,
+              description: <Text type="secondary">User (:8080) + Worker (:8082) + ITSM (:8084)</Text>,
               icon: <ClusterOutlined style={{ color: "#1677ff", fontSize: 32 }} />,
             }}
           />
@@ -278,7 +292,7 @@ export const HomePage: React.FC = () => {
           style={{ marginBottom: 32 }}
         >
           <Row gutter={[16, 16]}>
-            <Col xs={24} md={6}>
+            <Col xs={24} sm={12} md={8}>
               <Card
                 size="small"
                 title={formatMessage({
@@ -294,7 +308,7 @@ export const HomePage: React.FC = () => {
                 <p>• {formatMessage({ id: "home.topology.gateway.finish", defaultMessage: "mr.Finish 跨微服务数据聚合" })}</p>
               </Card>
             </Col>
-            <Col xs={24} md={6}>
+            <Col xs={24} sm={12} md={8}>
               <Card
                 size="small"
                 title={formatMessage({
@@ -310,7 +324,7 @@ export const HomePage: React.FC = () => {
                 <p>• {formatMessage({ id: "home.topology.user.menu", defaultMessage: "动态菜单树与按钮权限下发" })}</p>
               </Card>
             </Col>
-            <Col xs={24} md={6}>
+            <Col xs={24} sm={12} md={8}>
               <Card
                 size="small"
                 title={formatMessage({
@@ -326,12 +340,25 @@ export const HomePage: React.FC = () => {
                 <p>• {formatMessage({ id: "home.topology.worker.report", defaultMessage: "任务调度状态实时上报" })}</p>
               </Card>
             </Col>
-            <Col xs={24} md={6}>
+            <Col xs={24} sm={12} md={8}>
+              <Card
+                size="small"
+                title="4. ITSM 流程微服务"
+                variant="borderless"
+                style={{ background: "#fffbe6" }}
+              >
+                <p>• 端口: gRPC 8084</p>
+                <p>• BPMN 2.0 工业级流程引擎与设计器</p>
+                <p>• Temporal 分布式 SLA 履约超时监控</p>
+                <p>• 全生命周期工单流转与动态表单</p>
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8}>
               <Card
                 size="small"
                 title={formatMessage({
                   id: "home.topology.infra.title",
-                  defaultMessage: "4. 基础设施与发现",
+                  defaultMessage: "5. 基础设施与发现",
                 })}
                 variant="borderless"
                 style={{ background: "#fff7e6" }}

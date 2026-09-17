@@ -133,6 +133,25 @@ services:
     networks:
       - go-zero-net
 
+  itsm-rpc:
+    build:
+      context: ../../../
+      dockerfile: app/itsm/rpc/Dockerfile
+    container_name: go-zero-itsm-rpc
+    environment:
+      ITSM_RPC_LISTEN_ON: "0.0.0.0:8084"
+      MYSQL_DSN: "root:root@tcp(mysql:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+      REDIS_HOST: "redis:6379"
+      NACOS_HOST: "nacos"
+      NACOS_PORT: 8848
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - go-zero-net
+
   # -------------------------------------------------------------
   # 3. 统一接入网关 (HTTP Gateway / BFF)
   # -------------------------------------------------------------
@@ -146,6 +165,7 @@ services:
       NACOS_PORT: 8848
       USER_RPC_HOST: "user-rpc:8080"
       WORKER_RPC_HOST: "worker-rpc:8082"
+      ITSM_RPC_HOST: "itsm-rpc:8084"
       GATEWAY_HOST: "0.0.0.0"
       GATEWAY_PORT: 8888
     ports:
@@ -153,6 +173,7 @@ services:
     depends_on:
       - user-rpc
       - worker-rpc
+      - itsm-rpc
     networks:
       - go-zero-net
 

@@ -94,6 +94,1166 @@
         }
       }
     },
+    "/api/v1/itsm/process-defs": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "listProcessDefs",
+        "operationId": "itsmListProcessDefs",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "category",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "default": 0,
+            "example": 0,
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "procCode",
+                      "procName",
+                      "category",
+                      "bpmnXml",
+                      "formSchema",
+                      "version",
+                      "status",
+                      "description",
+                      "createTime",
+                      "updateTime"
+                    ],
+                    "properties": {
+                      "bpmnXml": {
+                        "type": "string"
+                      },
+                      "category": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "formSchema": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "procCode": {
+                        "type": "string"
+                      },
+                      "procName": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "updateTime": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "createProcessDef",
+        "operationId": "itsmCreateProcessDef",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "procCode",
+                "procName"
+              ],
+              "properties": {
+                "bpmnXml": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string",
+                  "default": "it_service",
+                  "example": "it_service"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "formSchema": {
+                  "type": "string"
+                },
+                "procCode": {
+                  "type": "string"
+                },
+                "procName": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "ticketNo": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/process-defs/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "getProcessDef",
+        "operationId": "itsmGetProcessDef",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "bpmnXml": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "createTime": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "formSchema": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "procCode": {
+                  "type": "string"
+                },
+                "procName": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "updateTime": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "updateProcessDef",
+        "operationId": "itsmUpdateProcessDef",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "bpmnXml": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "formSchema": {
+                  "type": "string"
+                },
+                "procName": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/process-defs/{id}/deploy": {
+      "post": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "deployProcessDef",
+        "operationId": "itsmDeployProcessDef",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/sla-policies": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "listSlaPolicies",
+        "operationId": "itsmListSlaPolicies",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "priority",
+                      "calendarType",
+                      "responseLimitMin",
+                      "resolveLimitMin",
+                      "warnThresholdPct"
+                    ],
+                    "properties": {
+                      "calendarType": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "priority": {
+                        "type": "string"
+                      },
+                      "resolveLimitMin": {
+                        "type": "integer"
+                      },
+                      "responseLimitMin": {
+                        "type": "integer"
+                      },
+                      "warnThresholdPct": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/sla-policies/{id}": {
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "updateSlaPolicy",
+        "operationId": "itsmUpdateSlaPolicy",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resolveLimitMin": {
+                  "type": "integer"
+                },
+                "responseLimitMin": {
+                  "type": "integer"
+                },
+                "warnThresholdPct": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "listTickets",
+        "operationId": "itsmListTickets",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "default": "all",
+            "example": "all",
+            "name": "viewType",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "status",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "priority",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "ticketNo",
+                      "title",
+                      "priority",
+                      "procDefId",
+                      "initiatorId",
+                      "currentNodeId",
+                      "currentNodeName",
+                      "status",
+                      "slaStatus",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "currentNodeId": {
+                        "type": "string"
+                      },
+                      "currentNodeName": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "initiatorId": {
+                        "type": "integer"
+                      },
+                      "initiatorName": {
+                        "type": "string"
+                      },
+                      "priority": {
+                        "type": "string"
+                      },
+                      "procDefId": {
+                        "type": "integer"
+                      },
+                      "procName": {
+                        "type": "string"
+                      },
+                      "slaResolveDeadline": {
+                        "type": "string"
+                      },
+                      "slaResponseDeadline": {
+                        "type": "string"
+                      },
+                      "slaStatus": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "ticketNo": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "createTicket",
+        "operationId": "itsmCreateTicket",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "procDefId",
+                "title"
+              ],
+              "properties": {
+                "formDataJson": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "string",
+                  "default": "P3",
+                  "example": "P3"
+                },
+                "procDefId": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "ticketNo": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "getTicketDetail",
+        "operationId": "itsmGetTicketDetail",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "activeTasks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "instId",
+                      "nodeId",
+                      "nodeName",
+                      "taskType",
+                      "approvalMode",
+                      "assigneeId",
+                      "status",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "approvalMode": {
+                        "type": "string"
+                      },
+                      "assigneeId": {
+                        "type": "integer"
+                      },
+                      "assigneeName": {
+                        "type": "string"
+                      },
+                      "claimAt": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "instId": {
+                        "type": "integer"
+                      },
+                      "nodeId": {
+                        "type": "string"
+                      },
+                      "nodeName": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "taskType": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "bpmnXml": {
+                  "type": "string"
+                },
+                "formDataJson": {
+                  "type": "string"
+                },
+                "formSchemaJson": {
+                  "type": "string"
+                },
+                "logs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "taskId",
+                      "nodeId",
+                      "nodeName",
+                      "operatorId",
+                      "operatorName",
+                      "actionType",
+                      "durationSec",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "actionType": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "durationSec": {
+                        "type": "integer"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "nodeId": {
+                        "type": "string"
+                      },
+                      "nodeName": {
+                        "type": "string"
+                      },
+                      "operatorId": {
+                        "type": "integer"
+                      },
+                      "operatorName": {
+                        "type": "string"
+                      },
+                      "opinion": {
+                        "type": "string"
+                      },
+                      "taskId": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "ticket": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "ticketNo",
+                    "title",
+                    "priority",
+                    "procDefId",
+                    "initiatorId",
+                    "currentNodeId",
+                    "currentNodeName",
+                    "status",
+                    "slaStatus",
+                    "createTime"
+                  ],
+                  "properties": {
+                    "createTime": {
+                      "type": "string"
+                    },
+                    "currentNodeId": {
+                      "type": "string"
+                    },
+                    "currentNodeName": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "initiatorId": {
+                      "type": "integer"
+                    },
+                    "initiatorName": {
+                      "type": "string"
+                    },
+                    "priority": {
+                      "type": "string"
+                    },
+                    "procDefId": {
+                      "type": "integer"
+                    },
+                    "procName": {
+                      "type": "string"
+                    },
+                    "slaResolveDeadline": {
+                      "type": "string"
+                    },
+                    "slaResponseDeadline": {
+                      "type": "string"
+                    },
+                    "slaStatus": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "ticketNo": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/approve": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "approveTask",
+        "operationId": "itsmApproveTask",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "taskId"
+              ],
+              "properties": {
+                "opinion": {
+                  "type": "string"
+                },
+                "taskId": {
+                  "type": "integer"
+                },
+                "updatedFormDataJson": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/cancel": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "cancelTicket",
+        "operationId": "itsmCancelTicket",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "reason": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/claim": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "claimTask",
+        "operationId": "itsmClaimTask",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "taskId"
+              ],
+              "properties": {
+                "taskId": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/reject": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "rejectTask",
+        "operationId": "itsmRejectTask",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "taskId"
+              ],
+              "properties": {
+                "opinion": {
+                  "type": "string"
+                },
+                "taskId": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/trajectory": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "getTicketTrajectory",
+        "operationId": "itsmGetTicketTrajectory",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "activeNodeIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "bpmnXml": {
+                  "type": "string"
+                },
+                "completedNodeIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "logs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "taskId",
+                      "nodeId",
+                      "nodeName",
+                      "operatorId",
+                      "operatorName",
+                      "actionType",
+                      "durationSec",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "actionType": {
+                        "type": "string"
+                      },
+                      "createTime": {
+                        "type": "string"
+                      },
+                      "durationSec": {
+                        "type": "integer"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "nodeId": {
+                        "type": "string"
+                      },
+                      "nodeName": {
+                        "type": "string"
+                      },
+                      "operatorId": {
+                        "type": "integer"
+                      },
+                      "operatorName": {
+                        "type": "string"
+                      },
+                      "opinion": {
+                        "type": "string"
+                      },
+                      "taskId": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "rejectedNodeIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/transfer": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "transferTask",
+        "operationId": "itsmTransferTask",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "taskId",
+                "targetUserId"
+              ],
+              "properties": {
+                "opinion": {
+                  "type": "string"
+                },
+                "targetUserId": {
+                  "type": "integer"
+                },
+                "taskId": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/portal/navigation/list": {
       "get": {
         "produces": [
@@ -5196,7 +6356,7 @@
       }
     }
   },
-  "x-date": "2026-09-15 07:48:19",
+  "x-date": "2026-09-16 00:19:15",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

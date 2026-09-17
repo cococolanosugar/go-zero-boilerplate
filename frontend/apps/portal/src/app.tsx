@@ -10,6 +10,7 @@ import {
   ApiOutlined,
   RocketOutlined,
   CompassOutlined,
+  CustomerServiceOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
@@ -52,6 +53,8 @@ const getIcon = (iconName?: React.ReactNode | string) => {
       return <ApiOutlined />;
     case "CompassOutlined":
       return <CompassOutlined />;
+    case "CustomerServiceOutlined":
+      return <CustomerServiceOutlined />;
     default:
       return null;
   }

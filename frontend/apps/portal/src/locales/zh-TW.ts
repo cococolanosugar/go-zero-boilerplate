@@ -2,6 +2,7 @@ export default {
   // 導航與頭部
   'menu.home': '門戶首頁',
   'menu.navigation': '網址導航',
+  'menu.desk': '服務台',
   'menu.services': '微服務治理',
   'menu.workbench': '聯調工作台',
   'nav.title': '企業網址導航',

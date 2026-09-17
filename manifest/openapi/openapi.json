@@ -87,6 +87,1174 @@
         ]
       }
     },
+    "/api/v1/itsm/process-defs": {
+      "get": {
+        "operationId": "itsmListProcessDefs",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "default": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "bpmnXml": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "formSchema": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "procCode": {
+                            "type": "string"
+                          },
+                          "procName": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "procCode",
+                          "procName",
+                          "category",
+                          "bpmnXml",
+                          "formSchema",
+                          "version",
+                          "status",
+                          "description",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listProcessDefs",
+        "tags": [
+          "itsm"
+        ]
+      },
+      "post": {
+        "operationId": "itsmCreateProcessDef",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "bpmnXml": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "default": "it_service",
+                    "example": "it_service",
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "formSchema": {
+                    "type": "string"
+                  },
+                  "procCode": {
+                    "type": "string"
+                  },
+                  "procName": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "procCode",
+                  "procName"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "ticketNo": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createProcessDef",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/process-defs/{id}": {
+      "get": {
+        "operationId": "itsmGetProcessDef",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "bpmnXml": {
+                      "type": "string"
+                    },
+                    "category": {
+                      "type": "string"
+                    },
+                    "createTime": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "formSchema": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "procCode": {
+                      "type": "string"
+                    },
+                    "procName": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "updateTime": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getProcessDef",
+        "tags": [
+          "itsm"
+        ]
+      },
+      "put": {
+        "operationId": "itsmUpdateProcessDef",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "bpmnXml": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "formSchema": {
+                    "type": "string"
+                  },
+                  "procName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateProcessDef",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/process-defs/{id}/deploy": {
+      "post": {
+        "operationId": "itsmDeployProcessDef",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deployProcessDef",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/sla-policies": {
+      "get": {
+        "operationId": "itsmListSlaPolicies",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "calendarType": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "priority": {
+                            "type": "string"
+                          },
+                          "resolveLimitMin": {
+                            "type": "integer"
+                          },
+                          "responseLimitMin": {
+                            "type": "integer"
+                          },
+                          "warnThresholdPct": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "priority",
+                          "calendarType",
+                          "responseLimitMin",
+                          "resolveLimitMin",
+                          "warnThresholdPct"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listSlaPolicies",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/sla-policies/{id}": {
+      "put": {
+        "operationId": "itsmUpdateSlaPolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "resolveLimitMin": {
+                    "type": "integer"
+                  },
+                  "responseLimitMin": {
+                    "type": "integer"
+                  },
+                  "warnThresholdPct": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateSlaPolicy",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets": {
+      "get": {
+        "operationId": "itsmListTickets",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "viewType",
+            "schema": {
+              "default": "all",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "currentNodeId": {
+                            "type": "string"
+                          },
+                          "currentNodeName": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "initiatorId": {
+                            "type": "integer"
+                          },
+                          "initiatorName": {
+                            "type": "string"
+                          },
+                          "priority": {
+                            "type": "string"
+                          },
+                          "procDefId": {
+                            "type": "integer"
+                          },
+                          "procName": {
+                            "type": "string"
+                          },
+                          "slaResolveDeadline": {
+                            "type": "string"
+                          },
+                          "slaResponseDeadline": {
+                            "type": "string"
+                          },
+                          "slaStatus": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "ticketNo": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "ticketNo",
+                          "title",
+                          "priority",
+                          "procDefId",
+                          "initiatorId",
+                          "currentNodeId",
+                          "currentNodeName",
+                          "status",
+                          "slaStatus",
+                          "createTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listTickets",
+        "tags": [
+          "itsm"
+        ]
+      },
+      "post": {
+        "operationId": "itsmCreateTicket",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "formDataJson": {
+                    "type": "string"
+                  },
+                  "priority": {
+                    "default": "P3",
+                    "example": "P3",
+                    "type": "string"
+                  },
+                  "procDefId": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "procDefId",
+                  "title"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "ticketNo": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createTicket",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets/{id}": {
+      "get": {
+        "operationId": "itsmGetTicketDetail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "activeTasks": {
+                      "items": {
+                        "properties": {
+                          "approvalMode": {
+                            "type": "string"
+                          },
+                          "assigneeId": {
+                            "type": "integer"
+                          },
+                          "assigneeName": {
+                            "type": "string"
+                          },
+                          "claimAt": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "instId": {
+                            "type": "integer"
+                          },
+                          "nodeId": {
+                            "type": "string"
+                          },
+                          "nodeName": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "taskType": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "instId",
+                          "nodeId",
+                          "nodeName",
+                          "taskType",
+                          "approvalMode",
+                          "assigneeId",
+                          "status",
+                          "createTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "bpmnXml": {
+                      "type": "string"
+                    },
+                    "formDataJson": {
+                      "type": "string"
+                    },
+                    "formSchemaJson": {
+                      "type": "string"
+                    },
+                    "logs": {
+                      "items": {
+                        "properties": {
+                          "actionType": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "durationSec": {
+                            "type": "integer"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "nodeId": {
+                            "type": "string"
+                          },
+                          "nodeName": {
+                            "type": "string"
+                          },
+                          "operatorId": {
+                            "type": "integer"
+                          },
+                          "operatorName": {
+                            "type": "string"
+                          },
+                          "opinion": {
+                            "type": "string"
+                          },
+                          "taskId": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "taskId",
+                          "nodeId",
+                          "nodeName",
+                          "operatorId",
+                          "operatorName",
+                          "actionType",
+                          "durationSec",
+                          "createTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "ticket": {
+                      "properties": {
+                        "createTime": {
+                          "type": "string"
+                        },
+                        "currentNodeId": {
+                          "type": "string"
+                        },
+                        "currentNodeName": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "initiatorId": {
+                          "type": "integer"
+                        },
+                        "initiatorName": {
+                          "type": "string"
+                        },
+                        "priority": {
+                          "type": "string"
+                        },
+                        "procDefId": {
+                          "type": "integer"
+                        },
+                        "procName": {
+                          "type": "string"
+                        },
+                        "slaResolveDeadline": {
+                          "type": "string"
+                        },
+                        "slaResponseDeadline": {
+                          "type": "string"
+                        },
+                        "slaStatus": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "ticketNo": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "ticketNo",
+                        "title",
+                        "priority",
+                        "procDefId",
+                        "initiatorId",
+                        "currentNodeId",
+                        "currentNodeName",
+                        "status",
+                        "slaStatus",
+                        "createTime"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getTicketDetail",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/approve": {
+      "post": {
+        "operationId": "itsmApproveTask",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "opinion": {
+                    "type": "string"
+                  },
+                  "taskId": {
+                    "type": "integer"
+                  },
+                  "updatedFormDataJson": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "taskId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "approveTask",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/cancel": {
+      "post": {
+        "operationId": "itsmCancelTicket",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "cancelTicket",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/claim": {
+      "post": {
+        "operationId": "itsmClaimTask",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "taskId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "taskId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "claimTask",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/reject": {
+      "post": {
+        "operationId": "itsmRejectTask",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "opinion": {
+                    "type": "string"
+                  },
+                  "taskId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "taskId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "rejectTask",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/trajectory": {
+      "get": {
+        "operationId": "itsmGetTicketTrajectory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "activeNodeIds": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "bpmnXml": {
+                      "type": "string"
+                    },
+                    "completedNodeIds": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "logs": {
+                      "items": {
+                        "properties": {
+                          "actionType": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "durationSec": {
+                            "type": "integer"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "nodeId": {
+                            "type": "string"
+                          },
+                          "nodeName": {
+                            "type": "string"
+                          },
+                          "operatorId": {
+                            "type": "integer"
+                          },
+                          "operatorName": {
+                            "type": "string"
+                          },
+                          "opinion": {
+                            "type": "string"
+                          },
+                          "taskId": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "taskId",
+                          "nodeId",
+                          "nodeName",
+                          "operatorId",
+                          "operatorName",
+                          "actionType",
+                          "durationSec",
+                          "createTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "rejectedNodeIds": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getTicketTrajectory",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
+    "/api/v1/itsm/tickets/{id}/transfer": {
+      "post": {
+        "operationId": "itsmTransferTask",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "opinion": {
+                    "type": "string"
+                  },
+                  "targetUserId": {
+                    "type": "integer"
+                  },
+                  "taskId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "taskId",
+                  "targetUserId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "transferTask",
+        "tags": [
+          "itsm"
+        ]
+      }
+    },
     "/api/v1/portal/navigation/list": {
       "get": {
         "operationId": "portalNavGetPortalNavList",
@@ -5261,7 +6429,7 @@
       }
     }
   },
-  "x-date": "2026-09-15 07:27:45",
+  "x-date": "2026-09-16 00:19:15",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

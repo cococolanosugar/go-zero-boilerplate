@@ -1,0 +1,271 @@
+syntax = "v1"
+
+info (
+	title:   "ITSM API"
+	desc:    "IT服务管理与BPMN流程流转接口"
+	author:  "antigravity"
+	version: "v1"
+)
+
+type (
+	// 流程定义
+	ProcessDefVO {
+		Id          int64  `json:"id"`
+		ProcCode    string `json:"procCode"`
+		ProcName    string `json:"procName"`
+		Category    string `json:"category"`
+		BpmnXml     string `json:"bpmnXml"`
+		FormSchema  string `json:"formSchema"`
+		Version     int32  `json:"version"`
+		Status      int32  `json:"status"`
+		Description string `json:"description"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListProcessDefsReq {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		Category string `form:"category,optional"`
+		Status   int32  `form:"status,default=0,optional"`
+		Keyword  string `form:"keyword,optional"`
+	}
+
+	ListProcessDefsResp {
+		Total int64          `json:"total"`
+		List  []ProcessDefVO `json:"list"`
+	}
+
+	GetProcessDefReq {
+		Id int64 `path:"id"`
+	}
+
+	CreateProcessDefReqVO {
+		ProcCode    string `json:"procCode"`
+		ProcName    string `json:"procName"`
+		Category    string `json:"category,optional,default=it_service"`
+		BpmnXml     string `json:"bpmnXml,optional"`
+		FormSchema  string `json:"formSchema,optional"`
+		Description string `json:"description,optional"`
+	}
+
+	UpdateProcessDefReqVO {
+		Id          int64  `path:"id"`
+		ProcName    string `json:"procName,optional"`
+		Category    string `json:"category,optional"`
+		BpmnXml     string `json:"bpmnXml,optional"`
+		FormSchema  string `json:"formSchema,optional"`
+		Description string `json:"description,optional"`
+		Status      int32  `json:"status,optional"`
+	}
+
+	DeployProcessDefReqVO {
+		Id int64 `path:"id"`
+	}
+
+	// 工单流转
+	TicketVO {
+		Id                  int64  `json:"id"`
+		TicketNo            string `json:"ticketNo"`
+		Title               string `json:"title"`
+		Priority            string `json:"priority"`
+		ProcDefId           int64  `json:"procDefId"`
+		ProcName            string `json:"procName,optional"`
+		InitiatorId         int64  `json:"initiatorId"`
+		InitiatorName       string `json:"initiatorName,optional"`
+		CurrentNodeId       string `json:"currentNodeId"`
+		CurrentNodeName     string `json:"currentNodeName"`
+		Status              string `json:"status"`
+		SlaStatus           string `json:"slaStatus"`
+		SlaResponseDeadline string `json:"slaResponseDeadline,optional"`
+		SlaResolveDeadline  string `json:"slaResolveDeadline,optional"`
+		CreateTime          string `json:"createTime"`
+	}
+
+	ListTicketsReqVO {
+		Page     int32  `form:"page,default=1"`
+		PageSize int32  `form:"pageSize,default=10"`
+		ViewType string `form:"viewType,optional,default=all"`
+		Status   string `form:"status,optional"`
+		Priority string `form:"priority,optional"`
+		Keyword  string `form:"keyword,optional"`
+	}
+
+	ListTicketsRespVO {
+		Total int64      `json:"total"`
+		List  []TicketVO `json:"list"`
+	}
+
+	GetTicketDetailReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TaskVO {
+		Id           int64  `json:"id"`
+		InstId       int64  `json:"instId"`
+		NodeId       string `json:"nodeId"`
+		NodeName     string `json:"nodeName"`
+		TaskType     string `json:"taskType"`
+		ApprovalMode string `json:"approvalMode"`
+		AssigneeId   int64  `json:"assigneeId"`
+		AssigneeName string `json:"assigneeName,optional"`
+		Status       string `json:"status"`
+		ClaimAt      string `json:"claimAt,optional"`
+		CreateTime   string `json:"createTime"`
+	}
+
+	TaskLogVO {
+		Id           int64  `json:"id"`
+		TaskId       int64  `json:"taskId"`
+		NodeId       string `json:"nodeId"`
+		NodeName     string `json:"nodeName"`
+		OperatorId   int64  `json:"operatorId"`
+		OperatorName string `json:"operatorName"`
+		ActionType   string `json:"actionType"`
+		Opinion      string `json:"opinion,optional"`
+		DurationSec  int32  `json:"durationSec"`
+		CreateTime   string `json:"createTime"`
+	}
+
+	TicketDetailRespVO {
+		Ticket         TicketVO    `json:"ticket"`
+		FormDataJson   string      `json:"formDataJson"`
+		FormSchemaJson string      `json:"formSchemaJson"`
+		BpmnXml        string      `json:"bpmnXml"`
+		ActiveTasks    []TaskVO    `json:"activeTasks"`
+		Logs           []TaskLogVO `json:"logs"`
+	}
+
+	CreateTicketReqVO {
+		ProcDefId    int64  `json:"procDefId"`
+		Title        string `json:"title"`
+		Priority     string `json:"priority,optional,default=P3"`
+		FormDataJson string `json:"formDataJson,optional"`
+	}
+
+	CreateTicketRespVO {
+		Id       int64  `json:"id"`
+		TicketNo string `json:"ticketNo"`
+	}
+
+	ClaimTaskReqVO {
+		Id     int64 `path:"id"`
+		TaskId int64 `json:"taskId"`
+	}
+
+	ApproveTaskReqVO {
+		Id                  int64  `path:"id"`
+		TaskId              int64  `json:"taskId"`
+		Opinion             string `json:"opinion,optional"`
+		UpdatedFormDataJson string `json:"updatedFormDataJson,optional"`
+	}
+
+	RejectTaskReqVO {
+		Id      int64  `path:"id"`
+		TaskId  int64  `json:"taskId"`
+		Opinion string `json:"opinion,optional"`
+	}
+
+	TransferTaskReqVO {
+		Id           int64  `path:"id"`
+		TaskId       int64  `json:"taskId"`
+		TargetUserId int64  `json:"targetUserId"`
+		Opinion      string `json:"opinion,optional"`
+	}
+
+	CancelTicketReqVO {
+		Id     int64  `path:"id"`
+		Reason string `json:"reason,optional"`
+	}
+
+	// 轨迹与 SLA
+	GetTicketTrajectoryReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TicketTrajectoryRespVO {
+		BpmnXml          string      `json:"bpmnXml"`
+		CompletedNodeIds []string    `json:"completedNodeIds"`
+		ActiveNodeIds    []string    `json:"activeNodeIds"`
+		RejectedNodeIds  []string    `json:"rejectedNodeIds"`
+		Logs             []TaskLogVO `json:"logs"`
+	}
+
+	SlaPolicyVO {
+		Id               int64  `json:"id"`
+		Priority         string `json:"priority"`
+		CalendarType     string `json:"calendarType"`
+		ResponseLimitMin int32  `json:"responseLimitMin"`
+		ResolveLimitMin  int32  `json:"resolveLimitMin"`
+		WarnThresholdPct int32  `json:"warnThresholdPct"`
+	}
+
+	ListSlaPoliciesRespVO {
+		List []SlaPolicyVO `json:"list"`
+	}
+
+	UpdateSlaPolicyReqVO {
+		Id               int64 `path:"id"`
+		ResponseLimitMin int32 `json:"responseLimitMin,optional"`
+		ResolveLimitMin  int32 `json:"resolveLimitMin,optional"`
+		WarnThresholdPct int32 `json:"warnThresholdPct,optional"`
+	}
+)
+
+@server (
+	jwt:    Auth
+	group:  itsm
+	prefix: /api/v1/itsm
+)
+service gateway {
+	// 流程定义管理
+	@handler listProcessDefs
+	get /process-defs (ListProcessDefsReq) returns (ListProcessDefsResp)
+
+	@handler createProcessDef
+	post /process-defs (CreateProcessDefReqVO) returns (CreateTicketRespVO)
+
+	@handler getProcessDef
+	get /process-defs/:id (GetProcessDefReq) returns (ProcessDefVO)
+
+	@handler updateProcessDef
+	put /process-defs/:id (UpdateProcessDefReqVO)
+
+	@handler deployProcessDef
+	post /process-defs/:id/deploy (DeployProcessDefReqVO)
+
+	// 工单流转中心
+	@handler listTickets
+	get /tickets (ListTicketsReqVO) returns (ListTicketsRespVO)
+
+	@handler createTicket
+	post /tickets (CreateTicketReqVO) returns (CreateTicketRespVO)
+
+	@handler getTicketDetail
+	get /tickets/:id (GetTicketDetailReqVO) returns (TicketDetailRespVO)
+
+	@handler claimTask
+	post /tickets/:id/claim (ClaimTaskReqVO)
+
+	@handler approveTask
+	post /tickets/:id/approve (ApproveTaskReqVO)
+
+	@handler rejectTask
+	post /tickets/:id/reject (RejectTaskReqVO)
+
+	@handler transferTask
+	post /tickets/:id/transfer (TransferTaskReqVO)
+
+	@handler cancelTicket
+	post /tickets/:id/cancel (CancelTicketReqVO)
+
+	// 轨迹与 SLA
+	@handler getTicketTrajectory
+	get /tickets/:id/trajectory (GetTicketTrajectoryReqVO) returns (TicketTrajectoryRespVO)
+
+	@handler listSlaPolicies
+	get /sla-policies returns (ListSlaPoliciesRespVO)
+
+	@handler updateSlaPolicy
+	put /sla-policies/:id (UpdateSlaPolicyReqVO)
+}

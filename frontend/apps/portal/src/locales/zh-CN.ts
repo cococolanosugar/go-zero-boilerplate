@@ -2,6 +2,7 @@ export default {
   // 导航与头部
   'menu.home': '门户首页',
   'menu.navigation': '网址导航',
+  'menu.desk': '服务台',
   'menu.services': '微服务治理',
   'menu.workbench': '联调工作台',
   'nav.title': '企业网址导航',

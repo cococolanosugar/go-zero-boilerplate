@@ -1,4 +1,4 @@
-.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-ts gen-openapi gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
+.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-itsm-rpc gen-ts gen-openapi gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-itsm-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
 
 SERVICE ?= user
 TABLE ?= all
@@ -33,6 +33,10 @@ gen-user-rpc:
 # 生成 worker-rpc 代码
 gen-worker-rpc:
 	cd app/worker/rpc && goctl rpc protoc worker.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+
+# 生成 itsm-rpc 代码
+gen-itsm-rpc:
+	cd app/itsm/rpc && goctl rpc protoc itsm.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 创建新微服务 RPC 模块 (例如: make new-rpc SERVICE=order)
 new-rpc:
@@ -72,6 +76,10 @@ run-user-rpc:
 # 启动 worker-rpc 异步任务微服务 (gRPC 8082，内置 Temporal Worker)
 run-worker-rpc:
 	cd app/worker/rpc && go run worker.go -f etc/worker.yaml
+
+# 启动 itsm-rpc 服务 (gRPC 8084，BPMN 2.0 + SLA)
+run-itsm-rpc:
+	cd app/itsm/rpc && go run itsm.go -f etc/itsm.yaml
 
 # 启动前端管理后台 (Vite 3001)
 run-admin:

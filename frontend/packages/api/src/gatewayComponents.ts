@@ -30,6 +30,14 @@ export interface AdminProfileResp {
 	menus: Array<SysMenuItem>
 }
 
+export interface ApproveTaskReqVO {
+	taskId: number
+	opinion?: string
+	updatedFormDataJson?: string
+}
+export interface ApproveTaskReqVOParams {
+}
+
 export interface AssignRolePermReq {
 	roleId: number
 	menuIds: Array<number>
@@ -52,6 +60,12 @@ export interface AsyncTaskItem {
 	updateTime: string
 }
 
+export interface CancelTicketReqVO {
+	reason?: string
+}
+export interface CancelTicketReqVOParams {
+}
+
 export interface CasdoorLoginReq {
 	code: string
 	state?: string
@@ -60,6 +74,21 @@ export interface CasdoorLoginReq {
 export interface ChangePersonalPasswordReq {
 	oldPassword: string
 	newPassword: string
+}
+
+export interface ClaimTaskReqVO {
+	taskId: number
+}
+export interface ClaimTaskReqVOParams {
+}
+
+export interface CreateProcessDefReqVO {
+	procCode: string
+	procName: string
+	category?: string
+	bpmnXml?: string
+	formSchema?: string
+	description?: string
 }
 
 export interface CreateSysConfigReq {
@@ -161,6 +190,18 @@ export interface CreateTaskReq {
 	remark?: string
 }
 
+export interface CreateTicketReqVO {
+	procDefId: number
+	title: string
+	priority?: string
+	formDataJson?: string
+}
+
+export interface CreateTicketRespVO {
+	id: number
+	ticketNo: string
+}
+
 export interface DashboardReq {
 }
 export interface DashboardReqParams {
@@ -196,6 +237,11 @@ export interface DeleteTaskReqParams {
 
 export interface DeleteTaskResp {
 	success: boolean
+}
+
+export interface DeployProcessDefReqVO {
+}
+export interface DeployProcessDefReqVOParams {
 }
 
 export interface FileUploadResp {
@@ -243,6 +289,11 @@ export interface GetPortalNavListResp {
 	list: Array<PortalNavDTO>
 }
 
+export interface GetProcessDefReq {
+}
+export interface GetProcessDefReqParams {
+}
+
 export interface GetSysMenuTreeResp {
 	list: Array<SysMenuItem>
 }
@@ -257,6 +308,16 @@ export interface GetTaskReq {
 export interface GetTaskReqParams {
 }
 
+export interface GetTicketDetailReqVO {
+}
+export interface GetTicketDetailReqVOParams {
+}
+
+export interface GetTicketTrajectoryReqVO {
+}
+export interface GetTicketTrajectoryReqVOParams {
+}
+
 export interface ListOnlineSessionsReq {
 }
 export interface ListOnlineSessionsReqParams {
@@ -269,6 +330,25 @@ export interface ListOnlineSessionsReqParams {
 export interface ListOnlineSessionsResp {
 	total: number
 	list: Array<OnlineSessionItem>
+}
+
+export interface ListProcessDefsReq {
+}
+export interface ListProcessDefsReqParams {
+	page: number
+	pageSize: number
+	category?: string
+	status?: number
+	keyword?: string
+}
+
+export interface ListProcessDefsResp {
+	total: number
+	list: Array<ProcessDefVO>
+}
+
+export interface ListSlaPoliciesRespVO {
+	list: Array<SlaPolicyVO>
 }
 
 export interface ListSysApisResp {
@@ -441,6 +521,22 @@ export interface ListTasksResp {
 	list: Array<AsyncTaskItem>
 }
 
+export interface ListTicketsReqVO {
+}
+export interface ListTicketsReqVOParams {
+	page: number
+	pageSize: number
+	viewType?: string
+	status?: string
+	priority?: string
+	keyword?: string
+}
+
+export interface ListTicketsRespVO {
+	total: number
+	list: Array<TicketVO>
+}
+
 export interface LoginReq {
 	mobile: string
 	password: string
@@ -505,6 +601,20 @@ export interface PortalNavDTO {
 	updateTime: string
 }
 
+export interface ProcessDefVO {
+	id: number
+	procCode: string
+	procName: string
+	category: string
+	bpmnXml: string
+	formSchema: string
+	version: number
+	status: number
+	description: string
+	createTime: string
+	updateTime: string
+}
+
 export interface RegisterReq {
 	username?: string
 	mobile: string
@@ -513,6 +623,13 @@ export interface RegisterReq {
 
 export interface RegisterResp {
 	id: number
+}
+
+export interface RejectTaskReqVO {
+	taskId: number
+	opinion?: string
+}
+export interface RejectTaskReqVOParams {
 }
 
 export interface RunTaskOnceReq {
@@ -525,6 +642,15 @@ export interface RunTaskOnceResp {
 	workflowId: string
 	runId: string
 	message: string
+}
+
+export interface SlaPolicyVO {
+	id: number
+	priority: string
+	calendarType: string
+	responseLimitMin: number
+	resolveLimitMin: number
+	warnThresholdPct: number
 }
 
 export interface SysApiItem {
@@ -683,6 +809,68 @@ export interface SysUserItem {
 	createTime: string
 }
 
+export interface TaskLogVO {
+	id: number
+	taskId: number
+	nodeId: string
+	nodeName: string
+	operatorId: number
+	operatorName: string
+	actionType: string
+	opinion?: string
+	durationSec: number
+	createTime: string
+}
+
+export interface TaskVO {
+	id: number
+	instId: number
+	nodeId: string
+	nodeName: string
+	taskType: string
+	approvalMode: string
+	assigneeId: number
+	assigneeName?: string
+	status: string
+	claimAt?: string
+	createTime: string
+}
+
+export interface TicketDetailRespVO {
+	ticket: TicketVO
+	formDataJson: string
+	formSchemaJson: string
+	bpmnXml: string
+	activeTasks: Array<TaskVO>
+	logs: Array<TaskLogVO>
+}
+
+export interface TicketTrajectoryRespVO {
+	bpmnXml: string
+	completedNodeIds: Array<string>
+	activeNodeIds: Array<string>
+	rejectedNodeIds: Array<string>
+	logs: Array<TaskLogVO>
+}
+
+export interface TicketVO {
+	id: number
+	ticketNo: string
+	title: string
+	priority: string
+	procDefId: number
+	procName?: string
+	initiatorId: number
+	initiatorName?: string
+	currentNodeId: string
+	currentNodeName: string
+	status: string
+	slaStatus: string
+	slaResponseDeadline?: string
+	slaResolveDeadline?: string
+	createTime: string
+}
+
 export interface ToggleTaskStatusReq {
 	status: number
 }
@@ -693,11 +881,38 @@ export interface ToggleTaskStatusResp {
 	success: boolean
 }
 
+export interface TransferTaskReqVO {
+	taskId: number
+	targetUserId: number
+	opinion?: string
+}
+export interface TransferTaskReqVOParams {
+}
+
 export interface UpdatePersonalProfileReq {
 	realName: string
 	mobile?: string
 	email?: string
 	avatar?: string
+}
+
+export interface UpdateProcessDefReqVO {
+	procName?: string
+	category?: string
+	bpmnXml?: string
+	formSchema?: string
+	description?: string
+	status?: number
+}
+export interface UpdateProcessDefReqVOParams {
+}
+
+export interface UpdateSlaPolicyReqVO {
+	responseLimitMin?: number
+	resolveLimitMin?: number
+	warnThresholdPct?: number
+}
+export interface UpdateSlaPolicyReqVOParams {
 }
 
 export interface UpdateSysConfigReq {

@@ -414,3 +414,184 @@ VALUES (1, 'order_status', '待支付', 'PENDING', 1, 'warning', 1, 1, '等待�
        (11, 'sys_notice_type', '系统通知', '1', 1, 'processing', 1, 1, '系统重要通知'),
        (12, 'sys_notice_type', '运营公告', '2', 2, 'warning', 0, 1, '平台运营公告')
 ON DUPLICATE KEY UPDATE `dict_label` = VALUES(`dict_label`);
+
+-- ====================================================================
+-- 12. 异步定时与工作流任务管理表 (sys_async_task)
+-- ====================================================================
+CREATE TABLE IF NOT EXISTS `sys_async_task` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '任务ID',
+  `task_name` varchar(128) NOT NULL COMMENT '任务名称',
+  `task_key` varchar(64) NOT NULL COMMENT '任务标识(唯一Key)',
+  `task_type` varchar(32) NOT NULL DEFAULT 'CRON' COMMENT '任务类型（CRON/WORKFLOW）',
+  `cron_expr` varchar(64) NOT NULL DEFAULT '' COMMENT 'Cron表达式',
+  `workflow_type` varchar(128) NOT NULL DEFAULT 'OrderSagaWorkflow' COMMENT '关联Temporal工作流类型',
+  `task_queue` varchar(64) NOT NULL DEFAULT 'ORDER_TASK_QUEUE' COMMENT 'Temporal任务队列',
+  `payload` text NOT NULL COMMENT '任务默认入参JSON',
+  `status` tinyint NOT NULL DEFAULT 1 COMMENT '任务状态（1正常 0暂停）',
+  `last_run_time` datetime DEFAULT NULL COMMENT '最近一次运行时间',
+  `last_run_status` varchar(32) NOT NULL DEFAULT 'IDLE' COMMENT '最近执行状态',
+  `remark` varchar(500) DEFAULT '' COMMENT '备注说明',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_task_key` (`task_key`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='异步定时与工作流任务管理表';
+
+INSERT IGNORE INTO `sys_async_task` (`id`, `task_name`, `task_key`, `task_type`, `cron_expr`, `workflow_type`, `task_queue`, `payload`, `status`, `last_run_status`, `remark`)
+VALUES 
+  (1, 'HelloWorld 异步演示任务', 'hello_world_sample', 'CRON', '*/5 * * * *', 'HelloWorldWorkflow', 'ASYNC_TASK_QUEUE', '{"name":"Antigravity Gopher"}', 1, 'IDLE', '用于演示 Temporal 异步任务与工作流开发标准模式的示例任务'),
+  (2, '系统每日报表统计', 'daily_report_generate', 'CRON', '0 2 * * *', 'DailyReportWorkflow', 'ASYNC_TASK_QUEUE', '{"scope":"all"}', 1, 'IDLE', '每日凌晨统计平台各项微服务核心指标并生成汇总报表');
+
+-- ====================================================================
+-- 13. 门户网址导航配置表 (sys_portal_nav)
+-- ====================================================================
+CREATE TABLE IF NOT EXISTS `sys_portal_nav` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '站点显示名称',
+  `category` varchar(32) NOT NULL DEFAULT 'default' COMMENT '所属分类',
+  `url` varchar(512) NOT NULL DEFAULT '' COMMENT '目标网址(支持 {HOST} 动态占位符)',
+  `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '图标(Antd图标名或图片URL)',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '站点描述说明',
+  `tags` varchar(128) NOT NULL DEFAULT '' COMMENT '站点标签(逗号分隔)',
+  `sort` int NOT NULL DEFAULT 0 COMMENT '排序权重(越大越靠前)',
+  `target` varchar(16) NOT NULL DEFAULT '_blank' COMMENT '打开方式(_blank/_self)',
+  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态(1:启用 0:停用)',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_category_status_sort` (`category`, `status`, `sort`),
+  KEY `idx_status_sort` (`status`, `sort`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='门户网址导航站点数据源配置表';
+
+INSERT IGNORE INTO `sys_portal_nav` (`id`, `title`, `category`, `url`, `icon`, `description`, `tags`, `sort`, `target`, `status`)
+VALUES
+  (1, 'Temporal Web 控制台', '任务引擎', 'http://{HOST}:8233', 'CloudServerOutlined', '分布式工作流与异步任务编排执行可视化监控面板', 'Temporal,Saga,Cron', 100, '_blank', 1),
+  (2, 'Nacos 服务注册与配置中心', '服务治理', 'http://{HOST}:8848/nacos', 'SafetyCertificateOutlined', '微服务注册、健康心跳探测与动态配置下发管理控制台', 'Nacos,gRPC,Registry', 90, '_blank', 1),
+  (3, 'Casdoor 统一身份认证中心', '身份认证', 'http://{HOST}:8000', 'KeyOutlined', '企业级 OAuth 2.0 / OIDC 单点登录与统一账号通行证管理中心', 'IAM,OIDC,SSO', 80, '_blank', 1),
+  (4, '网关 Swagger / OpenAPI 文档', '开发文档', 'http://{HOST}:8888/swagger', 'BookOutlined', '微服务统一网关对外暴露的全部 HTTP RESTful 接口契约与在线交互文档', 'BFF,RESTful,API', 70, '_blank', 1),
+  (5, '企业管理后台 (Admin)', '核心门户', 'http://{HOST}:3001', 'DashboardOutlined', '基于 Ant Design Pro 规范构建的企业级中后台高密系统治理工作台', 'React,Admin,RBAC', 60, '_blank', 1),
+  (6, '官方技术门户 (Portal)', '核心门户', 'http://{HOST}:3000', 'RocketOutlined', '面向全体开发者与客户的全栈技术门户、微服务全景与联调工作台', 'Portal,TopNav,Vite', 50, '_blank', 1),
+  (7, '企业 IT 自助服务台', '核心门户', 'http://{HOST}:3000/desk', 'CustomerServiceOutlined', '面向全体企业员工的一站式服务目录大厅、自助提单与审批流转时间线跟踪', 'ITSM,BPMN,SLA', 45, '_self', 1),
+  (8, 'BPMN 流程设计与工单治理中心', '核心门户', 'http://{HOST}:3001/itsm/tickets', 'AuditOutlined', '企业级 BPMN 2.0 流程模型可视化建模设计、服务目录发布与全量工单运维工作台', 'BPMN,Process,Admin', 40, '_blank', 1);
+
+-- ====================================================================
+-- 14. ITSM 服务管理与 BPMN 流程引擎数据表 (itsm_*)
+-- ====================================================================
+CREATE TABLE IF NOT EXISTS `itsm_process_def` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `proc_code` varchar(64) NOT NULL DEFAULT '',
+  `proc_name` varchar(128) NOT NULL DEFAULT '',
+  `category` varchar(64) NOT NULL DEFAULT 'common',
+  `bpmn_xml` longtext NOT NULL,
+  `form_schema` json NOT NULL,
+  `version` int NOT NULL DEFAULT 1,
+  `status` tinyint NOT NULL DEFAULT 1,
+  `description` varchar(255) NOT NULL DEFAULT '',
+  `created_by` bigint NOT NULL DEFAULT 0,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_proc_code_version` (`proc_code`, `version`),
+  KEY `idx_category_status` (`category`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ITSM 流程定义表';
+
+CREATE TABLE IF NOT EXISTS `itsm_process_inst` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `proc_def_id` bigint NOT NULL DEFAULT 0,
+  `ticket_no` varchar(64) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `priority` varchar(16) NOT NULL DEFAULT 'P3',
+  `initiator_id` bigint NOT NULL DEFAULT 0,
+  `current_node_id` varchar(64) NOT NULL DEFAULT '',
+  `current_node_name` varchar(128) NOT NULL DEFAULT '',
+  `status` varchar(32) NOT NULL DEFAULT 'RUNNING',
+  `sla_status` varchar(32) NOT NULL DEFAULT 'NORMAL',
+  `sla_response_deadline` datetime DEFAULT NULL,
+  `sla_resolve_deadline` datetime DEFAULT NULL,
+  `first_response_at` datetime DEFAULT NULL,
+  `resolved_at` datetime DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_ticket_no` (`ticket_no`),
+  KEY `idx_initiator_status` (`initiator_id`, `status`),
+  KEY `idx_status_create` (`status`, `create_time`),
+  KEY `idx_sla_status` (`sla_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ITSM 工单流程实例表';
+
+CREATE TABLE IF NOT EXISTS `itsm_task` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `inst_id` bigint NOT NULL DEFAULT 0,
+  `node_id` varchar(64) NOT NULL DEFAULT '',
+  `node_name` varchar(128) NOT NULL DEFAULT '',
+  `task_type` varchar(32) NOT NULL DEFAULT 'USER_TASK',
+  `approval_mode` varchar(32) NOT NULL DEFAULT 'SINGLE',
+  `assignee_id` bigint DEFAULT NULL,
+  `candidate_users` json DEFAULT NULL,
+  `candidate_roles` json DEFAULT NULL,
+  `status` varchar(32) NOT NULL DEFAULT 'READY',
+  `claim_at` datetime DEFAULT NULL,
+  `completed_at` datetime DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_inst_status` (`inst_id`, `status`),
+  KEY `idx_assignee_status` (`assignee_id`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ITSM 待办任务流转表';
+
+CREATE TABLE IF NOT EXISTS `itsm_ticket_data` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `inst_id` bigint NOT NULL DEFAULT 0,
+  `form_data` json NOT NULL,
+  `snapshot_schema` json DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_inst_id` (`inst_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ITSM 动态表单数据表';
+
+CREATE TABLE IF NOT EXISTS `itsm_task_log` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `inst_id` bigint NOT NULL DEFAULT 0,
+  `task_id` bigint DEFAULT NULL,
+  `node_id` varchar(64) NOT NULL DEFAULT '',
+  `node_name` varchar(128) NOT NULL DEFAULT '',
+  `operator_id` bigint NOT NULL DEFAULT 0,
+  `operator_name` varchar(64) NOT NULL DEFAULT '',
+  `action_type` varchar(32) NOT NULL DEFAULT '',
+  `opinion` text DEFAULT NULL,
+  `duration_sec` int NOT NULL DEFAULT 0,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_inst_create` (`inst_id`, `create_time`),
+  KEY `idx_operator` (`operator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ITSM 工单流转审计日志表';
+
+CREATE TABLE IF NOT EXISTS `itsm_sla_policy` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `priority` varchar(16) NOT NULL DEFAULT 'P3',
+  `calendar_type` varchar(32) NOT NULL DEFAULT 'WORKING_HOURS',
+  `response_limit_min` int NOT NULL DEFAULT 60,
+  `resolve_limit_min` int NOT NULL DEFAULT 480,
+  `warn_threshold_pct` int NOT NULL DEFAULT 80,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_priority_calendar` (`priority`, `calendar_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ITSM SLA 时效策略表';
+
+-- 预置 SLA 策略
+INSERT IGNORE INTO `itsm_sla_policy` (`id`, `priority`, `calendar_type`, `response_limit_min`, `resolve_limit_min`, `warn_threshold_pct`)
+VALUES
+  (1, 'P1', '24X7', 15, 120, 80),
+  (2, 'P2', 'WORKING_HOURS', 30, 240, 80),
+  (3, 'P3', 'WORKING_HOURS', 60, 480, 80),
+  (4, 'P4', 'WORKING_HOURS', 120, 1440, 80);
+
+-- 挂载管理后台菜单项：服务流程 (ITSM)
+INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`, `visible`, `status`)
+VALUES
+  (60, 0, '服务流程', 1, '/itsm', '', 'itsm:manage', 'BranchesOutlined', 4, 1, 1),
+  (61, 60, '工单中心', 2, '/itsm/tickets', 'Itsm/Tickets', 'itsm:ticket:view', 'AuditOutlined', 1, 1, 1),
+  (62, 60, '流程目录', 2, '/itsm/process-defs', 'Itsm/ProcessDefs', 'itsm:process-def:view', 'ApartmentOutlined', 2, 1, 1)
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);

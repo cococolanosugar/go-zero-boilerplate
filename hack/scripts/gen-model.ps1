@@ -22,4 +22,9 @@ if ($Table -eq "all" -or $Table -eq "log") {
     goctl model mysql ddl -src manifest/sql/log_schema.sql -dir app/user/model -c --style go_zero
 }
 
+if ($Table -eq "all" -or $Table -eq "itsm") {
+    Write-Host "Generating ITSM models from manifest/sql/itsm_schema.sql..." -ForegroundColor Cyan
+    goctl model mysql ddl -src manifest/sql/itsm_schema.sql -dir app/itsm/model -c --style go_zero
+}
+
 Write-Host "Done generating database models!" -ForegroundColor Green

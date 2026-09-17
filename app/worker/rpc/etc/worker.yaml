@@ -1,21 +1,20 @@
 Name: worker.rpc
-ListenOn: 0.0.0.0:8082
+ListenOn: ${WORKER_RPC_LISTEN_ON:0.0.0.0:8082}
 
 # 数据库持久层配置
-DataSource: root:root@tcp(127.0.0.1:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+DataSource: ${MYSQL_DSN:root:root@tcp(127.0.0.1:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai}
 
 # Redis 缓存集群配置
 Cache:
-  - Host: 127.0.0.1:6379
+  - Host: ${REDIS_HOST:127.0.0.1:6379}
 
 Temporal:
-  HostPort: 127.0.0.1:7233
-  Namespace: default
-  TaskQueue: ASYNC_TASK_QUEUE
+  HostPort: ${TEMPORAL_HOST:127.0.0.1:7233}
+  Namespace: ${TEMPORAL_NAMESPACE:default}
+  TaskQueue: ${TEMPORAL_TASK_QUEUE:ASYNC_TASK_QUEUE}
 
 # ================= 服务注册与发现配置 =================
 # Nacos:
-#   Host: 127.0.0.1
-#   Port: 8848
-#   NamespaceId: public
-
+#   Host: ${NACOS_HOST:127.0.0.1}
+#   Port: ${NACOS_PORT:8848}
+#   NamespaceId: ${NACOS_NAMESPACE:public}

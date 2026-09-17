@@ -83,6 +83,140 @@ export function deleteSysDictType(params: components.SysIdReqParams, id: number)
 }
 
 /**
+ * @description 
+ * @param params
+ */
+export function listProcessDefs(params: components.ListProcessDefsReqParams) {
+	return webapi.get<components.ListProcessDefsResp>(`/api/v1/itsm/process-defs`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createProcessDef(req: components.CreateProcessDefReqVO) {
+	return webapi.post<components.CreateTicketRespVO>(`/api/v1/itsm/process-defs`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getProcessDef(params: components.GetProcessDefReqParams, id: number) {
+	return webapi.get<components.ProcessDefVO>(`/api/v1/itsm/process-defs/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateProcessDef(params: components.UpdateProcessDefReqVOParams, req: components.UpdateProcessDefReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/itsm/process-defs/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deployProcessDef(params: components.DeployProcessDefReqVOParams, id: number) {
+	return webapi.post<null>(`/api/v1/itsm/process-defs/${id}/deploy`, params)
+}
+
+/**
+ * @description 
+ */
+export function listSlaPolicies() {
+	return webapi.get<components.ListSlaPoliciesRespVO>(`/api/v1/itsm/sla-policies`)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateSlaPolicy(params: components.UpdateSlaPolicyReqVOParams, req: components.UpdateSlaPolicyReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/itsm/sla-policies/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listTickets(params: components.ListTicketsReqVOParams) {
+	return webapi.get<components.ListTicketsRespVO>(`/api/v1/itsm/tickets`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createTicket(req: components.CreateTicketReqVO) {
+	return webapi.post<components.CreateTicketRespVO>(`/api/v1/itsm/tickets`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getTicketDetail(params: components.GetTicketDetailReqVOParams, id: number) {
+	return webapi.get<components.TicketDetailRespVO>(`/api/v1/itsm/tickets/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function approveTask(params: components.ApproveTaskReqVOParams, req: components.ApproveTaskReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/itsm/tickets/${id}/approve`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function cancelTicket(params: components.CancelTicketReqVOParams, req: components.CancelTicketReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/itsm/tickets/${id}/cancel`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function claimTask(params: components.ClaimTaskReqVOParams, req: components.ClaimTaskReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/itsm/tickets/${id}/claim`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function rejectTask(params: components.RejectTaskReqVOParams, req: components.RejectTaskReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/itsm/tickets/${id}/reject`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getTicketTrajectory(params: components.GetTicketTrajectoryReqVOParams, id: number) {
+	return webapi.get<components.TicketTrajectoryRespVO>(`/api/v1/itsm/tickets/${id}/trajectory`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function transferTask(params: components.TransferTaskReqVOParams, req: components.TransferTaskReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/itsm/tickets/${id}/transfer`, params, req)
+}
+
+/**
  * @description "获取门户公开网址导航列表"
  * @param params
  */

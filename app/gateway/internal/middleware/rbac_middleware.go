@@ -52,8 +52,10 @@ func (m *RbacMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			}
 		}
 
-		// 4. 仅对后台 /api/v1/system/* 接口执行动态 RBAC 权限拦截
-		if !strings.HasPrefix(path, "/api/v1/system") {
+		// 4. 对后台 /api/v1/system/* 以及 ITSM 管理类接口 (/process-defs, /sla-policies) 执行动态 RBAC 权限拦截
+		isSystemManage := strings.HasPrefix(path, "/api/v1/system")
+		isItsmManage := strings.HasPrefix(path, "/api/v1/itsm/process-defs") || strings.HasPrefix(path, "/api/v1/itsm/sla-policies")
+		if !isSystemManage && !isItsmManage {
 			next(w, r)
 			return
 		}
