@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import {
   App as AntdApp,
   Button,
@@ -37,13 +37,13 @@ import {
   type ProColumns,
 } from '@ant-design/pro-components';
 import {
-  devopsListClusters,
-  devopsCreateCluster,
-  devopsUpdateCluster,
-  devopsDeleteCluster,
-  devopsTestCluster,
-  devopsListNamespaces,
-  type DevopsListClusters200ListItem,
+  titanListClusters,
+  titanCreateCluster,
+  titanUpdateCluster,
+  titanDeleteCluster,
+  titanTestCluster,
+  titanListNamespaces,
+  type TitanListClusters200ListItem,
 } from '@zero/api';
 import { copyToClipboard } from '@zero/shared';
 
@@ -63,13 +63,13 @@ export const ClustersPage: React.FC = () => {
   // 表单与弹窗状态
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-  const [editingItem, setEditingItem] = useState<DevopsListClusters200ListItem | null>(null);
+  const [editingItem, setEditingItem] = useState<TitanListClusters200ListItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [form] = Form.useForm();
 
   // 命名空间 Drawer 状态
   const [nsDrawerOpen, setNsDrawerOpen] = useState(false);
-  const [currentCluster, setCurrentCluster] = useState<DevopsListClusters200ListItem | null>(null);
+  const [currentCluster, setCurrentCluster] = useState<TitanListClusters200ListItem | null>(null);
   const [namespaces, setNamespaces] = useState<string[]>([]);
   const [nsLoading, setNsLoading] = useState(false);
   const [nsFilter, setNsFilter] = useState('');
@@ -87,7 +87,7 @@ export const ClustersPage: React.FC = () => {
   };
 
   // 打开编辑弹窗
-  const handleOpenEdit = (record: DevopsListClusters200ListItem) => {
+  const handleOpenEdit = (record: TitanListClusters200ListItem) => {
     setModalMode('edit');
     setEditingItem(record);
     form.resetFields();
@@ -106,7 +106,7 @@ export const ClustersPage: React.FC = () => {
       const values = await form.validateFields();
       setSubmitting(true);
       if (modalMode === 'create') {
-        await devopsCreateCluster({
+        await titanCreateCluster({
           name: values.name,
           env: values.env,
           apiEndpoint: values.apiEndpoint || '',
@@ -115,7 +115,7 @@ export const ClustersPage: React.FC = () => {
         });
         message.success('Kubernetes 集群纳管成功');
       } else if (editingItem?.id) {
-        await devopsUpdateCluster(editingItem.id, {
+        await titanUpdateCluster(editingItem.id, {
           name: values.name,
           env: values.env,
           apiEndpoint: values.apiEndpoint,
@@ -136,11 +136,11 @@ export const ClustersPage: React.FC = () => {
   };
 
   // 连通性测试
-  const handleTestCluster = async (record: DevopsListClusters200ListItem) => {
+  const handleTestCluster = async (record: TitanListClusters200ListItem) => {
     if (!record.id) return;
     setTestingId(record.id);
     try {
-      const res = await devopsTestCluster(record.id);
+      const res = await titanTestCluster(record.id);
       if (res.success) {
         message.success(`集群 [${record.name}] 连通正常！Kubernetes 版本: ${res.version || 'v1.x'}`);
       } else {
@@ -155,14 +155,14 @@ export const ClustersPage: React.FC = () => {
   };
 
   // 查看命名空间
-  const handleViewNamespaces = async (record: DevopsListClusters200ListItem) => {
+  const handleViewNamespaces = async (record: TitanListClusters200ListItem) => {
     if (!record.id) return;
     setCurrentCluster(record);
     setNsFilter('');
     setNsDrawerOpen(true);
     setNsLoading(true);
     try {
-      const res = await devopsListNamespaces(record.id);
+      const res = await titanListNamespaces(record.id);
       setNamespaces(res.namespaces || []);
     } catch (err: any) {
       message.error(err?.message || '获取命名空间列表失败');
@@ -175,7 +175,7 @@ export const ClustersPage: React.FC = () => {
   // 删除集群
   const handleDelete = async (id: number) => {
     try {
-      await devopsDeleteCluster(id);
+      await titanDeleteCluster(id);
       message.success('集群已成功注销');
       actionRef.current?.reload();
     } catch (err: any) {
@@ -183,7 +183,7 @@ export const ClustersPage: React.FC = () => {
     }
   };
 
-  const columns: ProColumns<DevopsListClusters200ListItem>[] = [
+  const columns: ProColumns<TitanListClusters200ListItem>[] = [
     {
       title: '集群 ID',
       dataIndex: 'id',
@@ -324,7 +324,7 @@ export const ClustersPage: React.FC = () => {
         subTitle: '跨机房、多云多环境 Kubernetes 集群凭证托管、状态探测与资源发布中枢',
       }}
     >
-      <ProTable<DevopsListClusters200ListItem>
+      <ProTable<TitanListClusters200ListItem>
         headerTitle="已纳管 Kubernetes 集群列表"
         actionRef={actionRef}
         rowKey="id"
@@ -338,7 +338,7 @@ export const ClustersPage: React.FC = () => {
         ]}
         request={async (params) => {
           try {
-            const res = await devopsListClusters({
+            const res = await titanListClusters({
               env: params.env,
               page: params.current || 1,
               pageSize: params.pageSize || 20,

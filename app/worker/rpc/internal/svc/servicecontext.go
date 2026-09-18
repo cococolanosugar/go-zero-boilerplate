@@ -62,7 +62,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	taskActs := activities.NewTaskActivities()
 	w.RegisterActivity(taskActs)
 	w.RegisterActivity(activities.NewItsmSlaActivities(sqlConn))
-	w.RegisterActivity(activities.NewDevopsPipelineActivities(sqlConn))
+	w.RegisterActivity(activities.NewTitanPipelineActivities(sqlConn))
 
 	return &ServiceContext{
 		Config:                c,

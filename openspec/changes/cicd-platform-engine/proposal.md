@@ -48,12 +48,12 @@
 ## Impact
 
 1. **后端微服务架构**：
-   - 新增 `app/devops/rpc` 微服务（gRPC 端口 `:8086`）与 `app/devops/model` 持久层（流水线、步骤任务、执行记录、K8s集群、外部系统集成 5 张主表）；
-   - 网关 `app/gateway/desc/devops.api` 暴露 RESTful BFF 接口；
-   - `app/worker` 或 `pkg/temporalx` 承载长时间运行的 Pipeline 阶段状态机编排；
+   - 新增 `app/titan/rpc` 微服务（gRPC 端口 `:8086`）与 `app/titan/model` 持久层（流水线、步骤任务、执行记录、K8s集群、外部系统集成 5 张主表）；
+   - 网关 `app/gateway/desc/titan.api` 暴露 RESTful BFF 接口；
+   - `app/worker` 承载长时间运行的 Pipeline 阶段状态机编排；
 2. **前端与 SDK**：
-   - `@zero/api` 增加 `devops` API 端点与模型；
-   - `apps/admin` 新增 `/devops` 路由、流水线编排设计器、实时日志抽屉与多集群监控视图；
+   - `@zero/api` 增加 `titan` API 端点与模型；
+   - `apps/admin` 新增 `/titan` 路由、流水线编排设计器、实时日志抽屉与多集群监控视图；
 3. **基础设施与部署**：
    - `manifest/deploy` 与 `docker-compose` 增加 Harbor/Jenkins 快速集成配置与本地 K8s/k3s 联调文档；
-   - `Makefile` 与 `justfile` 新增 `gen-devops-rpc` 与 `run-devops-rpc` 指令。
+   - `Makefile` 与 `justfile` 新增 `gen-titan-rpc` 与 `run-titan-rpc` 指令。

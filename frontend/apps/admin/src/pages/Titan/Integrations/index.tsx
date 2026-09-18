@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import {
   App as AntdApp,
   Button,
@@ -34,12 +34,12 @@ import {
   type ProColumns,
 } from '@ant-design/pro-components';
 import {
-  devopsListIntegrations,
-  devopsCreateIntegration,
-  devopsUpdateIntegration,
-  devopsDeleteIntegration,
-  devopsTestIntegration,
-  type DevopsListIntegrations200ListItem,
+  titanListIntegrations,
+  titanCreateIntegration,
+  titanUpdateIntegration,
+  titanDeleteIntegration,
+  titanTestIntegration,
+  type TitanListIntegrations200ListItem,
 } from '@zero/api';
 
 const { Text } = Typography;
@@ -57,7 +57,7 @@ export const IntegrationsPage: React.FC = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-  const [editingItem, setEditingItem] = useState<DevopsListIntegrations200ListItem | null>(null);
+  const [editingItem, setEditingItem] = useState<TitanListIntegrations200ListItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [testingId, setTestingId] = useState<number | null>(null);
 
@@ -75,7 +75,7 @@ export const IntegrationsPage: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleOpenEdit = (record: DevopsListIntegrations200ListItem) => {
+  const handleOpenEdit = (record: TitanListIntegrations200ListItem) => {
     setModalMode('edit');
     setEditingItem(record);
     form.resetFields();
@@ -102,7 +102,7 @@ export const IntegrationsPage: React.FC = () => {
       }
 
       if (modalMode === 'create') {
-        await devopsCreateIntegration({
+        await titanCreateIntegration({
           name: values.name,
           category: values.category,
           authType: values.authType,
@@ -111,7 +111,7 @@ export const IntegrationsPage: React.FC = () => {
         });
         message.success('第三方集成凭证已成功纳管');
       } else if (editingItem?.id) {
-        await devopsUpdateIntegration(editingItem.id, {
+        await titanUpdateIntegration(editingItem.id, {
           name: values.name,
           authType: values.authType,
           config: configStr,
@@ -131,11 +131,11 @@ export const IntegrationsPage: React.FC = () => {
     }
   };
 
-  const handleTest = async (record: DevopsListIntegrations200ListItem) => {
+  const handleTest = async (record: TitanListIntegrations200ListItem) => {
     if (!record.id) return;
     setTestingId(record.id);
     try {
-      const res = await devopsTestIntegration(record.id);
+      const res = await titanTestIntegration(record.id);
       if (res.success) {
         message.success(`[${record.name}] 集成连通性测试通过！`);
       } else {
@@ -150,7 +150,7 @@ export const IntegrationsPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await devopsDeleteIntegration(id);
+      await titanDeleteIntegration(id);
       message.success('集成凭据已删除');
       actionRef.current?.reload();
     } catch (err: any) {
@@ -158,7 +158,7 @@ export const IntegrationsPage: React.FC = () => {
     }
   };
 
-  const columns: ProColumns<DevopsListIntegrations200ListItem>[] = [
+  const columns: ProColumns<TitanListIntegrations200ListItem>[] = [
     {
       title: '凭证 ID',
       dataIndex: 'id',
@@ -288,7 +288,7 @@ export const IntegrationsPage: React.FC = () => {
         subTitle: '纳管 Jenkins、GitLab、Harbor、SonarQube 等关键研发基础设施凭证与外部连接器',
       }}
     >
-      <ProTable<DevopsListIntegrations200ListItem>
+      <ProTable<TitanListIntegrations200ListItem>
         headerTitle="已纳管外部工具与凭据"
         actionRef={actionRef}
         rowKey="id"
@@ -300,7 +300,7 @@ export const IntegrationsPage: React.FC = () => {
         ]}
         request={async (params) => {
           try {
-            const res = await devopsListIntegrations({
+            const res = await titanListIntegrations({
               category: params.category,
               page: params.current || 1,
               pageSize: params.pageSize || 20,

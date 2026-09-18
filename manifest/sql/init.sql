@@ -603,10 +603,10 @@ VALUES
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- ====================================================================
--- 15. Titan 研发交付平台核心数据表 (devops_*)
+-- 15. Titan 研发交付平台核心数据表 (titan_*)
 -- ====================================================================
 
-CREATE TABLE IF NOT EXISTS `devops_integration` (
+CREATE TABLE IF NOT EXISTS `titan_integration` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL DEFAULT '',
   `category` varchar(64) NOT NULL DEFAULT 'git',
@@ -621,7 +621,7 @@ CREATE TABLE IF NOT EXISTS `devops_integration` (
   KEY `idx_category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan 外部系统集成与凭据表';
 
-CREATE TABLE IF NOT EXISTS `devops_cluster` (
+CREATE TABLE IF NOT EXISTS `titan_cluster` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL DEFAULT '',
   `env` varchar(32) NOT NULL DEFAULT 'dev',
@@ -638,7 +638,7 @@ CREATE TABLE IF NOT EXISTS `devops_cluster` (
   KEY `idx_env` (`env`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan Kubernetes 集群管理表';
 
-CREATE TABLE IF NOT EXISTS `devops_pipeline` (
+CREATE TABLE IF NOT EXISTS `titan_pipeline` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL DEFAULT '',
   `display_name` varchar(128) NOT NULL DEFAULT '',
@@ -658,7 +658,7 @@ CREATE TABLE IF NOT EXISTS `devops_pipeline` (
   KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan 流水线模型定义表';
 
-CREATE TABLE IF NOT EXISTS `devops_pipeline_exec` (
+CREATE TABLE IF NOT EXISTS `titan_pipeline_exec` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `pipeline_id` bigint NOT NULL DEFAULT 0,
   `pipeline_name` varchar(128) NOT NULL DEFAULT '',
@@ -682,7 +682,7 @@ CREATE TABLE IF NOT EXISTS `devops_pipeline_exec` (
   KEY `idx_create_time` (`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan 流水线执行实例表';
 
-CREATE TABLE IF NOT EXISTS `devops_pipeline_step_exec` (
+CREATE TABLE IF NOT EXISTS `titan_pipeline_step_exec` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `exec_id` bigint NOT NULL DEFAULT 0,
   `stage_id` varchar(64) NOT NULL DEFAULT '',

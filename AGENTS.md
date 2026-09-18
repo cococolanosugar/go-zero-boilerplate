@@ -58,14 +58,14 @@ go-zero-boilerplate/
 │   │   │   └── itsm.go            # ITSM RPC 统一启动入口
 │   │   └── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
 │   │
-│   └── devops/                    # 【DevOps 交付微服务】纯 gRPC (端口 8086，Titan CI/CD 引擎、K8s & Helm 编排)
+│   └── titan/                     # 【Titan 交付微服务】纯 gRPC (端口 8086，Titan CI/CD 引擎、K8s & Helm 编排)
 │       ├── rpc/
-│       │   ├── client/devops/     # 供网关调用的 RPC Client
-│       │   ├── etc/devops.yaml
+│       │   ├── client/titan/      # 供网关调用的 RPC Client
+│       │   ├── etc/titan.yaml
 │       │   ├── internal/          # jenkins, k8s, config, logic, server, svc
-│       │   ├── pb/ & devops.proto
-│       │   └── devops.go          # DevOps RPC 统一启动入口
-│       └── model/                 # DevOps 5 张数据表持久层 (integration, cluster, pipeline, pipeline_exec, step_exec)
+│       │   ├── pb/ & titan.proto
+│       │   └── titan.go           # Titan RPC 统一启动入口
+│       └── model/                 # Titan 5 张数据表持久层 (integration, cluster, pipeline, pipeline_exec, step_exec)
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -321,8 +321,8 @@ go-zero-boilerplate/
 
 ### 3.14 基于 Titan 的云原生研发交付与 CI/CD 自动化编排 (Titan DevOps Engine & Multi-Cluster Delivery)
 * **架构定位与设计哲学**：
-  * **DevOps 核心微服务 (`app/devops/rpc`)**：纯 gRPC 微服务（端口 8086），承载凭证纳管（Git/Jenkins/Harbor）、Kubernetes 多集群状态与命名空间发现、流水线模型定义与执行调度。
-  * **数据持久层 (`app/devops/model`)**：承载 `devops_integration`、`devops_cluster`、`devops_pipeline`、`devops_pipeline_exec`、`devops_pipeline_step_exec` 5 张核心数据表。
+  * **Titan 核心微服务 (`app/titan/rpc`)**：纯 gRPC 微服务（端口 8086），承载凭证纳管（Git/Jenkins/Harbor）、Kubernetes 多集群状态与命名空间发现、流水线模型定义与执行调度。
+  * **数据持久层 (`app/titan/model`)**：承载 `titan_integration`、`titan_cluster`、`titan_pipeline`、`titan_pipeline_exec`、`titan_pipeline_step_exec` 5 张核心数据表。
   * **AES-GCM 工业级密钥安全 (`pkg/cryptox`)**：所有外部系统 API Token、Jenkins 密码、Kubeconfig 凭据入库均强制通过 SHA-256 派生密钥进行 256 位 GCM 认证加密存储；对外接口与审计日志统一执行星号脱敏防护。
 * **双模部署与发布引擎 (Dual Release Engine: Helm & Server-Side Apply)**：
   * **Helm 3 Release Engine (`internal/k8s/helm.go`)**：基于官方 Helm Go SDK 动态加载内存级 `RESTClientGetter`，支持 Chart 升级、回滚、Values 字典深度合并（MergeValues）与幂等安装（`UpgradeInstall`）。
@@ -357,7 +357,7 @@ just gen-gateway
 just gen-rpc user
 just gen-rpc worker
 just gen-rpc itsm
-just gen-rpc devops
+just gen-rpc titan
 
 # 创建新微服务 RPC 模块 (自动应用项目模板并置入 app/<service>/rpc)
 just new-rpc <service>
@@ -378,7 +378,7 @@ just gen-ts
 just run-user-rpc     # 监听 127.0.0.1:8080
 just run-worker-rpc   # 监听 127.0.0.1:8082 (同时启动内置 Temporal Worker)
 just run-itsm-rpc     # 监听 127.0.0.1:8084 (ITSM BPMN 流程引擎)
-just run-devops-rpc   # 监听 127.0.0.1:8086 (Titan CI/CD 研发交付微服务)
+just run-titan-rpc    # 监听 127.0.0.1:8086 (Titan CI/CD 研发交付微服务)
 
 # 2. 启动统一网关
 just run-gateway      # 监听 0.0.0.0:8888

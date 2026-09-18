@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   Modal,
   Form,
@@ -31,9 +31,9 @@ import {
   ToolOutlined,
 } from '@ant-design/icons';
 import {
-  devopsCreatePipeline,
-  devopsUpdatePipeline,
-  type DevopsListPipelines200ListItem,
+  titanCreatePipeline,
+  titanUpdatePipeline,
+  type TitanListPipelines200ListItem,
 } from '@zero/api';
 
 const { Text, Paragraph } = Typography;
@@ -41,7 +41,7 @@ const { Text, Paragraph } = Typography;
 export interface DesignerModalProps {
   open: boolean;
   mode: 'create' | 'edit';
-  pipeline: DevopsListPipelines200ListItem | null;
+  pipeline: TitanListPipelines200ListItem | null;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -267,7 +267,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
       const stagesPayload = JSON.stringify(stages);
 
       if (mode === 'create') {
-        await devopsCreatePipeline({
+        await titanCreatePipeline({
           name: values.name,
           displayName: values.displayName,
           category: values.category,
@@ -279,7 +279,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
           description: values.description || '',
         });
       } else if (pipeline?.id) {
-        await devopsUpdatePipeline(pipeline.id, {
+        await titanUpdatePipeline(pipeline.id, {
           displayName: values.displayName,
           category: values.category,
           gitRepo: values.gitRepo,

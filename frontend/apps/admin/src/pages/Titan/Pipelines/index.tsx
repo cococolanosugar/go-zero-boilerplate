@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   App as AntdApp,
@@ -36,12 +36,12 @@ import {
   type ProColumns,
 } from '@ant-design/pro-components';
 import {
-  devopsListPipelines,
-  devopsDeletePipeline,
-  devopsTriggerPipeline,
-  devopsListExecutions,
-  type DevopsListPipelines200ListItem,
-  type DevopsListExecutions200ListItem,
+  titanListPipelines,
+  titanDeletePipeline,
+  titanTriggerPipeline,
+  titanListExecutions,
+  type TitanListPipelines200ListItem,
+  type TitanListExecutions200ListItem,
 } from '@zero/api';
 import { DesignerModal } from './DesignerModal';
 
@@ -71,11 +71,11 @@ export const PipelinesPage: React.FC = () => {
   // 设计器弹窗
   const [designerOpen, setDesignerOpen] = useState(false);
   const [designerMode, setDesignerMode] = useState<'create' | 'edit'>('create');
-  const [currentPipeline, setCurrentPipeline] = useState<DevopsListPipelines200ListItem | null>(null);
+  const [currentPipeline, setCurrentPipeline] = useState<TitanListPipelines200ListItem | null>(null);
 
   // 触发运行弹窗
   const [triggerOpen, setTriggerOpen] = useState(false);
-  const [triggerPipelineItem, setTriggerPipelineItem] = useState<DevopsListPipelines200ListItem | null>(null);
+  const [triggerPipelineItem, setTriggerPipelineItem] = useState<TitanListPipelines200ListItem | null>(null);
   const [triggering, setTriggering] = useState(false);
   const [triggerForm] = Form.useForm();
 
@@ -92,14 +92,14 @@ export const PipelinesPage: React.FC = () => {
   };
 
   // 打开编辑设计器
-  const handleOpenEdit = (record: DevopsListPipelines200ListItem) => {
+  const handleOpenEdit = (record: TitanListPipelines200ListItem) => {
     setDesignerMode('edit');
     setCurrentPipeline(record);
     setDesignerOpen(true);
   };
 
   // 打开触发运行
-  const handleOpenTrigger = (record: DevopsListPipelines200ListItem) => {
+  const handleOpenTrigger = (record: TitanListPipelines200ListItem) => {
     setTriggerPipelineItem(record);
     triggerForm.resetFields();
     triggerForm.setFieldsValue({
@@ -117,7 +117,7 @@ export const PipelinesPage: React.FC = () => {
       if (!triggerPipelineItem?.id) return;
       setTriggering(true);
 
-      const res = await devopsTriggerPipeline(triggerPipelineItem.id, {
+      const res = await titanTriggerPipeline(triggerPipelineItem.id, {
         gitBranch: values.gitBranch,
         gitCommit: values.gitCommit || '',
         runtimeParams: values.runtimeParams || '{}',
@@ -166,7 +166,7 @@ export const PipelinesPage: React.FC = () => {
   // 删除流水线
   const handleDelete = async (id: number) => {
     try {
-      await devopsDeletePipeline(id);
+      await titanDeletePipeline(id);
       message.success('流水线已成功删除');
       actionRef.current?.reload();
     } catch (err: any) {
@@ -174,7 +174,7 @@ export const PipelinesPage: React.FC = () => {
     }
   };
 
-  const columns: ProColumns<DevopsListPipelines200ListItem>[] = [
+  const columns: ProColumns<TitanListPipelines200ListItem>[] = [
     {
       title: '流水线 ID',
       dataIndex: 'id',
@@ -298,7 +298,7 @@ export const PipelinesPage: React.FC = () => {
         subTitle: '开箱即用的云原生持续构建、容器镜像制作与 Kubernetes 多集群发布编排流水线',
       }}
     >
-      <ProTable<DevopsListPipelines200ListItem>
+      <ProTable<TitanListPipelines200ListItem>
         headerTitle="持续交付流水线定义"
         actionRef={actionRef}
         rowKey="id"
@@ -317,7 +317,7 @@ export const PipelinesPage: React.FC = () => {
         ]}
         request={async (params) => {
           try {
-            const res = await devopsListPipelines({
+            const res = await titanListPipelines({
               category: params.category,
               keyword: params.displayName || params.keyword,
               page: params.current || 1,
@@ -398,14 +398,14 @@ export const PipelinesPage: React.FC = () => {
         onClose={() => setHistoryDrawerOpen(false)}
         size={880}
       >
-        <ProTable<DevopsListExecutions200ListItem>
+        <ProTable<TitanListExecutions200ListItem>
           actionRef={historyActionRef}
           rowKey="id"
           search={false}
           headerTitle={historyPipelineId ? `流水线 #${historyPipelineId} 执行历史` : '全局最近执行流水'}
           request={async (params) => {
             try {
-              const res = await devopsListExecutions({
+              const res = await titanListExecutions({
                 pipelineId: historyPipelineId,
                 page: params.current || 1,
                 pageSize: params.pageSize || 20,

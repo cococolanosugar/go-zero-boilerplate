@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   App as AntdApp,
@@ -35,12 +35,12 @@ import {
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import {
-  devopsGetExecutionDetail,
-  devopsCancelExecution,
-  devopsApproveStep,
-  devopsGetStepLog,
-  type DevopsGetExecutionDetail200Execution,
-  type DevopsGetExecutionDetail200StepsItem,
+  titanGetExecutionDetail,
+  titanCancelExecution,
+  titanApproveStep,
+  titanGetStepLog,
+  type TitanGetExecutionDetail200Execution,
+  type TitanGetExecutionDetail200StepsItem,
 } from '@zero/api';
 
 const { Text, Title, Paragraph } = Typography;
@@ -61,11 +61,11 @@ export const ExecutionDetailPage: React.FC = () => {
   const { message } = AntdApp.useApp();
 
   const [loading, setLoading] = useState(true);
-  const [execution, setExecution] = useState<DevopsGetExecutionDetail200Execution | null>(null);
-  const [steps, setSteps] = useState<DevopsGetExecutionDetail200StepsItem[]>([]);
+  const [execution, setExecution] = useState<TitanGetExecutionDetail200Execution | null>(null);
+  const [steps, setSteps] = useState<TitanGetExecutionDetail200StepsItem[]>([]);
 
   // 选中的步骤与日志查看
-  const [selectedStep, setSelectedStep] = useState<DevopsGetExecutionDetail200StepsItem | null>(null);
+  const [selectedStep, setSelectedStep] = useState<TitanGetExecutionDetail200StepsItem | null>(null);
   const [logDrawerOpen, setLogDrawerOpen] = useState(false);
   const [logContent, setLogContent] = useState('');
   const [logLoading, setLogLoading] = useState(false);
@@ -79,7 +79,7 @@ export const ExecutionDetailPage: React.FC = () => {
     if (!execId) return;
     try {
       setLoading(true);
-      const res = await devopsGetExecutionDetail(execId);
+      const res = await titanGetExecutionDetail(execId);
       setExecution(res.execution || null);
       setSteps(res.steps || []);
       if (!selectedStep && res.steps && res.steps.length > 0) {
@@ -104,12 +104,12 @@ export const ExecutionDetailPage: React.FC = () => {
   }, [execId, execution?.status]);
 
   // 获取步骤日志
-  const handleOpenLog = async (step: DevopsGetExecutionDetail200StepsItem) => {
+  const handleOpenLog = async (step: TitanGetExecutionDetail200StepsItem) => {
     setSelectedStep(step);
     setLogDrawerOpen(true);
     setLogLoading(true);
     try {
-      const res = await devopsGetStepLog(step.id || 0, { offset: 0 });
+      const res = await titanGetStepLog(step.id || 0, { offset: 0 });
       setLogContent(res.content || '暂无实时控制台日志输出');
     } catch (err: any) {
       setLogContent(`获取日志失败: ${err?.message || '未知错误'}`);
@@ -122,7 +122,7 @@ export const ExecutionDetailPage: React.FC = () => {
   const handleCancel = async () => {
     if (!execId) return;
     try {
-      await devopsCancelExecution(execId);
+      await titanCancelExecution(execId);
       message.success('流水线已发出终止信号');
       fetchDetail();
     } catch (err: any) {
@@ -134,7 +134,7 @@ export const ExecutionDetailPage: React.FC = () => {
   const handleApproval = async (stepId: number, approved: boolean) => {
     try {
       setApprovalSubmitting(true);
-      await devopsApproveStep(stepId, {
+      await titanApproveStep(stepId, {
         approved,
         comment: approvalComment,
       });

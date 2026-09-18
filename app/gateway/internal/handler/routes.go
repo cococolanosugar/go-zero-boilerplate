@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	dashboard "go-zero-boilerplate/app/gateway/internal/handler/dashboard"
-	devops "go-zero-boilerplate/app/gateway/internal/handler/devops"
 	dict "go-zero-boilerplate/app/gateway/internal/handler/dict"
 	itsm "go-zero-boilerplate/app/gateway/internal/handler/itsm"
 	portal_nav "go-zero-boilerplate/app/gateway/internal/handler/portal_nav"
@@ -18,6 +17,7 @@ import (
 	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
 	systemtask "go-zero-boilerplate/app/gateway/internal/handler/system/task"
+	titan "go-zero-boilerplate/app/gateway/internal/handler/titan"
 	user "go-zero-boilerplate/app/gateway/internal/handler/user"
 	user_notice "go-zero-boilerplate/app/gateway/internal/handler/user_notice"
 	"go-zero-boilerplate/app/gateway/internal/svc"
@@ -37,123 +37,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/dashboard"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/clusters",
-				Handler: devops.ListClustersHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/clusters",
-				Handler: devops.CreateClusterHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPut,
-				Path:    "/clusters/:id",
-				Handler: devops.UpdateClusterHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/clusters/:id",
-				Handler: devops.DeleteClusterHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/clusters/:id/namespaces",
-				Handler: devops.ListNamespacesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/clusters/:id/test",
-				Handler: devops.TestClusterHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/executions",
-				Handler: devops.ListExecutionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/executions/:id",
-				Handler: devops.GetExecutionDetailHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/executions/:id/cancel",
-				Handler: devops.CancelExecutionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/integrations",
-				Handler: devops.ListIntegrationsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/integrations",
-				Handler: devops.CreateIntegrationHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPut,
-				Path:    "/integrations/:id",
-				Handler: devops.UpdateIntegrationHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/integrations/:id",
-				Handler: devops.DeleteIntegrationHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/integrations/:id/test",
-				Handler: devops.TestIntegrationHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/pipelines",
-				Handler: devops.ListPipelinesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/pipelines",
-				Handler: devops.CreatePipelineHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/pipelines/:id",
-				Handler: devops.GetPipelineHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPut,
-				Path:    "/pipelines/:id",
-				Handler: devops.UpdatePipelineHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/pipelines/:id",
-				Handler: devops.DeletePipelineHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/pipelines/:id/trigger",
-				Handler: devops.TriggerPipelineHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/steps/:id/approve",
-				Handler: devops.ApproveStepHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/steps/:id/log",
-				Handler: devops.GetStepLogHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api/v1/devops"),
 	)
 
 	server.AddRoutes(
@@ -687,6 +570,123 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/system/task"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/clusters",
+				Handler: titan.ListClustersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/clusters",
+				Handler: titan.CreateClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/clusters/:id",
+				Handler: titan.UpdateClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/clusters/:id",
+				Handler: titan.DeleteClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/clusters/:id/namespaces",
+				Handler: titan.ListNamespacesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/clusters/:id/test",
+				Handler: titan.TestClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/executions",
+				Handler: titan.ListExecutionsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/executions/:id",
+				Handler: titan.GetExecutionDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/executions/:id/cancel",
+				Handler: titan.CancelExecutionHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/integrations",
+				Handler: titan.ListIntegrationsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/integrations",
+				Handler: titan.CreateIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/integrations/:id",
+				Handler: titan.UpdateIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/integrations/:id",
+				Handler: titan.DeleteIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/integrations/:id/test",
+				Handler: titan.TestIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/pipelines",
+				Handler: titan.ListPipelinesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/pipelines",
+				Handler: titan.CreatePipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/pipelines/:id",
+				Handler: titan.GetPipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/pipelines/:id",
+				Handler: titan.UpdatePipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/pipelines/:id",
+				Handler: titan.DeletePipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/pipelines/:id/trigger",
+				Handler: titan.TriggerPipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/steps/:id/approve",
+				Handler: titan.ApproveStepHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/steps/:id/log",
+				Handler: titan.GetStepLogHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/titan"),
 	)
 
 	server.AddRoutes(

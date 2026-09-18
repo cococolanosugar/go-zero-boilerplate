@@ -1,0 +1,15 @@
+Name: titan.rpc
+ListenOn: ${TITAN_RPC_LISTEN_ON:0.0.0.0:8086}
+
+# 数据库持久层配置
+DataSource: ${MYSQL_DSN:root:root@tcp(127.0.0.1:3306)/go_zero_boilerplate?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai}
+
+# Redis 缓存集群配置
+Cache:
+  - Host: ${REDIS_HOST:127.0.0.1:6379}
+
+# ================= 服务注册与发现配置 =================
+# Nacos:
+#   Host: ${NACOS_HOST:127.0.0.1}
+#   Port: ${NACOS_PORT:8848}
+#   NamespaceId: ${NACOS_NAMESPACE:public}

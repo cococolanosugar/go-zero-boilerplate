@@ -1,9 +1,9 @@
 package svc
 
 import (
-	devopsClient "go-zero-boilerplate/app/devops/rpc/client/devops"
 	"go-zero-boilerplate/app/gateway/internal/config"
 	itsmClient "go-zero-boilerplate/app/itsm/rpc/client/itsm"
+	titanClient "go-zero-boilerplate/app/titan/rpc/client/titan"
 	userClient "go-zero-boilerplate/app/user/rpc/client/user"
 	workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
 	"go-zero-boilerplate/pkg/session"
@@ -18,7 +18,7 @@ type ServiceContext struct {
 	UserRpc          userClient.User
 	WorkerRpc        workerClient.Worker
 	ItsmRpc          itsmClient.Itsm
-	DevopsRpc        devopsClient.Devops
+	TitanRpc         titanClient.Titan
 	Storage          storage.Driver
 	RedisClient      *redis.Redis
 	SessionMgr       *session.Manager
@@ -39,7 +39,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserRpc:     userClient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		WorkerRpc:   workerClient.NewWorker(zrpc.MustNewClient(c.WorkerRpc)),
 		ItsmRpc:     itsmClient.NewItsm(zrpc.MustNewClient(c.ItsmRpc)),
-		DevopsRpc:   devopsClient.NewDevops(zrpc.MustNewClient(c.DevopsRpc)),
+		TitanRpc:    titanClient.NewTitan(zrpc.MustNewClient(c.TitanRpc)),
 		Storage:     storageDriver,
 		RedisClient: redisClient,
 		SessionMgr:  sessionMgr,

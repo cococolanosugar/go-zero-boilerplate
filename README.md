@@ -2,10 +2,10 @@
 
 基于 [go-zero](https://github.com/zeromicro/go-zero) 与 **pnpm workspace** 搭建的工业级 **全栈 Monorepo（单仓多微服务 + 多端前端）** 架构。
 
-* **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`worker`、`itsm`、`devops`）收缩为纯 gRPC 通信。
+* **后端**：仅 `gateway` 对外暴露统一 HTTP RESTful 接入端口，内部所有业务微服务（`user`、`worker`、`itsm`、`titan`）收缩为纯 gRPC 通信。
 * **前端**：采用 `pnpm workspace` 统一管理后台（`admin`，基于 Ant Design 6.6.2 + Pro Components 2.8.10）与前台门户（`portal`，基于 Ant Design 6.6.2），通过 `goctl api ts` 自动生成统一的 `@zero/api` TypeScript SDK，契约一键直通！
 * **认证**：深度集成 [Casdoor](https://casdoor.org) 企业级统一身份认证（IAM/SSO），支持 OAuth 2.0 / OIDC 授权码安全置换与微服务 JIT 即时自动拨备建档，与传统账号密码双模并存。
-* **交付**：内置 **Titan 研发交付引擎**（`app/devops`，参考 Zadig 现代化云原生实践），支持源码检出、镜像构建、Kubernetes Helm/YAML 双模发布、Jenkins 委托调度与基于 Temporal 的 DAG 流水线与质量门禁卡点。
+* **交付**：内置 **Titan 研发交付引擎**（`app/titan`，参考 Zadig 现代化云原生实践），支持源码检出、镜像构建、Kubernetes Helm/YAML 双模发布、Jenkins 委托调度与基于 Temporal 的 DAG 流水线与质量门禁卡点。
 
 ---
 
@@ -15,7 +15,7 @@
 go-zero-boilerplate/
 ├── app/                           # 【后端 Go 微服务体系】
 │   ├── gateway/                   # 【统一对外 HTTP 网关 / BFF 层】(端口 8888)
-│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api, itsm.api, devops.api)
+│   │   ├── desc/                  # 模块化 API 契约定义 (gateway.api, user.api, dashboard.api, task.api, itsm.api, titan.api)
 │   │   ├── etc/gateway.yaml       # 网关配置
 │   │   ├── internal/              # 网关内部实现 (config, handler, logic, svc, types)
 │   │   └── gateway.go             # 网关启动 main 入口
@@ -26,15 +26,15 @@ go-zero-boilerplate/
 │   │
 │   ├── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
 │   │   ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
-│   │   ├── rpc/                   # gRPC 核心服务及对外 client/worker/
+│   │   └── rpc/                   # gRPC 核心服务及对外 client/worker/
 │   │   └── model/                 # 异步任务持久层
 │   │
 │   ├── itsm/                      # 【ITSM 流程与工单微服务】纯 gRPC (端口 8084，BPMN 2.0 引擎与 SLA 调度)
 │   │   ├── rpc/                   # gRPC 核心服务及对外 client/itsm/
 │   │   └── model/                 # 流程定义、动态表单、工单流转持久层
 │   │
-│   └── devops/                    # 【DevOps 研发交付微服务 (Titan)】纯 gRPC (端口 8086，CI/CD 发布引擎)
-│       ├── rpc/                   # gRPC 核心服务及对外 client/devops/ (K8s, Helm, Jenkins 集成)
+│   └── titan/                     # 【Titan 研发交付微服务】纯 gRPC (端口 8086，CI/CD 发布引擎)
+│       ├── rpc/                   # gRPC 核心服务及对外 client/titan/ (K8s, Helm, Jenkins 集成)
 │       └── model/                 # 流水线、执行实例、集群纳管、外部工具持久层
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
@@ -82,7 +82,7 @@ just run-worker-rpc
 just run-itsm-rpc
 
 # 启动 Titan 研发交付微服务 (gRPC :8086，CI/CD 发布引擎)
-just run-devops-rpc
+just run-titan-rpc
 
 # 启动统一网关 (HTTP :8888)
 just run-gateway
@@ -114,7 +114,7 @@ just gen-ts
 | 生成 user RPC | `just gen-rpc user` | `make gen-user-rpc` |
 | 生成 worker RPC | `just gen-rpc worker` | `make gen-worker-rpc` |
 | 生成 itsm RPC | `just gen-rpc itsm` | `make gen-itsm-rpc` |
-| 生成 devops RPC | `just gen-rpc devops` | `make gen-devops-rpc` |
+| 生成 titan RPC | `just gen-rpc titan` | `make gen-titan-rpc` |
 | **创建新微服务 RPC 模块** | `just new-rpc <service>` | `make new-rpc SERVICE=<service>` |
 | **创建新微服务 API 模块** | `just new-api <service>` | `make new-api SERVICE=<service>` |
 | **生成持久层 Model 代码** | `just gen-model` | `make gen-model` |
@@ -125,7 +125,7 @@ just gen-ts
 | 启动 user-rpc | `just run-user-rpc` | `make run-user-rpc` |
 | 启动 worker-rpc | `just run-worker-rpc` | `make run-worker-rpc` |
 | 启动 itsm-rpc | `just run-itsm-rpc` | `make run-itsm-rpc` |
-| 启动 devops-rpc | `just run-devops-rpc` | `make run-devops-rpc` |
+| 启动 titan-rpc | `just run-titan-rpc` | `make run-titan-rpc` |
 | 启动前端 Admin | `just run-admin` | `make run-admin` |
 | 启动前端 Portal | `just run-portal` | `make run-portal` |
 | 构建前端全部产物 | `just build-frontend` | `make build-frontend` |

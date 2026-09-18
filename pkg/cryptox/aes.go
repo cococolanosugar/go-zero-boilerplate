@@ -13,7 +13,7 @@ import (
 
 var (
 	// DefaultDevKey 默认开发秘钥（生产环境建议通过环境变量 TITAN_ENCRYPTION_KEY 覆盖）
-	defaultKey = "titan-devops-platform-secret-key"
+	defaultKey = "titan-platform-secret-key"
 )
 
 // deriveKey 将任意长度的字符串通过 SHA-256 派生为固定的 32 字节 (256-bit) AES 秘钥

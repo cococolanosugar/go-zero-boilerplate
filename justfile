@@ -68,13 +68,13 @@ run-worker-rpc:
 run-itsm-rpc:
     cd app/itsm/rpc && go run itsm.go -f etc/itsm.yaml
 
-# 启动 devops-rpc 研发交付微服务 (gRPC 8086，Titan CI/CD 引擎)
-run-devops-rpc:
-    cd app/devops/rpc && go run devops.go -f etc/devops.yaml
+# 启动 titan-rpc 研发交付微服务 (gRPC 8086，Titan CI/CD 引擎)
+run-titan-rpc:
+    cd app/titan/rpc && go run titan.go -f etc/titan.yaml
 
-# 生成 devops-rpc 代码
-gen-devops-rpc:
-    cd app/devops/rpc && goctl rpc protoc devops.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+# 生成 titan-rpc 代码
+gen-titan-rpc:
+    cd app/titan/rpc && goctl rpc protoc titan.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 启动前端管理后台 (Vite 3001，默认本地 8888 网关)
 run-admin:
@@ -148,7 +148,7 @@ docker-build:
     docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
     docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
     docker build -t go-zero-itsm-rpc:latest -f app/itsm/rpc/Dockerfile .
-    docker build -t go-zero-devops-rpc:latest -f app/devops/rpc/Dockerfile .
+    docker build -t go-zero-titan-rpc:latest -f app/titan/rpc/Dockerfile .
     docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
     docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 

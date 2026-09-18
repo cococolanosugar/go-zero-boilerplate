@@ -45,10 +45,10 @@ ItsmRpc:
     - ${ITSM_RPC_HOST:127.0.0.1:8084}
   NonBlock: true
 
-# Titan DevOps 微服务 gRPC 客户端 (端口 8086)
-DevopsRpc:
+# Titan 微服务 gRPC 客户端 (端口 8086)
+TitanRpc:
   Endpoints:
-    - ${DEVOPS_RPC_HOST:127.0.0.1:8086}
+    - ${TITAN_RPC_HOST:127.0.0.1:8086}
   NonBlock: true
 
 # ================= Casdoor SSO 认证配置 =================
