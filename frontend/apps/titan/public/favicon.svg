@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="titan-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1677ff" />
+      <stop offset="100%" stop-color="#13c2c2" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#titan-grad)" />
+  <path d="M32 14L48 24V40L32 50L16 40V24L32 14Z" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" />
+  <path d="M32 14V50" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+  <path d="M16 24L32 34L48 24" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" />
+</svg>

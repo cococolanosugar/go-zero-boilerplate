@@ -476,7 +476,7 @@ VALUES
   (6, '官方技术门户 (Portal)', '核心门户', 'common', 'http://{HOST}:3000', 'RocketOutlined', '面向全体开发者与客户的全栈技术门户、微服务全景与联调工作台', 'Portal,TopNav,Vite', 50, '_blank', 1),
   (7, '企业 IT 自助服务台', '核心门户', 'common', 'http://{HOST}:3000/desk', 'CustomerServiceOutlined', '面向全体企业员工的一站式服务目录大厅、自助提单与审批流转时间线跟踪', 'ITSM,BPMN,SLA', 45, '_self', 1),
   (8, 'BPMN 流程设计与工单治理中心', '核心门户', 'common', 'http://{HOST}:3001/itsm/tickets', 'AuditOutlined', '企业级 BPMN 2.0 流程模型可视化建模设计、服务目录发布与全量工单运维工作台', 'BPMN,Process,Admin', 40, '_blank', 1),
-  (9, 'Titan 研发交付平台 (CI/CD)', '核心门户', 'common', 'http://{HOST}:3001/titan/pipelines', 'DeploymentUnitOutlined', '云原生持续交付、源码构建、镜像制作与 Kubernetes Helm/YAML 自动化发布引擎', 'DevOps,CI/CD,K8s,Helm,Jenkins', 38, '_blank', 1),
+  (9, 'Titan 研发交付平台 (CI/CD)', '核心门户', 'common', 'http://{HOST}:3002', 'DeploymentUnitOutlined', '云原生持续交付、源码构建、镜像制作与 Kubernetes Helm/YAML 自动化发布引擎', 'DevOps,CI/CD,K8s,Helm,Jenkins', 38, '_blank', 1),
   (10, 'Nacos 生产配置中心 (Prod)', '服务治理', 'prod', 'https://nacos.prod.example.com', 'SafetyCertificateOutlined', '生产微服务配置热更新与核心注册心跳高可用集群', 'Nacos,Prod,HA', 95, '_blank', 1),
   (11, 'Temporal 任务中心 (Test)', '任务引擎', 'test', 'http://temporal.test.example.com:8233', 'CloudServerOutlined', '测试环境分布式异步编排与 Saga 联调控制台', 'Temporal,Test,Workflow', 85, '_blank', 1),
   (12, 'Prometheus 生产监控 (Prod)', '监控运维', 'prod', 'https://prometheus.prod.example.com', 'FundProjectionScreenOutlined', '生产微服务指标采集、报警看板与运行态监控大盘', 'Monitor,Prometheus,Alert', 75, '_blank', 1);

@@ -104,6 +104,22 @@ run-portal-mock:
 run-portal-test:
     cd frontend && pnpm dev:portal:test
 
+# 启动 Titan 独立交付平台前端 (Vite 3002，默认本地 8888 网关)
+run-titan-web:
+    cd frontend && pnpm dev:titan
+
+# 启动 Titan 独立交付平台前端 (离线 Mock 纯前端开发模式)
+run-titan-web-mock:
+    cd frontend && pnpm dev:titan:mock
+
+# 启动 Titan 独立交付平台前端 (连接远程测试环境网关)
+run-titan-web-test:
+    cd frontend && pnpm dev:titan:test
+
+# 启动 Titan 独立交付平台前端 (连接预发布环境网关)
+run-titan-web-pre:
+    cd frontend && pnpm dev:titan:pre
+
 # 构建全端前端产物
 build-frontend:
     cd frontend && pnpm build

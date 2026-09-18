@@ -70,7 +70,8 @@ go-zero-boilerplate/
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
 │   │   ├── admin/                 # 管理后台系统 (Vite + TS，端口 3001)
-│   │   └── portal/                # 官方门户系统 (Vite + TS，端口 3000)
+│   │   ├── portal/                # 官方门户系统 (Vite + TS，端口 3000)
+│   │   └── titan/                 # Titan 独立交付工作台 (Vite + TS，端口 3002)
 │   ├── packages/
 │   │   ├── api/                   # 【共享 API SDK】通过 goctl api ts 自动从网关契约生成 (@zero/api)
 │   │   └── shared/                # 跨前端应用共享的工具与常量 (@zero/shared)
@@ -386,6 +387,7 @@ just run-gateway      # 监听 0.0.0.0:8888
 # 3. 启动前端各端
 just run-admin        # 启动管理后台 (http://localhost:3001)
 just run-portal       # 启动官方门户 (http://localhost:3000)
+just run-titan-web    # 启动 Titan 独立研发交付平台 (http://localhost:3002)
 ```
 
 ### 4.3 前端构建与依赖

@@ -95,6 +95,9 @@ just run-admin
 
 # 启动官方门户 (http://localhost:3000)
 just run-portal
+
+# 启动 Titan 独立交付平台前端 (http://localhost:3002)
+just run-titan-web
 ```
 
 ### 3. 全栈契约一键同步 (IDL First)
@@ -128,6 +131,7 @@ just gen-ts
 | 启动 titan-rpc | `just run-titan-rpc` | `make run-titan-rpc` |
 | 启动前端 Admin | `just run-admin` | `make run-admin` |
 | 启动前端 Portal | `just run-portal` | `make run-portal` |
+| 启动前端 Titan | `just run-titan-web` | `make run-titan-web` |
 | 构建前端全部产物 | `just build-frontend` | `make build-frontend` |
 | **前端自动化单元测试** | `just test-frontend` | `make test-frontend` |
 | **前端 Ant Design 规范诊断** | `just lint-antd` | `make lint-antd` |
