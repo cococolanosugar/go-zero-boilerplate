@@ -2,6 +2,7 @@ export default {
   // 导航与头部
   'menu.home': '门户首页',
   'menu.navigation': '网址导航',
+  'menu.titan': '研发交付',
   'menu.desk': '服务台',
   'menu.services': '微服务治理',
   'menu.workbench': '联调工作台',
@@ -40,6 +41,7 @@ export default {
   'home.hero.title': '官方技术门户',
   'home.hero.desc': '统一 HTTP RESTful 网关 BFF 接入，纯 gRPC 隔离内部业务微服务，MySQL 8.0 与 Redis Cache-Aside 强一致持久层，全栈 IDL 契约自动化同步。',
   'home.btn.enterAdmin': '进入管理后台 (:3001)',
+  'home.btn.enterTitan': '进入 Titan 交付平台 (:3002)',
   'home.btn.login': '登录系统员工账号',
   'home.tag.currentLogin': '当前登录',
   'home.stat.gateway': '统一网关入口',

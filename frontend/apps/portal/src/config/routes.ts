@@ -34,6 +34,13 @@ export const routes: AppRouteItem[] = [
         component: lazy(() => import("../pages/Navigation")),
       },
       {
+        path: "/titan",
+        name: "menu.titan",
+        locale: "menu.titan",
+        icon: "DeploymentUnitOutlined",
+        component: lazy(() => import("../pages/Titan")),
+      },
+      {
         path: "/desk",
         name: "menu.desk",
         locale: "menu.desk",

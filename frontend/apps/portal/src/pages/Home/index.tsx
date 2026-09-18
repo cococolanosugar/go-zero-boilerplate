@@ -11,6 +11,7 @@ import {
   LaptopOutlined,
   LineChartOutlined,
   CustomerServiceOutlined,
+  DeploymentUnitOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard, StatisticCard } from "@ant-design/pro-components";
 import { useOutletContext, useNavigate } from "react-router-dom";
@@ -18,7 +19,7 @@ import { APP_NAME } from "@zero/shared";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
 import { useLayoutSettings } from "../../contexts/LayoutSettingsContext";
-import { getAdminPortalUrl } from "../../utils/env";
+import { getAdminPortalUrl, getTitanPortalUrl } from "../../utils/env";
 
 const TrafficChart = lazy(() => import("./components/TrafficChart"));
 
@@ -96,6 +97,18 @@ export const HomePage: React.FC = () => {
               <Button
                 size="large"
                 shape="round"
+                icon={<DeploymentUnitOutlined />}
+                onClick={() => window.open(getTitanPortalUrl(), "_blank")}
+                style={{ background: "#13c2c2", borderColor: "#13c2c2", color: "#fff" }}
+              >
+                {formatMessage({
+                  id: "home.btn.enterTitan",
+                  defaultMessage: "进入 Titan 交付平台 (:3002)",
+                })}
+              </Button>
+              <Button
+                size="large"
+                shape="round"
                 icon={<CustomerServiceOutlined />}
                 onClick={() => navigate("/desk")}
                 style={{ background: "#52c41a", borderColor: "#52c41a", color: "#fff" }}
@@ -144,9 +157,9 @@ export const HomePage: React.FC = () => {
           <StatisticCard
             statistic={{
               title: formatMessage({ id: "home.stat.services", defaultMessage: "核心业务微服务" }),
-              value: "3",
+              value: "4",
               suffix: formatMessage({ id: "home.stat.services.unit", defaultMessage: "个服务" }),
-              description: <Text type="secondary">User (:8080) + Worker (:8082) + ITSM (:8084)</Text>,
+              description: <Text type="secondary">User (:8080) + Worker (:8082) + ITSM (:8084) + Titan (:8086)</Text>,
               icon: <ClusterOutlined style={{ color: "#1677ff", fontSize: 32 }} />,
             }}
           />
@@ -356,9 +369,22 @@ export const HomePage: React.FC = () => {
             <Col xs={24} sm={12} md={8}>
               <Card
                 size="small"
+                title="5. Titan 交付微服务"
+                variant="borderless"
+                style={{ background: "#f0f5ff" }}
+              >
+                <p>• 端口: gRPC 8086</p>
+                <p>• 云原生持续交付与流水线编排</p>
+                <p>• K8s Helm 3 幂等升级 + YAML SSA</p>
+                <p>• Jenkins 委托调度与实时增量日志流</p>
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8}>
+              <Card
+                size="small"
                 title={formatMessage({
                   id: "home.topology.infra.title",
-                  defaultMessage: "5. 基础设施与发现",
+                  defaultMessage: "6. 基础设施与发现",
                 })}
                 variant="borderless"
                 style={{ background: "#fff7e6" }}

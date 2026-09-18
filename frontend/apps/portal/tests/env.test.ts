@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { getAdminPortalUrl } from "../src/utils/env";
+import { getAdminPortalUrl, getTitanPortalUrl } from "../src/utils/env";
 
 describe("Portal Environment Utilities", () => {
   const originalLocation = window.location;
@@ -33,5 +33,22 @@ describe("Portal Environment Utilities", () => {
 
     const url = getAdminPortalUrl();
     expect(url).toBe("http://localhost:3001");
+  });
+
+  it("should dynamically resolve titan URL matching current hostname with port 3002", () => {
+    const url = getTitanPortalUrl();
+    expect(url).toBe("http://192.168.31.174:3002");
+  });
+
+  it("should resolve titan localhost URL correctly when running locally", () => {
+    window.location = {
+      ...originalLocation,
+      protocol: "http:",
+      hostname: "localhost",
+      port: "3000",
+    } as any;
+
+    const url = getTitanPortalUrl();
+    expect(url).toBe("http://localhost:3002");
   });
 });

@@ -10,6 +10,7 @@ import {
   CompassOutlined,
   AuditOutlined,
   CustomerServiceOutlined,
+  DeploymentUnitOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 import { useOutletContext } from "react-router-dom";
@@ -20,6 +21,7 @@ import {
   getUserInfo,
   itsmListProcessDefs,
   itsmListTickets,
+  titanListPipelines,
 } from "@zero/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
@@ -210,6 +212,18 @@ export const WorkbenchPage: React.FC = () => {
                   }
                 >
                   6. 我的服务申请工单 (/itsm/tickets)
+                </Button>
+
+                <Button
+                  block
+                  type={activeApi === "Titan 交付流水线" ? "primary" : "default"}
+                  icon={<DeploymentUnitOutlined />}
+                  style={{ textAlign: "left" }}
+                  onClick={() =>
+                    testApi("Titan 交付流水线", () => titanListPipelines({ page: 1, pageSize: 10 }))
+                  }
+                >
+                  7. Titan 交付流水线 (/api/v1/titan/pipelines)
                 </Button>
               </Flex>
             </ProCard>

@@ -8,6 +8,7 @@ import {
   DatabaseOutlined,
   ToolOutlined,
   AuditOutlined,
+  DeploymentUnitOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 import { useIntl } from "../../contexts/LocaleContext";
@@ -62,6 +63,12 @@ export const ServicesPage: React.FC = () => {
       icon: <AuditOutlined style={{ fontSize: 24, color: "#fa8c16" }} />,
       desc: "纯 gRPC 流程与服务管理微服务（端口 8084），内置 BPMN 2.0 工业级流程引擎、多节点流转状态机与 Temporal 分布式 SLA 履约超时监控。",
       tags: ["gRPC 8084", "BPMN 2.0 引擎", "Temporal SLA", "动态表单"],
+    },
+    {
+      title: "Titan 研发交付微服务 (Titan RPC)",
+      icon: <DeploymentUnitOutlined style={{ fontSize: 24, color: "#722ed1" }} />,
+      desc: "纯 gRPC 交付微服务（端口 8086），承载云原生流水线编排、Kubernetes Helm/YAML SSA 自动化发布、Jenkins 调度与多集群纳管。",
+      tags: ["gRPC 8086", "CI/CD 交付", "K8s & Helm", "Jenkins 集成", "AES-GCM 加密"],
     },
     {
       title: formatMessage({
