@@ -338,6 +338,51 @@ go-zero-boilerplate/
   * `/titan/pipelines`：流水线 DAG 可视化设计器（Stages & Steps 增删拖拽）、一键运行（Branch/Commit/Params 参数传递）与全局执行流水大盘。
   * `/titan/pipelines/exec/:id`：执行拓扑步骤卡片、暗黑实时终端日志流与人工审批卡点决策。
 
+### 3.15 全局 UTF-8 编码铁律与数据安全注入守则 (Global UTF-8 Encoding & Safe Data Injection Guardrails)
+为彻底杜绝中文字符乱码（Mojibake，如 `ç”Ÿäº§é… ç½®ä¸­å¿ƒ`）、保证跨平台（Windows / Linux / macOS）与多端数据流 100% 一致性，全体开发者与 AI Agent 必须无条件遵守以下 UTF-8 编码规范与数据操作铁律：
+
+#### 1. 全链路编码统一（Codebase & Runtime Consistency）
+* **源码与配置文件规范**：所有 Go、TypeScript、SQL、JSON、YAML、Markdown 文件必须且仅能以 **UTF-8 无 BOM (UTF-8 without BOM)** 格式保存。
+* **持久层字符集约束**：
+  * MySQL 数据库实例与所有数据表必须显式指定：
+    ```sql
+    DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    ```
+  * 所有 Go 微服务与网关连接 MySQL 的 DSN 必须携带：
+    ```text
+    charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+    ```
+* **API 与 HTTP 头规范**：网关所有响应必须显式携带 `Content-Type: application/json; charset=utf-8`。
+
+#### 2. Windows 环境下 SQL 导入红线禁令（Strict Prohibition of PowerShell Pipes）
+* ⚠️ **绝对禁止管道重定向导入 SQL**：
+  * **严禁**在 Windows PowerShell 终端中执行如下管道或输入重定向命令：
+    ```powershell
+    # ❌ 严禁操作！PowerShell 输出流编码（ANSI/GBK）会篡改 UTF-8 字节流导致入库不可逆乱码
+    Get-Content <file.sql> | docker exec -i <container> mysql ...
+    cat <file.sql> | mysql ...
+    ```
+* ✅ **标准安全无损导入流程（Golden Standard）**：
+  1. 必须使用 `docker cp` 将原始 UTF-8 SQL 脚本文件原样拷贝入容器内（零转码损耗）：
+     ```bash
+     docker cp manifest/sql/init.sql go-zero-mysql:/tmp/init.sql
+     ```
+  2. 在容器内部调用原生 MySQL 命令执行，并显式指定客户端字符集：
+     ```bash
+     docker exec -i go-zero-mysql mysql -uroot -proot --default-character-set=utf8mb4 -e "source /tmp/init.sql"
+     ```
+  3. 或直接运行项目内置的自动化安全指令：
+     ```bash
+     just db-init
+     ```
+
+#### 3. 缓存与数据联动清理铁律（Cache Invalidation Guardrail）
+* 在修复、刷新或重置数据库数据后，必须立即清空 Redis 实体缓存：
+  ```bash
+  docker exec -i go-zero-redis redis-cli FLUSHALL
+  ```
+  避免后端 Model 的 Cache-Aside 机制命中历史脏缓存，导致前端界面出现与数据库不一致的假性乱码。
+
 ---
 
 ## 4. 常用命令速查 (Cheat Sheet)
@@ -462,6 +507,13 @@ just migrate-status
 ```bash
 # 语法：just gen-crud <所属微服务> <数据表名>
 just gen-crud user sys_post
+```
+
+### 4.9 数据库安全初始化与 UTF-8 数据重载 (Database Initialization & Safe UTF-8 Reload)
+一键安全导入 `manifest/sql/init.sql`（采用 `docker cp` 原生注入并刷新 Redis 实体缓存，100% 杜绝 Windows 管道转码造成的任何字符乱码）：
+```bash
+just db-init
+# 或 make db-init
 ```
 
 ---

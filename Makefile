@@ -1,4 +1,4 @@
-.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-itsm-rpc gen-titan-rpc gen-ts gen-openapi gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-itsm-rpc run-titan-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down migrate-new migrate-up migrate-down migrate-status gen-crud
+.PHONY: gen-gateway gen-rpc gen-user-rpc gen-worker-rpc gen-itsm-rpc gen-titan-rpc gen-ts gen-openapi gen-swagger gen-model new-rpc new-api run-gateway run-user-rpc run-worker-rpc run-itsm-rpc run-titan-rpc run-admin run-admin-mock run-admin-test run-admin-pre run-portal run-portal-mock run-portal-test run-portal-pre build-frontend build-web tidy test test-frontend lint-antd ai-index rename-project docker-build docker-up docker-down docker-infra-up docker-infra-down db-init migrate-new migrate-up migrate-down migrate-status gen-crud
 
 SERVICE ?= user
 TABLE ?= all
@@ -193,6 +193,12 @@ docker-infra-up:
 # 停止本地开发中间件容器
 docker-infra-down:
 	docker compose -f manifest/deploy/docker-compose/docker-compose.yml down
+
+# 安全无损初始化数据库（UTF-8 字符集保障，杜绝 Windows 管道乱码）
+db-init:
+	docker cp manifest/sql/init.sql go-zero-mysql:/tmp/init.sql
+	docker exec -i go-zero-mysql mysql -uroot -proot --default-character-set=utf8mb4 -e "source /tmp/init.sql"
+	docker exec -i go-zero-redis redis-cli FLUSHALL
 
 # ================= 数据库版本迁移流水线 (Atlas Migrations) =================
 

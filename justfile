@@ -184,6 +184,12 @@ docker-infra-up:
 docker-infra-down:
     docker compose -f manifest/deploy/docker-compose/docker-compose.yml down
 
+# 安全无损初始化数据库（UTF-8 字符集保障，杜绝 Windows 管道乱码）
+db-init:
+    docker cp manifest/sql/init.sql go-zero-mysql:/tmp/init.sql
+    docker exec -i go-zero-mysql mysql -uroot -proot --default-character-set=utf8mb4 -e "source /tmp/init.sql"
+    docker exec -i go-zero-redis redis-cli FLUSHALL
+
 # ================= 数据库版本迁移流水线 (Atlas Migrations) =================
 
 # 创建新的数据库迁移版本文件 (例如: just migrate-new add_sys_notice)
