@@ -1,4 +1,4 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
@@ -41,7 +41,7 @@ func (l *ListIntegrationsLogic) ListIntegrations(in *titan.ListIntegrationsReq) 
 	where := "WHERE 1=1"
 	var args []interface{}
 	if in.Category != "" {
-		where += " AND category = ?"
+		where += " AND LOWER(category) = LOWER(?)"
 		args = append(args, in.Category)
 	}
 

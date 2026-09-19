@@ -42,6 +42,25 @@ const (
 	Titan_GetStepLog_FullMethodName         = "/titan.titan/GetStepLog"
 	Titan_ApproveStep_FullMethodName        = "/titan.titan/ApproveStep"
 	Titan_CancelExecution_FullMethodName    = "/titan.titan/CancelExecution"
+	Titan_ListProjects_FullMethodName       = "/titan.titan/ListProjects"
+	Titan_GetProject_FullMethodName         = "/titan.titan/GetProject"
+	Titan_CreateProject_FullMethodName      = "/titan.titan/CreateProject"
+	Titan_UpdateProject_FullMethodName      = "/titan.titan/UpdateProject"
+	Titan_DeleteProject_FullMethodName      = "/titan.titan/DeleteProject"
+	Titan_ListApps_FullMethodName           = "/titan.titan/ListApps"
+	Titan_GetApp_FullMethodName             = "/titan.titan/GetApp"
+	Titan_CreateApp_FullMethodName          = "/titan.titan/CreateApp"
+	Titan_UpdateApp_FullMethodName          = "/titan.titan/UpdateApp"
+	Titan_DeleteApp_FullMethodName          = "/titan.titan/DeleteApp"
+	Titan_ListEnvs_FullMethodName           = "/titan.titan/ListEnvs"
+	Titan_GetEnv_FullMethodName             = "/titan.titan/GetEnv"
+	Titan_CreateEnv_FullMethodName          = "/titan.titan/CreateEnv"
+	Titan_UpdateEnv_FullMethodName          = "/titan.titan/UpdateEnv"
+	Titan_DeleteEnv_FullMethodName          = "/titan.titan/DeleteEnv"
+	Titan_GetEnvLiveDetail_FullMethodName   = "/titan.titan/GetEnvLiveDetail"
+	Titan_ListArtifacts_FullMethodName      = "/titan.titan/ListArtifacts"
+	Titan_CreateArtifact_FullMethodName     = "/titan.titan/CreateArtifact"
+	Titan_DeployArtifact_FullMethodName     = "/titan.titan/DeployArtifact"
 )
 
 // TitanClient is the client API for Titan service.
@@ -79,6 +98,32 @@ type TitanClient interface {
 	GetStepLog(ctx context.Context, in *GetStepLogReq, opts ...grpc.CallOption) (*GetStepLogResp, error)
 	ApproveStep(ctx context.Context, in *ApproveStepReq, opts ...grpc.CallOption) (*CommonResp, error)
 	CancelExecution(ctx context.Context, in *CancelExecutionReq, opts ...grpc.CallOption) (*CommonResp, error)
+	// ----------------------
+	// Zadig CI/CD 演进服务
+	// ----------------------
+	// 1. 项目 (Project)
+	ListProjects(ctx context.Context, in *ListProjectsReq, opts ...grpc.CallOption) (*ListProjectsResp, error)
+	GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*ProjectDetailResp, error)
+	CreateProject(ctx context.Context, in *CreateProjectReq, opts ...grpc.CallOption) (*CreateProjectResp, error)
+	UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*CommonResp, error)
+	DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*CommonResp, error)
+	// 2. 应用 (Application)
+	ListApps(ctx context.Context, in *ListAppsReq, opts ...grpc.CallOption) (*ListAppsResp, error)
+	GetApp(ctx context.Context, in *GetAppReq, opts ...grpc.CallOption) (*AppDetailResp, error)
+	CreateApp(ctx context.Context, in *CreateAppReq, opts ...grpc.CallOption) (*CreateAppResp, error)
+	UpdateApp(ctx context.Context, in *UpdateAppReq, opts ...grpc.CallOption) (*CommonResp, error)
+	DeleteApp(ctx context.Context, in *DeleteAppReq, opts ...grpc.CallOption) (*CommonResp, error)
+	// 3. 环境 (Environment)
+	ListEnvs(ctx context.Context, in *ListEnvsReq, opts ...grpc.CallOption) (*ListEnvsResp, error)
+	GetEnv(ctx context.Context, in *GetEnvReq, opts ...grpc.CallOption) (*EnvDetailResp, error)
+	CreateEnv(ctx context.Context, in *CreateEnvReq, opts ...grpc.CallOption) (*CreateEnvResp, error)
+	UpdateEnv(ctx context.Context, in *UpdateEnvReq, opts ...grpc.CallOption) (*CommonResp, error)
+	DeleteEnv(ctx context.Context, in *DeleteEnvReq, opts ...grpc.CallOption) (*CommonResp, error)
+	GetEnvLiveDetail(ctx context.Context, in *GetEnvLiveDetailReq, opts ...grpc.CallOption) (*GetEnvLiveDetailResp, error)
+	// 4. 制品 (Artifact)
+	ListArtifacts(ctx context.Context, in *ListArtifactsReq, opts ...grpc.CallOption) (*ListArtifactsResp, error)
+	CreateArtifact(ctx context.Context, in *CreateArtifactReq, opts ...grpc.CallOption) (*CreateArtifactResp, error)
+	DeployArtifact(ctx context.Context, in *DeployArtifactReq, opts ...grpc.CallOption) (*CommonResp, error)
 }
 
 type titanClient struct {
@@ -319,6 +364,196 @@ func (c *titanClient) CancelExecution(ctx context.Context, in *CancelExecutionRe
 	return out, nil
 }
 
+func (c *titanClient) ListProjects(ctx context.Context, in *ListProjectsReq, opts ...grpc.CallOption) (*ListProjectsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProjectsResp)
+	err := c.cc.Invoke(ctx, Titan_ListProjects_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*ProjectDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProjectDetailResp)
+	err := c.cc.Invoke(ctx, Titan_GetProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) CreateProject(ctx context.Context, in *CreateProjectReq, opts ...grpc.CallOption) (*CreateProjectResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateProjectResp)
+	err := c.cc.Invoke(ctx, Titan_CreateProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_UpdateProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_DeleteProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) ListApps(ctx context.Context, in *ListAppsReq, opts ...grpc.CallOption) (*ListAppsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAppsResp)
+	err := c.cc.Invoke(ctx, Titan_ListApps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) GetApp(ctx context.Context, in *GetAppReq, opts ...grpc.CallOption) (*AppDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AppDetailResp)
+	err := c.cc.Invoke(ctx, Titan_GetApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) CreateApp(ctx context.Context, in *CreateAppReq, opts ...grpc.CallOption) (*CreateAppResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAppResp)
+	err := c.cc.Invoke(ctx, Titan_CreateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) UpdateApp(ctx context.Context, in *UpdateAppReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_UpdateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) DeleteApp(ctx context.Context, in *DeleteAppReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_DeleteApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) ListEnvs(ctx context.Context, in *ListEnvsReq, opts ...grpc.CallOption) (*ListEnvsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListEnvsResp)
+	err := c.cc.Invoke(ctx, Titan_ListEnvs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) GetEnv(ctx context.Context, in *GetEnvReq, opts ...grpc.CallOption) (*EnvDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EnvDetailResp)
+	err := c.cc.Invoke(ctx, Titan_GetEnv_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) CreateEnv(ctx context.Context, in *CreateEnvReq, opts ...grpc.CallOption) (*CreateEnvResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateEnvResp)
+	err := c.cc.Invoke(ctx, Titan_CreateEnv_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) UpdateEnv(ctx context.Context, in *UpdateEnvReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_UpdateEnv_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) DeleteEnv(ctx context.Context, in *DeleteEnvReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_DeleteEnv_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) GetEnvLiveDetail(ctx context.Context, in *GetEnvLiveDetailReq, opts ...grpc.CallOption) (*GetEnvLiveDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEnvLiveDetailResp)
+	err := c.cc.Invoke(ctx, Titan_GetEnvLiveDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) ListArtifacts(ctx context.Context, in *ListArtifactsReq, opts ...grpc.CallOption) (*ListArtifactsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListArtifactsResp)
+	err := c.cc.Invoke(ctx, Titan_ListArtifacts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) CreateArtifact(ctx context.Context, in *CreateArtifactReq, opts ...grpc.CallOption) (*CreateArtifactResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateArtifactResp)
+	err := c.cc.Invoke(ctx, Titan_CreateArtifact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) DeployArtifact(ctx context.Context, in *DeployArtifactReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_DeployArtifact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TitanServer is the server API for Titan service.
 // All implementations must embed UnimplementedTitanServer
 // for forward compatibility.
@@ -354,6 +589,32 @@ type TitanServer interface {
 	GetStepLog(context.Context, *GetStepLogReq) (*GetStepLogResp, error)
 	ApproveStep(context.Context, *ApproveStepReq) (*CommonResp, error)
 	CancelExecution(context.Context, *CancelExecutionReq) (*CommonResp, error)
+	// ----------------------
+	// Zadig CI/CD 演进服务
+	// ----------------------
+	// 1. 项目 (Project)
+	ListProjects(context.Context, *ListProjectsReq) (*ListProjectsResp, error)
+	GetProject(context.Context, *GetProjectReq) (*ProjectDetailResp, error)
+	CreateProject(context.Context, *CreateProjectReq) (*CreateProjectResp, error)
+	UpdateProject(context.Context, *UpdateProjectReq) (*CommonResp, error)
+	DeleteProject(context.Context, *DeleteProjectReq) (*CommonResp, error)
+	// 2. 应用 (Application)
+	ListApps(context.Context, *ListAppsReq) (*ListAppsResp, error)
+	GetApp(context.Context, *GetAppReq) (*AppDetailResp, error)
+	CreateApp(context.Context, *CreateAppReq) (*CreateAppResp, error)
+	UpdateApp(context.Context, *UpdateAppReq) (*CommonResp, error)
+	DeleteApp(context.Context, *DeleteAppReq) (*CommonResp, error)
+	// 3. 环境 (Environment)
+	ListEnvs(context.Context, *ListEnvsReq) (*ListEnvsResp, error)
+	GetEnv(context.Context, *GetEnvReq) (*EnvDetailResp, error)
+	CreateEnv(context.Context, *CreateEnvReq) (*CreateEnvResp, error)
+	UpdateEnv(context.Context, *UpdateEnvReq) (*CommonResp, error)
+	DeleteEnv(context.Context, *DeleteEnvReq) (*CommonResp, error)
+	GetEnvLiveDetail(context.Context, *GetEnvLiveDetailReq) (*GetEnvLiveDetailResp, error)
+	// 4. 制品 (Artifact)
+	ListArtifacts(context.Context, *ListArtifactsReq) (*ListArtifactsResp, error)
+	CreateArtifact(context.Context, *CreateArtifactReq) (*CreateArtifactResp, error)
+	DeployArtifact(context.Context, *DeployArtifactReq) (*CommonResp, error)
 	mustEmbedUnimplementedTitanServer()
 }
 
@@ -432,6 +693,63 @@ func (UnimplementedTitanServer) ApproveStep(context.Context, *ApproveStepReq) (*
 }
 func (UnimplementedTitanServer) CancelExecution(context.Context, *CancelExecutionReq) (*CommonResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CancelExecution not implemented")
+}
+func (UnimplementedTitanServer) ListProjects(context.Context, *ListProjectsReq) (*ListProjectsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListProjects not implemented")
+}
+func (UnimplementedTitanServer) GetProject(context.Context, *GetProjectReq) (*ProjectDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetProject not implemented")
+}
+func (UnimplementedTitanServer) CreateProject(context.Context, *CreateProjectReq) (*CreateProjectResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateProject not implemented")
+}
+func (UnimplementedTitanServer) UpdateProject(context.Context, *UpdateProjectReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateProject not implemented")
+}
+func (UnimplementedTitanServer) DeleteProject(context.Context, *DeleteProjectReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteProject not implemented")
+}
+func (UnimplementedTitanServer) ListApps(context.Context, *ListAppsReq) (*ListAppsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
+}
+func (UnimplementedTitanServer) GetApp(context.Context, *GetAppReq) (*AppDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetApp not implemented")
+}
+func (UnimplementedTitanServer) CreateApp(context.Context, *CreateAppReq) (*CreateAppResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateApp not implemented")
+}
+func (UnimplementedTitanServer) UpdateApp(context.Context, *UpdateAppReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
+}
+func (UnimplementedTitanServer) DeleteApp(context.Context, *DeleteAppReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteApp not implemented")
+}
+func (UnimplementedTitanServer) ListEnvs(context.Context, *ListEnvsReq) (*ListEnvsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListEnvs not implemented")
+}
+func (UnimplementedTitanServer) GetEnv(context.Context, *GetEnvReq) (*EnvDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetEnv not implemented")
+}
+func (UnimplementedTitanServer) CreateEnv(context.Context, *CreateEnvReq) (*CreateEnvResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateEnv not implemented")
+}
+func (UnimplementedTitanServer) UpdateEnv(context.Context, *UpdateEnvReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateEnv not implemented")
+}
+func (UnimplementedTitanServer) DeleteEnv(context.Context, *DeleteEnvReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteEnv not implemented")
+}
+func (UnimplementedTitanServer) GetEnvLiveDetail(context.Context, *GetEnvLiveDetailReq) (*GetEnvLiveDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetEnvLiveDetail not implemented")
+}
+func (UnimplementedTitanServer) ListArtifacts(context.Context, *ListArtifactsReq) (*ListArtifactsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListArtifacts not implemented")
+}
+func (UnimplementedTitanServer) CreateArtifact(context.Context, *CreateArtifactReq) (*CreateArtifactResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateArtifact not implemented")
+}
+func (UnimplementedTitanServer) DeployArtifact(context.Context, *DeployArtifactReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeployArtifact not implemented")
 }
 func (UnimplementedTitanServer) mustEmbedUnimplementedTitanServer() {}
 func (UnimplementedTitanServer) testEmbeddedByValue()               {}
@@ -868,6 +1186,348 @@ func _Titan_CancelExecution_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Titan_ListProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProjectsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).ListProjects(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_ListProjects_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).ListProjects(ctx, req.(*ListProjectsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_GetProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).GetProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_GetProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).GetProject(ctx, req.(*GetProjectReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_CreateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateProjectReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).CreateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_CreateProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).CreateProject(ctx, req.(*CreateProjectReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProjectReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).UpdateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_UpdateProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).UpdateProject(ctx, req.(*UpdateProjectReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProjectReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).DeleteProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_DeleteProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).DeleteProject(ctx, req.(*DeleteProjectReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAppsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).ListApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_ListApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).ListApps(ctx, req.(*ListAppsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAppReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).GetApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_GetApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).GetApp(ctx, req.(*GetAppReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_CreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAppReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).CreateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_CreateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).CreateApp(ctx, req.(*CreateAppReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_UpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAppReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).UpdateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_UpdateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).UpdateApp(ctx, req.(*UpdateAppReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_DeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAppReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).DeleteApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_DeleteApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).DeleteApp(ctx, req.(*DeleteAppReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_ListEnvs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEnvsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).ListEnvs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_ListEnvs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).ListEnvs(ctx, req.(*ListEnvsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_GetEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEnvReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).GetEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_GetEnv_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).GetEnv(ctx, req.(*GetEnvReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_CreateEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateEnvReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).CreateEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_CreateEnv_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).CreateEnv(ctx, req.(*CreateEnvReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_UpdateEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEnvReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).UpdateEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_UpdateEnv_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).UpdateEnv(ctx, req.(*UpdateEnvReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_DeleteEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEnvReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).DeleteEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_DeleteEnv_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).DeleteEnv(ctx, req.(*DeleteEnvReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_GetEnvLiveDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEnvLiveDetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).GetEnvLiveDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_GetEnvLiveDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).GetEnvLiveDetail(ctx, req.(*GetEnvLiveDetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_ListArtifacts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListArtifactsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).ListArtifacts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_ListArtifacts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).ListArtifacts(ctx, req.(*ListArtifactsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_CreateArtifact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateArtifactReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).CreateArtifact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_CreateArtifact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).CreateArtifact(ctx, req.(*CreateArtifactReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_DeployArtifact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeployArtifactReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).DeployArtifact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_DeployArtifact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).DeployArtifact(ctx, req.(*DeployArtifactReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Titan_ServiceDesc is the grpc.ServiceDesc for Titan service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -966,6 +1626,82 @@ var Titan_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CancelExecution",
 			Handler:    _Titan_CancelExecution_Handler,
+		},
+		{
+			MethodName: "ListProjects",
+			Handler:    _Titan_ListProjects_Handler,
+		},
+		{
+			MethodName: "GetProject",
+			Handler:    _Titan_GetProject_Handler,
+		},
+		{
+			MethodName: "CreateProject",
+			Handler:    _Titan_CreateProject_Handler,
+		},
+		{
+			MethodName: "UpdateProject",
+			Handler:    _Titan_UpdateProject_Handler,
+		},
+		{
+			MethodName: "DeleteProject",
+			Handler:    _Titan_DeleteProject_Handler,
+		},
+		{
+			MethodName: "ListApps",
+			Handler:    _Titan_ListApps_Handler,
+		},
+		{
+			MethodName: "GetApp",
+			Handler:    _Titan_GetApp_Handler,
+		},
+		{
+			MethodName: "CreateApp",
+			Handler:    _Titan_CreateApp_Handler,
+		},
+		{
+			MethodName: "UpdateApp",
+			Handler:    _Titan_UpdateApp_Handler,
+		},
+		{
+			MethodName: "DeleteApp",
+			Handler:    _Titan_DeleteApp_Handler,
+		},
+		{
+			MethodName: "ListEnvs",
+			Handler:    _Titan_ListEnvs_Handler,
+		},
+		{
+			MethodName: "GetEnv",
+			Handler:    _Titan_GetEnv_Handler,
+		},
+		{
+			MethodName: "CreateEnv",
+			Handler:    _Titan_CreateEnv_Handler,
+		},
+		{
+			MethodName: "UpdateEnv",
+			Handler:    _Titan_UpdateEnv_Handler,
+		},
+		{
+			MethodName: "DeleteEnv",
+			Handler:    _Titan_DeleteEnv_Handler,
+		},
+		{
+			MethodName: "GetEnvLiveDetail",
+			Handler:    _Titan_GetEnvLiveDetail_Handler,
+		},
+		{
+			MethodName: "ListArtifacts",
+			Handler:    _Titan_ListArtifacts_Handler,
+		},
+		{
+			MethodName: "CreateArtifact",
+			Handler:    _Titan_CreateArtifact_Handler,
+		},
+		{
+			MethodName: "DeployArtifact",
+			Handler:    _Titan_DeployArtifact_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   App as AntdApp,
   Button,
@@ -26,6 +26,9 @@ import {
   DatabaseOutlined,
   SafetyCertificateOutlined,
   LockOutlined,
+  ApartmentOutlined,
+  SettingOutlined,
+  CloudServerOutlined,
 } from '@ant-design/icons';
 import {
   PageContainer,
@@ -45,10 +48,41 @@ import {
 const { Text } = Typography;
 
 const categoryMetaMap: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
+  NACOS: { label: 'Nacos 配置与注册中心', color: 'cyan', icon: <ApartmentOutlined /> },
+  APOLLO: { label: 'Apollo 分布式配置中心', color: 'magenta', icon: <SettingOutlined /> },
   JENKINS: { label: 'Jenkins CI', color: 'blue', icon: <ApiOutlined /> },
   GIT: { label: 'Git 仓库 (GitLab/GitHub)', color: 'green', icon: <GithubOutlined /> },
   REGISTRY: { label: '镜像仓库 (Harbor/Docker)', color: 'orange', icon: <DatabaseOutlined /> },
+  HARBOR: { label: 'Harbor 镜像仓库', color: 'orange', icon: <DatabaseOutlined /> },
   SONAR: { label: '代码扫描 (SonarQube)', color: 'purple', icon: <CodeOutlined /> },
+};
+
+const getCategoryMeta = (category?: string) => {
+  const key = (category || '').toUpperCase();
+  return categoryMetaMap[key] || {
+    label: category || '其它',
+    color: 'default',
+    icon: <ApiOutlined />,
+  };
+};
+
+const getConfigPlaceholder = (category: string) => {
+  const cat = (category || '').toUpperCase();
+  switch (cat) {
+    case 'NACOS':
+      return '{\n  "serverAddr": "127.0.0.1:8848",\n  "namespace": "public",\n  "group": "DEFAULT_GROUP",\n  "contextPath": "/nacos"\n}';
+    case 'APOLLO':
+      return '{\n  "portalUrl": "http://apollo-portal.internal.net",\n  "metaServer": "http://10.0.0.15:8080",\n  "appId": "titan-app",\n  "cluster": "default",\n  "env": "DEV",\n  "token": "apollo-token-xxxx"\n}';
+    case 'JENKINS':
+      return '{\n  "url": "http://10.0.0.10:8080",\n  "username": "admin",\n  "apiToken": "11xxxxxx"\n}';
+    case 'REGISTRY':
+    case 'HARBOR':
+      return '{\n  "url": "harbor.internal.net",\n  "username": "robot$deploy",\n  "password": "SecretPassword"\n}';
+    case 'SONAR':
+      return '{\n  "url": "https://sonar.internal.net",\n  "token": "sqa_xxxxxxxx"\n}';
+    default:
+      return '{\n  "url": "https://gitlab.internal.net",\n  "token": "glpat-xxxxxxxx"\n}';
+  }
 };
 
 export const IntegrationsPage: React.FC = () => {
@@ -62,15 +96,15 @@ export const IntegrationsPage: React.FC = () => {
   const [testingId, setTestingId] = useState<number | null>(null);
 
   const [form] = Form.useForm();
-  const selectedCategory = Form.useWatch('category', form) || 'JENKINS';
+  const selectedCategory = Form.useWatch('category', form) || 'NACOS';
 
   const handleOpenCreate = () => {
     setModalMode('create');
     setEditingItem(null);
     form.resetFields();
     form.setFieldsValue({
-      category: 'JENKINS',
-      authType: 'BASIC',
+      category: 'NACOS',
+      authType: 'NONE',
     });
     setModalOpen(true);
   };
@@ -81,8 +115,8 @@ export const IntegrationsPage: React.FC = () => {
     form.resetFields();
     form.setFieldsValue({
       name: record.name,
-      category: record.category,
-      authType: record.authType,
+      category: (record.category || '').toUpperCase(),
+      authType: (record.authType || 'TOKEN').toUpperCase(),
       config: record.config,
       status: record.status,
       description: record.description,
@@ -104,7 +138,7 @@ export const IntegrationsPage: React.FC = () => {
       if (modalMode === 'create') {
         await titanCreateIntegration({
           name: values.name,
-          category: values.category,
+          category: (values.category || '').toUpperCase(),
           authType: values.authType,
           config: configStr,
           description: values.description || '',
@@ -178,20 +212,18 @@ export const IntegrationsPage: React.FC = () => {
     {
       title: '集成类别',
       dataIndex: 'category',
-      width: 180,
+      width: 200,
       valueType: 'select',
       valueEnum: {
+        NACOS: { text: 'Nacos 配置与注册中心' },
+        APOLLO: { text: 'Apollo 分布式配置中心' },
         JENKINS: { text: 'Jenkins CI' },
         GIT: { text: 'Git 代码托管' },
         REGISTRY: { text: '镜像仓库 (Harbor)' },
         SONAR: { text: 'SonarQube' },
       },
       render: (_, record) => {
-        const meta = categoryMetaMap[record.category || ''] || {
-          label: record.category || '其它',
-          color: 'default',
-          icon: <ApiOutlined />,
-        };
+        const meta = getCategoryMeta(record.category);
         return (
           <Tag color={meta.color} icon={meta.icon}>
             {meta.label}
@@ -202,9 +234,21 @@ export const IntegrationsPage: React.FC = () => {
     {
       title: '认证类型',
       dataIndex: 'authType',
-      width: 120,
+      width: 130,
       search: false,
-      render: (val) => <Tag color="geekblue">{val || 'TOKEN'}</Tag>,
+      render: (val) => {
+        const type = String(val || 'TOKEN').toUpperCase();
+        if (type === 'NONE') {
+          return <Tag color="default">免密 (NONE)</Tag>;
+        }
+        if (type === 'BASIC') {
+          return <Tag color="blue">BASIC</Tag>;
+        }
+        if (type === 'SSH_KEY') {
+          return <Tag color="orange">SSH_KEY</Tag>;
+        }
+        return <Tag color="geekblue">{type}</Tag>;
+      },
     },
     {
       title: '配置信息 (已脱敏)',
@@ -285,7 +329,7 @@ export const IntegrationsPage: React.FC = () => {
     <PageContainer
       header={{
         title: 'Titan 集成管理 (Toolchain Integrations)',
-        subTitle: '纳管 Jenkins、GitLab、Harbor、SonarQube 等关键研发基础设施凭证与外部连接器',
+        subTitle: '统一纳管 Nacos / Apollo 配置中心与服务注册、Jenkins、GitLab、Harbor、SonarQube 等研发基础设施凭证与外部连接器',
       }}
     >
       <ProTable<TitanListIntegrations200ListItem>
@@ -336,13 +380,28 @@ export const IntegrationsPage: React.FC = () => {
           style={{ marginBottom: 16 }}
         />
 
-        <Form form={form} layout="vertical" preserve={false}>
+        <Form
+          form={form}
+          layout="vertical"
+          preserve={false}
+          onValuesChange={(changedValues) => {
+            if (changedValues.category && modalMode === 'create') {
+              if (changedValues.category === 'NACOS') {
+                form.setFieldValue('authType', 'NONE');
+              } else if (changedValues.category === 'APOLLO') {
+                form.setFieldValue('authType', 'TOKEN');
+              } else if (changedValues.category === 'JENKINS') {
+                form.setFieldValue('authType', 'BASIC');
+              }
+            }
+          }}
+        >
           <Form.Item
             name="name"
             label="集成标识名称"
             rules={[{ required: true, message: '请输入集成凭证名称' }]}
           >
-            <Input placeholder="如：corp-jenkins-master, gitlab-deployer, harbor-prod" />
+            <Input placeholder="如：nacos-prod, apollo-cluster, corp-jenkins, harbor-registry" />
           </Form.Item>
 
           <Form.Item
@@ -353,6 +412,8 @@ export const IntegrationsPage: React.FC = () => {
             <Select
               disabled={modalMode === 'edit'}
               options={[
+                { label: 'Nacos 配置与注册中心', value: 'NACOS' },
+                { label: 'Apollo 分布式配置中心', value: 'APOLLO' },
                 { label: 'Jenkins CI 引擎', value: 'JENKINS' },
                 { label: 'Git 代码托管平台 (GitLab/GitHub/Gitee)', value: 'GIT' },
                 { label: '容器镜像仓库 (Harbor / DockerHub)', value: 'REGISTRY' },
@@ -368,8 +429,9 @@ export const IntegrationsPage: React.FC = () => {
           >
             <Select
               options={[
+                { label: '免密 / 内网匿名访问 (NONE)', value: 'NONE' },
+                { label: 'Token 访问令牌 (TOKEN)', value: 'TOKEN' },
                 { label: 'Basic Auth (账号 + 密码/Token)', value: 'BASIC' },
-                { label: 'Personal Access Token (单 Token)', value: 'TOKEN' },
                 { label: 'SSH Private Key (私钥免密)', value: 'SSH_KEY' },
               ]}
             />
@@ -379,17 +441,11 @@ export const IntegrationsPage: React.FC = () => {
             name="config"
             label="连接与认证配置 (JSON 格式)"
             rules={[{ required: true, message: '请输入配置参数' }]}
-            tooltip="包含服务器地址 (url) 及认证密钥 (token/password/username)"
+            tooltip="包含服务器地址 (url/serverAddr) 及认证密钥 (token/password/username)"
           >
             <Input.TextArea
               rows={6}
-              placeholder={
-                selectedCategory === 'JENKINS'
-                  ? '{\n  "url": "http://10.0.0.10:8080",\n  "username": "admin",\n  "apiToken": "11xxxxxx"\n}'
-                  : selectedCategory === 'REGISTRY'
-                  ? '{\n  "url": "harbor.internal.net",\n  "username": "robot$deploy",\n  "password": "SecretPassword"\n}'
-                  : '{\n  "url": "https://gitlab.internal.net",\n  "token": "glpat-xxxxxxxx"\n}'
-              }
+              placeholder={getConfigPlaceholder(selectedCategory)}
             />
           </Form.Item>
 

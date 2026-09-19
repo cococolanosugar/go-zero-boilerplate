@@ -30,6 +30,22 @@ export interface AdminProfileResp {
 	menus: Array<SysMenuItem>
 }
 
+export interface AppVO {
+	id: number
+	projectId: number
+	name: string
+	displayName: string
+	description: string
+	integrationId: number
+	repoUrl: string
+	defaultBranch: string
+	buildConfig: string
+	deploySpec: string
+	status: number
+	createTime: string
+	updateTime: string
+}
+
 export interface ApproveStepReqVO {
 	approved: boolean
 	comment?: string
@@ -43,6 +59,23 @@ export interface ApproveTaskReqVO {
 	updatedFormDataJson?: string
 }
 export interface ApproveTaskReqVOParams {
+}
+
+export interface ArtifactVO {
+	id: number
+	projectId: number
+	appId: number
+	appName: string
+	imageUrl: string
+	imageTag: string
+	imageDigest: string
+	gitBranch: string
+	gitCommit: string
+	commitMsg: string
+	buildExecId: number
+	imageSizeBytes: number
+	status: string
+	createTime: string
 }
 
 export interface AssignRolePermReq {
@@ -107,6 +140,41 @@ export interface ClusterVO {
 	updateTime: string
 }
 
+export interface CreateAppReqVO {
+	name: string
+	displayName: string
+	description?: string
+	integrationId?: number
+	repoUrl?: string
+	defaultBranch: string
+	buildConfig?: string
+	deploySpec?: string
+}
+export interface CreateAppReqVOParams {
+}
+
+export interface CreateAppRespVO {
+	id: number
+}
+
+export interface CreateArtifactReqVO {
+	appId: number
+	imageUrl: string
+	imageTag: string
+	imageDigest?: string
+	gitBranch?: string
+	gitCommit?: string
+	commitMsg?: string
+	buildExecId?: number
+	imageSizeBytes?: number
+}
+export interface CreateArtifactReqVOParams {
+}
+
+export interface CreateArtifactRespVO {
+	id: number
+}
+
 export interface CreateClusterReqVO {
 	name: string
 	env: string
@@ -116,6 +184,19 @@ export interface CreateClusterReqVO {
 }
 
 export interface CreateClusterRespVO {
+	id: number
+}
+
+export interface CreateEnvReqVO {
+	envCode: string
+	name: string
+	clusterId: number
+	namespace: string
+}
+export interface CreateEnvReqVOParams {
+}
+
+export interface CreateEnvRespVO {
 	id: number
 }
 
@@ -154,6 +235,17 @@ export interface CreateProcessDefReqVO {
 	bpmnXml?: string
 	formSchema?: string
 	description?: string
+}
+
+export interface CreateProjectReqVO {
+	name: string
+	displayName: string
+	description?: string
+	ownerId?: number
+}
+
+export interface CreateProjectRespVO {
+	id: number
 }
 
 export interface CreateSysConfigReq {
@@ -286,9 +378,19 @@ export interface DashboardSystemStats {
 	successRate: number
 }
 
+export interface DeleteAppReqVO {
+}
+export interface DeleteAppReqVOParams {
+}
+
 export interface DeleteClusterReqVO {
 }
 export interface DeleteClusterReqVOParams {
+}
+
+export interface DeleteEnvReqVO {
+}
+export interface DeleteEnvReqVOParams {
 }
 
 export interface DeleteIntegrationReqVO {
@@ -299,6 +401,11 @@ export interface DeleteIntegrationReqVOParams {
 export interface DeletePipelineReqVO {
 }
 export interface DeletePipelineReqVOParams {
+}
+
+export interface DeleteProjectReqVO {
+}
+export interface DeleteProjectReqVOParams {
 }
 
 export interface DeleteSysPortalNavReq {
@@ -319,9 +426,45 @@ export interface DeleteTaskResp {
 	success: boolean
 }
 
+export interface DeployArtifactReqVO {
+	appId: number
+	artifactId: number
+}
+export interface DeployArtifactReqVOParams {
+}
+
 export interface DeployProcessDefReqVO {
 }
 export interface DeployProcessDefReqVOParams {
+}
+
+export interface EnvAppLiveVO {
+	appId: number
+	appName: string
+	displayName: string
+	currentArtifactId: number
+	imageTag: string
+	imageUrl: string
+	gitCommit: string
+	readyReplicas: number
+	totalReplicas: number
+	status: string
+	lastDeployedTime: string
+	pods: Array<string>
+}
+
+export interface EnvVO {
+	id: number
+	projectId: number
+	envCode: string
+	name: string
+	clusterId: number
+	clusterName: string
+	namespace: string
+	status: string
+	appCount: number
+	createTime: string
+	updateTime: string
 }
 
 export interface ExecutionDetailRespVO {
@@ -362,6 +505,11 @@ export interface ForceLogoutReq {
 export interface ForceLogoutReqParams {
 }
 
+export interface GetAppReqVO {
+}
+export interface GetAppReqVOParams {
+}
+
 export interface GetDictDataByTypeReq {
 }
 export interface GetDictDataByTypeReqParams {
@@ -369,6 +517,25 @@ export interface GetDictDataByTypeReqParams {
 
 export interface GetDictDataByTypeResp {
 	list: Array<SysDictDataItem>
+}
+
+export interface GetEnvLiveDetailReqVO {
+}
+export interface GetEnvLiveDetailReqVOParams {
+}
+
+export interface GetEnvLiveDetailRespVO {
+	envId: number
+	envCode: string
+	envName: string
+	clusterName: string
+	namespace: string
+	apps: Array<EnvAppLiveVO>
+}
+
+export interface GetEnvReqVO {
+}
+export interface GetEnvReqVOParams {
 }
 
 export interface GetExecutionDetailReqVO {
@@ -406,6 +573,11 @@ export interface GetPortalNavListResp {
 export interface GetProcessDefReq {
 }
 export interface GetProcessDefReqParams {
+}
+
+export interface GetProjectReqVO {
+}
+export interface GetProjectReqVOParams {
 }
 
 export interface GetStepLogReqVO {
@@ -457,6 +629,31 @@ export interface IntegrationVO {
 	updateTime: string
 }
 
+export interface ListAppsReqVO {
+}
+export interface ListAppsReqVOParams {
+	page: number
+	pageSize: number
+}
+
+export interface ListAppsRespVO {
+	total: number
+	list: Array<AppVO>
+}
+
+export interface ListArtifactsReqVO {
+}
+export interface ListArtifactsReqVOParams {
+	appId?: number
+	page: number
+	pageSize: number
+}
+
+export interface ListArtifactsRespVO {
+	total: number
+	list: Array<ArtifactVO>
+}
+
 export interface ListClustersReqVO {
 }
 export interface ListClustersReqVOParams {
@@ -468,6 +665,15 @@ export interface ListClustersReqVOParams {
 export interface ListClustersRespVO {
 	total: number
 	list: Array<ClusterVO>
+}
+
+export interface ListEnvsReqVO {
+}
+export interface ListEnvsReqVOParams {
+}
+
+export interface ListEnvsRespVO {
+	list: Array<EnvVO>
 }
 
 export interface ListExecutionsReqVO {
@@ -547,6 +753,19 @@ export interface ListProcessDefsReqParams {
 export interface ListProcessDefsResp {
 	total: number
 	list: Array<ProcessDefVO>
+}
+
+export interface ListProjectsReqVO {
+}
+export interface ListProjectsReqVOParams {
+	page: number
+	pageSize: number
+	keyword?: string
+}
+
+export interface ListProjectsRespVO {
+	total: number
+	list: Array<ProjectVO>
 }
 
 export interface ListSlaPoliciesRespVO {
@@ -830,6 +1049,19 @@ export interface ProcessDefVO {
 	version: number
 	status: number
 	description: string
+	createTime: string
+	updateTime: string
+}
+
+export interface ProjectVO {
+	id: number
+	name: string
+	displayName: string
+	description: string
+	ownerId: number
+	status: number
+	appCount: number
+	envCount: number
 	createTime: string
 	updateTime: string
 }
@@ -1158,6 +1390,20 @@ export interface TriggerPipelineRespVO {
 	execNo: string
 }
 
+export interface UpdateAppReqVO {
+	name?: string
+	displayName?: string
+	description?: string
+	integrationId?: number
+	repoUrl?: string
+	defaultBranch?: string
+	buildConfig?: string
+	deploySpec?: string
+	status?: number
+}
+export interface UpdateAppReqVOParams {
+}
+
 export interface UpdateClusterReqVO {
 	name?: string
 	env?: string
@@ -1166,6 +1412,15 @@ export interface UpdateClusterReqVO {
 	description?: string
 }
 export interface UpdateClusterReqVOParams {
+}
+
+export interface UpdateEnvReqVO {
+	name?: string
+	clusterId?: number
+	namespace?: string
+	status?: string
+}
+export interface UpdateEnvReqVOParams {
 }
 
 export interface UpdateIntegrationReqVO {
@@ -1208,6 +1463,15 @@ export interface UpdateProcessDefReqVO {
 	status?: number
 }
 export interface UpdateProcessDefReqVOParams {
+}
+
+export interface UpdateProjectReqVO {
+	displayName?: string
+	description?: string
+	ownerId?: number
+	status?: number
+}
+export interface UpdateProjectReqVOParams {
 }
 
 export interface UpdateSlaPolicyReqVO {

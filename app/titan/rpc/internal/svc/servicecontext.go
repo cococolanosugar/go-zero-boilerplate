@@ -15,6 +15,11 @@ type ServiceContext struct {
 	PipelineModel         model.TitanPipelineModel
 	PipelineExecModel     model.TitanPipelineExecModel
 	PipelineStepExecModel model.TitanPipelineStepExecModel
+	ProjectModel          model.TitanProjectModel
+	AppModel              model.TitanAppModel
+	EnvModel              model.TitanEnvModel
+	ArtifactModel         model.TitanArtifactModel
+	EnvAppBindingModel    model.TitanEnvAppBindingModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -27,5 +32,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		PipelineModel:         model.NewTitanPipelineModel(conn, c.Cache),
 		PipelineExecModel:     model.NewTitanPipelineExecModel(conn, c.Cache),
 		PipelineStepExecModel: model.NewTitanPipelineStepExecModel(conn, c.Cache),
+		ProjectModel:          model.NewTitanProjectModel(conn, c.Cache),
+		AppModel:              model.NewTitanAppModel(conn, c.Cache),
+		EnvModel:              model.NewTitanEnvModel(conn, c.Cache),
+		ArtifactModel:         model.NewTitanArtifactModel(conn, c.Cache),
+		EnvAppBindingModel:    model.NewTitanEnvAppBindingModel(conn, c.Cache),
 	}
 }

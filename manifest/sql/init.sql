@@ -700,13 +700,102 @@ CREATE TABLE IF NOT EXISTS `titan_pipeline_step_exec` (
   KEY `idx_exec_stage` (`exec_id`, `stage_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan 流水线步骤执行记录表';
 
+CREATE TABLE IF NOT EXISTS `titan_project` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '项目ID',
+  `name` varchar(64) NOT NULL COMMENT '项目唯一英文标识（如 shop-system）',
+  `display_name` varchar(128) NOT NULL COMMENT '项目显示名称',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '项目描述',
+  `owner_id` bigint NOT NULL DEFAULT 0 COMMENT '负责人ID',
+  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态 1:正常 2:归档',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_name` (`name`),
+  KEY `idx_owner` (`owner_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan交付项目表';
+
+CREATE TABLE IF NOT EXISTS `titan_app` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '应用ID',
+  `project_id` bigint NOT NULL COMMENT '所属项目ID',
+  `name` varchar(64) NOT NULL COMMENT '应用英文标识（如 user-rpc）',
+  `display_name` varchar(128) NOT NULL COMMENT '应用显示名称',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '应用描述',
+  `integration_id` bigint NOT NULL DEFAULT 0 COMMENT '代码仓凭证ID (关联 titan_integration)',
+  `repo_url` varchar(255) NOT NULL DEFAULT '' COMMENT 'Git代码仓完整克隆地址',
+  `default_branch` varchar(64) NOT NULL DEFAULT 'main' COMMENT '默认分支',
+  `build_config` json NOT NULL COMMENT '构建策略: { dockerfilePath, contextPath, baseImage, buildArgs, envVars }',
+  `deploy_spec` longtext NOT NULL COMMENT 'K8s部署编排模版YAML (包含 {{.IMAGE}}, {{.APP_NAME}} 变量)',
+  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态 1:启用 2:停用',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_proj_app` (`project_id`, `name`),
+  KEY `idx_project_id` (`project_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan微服务应用定义表';
+
+CREATE TABLE IF NOT EXISTS `titan_env` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '环境ID',
+  `project_id` bigint NOT NULL COMMENT '所属项目ID',
+  `env_code` varchar(32) NOT NULL COMMENT '环境标识代码: dev / qa / staging / prod',
+  `name` varchar(64) NOT NULL COMMENT '环境名称 (如 开发环境、生产环境)',
+  `cluster_id` bigint NOT NULL COMMENT '关联物理K8s集群ID (titan_cluster)',
+  `namespace` varchar(64) NOT NULL COMMENT '对应的Kubernetes命名空间',
+  `status` varchar(32) NOT NULL DEFAULT 'ACTIVE' COMMENT '状态: ACTIVE, CREATING, DELETED',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_proj_env` (`project_id`, `env_code`),
+  KEY `idx_project_id` (`project_id`),
+  KEY `idx_cluster_id` (`cluster_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan项目交付环境表';
+
+CREATE TABLE IF NOT EXISTS `titan_artifact` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '制品ID',
+  `project_id` bigint NOT NULL COMMENT '所属项目ID',
+  `app_id` bigint NOT NULL COMMENT '所属应用ID',
+  `image_url` varchar(255) NOT NULL COMMENT '镜像全名(包含registry与仓库名)',
+  `image_tag` varchar(128) NOT NULL COMMENT '制品Tag (如 v1.0.0 或 git-7fa9b2)',
+  `image_digest` varchar(128) NOT NULL DEFAULT '' COMMENT '镜像SHA256摘要',
+  `git_branch` varchar(64) NOT NULL DEFAULT '' COMMENT '构建源码分支',
+  `git_commit` varchar(64) NOT NULL DEFAULT '' COMMENT '构建源码Commit Hash',
+  `commit_msg` varchar(255) NOT NULL DEFAULT '' COMMENT '提交说明',
+  `build_exec_id` bigint NOT NULL DEFAULT 0 COMMENT '生成的执行工作流ID',
+  `image_size_bytes` bigint NOT NULL DEFAULT 0 COMMENT '镜像大小',
+  `status` varchar(32) NOT NULL DEFAULT 'AVAILABLE' COMMENT '状态: AVAILABLE, EXPIRED',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_app_tag` (`app_id`, `image_tag`),
+  KEY `idx_proj_app` (`project_id`, `app_id`),
+  KEY `idx_git_commit` (`git_commit`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan不可变制品库';
+
+CREATE TABLE IF NOT EXISTS `titan_env_app_binding` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `env_id` bigint NOT NULL COMMENT '环境ID',
+  `app_id` bigint NOT NULL COMMENT '应用ID',
+  `current_artifact_id` bigint NOT NULL DEFAULT 0 COMMENT '当前运行的制品ID',
+  `ready_replicas` int NOT NULL DEFAULT 0 COMMENT '就绪Pod副本数',
+  `total_replicas` int NOT NULL DEFAULT 0 COMMENT '期望总副本数',
+  `status` varchar(32) NOT NULL DEFAULT 'PENDING' COMMENT '状态: RUNNING, UPDATING, FAILED, STOPPED',
+  `last_deployed_time` datetime DEFAULT NULL COMMENT '最后一次部署时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_env_app` (`env_id`, `app_id`),
+  KEY `idx_env_id` (`env_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan环境应用运行态绑定表';
+
 -- 挂载管理后台菜单项：Titan 研发交付平台
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`, `visible`, `status`)
 VALUES
   (70, 0, '研发交付', 1, '/titan', '', 'titan:manage', 'DeploymentUnitOutlined', 5, 1, 1),
-  (71, 70, '交付流水线', 2, '/titan/pipelines', 'Titan/Pipelines', 'titan:pipeline:view', 'PlayCircleOutlined', 1, 1, 1),
-  (72, 70, '集群大盘', 2, '/titan/clusters', 'Titan/Clusters', 'titan:cluster:view', 'ClusterOutlined', 2, 1, 1),
-  (73, 70, '集成管理', 2, '/titan/integrations', 'Titan/Integrations', 'titan:integration:view', 'ApiOutlined', 3, 1, 1)
+  (71, 70, '交付流水线', 2, '/titan/pipelines', 'Titan/Pipelines', 'titan:pipeline:view', 'PlayCircleOutlined', 4, 1, 1),
+  (72, 70, '集群大盘', 2, '/titan/clusters', 'Titan/Clusters', 'titan:cluster:view', 'ClusterOutlined', 5, 1, 1),
+  (73, 70, '集成管理', 2, '/titan/integrations', 'Titan/Integrations', 'titan:integration:view', 'ApiOutlined', 6, 1, 1),
+  (74, 70, '交付项目', 2, '/titan/projects', 'Titan/Projects', 'titan:project:view', 'ProjectOutlined', 1, 1, 1),
+  (75, 70, '微服务应用', 2, '/titan/apps', 'Titan/Apps', 'titan:app:view', 'AppstoreOutlined', 2, 1, 1),
+  (76, 70, '环境大盘', 2, '/titan/environments', 'Titan/Environments', 'titan:env:view', 'CloudServerOutlined', 3, 1, 1),
+  (77, 70, '制品中心', 2, '/titan/artifacts', 'Titan/Artifacts', 'titan:artifact:view', 'RocketOutlined', 4, 1, 1)
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 -- 预置 Titan 初始演示数据 (集群、集成凭证、流水线模型与执行记录)
@@ -720,7 +809,9 @@ INSERT IGNORE INTO `titan_integration` (`id`, `name`, `category`, `auth_type`, `
 VALUES
   (1, '企业核心 GitLab', 'git', 'token', '{"url": "https://gitlab.company.internal", "token": "glpat-sample-token"}', 1, '企业研发团队核心代码托管', 1),
   (2, '生产 Harbor 镜像仓库', 'harbor', 'token', '{"url": "https://harbor.company.internal", "username": "robot-ci", "token": "sample-pwd"}', 1, '业务容器镜像统一推送与存储', 1),
-  (3, '企业构建 Jenkins 集群', 'jenkins', 'token', '{"url": "http://jenkins.company.internal:8080", "username": "admin", "token": "11a2b3c4d5"}', 1, '存量构建任务与物理机资源池', 1);
+  (3, '企业构建 Jenkins 集群', 'jenkins', 'token', '{"url": "http://jenkins.company.internal:8080", "username": "admin", "token": "11a2b3c4d5"}', 1, '存量构建任务与物理机资源池', 1),
+  (4, '集群默认 Nacos 服务注册与配置中心', 'nacos', 'none', '{"serverAddr": "127.0.0.1:8848", "namespace": "public", "group": "DEFAULT_GROUP", "contextPath": "/nacos"}', 1, 'go-zero 微服务集群统一服务注册与动态配置中心 (Alibaba Nacos)', 1),
+  (5, '企业级 Apollo 分布式配置中心', 'apollo', 'token', '{"portalUrl": "http://127.0.0.1:8070", "metaServer": "http://127.0.0.1:8080", "appId": "go-zero-boilerplate", "cluster": "default", "env": "DEV", "token": "apollo-dev-secret-token"}', 1, '多环境动态参数热发布配置中心 (Ctrip Apollo)', 1);
 
 INSERT IGNORE INTO `titan_pipeline` (`id`, `name`, `display_name`, `category`, `git_repo`, `git_branch`, `stages`, `params`, `triggers`, `status`, `description`, `created_by`)
 VALUES

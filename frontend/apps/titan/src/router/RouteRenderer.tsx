@@ -34,7 +34,7 @@ function renderRouteNodes(items: AppRouteItem[], parentPath = ""): React.ReactNo
     const relPath = toRelativePath(item.path, parentPath);
     const isIndex = item.path === parentPath || (parentPath === "/" && item.path === "/");
 
-    if (item.redirect) {
+    if (item.redirect && (!item.routes || item.routes.length === 0)) {
       if (isIndex) {
         return <Route key={key} index element={<Navigate to={item.redirect} replace />} />;
       }
@@ -49,9 +49,15 @@ function renderRouteNodes(items: AppRouteItem[], parentPath = ""): React.ReactNo
 
     if (item.routes && item.routes.length > 0) {
       return (
-        <Route key={key} path={relPath}>
-          {renderRouteNodes(item.routes, item.path)}
-        </Route>
+        <React.Fragment key={key}>
+          {item.redirect && (
+            <Route
+              path={relPath}
+              element={<Navigate to={item.redirect} replace />}
+            />
+          )}
+          {renderRouteNodes(item.routes, parentPath)}
+        </React.Fragment>
       );
     }
 

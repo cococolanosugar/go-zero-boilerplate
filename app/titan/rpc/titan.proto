@@ -319,6 +319,275 @@ message CancelExecutionReq {
 }
 
 // ----------------------
+// 5. 项目 (Project)
+// ----------------------
+message ProjectItem {
+  int64 id = 1;
+  string name = 2;
+  string displayName = 3;
+  string description = 4;
+  int64 ownerId = 5;
+  int32 status = 6;
+  int32 appCount = 7;
+  int32 envCount = 8;
+  string createTime = 9;
+  string updateTime = 10;
+}
+
+message ListProjectsReq {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string keyword = 3;
+}
+
+message ListProjectsResp {
+  int64 total = 1;
+  repeated ProjectItem list = 2;
+}
+
+message GetProjectReq {
+  int64 id = 1;
+}
+
+message ProjectDetailResp {
+  ProjectItem project = 1;
+}
+
+message CreateProjectReq {
+  string name = 1;
+  string displayName = 2;
+  string description = 3;
+  int64 ownerId = 4;
+}
+
+message CreateProjectResp {
+  int64 id = 1;
+}
+
+message UpdateProjectReq {
+  int64 id = 1;
+  string displayName = 2;
+  string description = 3;
+  int64 ownerId = 4;
+  int32 status = 5;
+}
+
+message DeleteProjectReq {
+  int64 id = 1;
+}
+
+// ----------------------
+// 6. 应用 (Application)
+// ----------------------
+message AppItem {
+  int64 id = 1;
+  int64 projectId = 2;
+  string name = 3;
+  string displayName = 4;
+  string description = 5;
+  int64 integrationId = 6;
+  string repoUrl = 7;
+  string defaultBranch = 8;
+  string buildConfig = 9;
+  string deploySpec = 10;
+  int32 status = 11;
+  string createTime = 12;
+  string updateTime = 13;
+}
+
+message ListAppsReq {
+  int64 projectId = 1;
+  int32 page = 2;
+  int32 pageSize = 3;
+}
+
+message ListAppsResp {
+  int64 total = 1;
+  repeated AppItem list = 2;
+}
+
+message GetAppReq {
+  int64 id = 1;
+}
+
+message AppDetailResp {
+  AppItem app = 1;
+}
+
+message CreateAppReq {
+  int64 projectId = 1;
+  string name = 2;
+  string displayName = 3;
+  string description = 4;
+  int64 integrationId = 5;
+  string repoUrl = 6;
+  string defaultBranch = 7;
+  string buildConfig = 8;
+  string deploySpec = 9;
+}
+
+message CreateAppResp {
+  int64 id = 1;
+}
+
+message UpdateAppReq {
+  int64 id = 1;
+  string displayName = 2;
+  string description = 3;
+  int64 integrationId = 4;
+  string repoUrl = 5;
+  string defaultBranch = 6;
+  string buildConfig = 7;
+  string deploySpec = 8;
+  int32 status = 9;
+  string name = 10;
+}
+
+message DeleteAppReq {
+  int64 id = 1;
+}
+
+// ----------------------
+// 7. 环境 (Environment)
+// ----------------------
+message EnvItem {
+  int64 id = 1;
+  int64 projectId = 2;
+  string envCode = 3;
+  string name = 4;
+  int64 clusterId = 5;
+  string clusterName = 6;
+  string namespace = 7;
+  string status = 8;
+  int32 appCount = 9;
+  string createTime = 10;
+  string updateTime = 11;
+}
+
+message ListEnvsReq {
+  int64 projectId = 1;
+}
+
+message ListEnvsResp {
+  repeated EnvItem list = 1;
+}
+
+message GetEnvReq {
+  int64 id = 1;
+}
+
+message EnvDetailResp {
+  EnvItem env = 1;
+}
+
+message CreateEnvReq {
+  int64 projectId = 1;
+  string envCode = 2;
+  string name = 3;
+  int64 clusterId = 4;
+  string namespace = 5;
+}
+
+message CreateEnvResp {
+  int64 id = 1;
+}
+
+message UpdateEnvReq {
+  int64 id = 1;
+  string name = 2;
+  int64 clusterId = 3;
+  string namespace = 4;
+  string status = 5;
+}
+
+message DeleteEnvReq {
+  int64 id = 1;
+}
+
+message EnvAppLiveItem {
+  int64 appId = 1;
+  string appName = 2;
+  string displayName = 3;
+  int64 currentArtifactId = 4;
+  string imageTag = 5;
+  string imageUrl = 6;
+  string gitCommit = 7;
+  int32 readyReplicas = 8;
+  int32 totalReplicas = 9;
+  string status = 10;
+  string lastDeployedTime = 11;
+  repeated string pods = 12;
+}
+
+message GetEnvLiveDetailReq {
+  int64 envId = 1;
+}
+
+message GetEnvLiveDetailResp {
+  int64 envId = 1;
+  string envCode = 2;
+  string envName = 3;
+  string clusterName = 4;
+  string namespace = 5;
+  repeated EnvAppLiveItem apps = 6;
+}
+
+// ----------------------
+// 8. 制品库 (Artifact)
+// ----------------------
+message ArtifactItem {
+  int64 id = 1;
+  int64 projectId = 2;
+  int64 appId = 3;
+  string appName = 4;
+  string imageUrl = 5;
+  string imageTag = 6;
+  string imageDigest = 7;
+  string gitBranch = 8;
+  string gitCommit = 9;
+  string commitMsg = 10;
+  int64 buildExecId = 11;
+  int64 imageSizeBytes = 12;
+  string status = 13;
+  string createTime = 14;
+}
+
+message ListArtifactsReq {
+  int64 projectId = 1;
+  int64 appId = 2;
+  int32 page = 3;
+  int32 pageSize = 4;
+}
+
+message ListArtifactsResp {
+  int64 total = 1;
+  repeated ArtifactItem list = 2;
+}
+
+message CreateArtifactReq {
+  int64 projectId = 1;
+  int64 appId = 2;
+  string imageUrl = 3;
+  string imageTag = 4;
+  string imageDigest = 5;
+  string gitBranch = 6;
+  string gitCommit = 7;
+  string commitMsg = 8;
+  int64 buildExecId = 9;
+  int64 imageSizeBytes = 10;
+}
+
+message CreateArtifactResp {
+  int64 id = 1;
+}
+
+message DeployArtifactReq {
+  int64 envId = 1;
+  int64 appId = 2;
+  int64 artifactId = 3;
+}
+
+// ----------------------
 // Titan gRPC Service
 // ----------------------
 service titan {
@@ -353,4 +622,34 @@ service titan {
   rpc GetStepLog(GetStepLogReq) returns (GetStepLogResp);
   rpc ApproveStep(ApproveStepReq) returns (CommonResp);
   rpc CancelExecution(CancelExecutionReq) returns (CommonResp);
+
+  // ----------------------
+  // Zadig CI/CD 演进服务
+  // ----------------------
+  // 1. 项目 (Project)
+  rpc ListProjects(ListProjectsReq) returns (ListProjectsResp);
+  rpc GetProject(GetProjectReq) returns (ProjectDetailResp);
+  rpc CreateProject(CreateProjectReq) returns (CreateProjectResp);
+  rpc UpdateProject(UpdateProjectReq) returns (CommonResp);
+  rpc DeleteProject(DeleteProjectReq) returns (CommonResp);
+
+  // 2. 应用 (Application)
+  rpc ListApps(ListAppsReq) returns (ListAppsResp);
+  rpc GetApp(GetAppReq) returns (AppDetailResp);
+  rpc CreateApp(CreateAppReq) returns (CreateAppResp);
+  rpc UpdateApp(UpdateAppReq) returns (CommonResp);
+  rpc DeleteApp(DeleteAppReq) returns (CommonResp);
+
+  // 3. 环境 (Environment)
+  rpc ListEnvs(ListEnvsReq) returns (ListEnvsResp);
+  rpc GetEnv(GetEnvReq) returns (EnvDetailResp);
+  rpc CreateEnv(CreateEnvReq) returns (CreateEnvResp);
+  rpc UpdateEnv(UpdateEnvReq) returns (CommonResp);
+  rpc DeleteEnv(DeleteEnvReq) returns (CommonResp);
+  rpc GetEnvLiveDetail(GetEnvLiveDetailReq) returns (GetEnvLiveDetailResp);
+
+  // 4. 制品 (Artifact)
+  rpc ListArtifacts(ListArtifactsReq) returns (ListArtifactsResp);
+  rpc CreateArtifact(CreateArtifactReq) returns (CreateArtifactResp);
+  rpc DeployArtifact(DeployArtifactReq) returns (CommonResp);
 }

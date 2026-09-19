@@ -3,6 +3,22 @@
 
 package types
 
+type AppVO struct {
+	Id            int64  `json:"id"`
+	ProjectId     int64  `json:"projectId"`
+	Name          string `json:"name"`
+	DisplayName   string `json:"displayName"`
+	Description   string `json:"description"`
+	IntegrationId int64  `json:"integrationId"`
+	RepoUrl       string `json:"repoUrl"`
+	DefaultBranch string `json:"defaultBranch"`
+	BuildConfig   string `json:"buildConfig"`
+	DeploySpec    string `json:"deploySpec"`
+	Status        int32  `json:"status"`
+	CreateTime    string `json:"createTime"`
+	UpdateTime    string `json:"updateTime"`
+}
+
 type ApproveStepReqVO struct {
 	Id       int64  `path:"id"`
 	Approved bool   `json:"approved"`
@@ -11,6 +27,39 @@ type ApproveStepReqVO struct {
 
 type CancelExecutionReqVO struct {
 	Id int64 `path:"id"`
+}
+
+type CreateAppReqVO struct {
+	ProjectId     int64  `path:"projectId"`
+	Name          string `json:"name"`
+	DisplayName   string `json:"displayName"`
+	Description   string `json:"description,optional"`
+	IntegrationId int64  `json:"integrationId,optional"`
+	RepoUrl       string `json:"repoUrl,optional"`
+	DefaultBranch string `json:"defaultBranch,default=main"`
+	BuildConfig   string `json:"buildConfig,optional"`
+	DeploySpec    string `json:"deploySpec,optional"`
+}
+
+type CreateAppRespVO struct {
+	Id int64 `json:"id"`
+}
+
+type CreateArtifactReqVO struct {
+	ProjectId      int64  `path:"projectId"`
+	AppId          int64  `json:"appId"`
+	ImageUrl       string `json:"imageUrl"`
+	ImageTag       string `json:"imageTag"`
+	ImageDigest    string `json:"imageDigest,optional"`
+	GitBranch      string `json:"gitBranch,optional"`
+	GitCommit      string `json:"gitCommit,optional"`
+	CommitMsg      string `json:"commitMsg,optional"`
+	BuildExecId    int64  `json:"buildExecId,optional"`
+	ImageSizeBytes int64  `json:"imageSizeBytes,optional"`
+}
+
+type CreateArtifactRespVO struct {
+	Id int64 `json:"id"`
 }
 
 type CreateClusterReqVO struct {
@@ -22,6 +71,18 @@ type CreateClusterReqVO struct {
 }
 
 type CreateClusterRespVO struct {
+	Id int64 `json:"id"`
+}
+
+type CreateEnvReqVO struct {
+	ProjectId int64  `path:"projectId"`
+	EnvCode   string `json:"envCode"`
+	Name      string `json:"name"`
+	ClusterId int64  `json:"clusterId"`
+	Namespace string `json:"namespace"`
+}
+
+type CreateEnvRespVO struct {
 	Id int64 `json:"id"`
 }
 
@@ -53,8 +114,29 @@ type CreatePipelineRespVO struct {
 	Id int64 `json:"id"`
 }
 
+type CreateProjectReqVO struct {
+	Name        string `json:"name"`
+	DisplayName string `json:"displayName"`
+	Description string `json:"description,optional"`
+	OwnerId     int64  `json:"ownerId,optional"`
+}
+
+type CreateProjectRespVO struct {
+	Id int64 `json:"id"`
+}
+
+type DeleteAppReqVO struct {
+	ProjectId int64 `path:"projectId"`
+	Id        int64 `path:"id"`
+}
+
 type DeleteClusterReqVO struct {
 	Id int64 `path:"id"`
+}
+
+type DeleteEnvReqVO struct {
+	ProjectId int64 `path:"projectId"`
+	Id        int64 `path:"id"`
 }
 
 type DeleteIntegrationReqVO struct {
@@ -65,9 +147,56 @@ type DeletePipelineReqVO struct {
 	Id int64 `path:"id"`
 }
 
+type DeleteProjectReqVO struct {
+	Id int64 `path:"id"`
+}
+
+type DeployArtifactReqVO struct {
+	Id         int64 `path:"id"`
+	AppId      int64 `json:"appId"`
+	ArtifactId int64 `json:"artifactId"`
+}
+
+type EnvVO struct {
+	Id          int64  `json:"id"`
+	ProjectId   int64  `json:"projectId"`
+	EnvCode     string `json:"envCode"`
+	Name        string `json:"name"`
+	ClusterId   int64  `json:"clusterId"`
+	ClusterName string `json:"clusterName"`
+	Namespace   string `json:"namespace"`
+	Status      string `json:"status"`
+	AppCount    int32  `json:"appCount"`
+	CreateTime  string `json:"createTime"`
+	UpdateTime  string `json:"updateTime"`
+}
+
 type ExecutionDetailRespVO struct {
 	Execution ExecutionVO  `json:"execution"`
 	Steps     []StepExecVO `json:"steps"`
+}
+
+type GetAppReqVO struct {
+	ProjectId int64 `path:"projectId"`
+	Id        int64 `path:"id"`
+}
+
+type GetEnvLiveDetailReqVO struct {
+	Id int64 `path:"id"`
+}
+
+type GetEnvLiveDetailRespVO struct {
+	EnvId       int64          `json:"envId"`
+	EnvCode     string         `json:"envCode"`
+	EnvName     string         `json:"envName"`
+	ClusterName string         `json:"clusterName"`
+	Namespace   string         `json:"namespace"`
+	Apps        []EnvAppLiveVO `json:"apps"`
+}
+
+type GetEnvReqVO struct {
+	ProjectId int64 `path:"projectId"`
+	Id        int64 `path:"id"`
 }
 
 type GetExecutionDetailReqVO struct {
@@ -75,6 +204,10 @@ type GetExecutionDetailReqVO struct {
 }
 
 type GetPipelineReqVO struct {
+	Id int64 `path:"id"`
+}
+
+type GetProjectReqVO struct {
 	Id int64 `path:"id"`
 }
 
@@ -89,6 +222,29 @@ type GetStepLogRespVO struct {
 	IsEnd      bool   `json:"isEnd"`
 }
 
+type ListAppsReqVO struct {
+	ProjectId int64 `path:"projectId"`
+	Page      int32 `form:"page,default=1"`
+	PageSize  int32 `form:"pageSize,default=50"`
+}
+
+type ListAppsRespVO struct {
+	Total int64   `json:"total"`
+	List  []AppVO `json:"list"`
+}
+
+type ListArtifactsReqVO struct {
+	ProjectId int64 `path:"projectId"`
+	AppId     int64 `form:"appId,optional"`
+	Page      int32 `form:"page,default=1"`
+	PageSize  int32 `form:"pageSize,default=20"`
+}
+
+type ListArtifactsRespVO struct {
+	Total int64        `json:"total"`
+	List  []ArtifactVO `json:"list"`
+}
+
 type ListClustersReqVO struct {
 	Env      string `form:"env,optional"`
 	Page     int32  `form:"page,default=1"`
@@ -98,6 +254,14 @@ type ListClustersReqVO struct {
 type ListClustersRespVO struct {
 	Total int64       `json:"total"`
 	List  []ClusterVO `json:"list"`
+}
+
+type ListEnvsReqVO struct {
+	ProjectId int64 `path:"projectId"`
+}
+
+type ListEnvsRespVO struct {
+	List []EnvVO `json:"list"`
 }
 
 type ListExecutionsReqVO struct {
@@ -143,6 +307,17 @@ type ListPipelinesRespVO struct {
 	List  []PipelineVO `json:"list"`
 }
 
+type ListProjectsReqVO struct {
+	Page     int32  `form:"page,default=1"`
+	PageSize int32  `form:"pageSize,default=20"`
+	Keyword  string `form:"keyword,optional"`
+}
+
+type ListProjectsRespVO struct {
+	Total int64       `json:"total"`
+	List  []ProjectVO `json:"list"`
+}
+
 type PipelineVO struct {
 	Id          int64  `json:"id"`
 	Name        string `json:"name"`
@@ -156,6 +331,19 @@ type PipelineVO struct {
 	Status      int32  `json:"status"`
 	Description string `json:"description"`
 	CreatedBy   int64  `json:"createdBy"`
+	CreateTime  string `json:"createTime"`
+	UpdateTime  string `json:"updateTime"`
+}
+
+type ProjectVO struct {
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	DisplayName string `json:"displayName"`
+	Description string `json:"description"`
+	OwnerId     int64  `json:"ownerId"`
+	Status      int32  `json:"status"`
+	AppCount    int32  `json:"appCount"`
+	EnvCount    int32  `json:"envCount"`
 	CreateTime  string `json:"createTime"`
 	UpdateTime  string `json:"updateTime"`
 }
@@ -192,6 +380,20 @@ type TriggerPipelineRespVO struct {
 	ExecNo string `json:"execNo"`
 }
 
+type UpdateAppReqVO struct {
+	ProjectId     int64  `path:"projectId"`
+	Id            int64  `path:"id"`
+	Name          string `json:"name,optional"`
+	DisplayName   string `json:"displayName,optional"`
+	Description   string `json:"description,optional"`
+	IntegrationId int64  `json:"integrationId,optional"`
+	RepoUrl       string `json:"repoUrl,optional"`
+	DefaultBranch string `json:"defaultBranch,optional"`
+	BuildConfig   string `json:"buildConfig,optional"`
+	DeploySpec    string `json:"deploySpec,optional"`
+	Status        int32  `json:"status,optional"`
+}
+
 type UpdateClusterReqVO struct {
 	Id          int64  `path:"id"`
 	Name        string `json:"name,optional"`
@@ -199,6 +401,15 @@ type UpdateClusterReqVO struct {
 	ApiEndpoint string `json:"apiEndpoint,optional"`
 	Kubeconfig  string `json:"kubeconfig,optional"`
 	Description string `json:"description,optional"`
+}
+
+type UpdateEnvReqVO struct {
+	ProjectId int64  `path:"projectId"`
+	Id        int64  `path:"id"`
+	Name      string `json:"name,optional"`
+	ClusterId int64  `json:"clusterId,optional"`
+	Namespace string `json:"namespace,optional"`
+	Status    string `json:"status,optional"`
 }
 
 type UpdateIntegrationReqVO struct {
@@ -221,4 +432,12 @@ type UpdatePipelineReqVO struct {
 	Triggers    string `json:"triggers,optional"`
 	Status      int32  `json:"status,optional"`
 	Description string `json:"description,optional"`
+}
+
+type UpdateProjectReqVO struct {
+	Id          int64  `path:"id"`
+	DisplayName string `json:"displayName,optional"`
+	Description string `json:"description,optional"`
+	OwnerId     int64  `json:"ownerId,optional"`
+	Status      int32  `json:"status,optional"`
 }

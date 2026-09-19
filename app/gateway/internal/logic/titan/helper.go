@@ -1,4 +1,4 @@
-﻿package titan
+package titan
 
 import (
 	"context"
@@ -123,3 +123,84 @@ func toStepExecVO(item *titan.StepExecItem) types.StepExecVO {
 		DurationMs: item.DurationMs,
 	}
 }
+
+func toProjectVO(item *titan.ProjectItem) types.ProjectVO {
+	if item == nil {
+		return types.ProjectVO{}
+	}
+	return types.ProjectVO{
+		Id:          item.Id,
+		Name:        item.Name,
+		DisplayName: item.DisplayName,
+		Description: item.Description,
+		OwnerId:     item.OwnerId,
+		Status:      item.Status,
+		AppCount:    item.AppCount,
+		EnvCount:    item.EnvCount,
+		CreateTime:  item.CreateTime,
+		UpdateTime:  item.UpdateTime,
+	}
+}
+
+func toAppVO(item *titan.AppItem) types.AppVO {
+	if item == nil {
+		return types.AppVO{}
+	}
+	return types.AppVO{
+		Id:            item.Id,
+		ProjectId:     item.ProjectId,
+		Name:          item.Name,
+		DisplayName:   item.DisplayName,
+		Description:   item.Description,
+		IntegrationId: item.IntegrationId,
+		RepoUrl:       item.RepoUrl,
+		DefaultBranch: item.DefaultBranch,
+		BuildConfig:   item.BuildConfig,
+		DeploySpec:    item.DeploySpec,
+		Status:        item.Status,
+		CreateTime:    item.CreateTime,
+		UpdateTime:    item.UpdateTime,
+	}
+}
+
+func toEnvVO(item *titan.EnvItem) types.EnvVO {
+	if item == nil {
+		return types.EnvVO{}
+	}
+	return types.EnvVO{
+		Id:          item.Id,
+		ProjectId:   item.ProjectId,
+		EnvCode:     item.EnvCode,
+		Name:        item.Name,
+		ClusterId:   item.ClusterId,
+		ClusterName: item.ClusterName,
+		Namespace:   item.Namespace,
+		Status:      item.Status,
+		AppCount:    item.AppCount,
+		CreateTime:  item.CreateTime,
+		UpdateTime:  item.UpdateTime,
+	}
+}
+
+func toArtifactVO(item *titan.ArtifactItem) types.ArtifactVO {
+	if item == nil {
+		return types.ArtifactVO{}
+	}
+	return types.ArtifactVO{
+		Id:             item.Id,
+		ProjectId:      item.ProjectId,
+		AppId:          item.AppId,
+		AppName:        item.AppName,
+		ImageUrl:       item.ImageUrl,
+		ImageTag:       item.ImageTag,
+		ImageDigest:    item.ImageDigest,
+		GitBranch:      item.GitBranch,
+		GitCommit:      item.GitCommit,
+		CommitMsg:      item.CommitMsg,
+		BuildExecId:    item.BuildExecId,
+		ImageSizeBytes: item.ImageSizeBytes,
+		Status:         item.Status,
+		CreateTime:     item.CreateTime,
+	}
+}
+

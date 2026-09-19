@@ -16,6 +16,8 @@ import {
   Card,
   Tooltip,
   Divider,
+  Tabs,
+  Segmented,
 } from 'antd';
 import {
   PlusOutlined,
@@ -28,6 +30,10 @@ import {
   AppstoreOutlined,
   EyeOutlined,
   SyncOutlined,
+  ArrowRightOutlined,
+  CodeOutlined,
+  CloudUploadOutlined,
+  SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import {
   PageContainer,
@@ -51,7 +57,7 @@ const categoryMetaMap: Record<string, { label: string; color: string }> = {
   microservice: { label: '后端微服务', color: 'blue' },
   frontend: { label: '前端应用', color: 'cyan' },
   data: { label: '数据批处理', color: 'purple' },
-  other: { label: '通用流水线', color: 'default' },
+  other: { label: '通用工作流', color: 'default' },
 };
 
 const execStatusMap: Record<string, { color: string; label: string }> = {
@@ -67,6 +73,9 @@ export const PipelinesPage: React.FC = () => {
   const { message, notification } = AntdApp.useApp();
   const navigate = useNavigate();
   const actionRef = useRef<ActionType>(null);
+
+  // 分类过滤
+  const [activeCategory, setActiveCategory] = useState<string>('all');
 
   // 设计器弹窗
   const [designerOpen, setDesignerOpen] = useState(false);
@@ -174,90 +183,129 @@ export const PipelinesPage: React.FC = () => {
     }
   };
 
+  // 渲染 Zadig 标志性阶段视觉流程图
+  const renderStagesFlow = (category?: string) => {
+    if (category === 'frontend') {
+      return (
+        <Space size={4} wrap>
+          <Tag color="blue" icon={<CodeOutlined />}>检出</Tag>
+          <ArrowRightOutlined style={{ fontSize: 10, color: '#bfbfbf' }} />
+          <Tag color="geekblue" icon={<RocketOutlined />}>Node构建</Tag>
+          <ArrowRightOutlined style={{ fontSize: 10, color: '#bfbfbf' }} />
+          <Tag color="green" icon={<CloudUploadOutlined />}>CDN发布</Tag>
+        </Space>
+      );
+    }
+    if (category === 'data') {
+      return (
+        <Space size={4} wrap>
+          <Tag color="purple" icon={<CodeOutlined />}>数据同步</Tag>
+          <ArrowRightOutlined style={{ fontSize: 10, color: '#bfbfbf' }} />
+          <Tag color="geekblue" icon={<SyncOutlined />}>计算流</Tag>
+          <ArrowRightOutlined style={{ fontSize: 10, color: '#bfbfbf' }} />
+          <Tag color="green" icon={<SafetyCertificateOutlined />}>校验归档</Tag>
+        </Space>
+      );
+    }
+    // Default / microservice
+    return (
+      <Space size={4} wrap>
+        <Tag color="blue" icon={<CodeOutlined />}>代码检出</Tag>
+        <ArrowRightOutlined style={{ fontSize: 10, color: '#bfbfbf' }} />
+        <Tag color="cyan" icon={<RocketOutlined />}>Docker构建</Tag>
+        <ArrowRightOutlined style={{ fontSize: 10, color: '#bfbfbf' }} />
+        <Tag color="green" icon={<CloudUploadOutlined />}>K8s交付</Tag>
+      </Space>
+    );
+  };
+
   const columns: ProColumns<TitanListPipelines200ListItem>[] = [
-    {
-      title: '流水线 ID',
-      dataIndex: 'id',
-      width: 80,
-      search: false,
-    },
     {
       title: '流水线名称',
       dataIndex: 'displayName',
       render: (_, record) => (
-        <Space vertical size={2}>
+        <Space direction="vertical" size={2}>
           <Space>
-            <RocketOutlined style={{ color: '#1677ff' }} />
-            <Text strong>{record.displayName || record.name}</Text>
+            <RocketOutlined style={{ color: '#1677ff', fontSize: 16 }} />
+            <Text strong style={{ fontSize: 14 }}>{record.displayName || record.name}</Text>
           </Space>
-          <Text code style={{ fontSize: 12 }}>
+          <Text code style={{ fontSize: 11 }}>
             {record.name}
           </Text>
         </Space>
       ),
     },
     {
-      title: '所属分类',
+      title: '工作流类型',
       dataIndex: 'category',
-      width: 140,
+      width: 120,
       valueType: 'select',
       valueEnum: {
         microservice: { text: '后端微服务' },
         frontend: { text: '前端应用' },
         data: { text: '数据批处理' },
-        other: { text: '通用流水线' },
+        other: { text: '通用工作流' },
       },
       render: (_, record) => {
         const item = categoryMetaMap[record.category || ''] || {
-          label: record.category || '其它',
+          label: record.category || '通用',
           color: 'default',
         };
         return <Tag color={item.color}>{item.label}</Tag>;
       },
     },
     {
+      title: '阶段编排流 (Stages Flow)',
+      dataIndex: 'category',
+      search: false,
+      width: 300,
+      render: (_, record) => renderStagesFlow(record.category),
+    },
+    {
       title: 'Git 仓库 / 分支',
       dataIndex: 'gitRepo',
       search: false,
       render: (_, record) => (
-        <Space vertical size={2}>
-          <Text ellipsis style={{ maxWidth: 220 }}>
+        <Space direction="vertical" size={2}>
+          <Text ellipsis style={{ maxWidth: 200, fontSize: 12 }}>
             {record.gitRepo || '-'}
           </Text>
           <Space size={4}>
             <BranchesOutlined style={{ color: '#52c41a' }} />
-            <Tag color="green">{record.gitBranch || 'master'}</Tag>
+            <Tag color="green">{record.gitBranch || 'main'}</Tag>
           </Space>
         </Space>
       ),
     },
     {
-      title: '状态',
+      title: '运行状态',
       dataIndex: 'status',
-      width: 100,
+      width: 90,
       search: false,
       render: (val) =>
-        val === 1 ? <Badge status="success" text="启用" /> : <Badge status="error" text="停用" />,
+        val === 1 ? <Badge status="success" text="活跃" /> : <Badge status="error" text="停用" />,
     },
     {
       title: '更新时间',
       dataIndex: 'updateTime',
-      width: 170,
+      width: 160,
       search: false,
+      render: (t) => <Text type="secondary" style={{ fontSize: 12 }}>{t || '-'}</Text>,
     },
     {
       title: '操作',
       valueType: 'option',
-      width: 260,
+      width: 240,
       render: (_, record) => [
         <Button
           key="run"
           type="primary"
           size="small"
           icon={<PlayCircleOutlined />}
+          style={{ background: '#52c41a', borderColor: '#52c41a' }}
           onClick={() => handleOpenTrigger(record)}
         >
-          运行
+          启动
         </Button>,
         <Button
           key="edit"
@@ -282,6 +330,8 @@ export const PipelinesPage: React.FC = () => {
           title="确定删除此交付流水线？"
           description="删除后历史构建记录与触发配置将一同清除！"
           onConfirm={() => record.id && handleDelete(record.id)}
+          okText="确定"
+          cancelText="取消"
         >
           <Button type="link" size="small" danger icon={<DeleteOutlined />}>
             删除
@@ -294,12 +344,27 @@ export const PipelinesPage: React.FC = () => {
   return (
     <PageContainer
       header={{
-        title: 'Titan 交付流水线 (Delivery Pipelines)',
-        subTitle: '开箱即用的云原生持续构建、容器镜像制作与 Kubernetes 多集群发布编排流水线',
+        title: '交付流水线 (Delivery Pipelines)',
+        subTitle: '对齐 Zadig 自动化工作流：支持后端微服务、前端应用与数据作业的阶段 DAG 编排与自动化分发',
       }}
     >
+      {/* Zadig 标志性分类 Tabs */}
+      <Tabs
+        activeKey={activeCategory}
+        onChange={(key) => {
+          setActiveCategory(key);
+          actionRef.current?.reload();
+        }}
+        items={[
+          { key: 'all', label: '全部工作流 (All)' },
+          { key: 'microservice', label: '后端微服务 (Microservices)' },
+          { key: 'frontend', label: '前端持续交付 (Frontend)' },
+          { key: 'data', label: '数据与批处理 (Data & Batch)' },
+        ]}
+        style={{ marginBottom: 12 }}
+      />
+
       <ProTable<TitanListPipelines200ListItem>
-        headerTitle="持续交付流水线定义"
         actionRef={actionRef}
         rowKey="id"
         search={{ labelWidth: 90 }}
@@ -317,8 +382,10 @@ export const PipelinesPage: React.FC = () => {
         ]}
         request={async (params) => {
           try {
+            const categoryFilter =
+              activeCategory !== 'all' ? activeCategory : params.category;
             const res = await titanListPipelines({
-              category: params.category,
+              category: categoryFilter,
               keyword: params.displayName || params.keyword,
               page: params.current || 1,
               pageSize: params.pageSize || 20,
@@ -357,7 +424,7 @@ export const PipelinesPage: React.FC = () => {
         onOk={handleConfirmTrigger}
         confirmLoading={triggering}
         width={540}
-        destroyOnHidden
+        destroyOnClose
       >
         <Form form={triggerForm} layout="vertical" preserve={false}>
           <Form.Item
@@ -396,7 +463,7 @@ export const PipelinesPage: React.FC = () => {
         }
         open={historyDrawerOpen}
         onClose={() => setHistoryDrawerOpen(false)}
-        size={880}
+        width={880}
       >
         <ProTable<TitanListExecutions200ListItem>
           actionRef={historyActionRef}

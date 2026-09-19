@@ -6,18 +6,36 @@
  */
 import type {
   TitanApproveStepBody,
+  TitanCreateApp200,
+  TitanCreateAppBody,
+  TitanCreateArtifact200,
+  TitanCreateArtifactBody,
   TitanCreateCluster200,
   TitanCreateClusterBody,
+  TitanCreateEnv200,
+  TitanCreateEnvBody,
   TitanCreateIntegration200,
   TitanCreateIntegrationBody,
   TitanCreatePipeline200,
   TitanCreatePipelineBody,
+  TitanCreateProject200,
+  TitanCreateProjectBody,
+  TitanDeployArtifactBody,
+  TitanGetApp200,
+  TitanGetEnv200,
+  TitanGetEnvLiveDetail200,
   TitanGetExecutionDetail200,
   TitanGetPipeline200,
+  TitanGetProject200,
   TitanGetStepLog200,
   TitanGetStepLogParams,
+  TitanListApps200,
+  TitanListAppsParams,
+  TitanListArtifacts200,
+  TitanListArtifactsParams,
   TitanListClusters200,
   TitanListClustersParams,
+  TitanListEnvs200,
   TitanListExecutions200,
   TitanListExecutionsParams,
   TitanListIntegrations200,
@@ -25,13 +43,18 @@ import type {
   TitanListNamespaces200,
   TitanListPipelines200,
   TitanListPipelinesParams,
+  TitanListProjects200,
+  TitanListProjectsParams,
   TitanTestCluster200,
   TitanTestIntegration200,
   TitanTriggerPipeline200,
   TitanTriggerPipelineBody,
+  TitanUpdateAppBody,
   TitanUpdateClusterBody,
+  TitanUpdateEnvBody,
   TitanUpdateIntegrationBody,
-  TitanUpdatePipelineBody
+  TitanUpdatePipelineBody,
+  TitanUpdateProjectBody
 } from '../../model';
 
 import { customInstance } from '../../custom-instance';
@@ -109,6 +132,31 @@ export const titanTestCluster = (
  options?: SecondParameter<typeof customInstance<TitanTestCluster200>>,) => {
       return customInstance<TitanTestCluster200>(
       {url: `/api/v1/titan/clusters/${id}/test`, method: 'POST'
+    },
+      options);
+    }
+  /**
+ * @summary deployArtifact
+ */
+export const titanDeployArtifact = (
+    id: number,
+    titanDeployArtifactBody: TitanDeployArtifactBody,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/envs/${id}/deploy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanDeployArtifactBody
+    },
+      options);
+    }
+  /**
+ * @summary getEnvLiveDetail
+ */
+export const titanGetEnvLiveDetail = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<TitanGetEnvLiveDetail200>>,) => {
+      return customInstance<TitanGetEnvLiveDetail200>(
+      {url: `/api/v1/titan/envs/${id}/live`, method: 'GET'
     },
       options);
     }
@@ -283,6 +331,224 @@ export const titanTriggerPipeline = (
       options);
     }
   /**
+ * @summary listProjects
+ */
+export const titanListProjects = (
+    params: TitanListProjectsParams,
+ options?: SecondParameter<typeof customInstance<TitanListProjects200>>,) => {
+      return customInstance<TitanListProjects200>(
+      {url: `/api/v1/titan/projects`, method: 'GET',
+        params
+    },
+      options);
+    }
+  /**
+ * @summary createProject
+ */
+export const titanCreateProject = (
+    titanCreateProjectBody: TitanCreateProjectBody,
+ options?: SecondParameter<typeof customInstance<TitanCreateProject200>>,) => {
+      return customInstance<TitanCreateProject200>(
+      {url: `/api/v1/titan/projects`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanCreateProjectBody
+    },
+      options);
+    }
+  /**
+ * @summary deleteProject
+ */
+export const titanDeleteProject = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/projects/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  /**
+ * @summary getProject
+ */
+export const titanGetProject = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<TitanGetProject200>>,) => {
+      return customInstance<TitanGetProject200>(
+      {url: `/api/v1/titan/projects/${id}`, method: 'GET'
+    },
+      options);
+    }
+  /**
+ * @summary updateProject
+ */
+export const titanUpdateProject = (
+    id: number,
+    titanUpdateProjectBody: TitanUpdateProjectBody,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/projects/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: titanUpdateProjectBody
+    },
+      options);
+    }
+  /**
+ * @summary listApps
+ */
+export const titanListApps = (
+    projectId: number,
+    params: TitanListAppsParams,
+ options?: SecondParameter<typeof customInstance<TitanListApps200>>,) => {
+      return customInstance<TitanListApps200>(
+      {url: `/api/v1/titan/projects/${projectId}/apps`, method: 'GET',
+        params
+    },
+      options);
+    }
+  /**
+ * @summary createApp
+ */
+export const titanCreateApp = (
+    projectId: number,
+    titanCreateAppBody: TitanCreateAppBody,
+ options?: SecondParameter<typeof customInstance<TitanCreateApp200>>,) => {
+      return customInstance<TitanCreateApp200>(
+      {url: `/api/v1/titan/projects/${projectId}/apps`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanCreateAppBody
+    },
+      options);
+    }
+  /**
+ * @summary deleteApp
+ */
+export const titanDeleteApp = (
+    projectId: number,
+    id: number,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/projects/${projectId}/apps/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  /**
+ * @summary getApp
+ */
+export const titanGetApp = (
+    projectId: number,
+    id: number,
+ options?: SecondParameter<typeof customInstance<TitanGetApp200>>,) => {
+      return customInstance<TitanGetApp200>(
+      {url: `/api/v1/titan/projects/${projectId}/apps/${id}`, method: 'GET'
+    },
+      options);
+    }
+  /**
+ * @summary updateApp
+ */
+export const titanUpdateApp = (
+    projectId: number,
+    id: number,
+    titanUpdateAppBody: TitanUpdateAppBody,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/projects/${projectId}/apps/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: titanUpdateAppBody
+    },
+      options);
+    }
+  /**
+ * @summary listArtifacts
+ */
+export const titanListArtifacts = (
+    projectId: number,
+    params: TitanListArtifactsParams,
+ options?: SecondParameter<typeof customInstance<TitanListArtifacts200>>,) => {
+      return customInstance<TitanListArtifacts200>(
+      {url: `/api/v1/titan/projects/${projectId}/artifacts`, method: 'GET',
+        params
+    },
+      options);
+    }
+  /**
+ * @summary createArtifact
+ */
+export const titanCreateArtifact = (
+    projectId: number,
+    titanCreateArtifactBody: TitanCreateArtifactBody,
+ options?: SecondParameter<typeof customInstance<TitanCreateArtifact200>>,) => {
+      return customInstance<TitanCreateArtifact200>(
+      {url: `/api/v1/titan/projects/${projectId}/artifacts`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanCreateArtifactBody
+    },
+      options);
+    }
+  /**
+ * @summary listEnvs
+ */
+export const titanListEnvs = (
+    projectId: number,
+ options?: SecondParameter<typeof customInstance<TitanListEnvs200>>,) => {
+      return customInstance<TitanListEnvs200>(
+      {url: `/api/v1/titan/projects/${projectId}/envs`, method: 'GET'
+    },
+      options);
+    }
+  /**
+ * @summary createEnv
+ */
+export const titanCreateEnv = (
+    projectId: number,
+    titanCreateEnvBody: TitanCreateEnvBody,
+ options?: SecondParameter<typeof customInstance<TitanCreateEnv200>>,) => {
+      return customInstance<TitanCreateEnv200>(
+      {url: `/api/v1/titan/projects/${projectId}/envs`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanCreateEnvBody
+    },
+      options);
+    }
+  /**
+ * @summary deleteEnv
+ */
+export const titanDeleteEnv = (
+    projectId: number,
+    id: number,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/projects/${projectId}/envs/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  /**
+ * @summary getEnv
+ */
+export const titanGetEnv = (
+    projectId: number,
+    id: number,
+ options?: SecondParameter<typeof customInstance<TitanGetEnv200>>,) => {
+      return customInstance<TitanGetEnv200>(
+      {url: `/api/v1/titan/projects/${projectId}/envs/${id}`, method: 'GET'
+    },
+      options);
+    }
+  /**
+ * @summary updateEnv
+ */
+export const titanUpdateEnv = (
+    projectId: number,
+    id: number,
+    titanUpdateEnvBody: TitanUpdateEnvBody,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/projects/${projectId}/envs/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: titanUpdateEnvBody
+    },
+      options);
+    }
+  /**
  * @summary approveStep
  */
 export const titanApproveStep = (
@@ -320,6 +586,8 @@ export type TitanDeleteClusterResult = NonNullable<Awaited<ReturnType<typeof tit
 export type TitanUpdateClusterResult = NonNullable<Awaited<ReturnType<typeof titanUpdateCluster>>>
 export type TitanListNamespacesResult = NonNullable<Awaited<ReturnType<typeof titanListNamespaces>>>
 export type TitanTestClusterResult = NonNullable<Awaited<ReturnType<typeof titanTestCluster>>>
+export type TitanDeployArtifactResult = NonNullable<Awaited<ReturnType<typeof titanDeployArtifact>>>
+export type TitanGetEnvLiveDetailResult = NonNullable<Awaited<ReturnType<typeof titanGetEnvLiveDetail>>>
 export type TitanListExecutionsResult = NonNullable<Awaited<ReturnType<typeof titanListExecutions>>>
 export type TitanGetExecutionDetailResult = NonNullable<Awaited<ReturnType<typeof titanGetExecutionDetail>>>
 export type TitanCancelExecutionResult = NonNullable<Awaited<ReturnType<typeof titanCancelExecution>>>
@@ -334,5 +602,22 @@ export type TitanDeletePipelineResult = NonNullable<Awaited<ReturnType<typeof ti
 export type TitanGetPipelineResult = NonNullable<Awaited<ReturnType<typeof titanGetPipeline>>>
 export type TitanUpdatePipelineResult = NonNullable<Awaited<ReturnType<typeof titanUpdatePipeline>>>
 export type TitanTriggerPipelineResult = NonNullable<Awaited<ReturnType<typeof titanTriggerPipeline>>>
+export type TitanListProjectsResult = NonNullable<Awaited<ReturnType<typeof titanListProjects>>>
+export type TitanCreateProjectResult = NonNullable<Awaited<ReturnType<typeof titanCreateProject>>>
+export type TitanDeleteProjectResult = NonNullable<Awaited<ReturnType<typeof titanDeleteProject>>>
+export type TitanGetProjectResult = NonNullable<Awaited<ReturnType<typeof titanGetProject>>>
+export type TitanUpdateProjectResult = NonNullable<Awaited<ReturnType<typeof titanUpdateProject>>>
+export type TitanListAppsResult = NonNullable<Awaited<ReturnType<typeof titanListApps>>>
+export type TitanCreateAppResult = NonNullable<Awaited<ReturnType<typeof titanCreateApp>>>
+export type TitanDeleteAppResult = NonNullable<Awaited<ReturnType<typeof titanDeleteApp>>>
+export type TitanGetAppResult = NonNullable<Awaited<ReturnType<typeof titanGetApp>>>
+export type TitanUpdateAppResult = NonNullable<Awaited<ReturnType<typeof titanUpdateApp>>>
+export type TitanListArtifactsResult = NonNullable<Awaited<ReturnType<typeof titanListArtifacts>>>
+export type TitanCreateArtifactResult = NonNullable<Awaited<ReturnType<typeof titanCreateArtifact>>>
+export type TitanListEnvsResult = NonNullable<Awaited<ReturnType<typeof titanListEnvs>>>
+export type TitanCreateEnvResult = NonNullable<Awaited<ReturnType<typeof titanCreateEnv>>>
+export type TitanDeleteEnvResult = NonNullable<Awaited<ReturnType<typeof titanDeleteEnv>>>
+export type TitanGetEnvResult = NonNullable<Awaited<ReturnType<typeof titanGetEnv>>>
+export type TitanUpdateEnvResult = NonNullable<Awaited<ReturnType<typeof titanUpdateEnv>>>
 export type TitanApproveStepResult = NonNullable<Awaited<ReturnType<typeof titanApproveStep>>>
 export type TitanGetStepLogResult = NonNullable<Awaited<ReturnType<typeof titanGetStepLog>>>

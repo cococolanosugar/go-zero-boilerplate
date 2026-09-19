@@ -17,33 +17,94 @@ export const routes: AppRouteItem[] = [
         icon: "DashboardOutlined",
         component: lazy(() => import("../pages/Dashboard")),
       },
+
+      // 1. 项目与微服务空间
       {
-        path: "/pipelines",
-        name: "menu.pipelines",
-        locale: "menu.pipelines",
-        icon: "BranchesOutlined",
-        component: lazy(() => import("../pages/Pipelines")),
+        path: "/space",
+        name: "menu.space",
+        locale: "menu.space",
+        icon: "DeploymentUnitOutlined",
+        redirect: "/projects",
+        routes: [
+          {
+            path: "/projects",
+            name: "menu.projects",
+            locale: "menu.projects",
+            icon: "ProjectOutlined",
+            component: lazy(() => import("../pages/Projects")),
+          },
+          {
+            path: "/apps",
+            name: "menu.apps",
+            locale: "menu.apps",
+            icon: "AppstoreOutlined",
+            component: lazy(() => import("../pages/Apps")),
+          },
+        ],
       },
+
+      // 2. 持续交付中心
       {
-        path: "/pipelines/exec/:id",
-        name: "menu.pipeline.detail",
-        locale: "menu.pipeline.detail",
-        hideInMenu: true,
-        component: lazy(() => import("../pages/Pipelines/ExecutionDetail")),
+        path: "/delivery",
+        name: "menu.delivery",
+        locale: "menu.delivery",
+        icon: "RocketOutlined",
+        redirect: "/environments",
+        routes: [
+          {
+            path: "/environments",
+            name: "menu.environments",
+            locale: "menu.environments",
+            icon: "CloudServerOutlined",
+            component: lazy(() => import("../pages/Environments")),
+          },
+          {
+            path: "/artifacts",
+            name: "menu.artifacts",
+            locale: "menu.artifacts",
+            icon: "TagOutlined",
+            component: lazy(() => import("../pages/Artifacts")),
+          },
+          {
+            path: "/pipelines",
+            name: "menu.pipelines",
+            locale: "menu.pipelines",
+            icon: "BranchesOutlined",
+            component: lazy(() => import("../pages/Pipelines")),
+          },
+          {
+            path: "/pipelines/exec/:id",
+            name: "menu.pipeline.detail",
+            locale: "menu.pipeline.detail",
+            hideInMenu: true,
+            component: lazy(() => import("../pages/Pipelines/ExecutionDetail")),
+          },
+        ],
       },
+
+      // 3. 基础设施与集成治理
       {
-        path: "/clusters",
-        name: "menu.clusters",
-        locale: "menu.clusters",
+        path: "/infrastructure",
+        name: "menu.infrastructure",
+        locale: "menu.infrastructure",
         icon: "ClusterOutlined",
-        component: lazy(() => import("../pages/Clusters")),
-      },
-      {
-        path: "/integrations",
-        name: "menu.integrations",
-        locale: "menu.integrations",
-        icon: "ApiOutlined",
-        component: lazy(() => import("../pages/Integrations")),
+        redirect: "/clusters",
+        routes: [
+          {
+            path: "/clusters",
+            name: "menu.clusters",
+            locale: "menu.clusters",
+            icon: "ClusterOutlined",
+            component: lazy(() => import("../pages/Clusters")),
+          },
+          {
+            path: "/integrations",
+            name: "menu.integrations",
+            locale: "menu.integrations",
+            icon: "ApiOutlined",
+            component: lazy(() => import("../pages/Integrations")),
+          },
+        ],
       },
 
       // 兼容历史 /titan/* 路由重定向

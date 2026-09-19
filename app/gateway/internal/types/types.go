@@ -3,6 +3,23 @@
 
 package types
 
+type ArtifactVO struct {
+	Id             int64  `json:"id"`
+	ProjectId      int64  `json:"projectId"`
+	AppId          int64  `json:"appId"`
+	AppName        string `json:"appName"`
+	ImageUrl       string `json:"imageUrl"`
+	ImageTag       string `json:"imageTag"`
+	ImageDigest    string `json:"imageDigest"`
+	GitBranch      string `json:"gitBranch"`
+	GitCommit      string `json:"gitCommit"`
+	CommitMsg      string `json:"commitMsg"`
+	BuildExecId    int64  `json:"buildExecId"`
+	ImageSizeBytes int64  `json:"imageSizeBytes"`
+	Status         string `json:"status"`
+	CreateTime     string `json:"createTime"`
+}
+
 type ClusterVO struct {
 	Id          int64  `json:"id"`
 	Name        string `json:"name"`
@@ -21,6 +38,21 @@ type DashboardSystemStats struct {
 	ActiveTasks    int64   `json:"activeTasks"`
 	CompletedTasks int64   `json:"completedTasks"`
 	SuccessRate    float64 `json:"successRate"`
+}
+
+type EnvAppLiveVO struct {
+	AppId             int64    `json:"appId"`
+	AppName           string   `json:"appName"`
+	DisplayName       string   `json:"displayName"`
+	CurrentArtifactId int64    `json:"currentArtifactId"`
+	ImageTag          string   `json:"imageTag"`
+	ImageUrl          string   `json:"imageUrl"`
+	GitCommit         string   `json:"gitCommit"`
+	ReadyReplicas     int32    `json:"readyReplicas"`
+	TotalReplicas     int32    `json:"totalReplicas"`
+	Status            string   `json:"status"`
+	LastDeployedTime  string   `json:"lastDeployedTime"`
+	Pods              []string `json:"pods"`
 }
 
 type ExecutionVO struct {

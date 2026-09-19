@@ -25,6 +25,7 @@ import {
   CloseCircleOutlined,
   SyncOutlined,
   ArrowRightOutlined,
+  ProjectOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import {
@@ -32,6 +33,7 @@ import {
   titanListExecutions,
   titanListClusters,
   titanListIntegrations,
+  titanListProjects,
   type TitanListExecutions200ListItem,
   type TitanListClusters200ListItem,
 } from '@zero/api';
@@ -51,6 +53,7 @@ export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
+    totalProjects: 0,
     totalPipelines: 0,
     totalExecutions: 0,
     totalClusters: 0,
@@ -63,19 +66,22 @@ export const DashboardPage: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [pipelineRes, execRes, clusterRes, integrationRes] = await Promise.allSettled([
+        const [projectRes, pipelineRes, execRes, clusterRes, integrationRes] = await Promise.allSettled([
+          titanListProjects({ page: 1, pageSize: 1 }),
           titanListPipelines({ page: 1, pageSize: 1 }),
           titanListExecutions({ page: 1, pageSize: 6 }),
           titanListClusters({ page: 1, pageSize: 10 }),
           titanListIntegrations({ page: 1, pageSize: 1 }),
         ]);
 
+        const totalProjects = projectRes.status === 'fulfilled' ? projectRes.value.total || 0 : 0;
         const totalPipelines = pipelineRes.status === 'fulfilled' ? pipelineRes.value.total || 0 : 0;
         const totalExec = execRes.status === 'fulfilled' ? execRes.value.total || 0 : 0;
         const totalClusters = clusterRes.status === 'fulfilled' ? clusterRes.value.total || 0 : 0;
         const totalIntegrations = integrationRes.status === 'fulfilled' ? integrationRes.value.total || 0 : 0;
 
         setStats({
+          totalProjects,
           totalPipelines,
           totalExecutions: totalExec,
           totalClusters,
@@ -123,25 +129,41 @@ export const DashboardPage: React.FC = () => {
       }}
     >
       <Spin spinning={loading}>
-        {/* 指标卡片 */}
+        {/* Zadig 研发大盘 - 5 核心指标卡片 */}
         <Row gutter={[16, 16]}>
-          <Col xs={24} sm={12} md={6}>
-            <Card variant="borderless" hoverable onClick={() => navigate('/pipelines')}>
+          <Col xs={24} sm={12} md={8} lg={5}>
+            <Card variant="borderless" hoverable onClick={() => navigate('/projects')}>
               <Statistic
-                title="纳管流水线 (Pipelines)"
-                value={stats.totalPipelines}
-                prefix={<BranchesOutlined style={{ color: '#1677ff' }} />}
-                suffix="条"
+                title="交付项目 (Projects)"
+                value={stats.totalProjects}
+                prefix={<ProjectOutlined style={{ color: '#1677ff' }} />}
+                suffix="个"
               />
               <div style={{ marginTop: 8 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
-                  涵盖微服务、前端与批处理发布
+                  项目 → 应用 → 制品 → 环境
                 </Text>
               </div>
             </Card>
           </Col>
 
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={8} lg={4}>
+            <Card variant="borderless" hoverable onClick={() => navigate('/pipelines')}>
+              <Statistic
+                title="自定义流水线"
+                value={stats.totalPipelines}
+                prefix={<BranchesOutlined style={{ color: '#722ed1' }} />}
+                suffix="条"
+              />
+              <div style={{ marginTop: 8 }}>
+                <Text type="secondary" style={{ fontSize: 12 }}>
+                  扩展 CI/CD 编排
+                </Text>
+              </div>
+            </Card>
+          </Col>
+
+          <Col xs={24} sm={12} md={8} lg={5}>
             <Card variant="borderless" hoverable onClick={() => navigate('/pipelines')}>
               <Statistic
                 title="累计运行次数 (Runs)"
@@ -157,7 +179,7 @@ export const DashboardPage: React.FC = () => {
             </Card>
           </Col>
 
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={12} lg={5}>
             <Card variant="borderless" hoverable onClick={() => navigate('/clusters')}>
               <Statistic
                 title="Kubernetes 集群 (Clusters)"
@@ -173,7 +195,7 @@ export const DashboardPage: React.FC = () => {
             </Card>
           </Col>
 
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={12} lg={5}>
             <Card variant="borderless" hoverable onClick={() => navigate('/integrations')}>
               <Statistic
                 title="系统集成凭据 (Integrations)"

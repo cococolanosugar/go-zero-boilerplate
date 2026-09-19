@@ -14,28 +14,57 @@ import (
 )
 
 type (
+	AppDetailResp         = titan.AppDetailResp
+	AppItem               = titan.AppItem
 	ApproveStepReq        = titan.ApproveStepReq
+	ArtifactItem          = titan.ArtifactItem
 	CancelExecutionReq    = titan.CancelExecutionReq
 	ClusterItem           = titan.ClusterItem
 	CommonResp            = titan.CommonResp
+	CreateAppReq          = titan.CreateAppReq
+	CreateAppResp         = titan.CreateAppResp
+	CreateArtifactReq     = titan.CreateArtifactReq
+	CreateArtifactResp    = titan.CreateArtifactResp
 	CreateClusterReq      = titan.CreateClusterReq
 	CreateClusterResp     = titan.CreateClusterResp
+	CreateEnvReq          = titan.CreateEnvReq
+	CreateEnvResp         = titan.CreateEnvResp
 	CreateIntegrationReq  = titan.CreateIntegrationReq
 	CreateIntegrationResp = titan.CreateIntegrationResp
 	CreatePipelineReq     = titan.CreatePipelineReq
 	CreatePipelineResp    = titan.CreatePipelineResp
+	CreateProjectReq      = titan.CreateProjectReq
+	CreateProjectResp     = titan.CreateProjectResp
+	DeleteAppReq          = titan.DeleteAppReq
 	DeleteClusterReq      = titan.DeleteClusterReq
+	DeleteEnvReq          = titan.DeleteEnvReq
 	DeleteIntegrationReq  = titan.DeleteIntegrationReq
 	DeletePipelineReq     = titan.DeletePipelineReq
+	DeleteProjectReq      = titan.DeleteProjectReq
+	DeployArtifactReq     = titan.DeployArtifactReq
+	EnvAppLiveItem        = titan.EnvAppLiveItem
+	EnvDetailResp         = titan.EnvDetailResp
+	EnvItem               = titan.EnvItem
 	ExecutionDetailResp   = titan.ExecutionDetailResp
 	ExecutionItem         = titan.ExecutionItem
+	GetAppReq             = titan.GetAppReq
+	GetEnvLiveDetailReq   = titan.GetEnvLiveDetailReq
+	GetEnvLiveDetailResp  = titan.GetEnvLiveDetailResp
+	GetEnvReq             = titan.GetEnvReq
 	GetExecutionDetailReq = titan.GetExecutionDetailReq
 	GetPipelineReq        = titan.GetPipelineReq
+	GetProjectReq         = titan.GetProjectReq
 	GetStepLogReq         = titan.GetStepLogReq
 	GetStepLogResp        = titan.GetStepLogResp
 	IntegrationItem       = titan.IntegrationItem
+	ListAppsReq           = titan.ListAppsReq
+	ListAppsResp          = titan.ListAppsResp
+	ListArtifactsReq      = titan.ListArtifactsReq
+	ListArtifactsResp     = titan.ListArtifactsResp
 	ListClustersReq       = titan.ListClustersReq
 	ListClustersResp      = titan.ListClustersResp
+	ListEnvsReq           = titan.ListEnvsReq
+	ListEnvsResp          = titan.ListEnvsResp
 	ListExecutionsReq     = titan.ListExecutionsReq
 	ListExecutionsResp    = titan.ListExecutionsResp
 	ListIntegrationsReq   = titan.ListIntegrationsReq
@@ -44,10 +73,14 @@ type (
 	ListNamespacesResp    = titan.ListNamespacesResp
 	ListPipelinesReq      = titan.ListPipelinesReq
 	ListPipelinesResp     = titan.ListPipelinesResp
+	ListProjectsReq       = titan.ListProjectsReq
+	ListProjectsResp      = titan.ListProjectsResp
 	PingReq               = titan.PingReq
 	PingResp              = titan.PingResp
 	PipelineDetailResp    = titan.PipelineDetailResp
 	PipelineItem          = titan.PipelineItem
+	ProjectDetailResp     = titan.ProjectDetailResp
+	ProjectItem           = titan.ProjectItem
 	StepExecItem          = titan.StepExecItem
 	TestClusterReq        = titan.TestClusterReq
 	TestClusterResp       = titan.TestClusterResp
@@ -55,9 +88,12 @@ type (
 	TestIntegrationResp   = titan.TestIntegrationResp
 	TriggerPipelineReq    = titan.TriggerPipelineReq
 	TriggerPipelineResp   = titan.TriggerPipelineResp
+	UpdateAppReq          = titan.UpdateAppReq
 	UpdateClusterReq      = titan.UpdateClusterReq
+	UpdateEnvReq          = titan.UpdateEnvReq
 	UpdateIntegrationReq  = titan.UpdateIntegrationReq
 	UpdatePipelineReq     = titan.UpdatePipelineReq
+	UpdateProjectReq      = titan.UpdateProjectReq
 
 	Titan interface {
 		Ping(ctx context.Context, in *PingReq, opts ...grpc.CallOption) (*PingResp, error)
@@ -87,6 +123,29 @@ type (
 		GetStepLog(ctx context.Context, in *GetStepLogReq, opts ...grpc.CallOption) (*GetStepLogResp, error)
 		ApproveStep(ctx context.Context, in *ApproveStepReq, opts ...grpc.CallOption) (*CommonResp, error)
 		CancelExecution(ctx context.Context, in *CancelExecutionReq, opts ...grpc.CallOption) (*CommonResp, error)
+		// ----------------------
+		ListProjects(ctx context.Context, in *ListProjectsReq, opts ...grpc.CallOption) (*ListProjectsResp, error)
+		GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*ProjectDetailResp, error)
+		CreateProject(ctx context.Context, in *CreateProjectReq, opts ...grpc.CallOption) (*CreateProjectResp, error)
+		UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*CommonResp, error)
+		DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*CommonResp, error)
+		// 2. 应用 (Application)
+		ListApps(ctx context.Context, in *ListAppsReq, opts ...grpc.CallOption) (*ListAppsResp, error)
+		GetApp(ctx context.Context, in *GetAppReq, opts ...grpc.CallOption) (*AppDetailResp, error)
+		CreateApp(ctx context.Context, in *CreateAppReq, opts ...grpc.CallOption) (*CreateAppResp, error)
+		UpdateApp(ctx context.Context, in *UpdateAppReq, opts ...grpc.CallOption) (*CommonResp, error)
+		DeleteApp(ctx context.Context, in *DeleteAppReq, opts ...grpc.CallOption) (*CommonResp, error)
+		// 3. 环境 (Environment)
+		ListEnvs(ctx context.Context, in *ListEnvsReq, opts ...grpc.CallOption) (*ListEnvsResp, error)
+		GetEnv(ctx context.Context, in *GetEnvReq, opts ...grpc.CallOption) (*EnvDetailResp, error)
+		CreateEnv(ctx context.Context, in *CreateEnvReq, opts ...grpc.CallOption) (*CreateEnvResp, error)
+		UpdateEnv(ctx context.Context, in *UpdateEnvReq, opts ...grpc.CallOption) (*CommonResp, error)
+		DeleteEnv(ctx context.Context, in *DeleteEnvReq, opts ...grpc.CallOption) (*CommonResp, error)
+		GetEnvLiveDetail(ctx context.Context, in *GetEnvLiveDetailReq, opts ...grpc.CallOption) (*GetEnvLiveDetailResp, error)
+		// 4. 制品 (Artifact)
+		ListArtifacts(ctx context.Context, in *ListArtifactsReq, opts ...grpc.CallOption) (*ListArtifactsResp, error)
+		CreateArtifact(ctx context.Context, in *CreateArtifactReq, opts ...grpc.CallOption) (*CreateArtifactResp, error)
+		DeployArtifact(ctx context.Context, in *DeployArtifactReq, opts ...grpc.CallOption) (*CommonResp, error)
 	}
 
 	defaultTitan struct {
@@ -217,4 +276,103 @@ func (m *defaultTitan) ApproveStep(ctx context.Context, in *ApproveStepReq, opts
 func (m *defaultTitan) CancelExecution(ctx context.Context, in *CancelExecutionReq, opts ...grpc.CallOption) (*CommonResp, error) {
 	client := titan.NewTitanClient(m.cli.Conn())
 	return client.CancelExecution(ctx, in, opts...)
+}
+
+// ----------------------
+func (m *defaultTitan) ListProjects(ctx context.Context, in *ListProjectsReq, opts ...grpc.CallOption) (*ListProjectsResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.ListProjects(ctx, in, opts...)
+}
+
+func (m *defaultTitan) GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*ProjectDetailResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.GetProject(ctx, in, opts...)
+}
+
+func (m *defaultTitan) CreateProject(ctx context.Context, in *CreateProjectReq, opts ...grpc.CallOption) (*CreateProjectResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.CreateProject(ctx, in, opts...)
+}
+
+func (m *defaultTitan) UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.UpdateProject(ctx, in, opts...)
+}
+
+func (m *defaultTitan) DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.DeleteProject(ctx, in, opts...)
+}
+
+// 2. 应用 (Application)
+func (m *defaultTitan) ListApps(ctx context.Context, in *ListAppsReq, opts ...grpc.CallOption) (*ListAppsResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.ListApps(ctx, in, opts...)
+}
+
+func (m *defaultTitan) GetApp(ctx context.Context, in *GetAppReq, opts ...grpc.CallOption) (*AppDetailResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.GetApp(ctx, in, opts...)
+}
+
+func (m *defaultTitan) CreateApp(ctx context.Context, in *CreateAppReq, opts ...grpc.CallOption) (*CreateAppResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.CreateApp(ctx, in, opts...)
+}
+
+func (m *defaultTitan) UpdateApp(ctx context.Context, in *UpdateAppReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.UpdateApp(ctx, in, opts...)
+}
+
+func (m *defaultTitan) DeleteApp(ctx context.Context, in *DeleteAppReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.DeleteApp(ctx, in, opts...)
+}
+
+// 3. 环境 (Environment)
+func (m *defaultTitan) ListEnvs(ctx context.Context, in *ListEnvsReq, opts ...grpc.CallOption) (*ListEnvsResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.ListEnvs(ctx, in, opts...)
+}
+
+func (m *defaultTitan) GetEnv(ctx context.Context, in *GetEnvReq, opts ...grpc.CallOption) (*EnvDetailResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.GetEnv(ctx, in, opts...)
+}
+
+func (m *defaultTitan) CreateEnv(ctx context.Context, in *CreateEnvReq, opts ...grpc.CallOption) (*CreateEnvResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.CreateEnv(ctx, in, opts...)
+}
+
+func (m *defaultTitan) UpdateEnv(ctx context.Context, in *UpdateEnvReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.UpdateEnv(ctx, in, opts...)
+}
+
+func (m *defaultTitan) DeleteEnv(ctx context.Context, in *DeleteEnvReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.DeleteEnv(ctx, in, opts...)
+}
+
+func (m *defaultTitan) GetEnvLiveDetail(ctx context.Context, in *GetEnvLiveDetailReq, opts ...grpc.CallOption) (*GetEnvLiveDetailResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.GetEnvLiveDetail(ctx, in, opts...)
+}
+
+// 4. 制品 (Artifact)
+func (m *defaultTitan) ListArtifacts(ctx context.Context, in *ListArtifactsReq, opts ...grpc.CallOption) (*ListArtifactsResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.ListArtifacts(ctx, in, opts...)
+}
+
+func (m *defaultTitan) CreateArtifact(ctx context.Context, in *CreateArtifactReq, opts ...grpc.CallOption) (*CreateArtifactResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.CreateArtifact(ctx, in, opts...)
+}
+
+func (m *defaultTitan) DeployArtifact(ctx context.Context, in *DeployArtifactReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.DeployArtifact(ctx, in, opts...)
 }

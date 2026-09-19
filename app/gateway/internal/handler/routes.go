@@ -605,6 +605,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: titan.TestClusterHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPost,
+				Path:    "/envs/:id/deploy",
+				Handler: titan.DeployArtifactHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/envs/:id/live",
+				Handler: titan.GetEnvLiveDetailHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodGet,
 				Path:    "/executions",
 				Handler: titan.ListExecutionsHandler(serverCtx),
@@ -673,6 +683,91 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/pipelines/:id/trigger",
 				Handler: titan.TriggerPipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects",
+				Handler: titan.ListProjectsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects",
+				Handler: titan.CreateProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:id",
+				Handler: titan.GetProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/projects/:id",
+				Handler: titan.UpdateProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/projects/:id",
+				Handler: titan.DeleteProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/apps",
+				Handler: titan.ListAppsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/apps",
+				Handler: titan.CreateAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/apps/:id",
+				Handler: titan.GetAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/projects/:projectId/apps/:id",
+				Handler: titan.UpdateAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/projects/:projectId/apps/:id",
+				Handler: titan.DeleteAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/artifacts",
+				Handler: titan.ListArtifactsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/artifacts",
+				Handler: titan.CreateArtifactHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/envs",
+				Handler: titan.ListEnvsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/envs",
+				Handler: titan.CreateEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/envs/:id",
+				Handler: titan.GetEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/projects/:projectId/envs/:id",
+				Handler: titan.UpdateEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/projects/:projectId/envs/:id",
+				Handler: titan.DeleteEnvHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

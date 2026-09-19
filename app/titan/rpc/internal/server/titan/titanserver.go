@@ -141,3 +141,102 @@ func (s *TitanServer) CancelExecution(ctx context.Context, in *titan.CancelExecu
 	l := titanlogic.NewCancelExecutionLogic(ctx, s.svcCtx)
 	return l.CancelExecution(in)
 }
+
+// ----------------------
+func (s *TitanServer) ListProjects(ctx context.Context, in *titan.ListProjectsReq) (*titan.ListProjectsResp, error) {
+	l := titanlogic.NewListProjectsLogic(ctx, s.svcCtx)
+	return l.ListProjects(in)
+}
+
+func (s *TitanServer) GetProject(ctx context.Context, in *titan.GetProjectReq) (*titan.ProjectDetailResp, error) {
+	l := titanlogic.NewGetProjectLogic(ctx, s.svcCtx)
+	return l.GetProject(in)
+}
+
+func (s *TitanServer) CreateProject(ctx context.Context, in *titan.CreateProjectReq) (*titan.CreateProjectResp, error) {
+	l := titanlogic.NewCreateProjectLogic(ctx, s.svcCtx)
+	return l.CreateProject(in)
+}
+
+func (s *TitanServer) UpdateProject(ctx context.Context, in *titan.UpdateProjectReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewUpdateProjectLogic(ctx, s.svcCtx)
+	return l.UpdateProject(in)
+}
+
+func (s *TitanServer) DeleteProject(ctx context.Context, in *titan.DeleteProjectReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewDeleteProjectLogic(ctx, s.svcCtx)
+	return l.DeleteProject(in)
+}
+
+// 2. 应用 (Application)
+func (s *TitanServer) ListApps(ctx context.Context, in *titan.ListAppsReq) (*titan.ListAppsResp, error) {
+	l := titanlogic.NewListAppsLogic(ctx, s.svcCtx)
+	return l.ListApps(in)
+}
+
+func (s *TitanServer) GetApp(ctx context.Context, in *titan.GetAppReq) (*titan.AppDetailResp, error) {
+	l := titanlogic.NewGetAppLogic(ctx, s.svcCtx)
+	return l.GetApp(in)
+}
+
+func (s *TitanServer) CreateApp(ctx context.Context, in *titan.CreateAppReq) (*titan.CreateAppResp, error) {
+	l := titanlogic.NewCreateAppLogic(ctx, s.svcCtx)
+	return l.CreateApp(in)
+}
+
+func (s *TitanServer) UpdateApp(ctx context.Context, in *titan.UpdateAppReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewUpdateAppLogic(ctx, s.svcCtx)
+	return l.UpdateApp(in)
+}
+
+func (s *TitanServer) DeleteApp(ctx context.Context, in *titan.DeleteAppReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewDeleteAppLogic(ctx, s.svcCtx)
+	return l.DeleteApp(in)
+}
+
+// 3. 环境 (Environment)
+func (s *TitanServer) ListEnvs(ctx context.Context, in *titan.ListEnvsReq) (*titan.ListEnvsResp, error) {
+	l := titanlogic.NewListEnvsLogic(ctx, s.svcCtx)
+	return l.ListEnvs(in)
+}
+
+func (s *TitanServer) GetEnv(ctx context.Context, in *titan.GetEnvReq) (*titan.EnvDetailResp, error) {
+	l := titanlogic.NewGetEnvLogic(ctx, s.svcCtx)
+	return l.GetEnv(in)
+}
+
+func (s *TitanServer) CreateEnv(ctx context.Context, in *titan.CreateEnvReq) (*titan.CreateEnvResp, error) {
+	l := titanlogic.NewCreateEnvLogic(ctx, s.svcCtx)
+	return l.CreateEnv(in)
+}
+
+func (s *TitanServer) UpdateEnv(ctx context.Context, in *titan.UpdateEnvReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewUpdateEnvLogic(ctx, s.svcCtx)
+	return l.UpdateEnv(in)
+}
+
+func (s *TitanServer) DeleteEnv(ctx context.Context, in *titan.DeleteEnvReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewDeleteEnvLogic(ctx, s.svcCtx)
+	return l.DeleteEnv(in)
+}
+
+func (s *TitanServer) GetEnvLiveDetail(ctx context.Context, in *titan.GetEnvLiveDetailReq) (*titan.GetEnvLiveDetailResp, error) {
+	l := titanlogic.NewGetEnvLiveDetailLogic(ctx, s.svcCtx)
+	return l.GetEnvLiveDetail(in)
+}
+
+// 4. 制品 (Artifact)
+func (s *TitanServer) ListArtifacts(ctx context.Context, in *titan.ListArtifactsReq) (*titan.ListArtifactsResp, error) {
+	l := titanlogic.NewListArtifactsLogic(ctx, s.svcCtx)
+	return l.ListArtifacts(in)
+}
+
+func (s *TitanServer) CreateArtifact(ctx context.Context, in *titan.CreateArtifactReq) (*titan.CreateArtifactResp, error) {
+	l := titanlogic.NewCreateArtifactLogic(ctx, s.svcCtx)
+	return l.CreateArtifact(in)
+}
+
+func (s *TitanServer) DeployArtifact(ctx context.Context, in *titan.DeployArtifactReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewDeployArtifactLogic(ctx, s.svcCtx)
+	return l.DeployArtifact(in)
+}

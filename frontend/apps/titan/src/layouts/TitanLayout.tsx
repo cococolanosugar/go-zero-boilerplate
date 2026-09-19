@@ -22,9 +22,17 @@ import {
   HomeOutlined,
   SettingOutlined,
   LinkOutlined,
+  ProjectOutlined,
+  AppstoreOutlined,
+  CloudServerOutlined,
+  RocketOutlined,
+  DeploymentUnitOutlined,
+  TagOutlined,
 } from "@ant-design/icons";
+import { Select } from "antd";
 import { ProLayout } from "@ant-design/pro-components";
 import { useAuth } from "../contexts/AuthContext";
+import { useProject } from "../contexts/ProjectContext";
 import { useLocale, useIntl } from "../contexts/LocaleContext";
 import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { LOCALES, type LocaleKey } from "../locales";
@@ -32,6 +40,10 @@ import { defaultSettings } from "../config/defaultSettings";
 
 const iconMap: Record<string, React.ReactNode> = {
   DashboardOutlined: <DashboardOutlined />,
+  ProjectOutlined: <ProjectOutlined />,
+  AppstoreOutlined: <AppstoreOutlined />,
+  CloudServerOutlined: <CloudServerOutlined />,
+  RocketOutlined: <RocketOutlined />,
   BranchesOutlined: <BranchesOutlined />,
   ClusterOutlined: <ClusterOutlined />,
   ApiOutlined: <ApiOutlined />,
@@ -42,6 +54,7 @@ export const TitanLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, logout } = useAuth();
+  const { projects, currentProjectId, setCurrentProjectId, loading: projectLoading } = useProject();
   const { locale, setLocale } = useLocale();
   const { formatMessage } = useIntl();
   const { isDark, setIsDark } = useLayoutSettings();
@@ -68,7 +81,7 @@ export const TitanLayout: React.FC = () => {
         menuItemRender={(item, dom) => (
           <div
             onClick={() => {
-              if (item.path) {
+              if (item.path && (!item.children || item.children.length === 0)) {
                 navigate(item.path);
               }
             }}
@@ -79,26 +92,82 @@ export const TitanLayout: React.FC = () => {
         menuDataRender={() => [
           {
             path: "/dashboard",
-            name: formatMessage({ id: "menu.dashboard", defaultMessage: "研发大盘" }),
-            icon: iconMap.DashboardOutlined,
+            name: "研发大盘",
+            icon: <DashboardOutlined />,
           },
           {
-            path: "/pipelines",
-            name: formatMessage({ id: "menu.pipelines", defaultMessage: "流水线中心" }),
-            icon: iconMap.BranchesOutlined,
+            path: "/space",
+            name: "项目与微服务",
+            icon: <DeploymentUnitOutlined />,
+            children: [
+              {
+                path: "/projects",
+                name: "交付项目",
+                icon: <ProjectOutlined />,
+              },
+              {
+                path: "/apps",
+                name: "微服务应用",
+                icon: <AppstoreOutlined />,
+              },
+            ],
           },
           {
-            path: "/clusters",
-            name: formatMessage({ id: "menu.clusters", defaultMessage: "多集群治理" }),
-            icon: iconMap.ClusterOutlined,
+            path: "/delivery",
+            name: "持续交付编排",
+            icon: <RocketOutlined />,
+            children: [
+              {
+                path: "/environments",
+                name: "环境大盘",
+                icon: <CloudServerOutlined />,
+              },
+              {
+                path: "/artifacts",
+                name: "制品版本中心",
+                icon: <TagOutlined />,
+              },
+              {
+                path: "/pipelines",
+                name: "交付流水线",
+                icon: <BranchesOutlined />,
+              },
+            ],
           },
           {
-            path: "/integrations",
-            name: formatMessage({ id: "menu.integrations", defaultMessage: "凭据与集成" }),
-            icon: iconMap.ApiOutlined,
+            path: "/infrastructure",
+            name: "基础设施与治理",
+            icon: <ClusterOutlined />,
+            children: [
+              {
+                path: "/clusters",
+                name: "多集群治理",
+                icon: <ClusterOutlined />,
+              },
+              {
+                path: "/integrations",
+                name: "凭据与集成",
+                icon: <ApiOutlined />,
+              },
+            ],
           },
         ]}
         actionsRender={() => [
+          <Select
+            key="projectSelector"
+            value={currentProjectId || undefined}
+            onChange={(val) => {
+              setCurrentProjectId(val);
+              message.success("已切换当前项目空间");
+            }}
+            loading={projectLoading}
+            placeholder="选择交付项目"
+            style={{ width: 200 }}
+            options={projects.map((p) => ({
+              label: `📦 ${p.displayName || p.name}`,
+              value: p.id,
+            }))}
+          />,
           <Tooltip key="portal" title="返回官方技术门户 (:3000)">
             <Button
               type="text"
