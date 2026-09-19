@@ -26,7 +26,8 @@ func NewDeleteAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteA
 
 func (l *DeleteAppLogic) DeleteApp(req *types.DeleteAppReqVO) error {
 	_, err := l.svcCtx.TitanRpc.DeleteApp(l.ctx, &titan.DeleteAppReq{
-		Id: req.Id,
+		Id:        req.Id,
+		ProjectId: req.ProjectId,
 	})
 	return err
 }

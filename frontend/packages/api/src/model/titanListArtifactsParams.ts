@@ -7,6 +7,14 @@
 
 export type TitanListArtifactsParams = {
 appId?: number;
+/**
+ * @minimum 1
+ * @maximum 100000
+ */
 page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
 pageSize?: number;
 };

@@ -26,7 +26,8 @@ func NewGetAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAppLogi
 
 func (l *GetAppLogic) GetApp(req *types.GetAppReqVO) (resp *types.AppVO, err error) {
 	res, err := l.svcCtx.TitanRpc.GetApp(l.ctx, &titan.GetAppReq{
-		Id: req.Id,
+		Id:        req.Id,
+		ProjectId: req.ProjectId,
 	})
 	if err != nil {
 		return nil, err

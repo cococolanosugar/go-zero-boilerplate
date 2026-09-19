@@ -20,4 +20,5 @@ export type TitanListArtifacts200ListItem = {
   imageUrl: string;
   projectId: number;
   status: string;
+  updateTime: string;
 };

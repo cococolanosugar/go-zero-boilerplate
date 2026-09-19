@@ -2,11 +2,10 @@ package titanlogic
 
 import (
 	"context"
-	"fmt"
 
-	"go-zero-boilerplate/app/titan/model"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,50 +25,32 @@ func NewListArtifactsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 }
 
 func (l *ListArtifactsLogic) ListArtifacts(in *titan.ListArtifactsReq) (*titan.ListArtifactsResp, error) {
-	page := in.Page
-	if page <= 0 {
-		page = 1
-	}
-	pageSize := in.PageSize
-	if pageSize <= 0 {
-		pageSize = 20
-	}
-	offset := (page - 1) * pageSize
+	offset, limit := normalizePage(int64(in.Page), int64(in.PageSize))
 
-	where := "WHERE 1=1"
-	var args []interface{}
-	if in.ProjectId > 0 {
-		where += " AND project_id = ?"
-		args = append(args, in.ProjectId)
-	}
-	if in.AppId > 0 {
-		where += " AND app_id = ?"
-		args = append(args, in.AppId)
+	artifacts, total, err := l.svcCtx.ArtifactModel.ListByPage(l.ctx, in.ProjectId, in.AppId, offset, limit)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询制品列表失败: " + err.Error())
 	}
 
-	var total int64
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM titan_artifact %s", where)
-	if err := l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &total, countQuery, args...); err != nil {
-		return nil, err
+	// 批量取应用名（消除 N+1）
+	appIds := make([]int64, 0, len(artifacts))
+	for _, art := range artifacts {
+		appIds = append(appIds, art.AppId)
 	}
-
-	var artifacts []*model.TitanArtifact
-	listQuery := fmt.Sprintf("SELECT id, project_id, app_id, image_url, image_tag, image_digest, git_branch, git_commit, commit_msg, build_exec_id, image_size_bytes, status, create_time, update_time FROM titan_artifact %s ORDER BY id DESC LIMIT %d, %d", where, offset, pageSize)
-	if err := l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &artifacts, listQuery, args...); err != nil {
-		return nil, err
+	apps, err := l.svcCtx.AppModel.FindByIds(l.ctx, appIds)
+	if err != nil {
+		return nil, xerr.NewErrMsg("批量查询应用失败: " + err.Error())
 	}
 
 	var list []*titan.ArtifactItem
 	for _, art := range artifacts {
 		var appName string
-		app, err := l.svcCtx.AppModel.FindOne(l.ctx, art.AppId)
-		if err == nil && app != nil {
+		if app, ok := apps[art.AppId]; ok {
 			appName = app.DisplayName
 			if appName == "" {
 				appName = app.Name
 			}
 		}
-
 		list = append(list, &titan.ArtifactItem{
 			Id:             art.Id,
 			ProjectId:      art.ProjectId,
@@ -84,7 +65,8 @@ func (l *ListArtifactsLogic) ListArtifacts(in *titan.ListArtifactsReq) (*titan.L
 			BuildExecId:    art.BuildExecId,
 			ImageSizeBytes: art.ImageSizeBytes,
 			Status:         art.Status,
-			CreateTime:     art.CreateTime.Format("2006-01-02 15:04:05"),
+			CreateTime:     formatTime(art.CreateTime),
+			UpdateTime:     formatTime(art.UpdateTime),
 		})
 	}
 

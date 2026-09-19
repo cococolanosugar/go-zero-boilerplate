@@ -9,6 +9,7 @@ import (
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/pkg/confx"
+	"go-zero-boilerplate/pkg/cryptox"
 	"go-zero-boilerplate/pkg/nacosx"
 
 	"github.com/zeromicro/go-zero/core/service"
@@ -26,6 +27,7 @@ func main() {
 
 	var c config.Config
 	confx.MustLoad(*configFile, &c)
+	cryptox.Init(c.Mode)
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {

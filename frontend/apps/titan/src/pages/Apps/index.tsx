@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Button,
@@ -21,8 +21,14 @@ import {
   Tooltip,
   Descriptions,
   Table,
-  Badge,
 } from "antd";
+import { copyToClipboard } from "@zero/shared";
+import {
+  jsonValidator,
+  TITAN_NAME_PATTERN,
+  TITAN_NAME_MAX_LEN,
+} from "../../constants/validation";
+import { getErrorMessage, isFormValidateError } from "../../utils/error";
 import {
   PlusOutlined,
   AppstoreOutlined,
@@ -36,11 +42,10 @@ import {
   ApartmentOutlined,
   UnorderedListOutlined,
   CheckCircleOutlined,
-  SyncOutlined,
-  BranchesOutlined,
 } from "@ant-design/icons";
-import { PageContainer, ProTable, type ProColumns } from "@ant-design/pro-components";
+import { PageContainer } from "@ant-design/pro-components";
 import { useProject } from "../../contexts/ProjectContext";
+import { useIntl } from "../../contexts/LocaleContext";
 import {
   titanListApps,
   titanCreateApp,
@@ -54,12 +59,13 @@ import {
   type TitanListArtifacts200ListItem,
 } from "@zero/api";
 
-const { Text, Title, Paragraph } = Typography;
+const { Text, Title } = Typography;
 
 export const AppsPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { message } = AntdApp.useApp();
+  const { formatMessage: t } = useIntl();
   const { currentProjectId, currentProject } = useProject();
   const [apps, setApps] = useState<TitanListApps200ListItem[]>([]);
   const [integrations, setIntegrations] = useState<TitanListIntegrations200ListItem[]>([]);
@@ -83,32 +89,42 @@ export const AppsPage: React.FC = () => {
   const [building, setBuilding] = useState(false);
   const [buildForm] = Form.useForm();
 
+  // 竞态保护：请求序列号，仅最新请求可写入状态（快速切换项目时丢弃过期响应）
+  const loadSeqRef = useRef(0);
+  const selectedAppIdRef = useRef<number | null>(null);
+  selectedAppIdRef.current = selectedAppId;
+
   const loadApps = useCallback(async (targetSelectId?: number) => {
     if (!currentProjectId) {
       setApps([]);
       setSelectedAppId(null);
       return;
     }
+    const seq = ++loadSeqRef.current;
     setLoading(true);
     try {
       const res = await titanListApps(currentProjectId, { page: 1, pageSize: 100 });
+      if (seq !== loadSeqRef.current) return; // 过期响应丢弃
       const list = res.list || [];
       setApps(list);
       if (list.length > 0) {
         if (targetSelectId && list.some((a) => a.id === targetSelectId)) {
           setSelectedAppId(targetSelectId);
-        } else if (!selectedAppId || !list.some((a) => a.id === selectedAppId)) {
+        } else if (!selectedAppIdRef.current || !list.some((a) => a.id === selectedAppIdRef.current)) {
           setSelectedAppId(list[0].id!);
         }
       } else {
         setSelectedAppId(null);
       }
     } catch (err) {
-      console.error("Failed to load apps:", err);
+      if (seq !== loadSeqRef.current) return;
+      message.error(t({ id: "titan.apps.loadFailed", defaultMessage: "加载应用列表失败，请稍后重试" }));
     } finally {
-      setLoading(false);
+      if (seq === loadSeqRef.current) {
+        setLoading(false);
+      }
     }
-  }, [currentProjectId, selectedAppId]);
+  }, [currentProjectId, message, t]);
 
   useEffect(() => {
     const targetAppId = searchParams.get("appId");
@@ -220,14 +236,15 @@ spec:
           name: values.name,
           displayName: values.displayName,
           description: values.description,
-          integrationId: values.integrationId,
+          // 表单未注册该字段时回退到编辑对象的当前值，避免编辑丢失集成绑定
+          integrationId: values.integrationId ?? editingApp.integrationId,
           repoUrl: values.repoUrl,
           defaultBranch: values.defaultBranch,
           buildConfig: values.buildConfig,
           deploySpec: values.deploySpec,
-          status: 1,
+          // status 未在表单中维护：undefined = 不更新（optional 语义），不再强制置 1
         });
-        message.success("应用更新成功");
+        message.success(t({ id: "titan.apps.updateSuccess", defaultMessage: "应用更新成功" }));
         setModalOpen(false);
         await loadApps(editingApp.id);
       } else {
@@ -241,7 +258,7 @@ spec:
           buildConfig: values.buildConfig,
           deploySpec: values.deploySpec,
         });
-        message.success("应用创建成功");
+        message.success(t({ id: "titan.apps.createSuccess", defaultMessage: "应用创建成功" }));
         setModalOpen(false);
         const newId = createRes?.id;
         if (newId) {
@@ -249,9 +266,9 @@ spec:
         }
         await loadApps(newId);
       }
-    } catch (err: any) {
-      if (err.errorFields) return;
-      message.error(err.message || "操作失败");
+    } catch (err) {
+      if (isFormValidateError(err)) return;
+      message.error(getErrorMessage(err, t({ id: "titan.common.operationFailed", defaultMessage: "操作失败" })));
     } finally {
       setSubmitting(false);
     }
@@ -260,10 +277,10 @@ spec:
   const handleDelete = async (id: number) => {
     try {
       await titanDeleteApp(currentProjectId!, id);
-      message.success("应用已删除");
+      message.success(t({ id: "titan.apps.deleteSuccess", defaultMessage: "应用已删除" }));
       await loadApps();
-    } catch (err: any) {
-      message.error(err.message || "删除失败");
+    } catch (err) {
+      message.error(getErrorMessage(err, t({ id: "titan.common.deleteFailed", defaultMessage: "删除失败" })));
     }
   };
 
@@ -298,29 +315,36 @@ spec:
         imageDigest: `sha256:${Math.random().toString(16).substring(2)}${Math.random().toString(16).substring(2)}`,
         imageSizeBytes: Math.floor(150 * 1024 * 1024 + Math.random() * 50 * 1024 * 1024),
       });
-      message.success(`🎉 制品 ${values.imageTag} 构建完成并入库！`);
+      message.success(
+        t({ id: "titan.apps.buildSuccess", defaultMessage: "🎉 制品 {tag} 构建完成并入库！" }, { tag: values.imageTag })
+      );
       setBuildModalOpen(false);
       buildForm.resetFields();
       if (selectedAppId) {
         await loadServiceArtifacts(selectedAppId);
       }
-    } catch (err: any) {
-      if (err.errorFields) return;
-      message.error(err.message || "构建失败");
+    } catch (err) {
+      if (isFormValidateError(err)) return;
+      message.error(getErrorMessage(err, t({ id: "titan.apps.buildFailed", defaultMessage: "构建失败" })));
     } finally {
       setBuilding(false);
     }
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    message.success("已复制到剪贴板");
+  // 复制到剪贴板（统一走 @zero/shared，含降级与失败提示）
+  const handleCopy = async (text: string) => {
+    const ok = await copyToClipboard(text);
+    if (ok) {
+      message.success(t({ id: "titan.common.copySuccess", defaultMessage: "已复制到剪贴板" }));
+    } else {
+      message.error(t({ id: "titan.common.copyFailed", defaultMessage: "复制失败，请手动复制" }));
+    }
   };
 
   if (!currentProjectId) {
     return (
       <PageContainer>
-        <Empty description="请先在顶部选择一个交付项目" />
+        <Empty description={t({ id: "titan.apps.selectProjectFirst", defaultMessage: "请先在顶部选择一个交付项目" })} />
       </PageContainer>
     );
   }
@@ -330,29 +354,36 @@ spec:
   return (
     <PageContainer
       header={{
-        title: `微服务应用管理 (Services) - ${currentProject?.displayName || currentProject?.name}`,
-        subTitle: "对齐 Zadig 服务管理规范：每个应用对齐独立 Git 代码仓，内聚 Dockerfile 镜像构建配置与 Kubernetes YAML 编排模板",
+        title: t(
+          { id: "titan.apps.title", defaultMessage: "微服务应用管理 (Services) - {project}" },
+          { project: currentProject?.displayName || currentProject?.name }
+        ),
+        subTitle: t({
+          id: "titan.apps.subTitle",
+          defaultMessage:
+            "对齐 Zadig 服务管理规范：每个应用对齐独立 Git 代码仓，内聚 Dockerfile 镜像构建配置与 Kubernetes YAML 编排模板",
+        }),
         extra: [
           <Segmented
             key="viewSwitch"
             value={layoutMode}
             onChange={(val) => setLayoutMode(val as "workbench" | "table")}
             options={[
-              { label: "服务工作台", value: "workbench", icon: <ApartmentOutlined /> },
-              { label: "表格视图", value: "table", icon: <UnorderedListOutlined /> },
+              { label: t({ id: "titan.apps.viewWorkbench", defaultMessage: "服务工作台" }), value: "workbench", icon: <ApartmentOutlined /> },
+              { label: t({ id: "titan.apps.viewTable", defaultMessage: "表格视图" }), value: "table", icon: <UnorderedListOutlined /> },
             ]}
           />,
           <Button key="add" type="primary" icon={<PlusOutlined />} onClick={handleOpenCreate}>
-            添加微服务应用
+            {t({ id: "titan.apps.add", defaultMessage: "添加微服务应用" })}
           </Button>,
         ],
       }}
     >
       {apps.length === 0 ? (
         <Card variant="borderless">
-          <Empty description="当前项目下暂无微服务应用，点击上方按钮接入第一个微服务">
+          <Empty description={t({ id: "titan.apps.emptyNoApps", defaultMessage: "当前项目下暂无微服务应用，点击上方按钮接入第一个微服务" })}>
             <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenCreate}>
-              接入微服务应用
+              {t({ id: "titan.apps.emptyNoAppsAction", defaultMessage: "接入微服务应用" })}
             </Button>
           </Empty>
         </Card>
@@ -362,7 +393,11 @@ spec:
           {/* 左侧服务列表 */}
           <Col xs={24} md={7} lg={6}>
             <Card
-              title={<span style={{ fontWeight: 600 }}>微服务列表 ({apps.length})</span>}
+              title={
+                <span style={{ fontWeight: 600 }}>
+                  {t({ id: "titan.apps.serviceList", defaultMessage: "微服务列表 ({count})" }, { count: apps.length })}
+                </span>
+              }
               variant="borderless"
               styles={{ body: { padding: "8px 0" } }}
               style={{ height: "calc(100vh - 200px)", minHeight: 650, overflowY: "auto" }}
@@ -460,7 +495,7 @@ spec:
                         </Title>
                         <Tag color="geekblue">{currentApp.name}</Tag>
                         <Tag color="success" icon={<CheckCircleOutlined />}>
-                          配置就绪
+                          {t({ id: "titan.apps.configReady", defaultMessage: "配置就绪" })}
                         </Tag>
                       </Space>
                       <div style={{ marginTop: 4 }}>
@@ -473,11 +508,12 @@ spec:
                               rel="noreferrer"
                               style={{ fontSize: 12 }}
                             >
-                              {currentApp.repoUrl || "未配置代码仓"}
+                              {currentApp.repoUrl || t({ id: "titan.apps.noRepo", defaultMessage: "未配置代码仓" })}
                             </a>
                           </Space>
                           <Text type="secondary" style={{ fontSize: 12 }}>
-                            默认分支: <strong>{currentApp.defaultBranch || "main"}</strong>
+                            {t({ id: "titan.apps.defaultBranchLabel", defaultMessage: "默认分支:" })}{" "}
+                            <strong>{currentApp.defaultBranch || "main"}</strong>
                           </Text>
                         </Space>
                       </div>
@@ -490,21 +526,21 @@ spec:
                       icon={<EditOutlined />}
                       onClick={() => handleOpenEdit(currentApp)}
                     >
-                      修改服务配置
+                      {t({ id: "titan.apps.editConfig", defaultMessage: "修改服务配置" })}
                     </Button>
                     <Button
                       icon={<RocketOutlined />}
                       style={{ color: "#52c41a", borderColor: "#52c41a" }}
                       onClick={() => handleOpenBuild(currentApp)}
                     >
-                      构建不可变制品
+                      {t({ id: "titan.apps.buildArtifact", defaultMessage: "构建不可变制品" })}
                     </Button>
                     <Popconfirm
-                      title="确认移除该微服务吗？"
-                      description="移除后对应的发布绑定将一并解除"
+                      title={t({ id: "titan.apps.removeConfirmTitle", defaultMessage: "确认移除该微服务吗？" })}
+                      description={t({ id: "titan.apps.removeConfirmDesc", defaultMessage: "移除后对应的发布绑定将一并解除" })}
                       onConfirm={() => handleDelete(currentApp.id!)}
-                      okText="确认删除"
-                      cancelText="取消"
+                      okText={t({ id: "titan.common.confirmDelete", defaultMessage: "确认删除" })}
+                      cancelText={t({ id: "titan.common.cancel", defaultMessage: "取消" })}
                     >
                       <Button danger icon={<DeleteOutlined />} />
                     </Popconfirm>
@@ -520,29 +556,37 @@ spec:
                       label: (
                         <Space>
                           <CodeOutlined />
-                          <span>镜像构建配置 (Build Spec)</span>
+                          <span>{t({ id: "titan.apps.tabBuild", defaultMessage: "镜像构建配置 (Build Spec)" })}</span>
                         </Space>
                       ),
                       children: (
                         <div>
                           <Alert
-                            message="不可变镜像构建策略 (Aligned with Zadig Docker Build)"
-                            description="通过 Git 仓库代码检出，基于 Dockerfile 与指定编译环境打出不可变容器镜像制品并推送到镜像中心。"
+                            title={t({ id: "titan.apps.buildAlertTitle", defaultMessage: "不可变镜像构建策略 (Aligned with Zadig Docker Build)" })}
+                            description={t({
+                              id: "titan.apps.buildAlertDesc",
+                              defaultMessage:
+                                "通过 Git 仓库代码检出，基于 Dockerfile 与指定编译环境打出不可变容器镜像制品并推送到镜像中心。",
+                            })}
                             type="info"
                             showIcon
                             style={{ marginBottom: 16 }}
                           />
                           <Descriptions bordered size="small" column={{ xs: 1, sm: 2, md: 3 }} style={{ marginBottom: 16 }}>
-                            <Descriptions.Item label="Dockerfile 路径">Dockerfile</Descriptions.Item>
-                            <Descriptions.Item label="构建上下文路径">.</Descriptions.Item>
-                            <Descriptions.Item label="基础镜像源">golang:1.24-alpine</Descriptions.Item>
-                            <Descriptions.Item label="编译参数">CGO_ENABLED=0</Descriptions.Item>
-                            <Descriptions.Item label="集成凭据">默认 Git/Harbor 凭据</Descriptions.Item>
-                            <Descriptions.Item label="缓存策略">Docker BuildKit Cache</Descriptions.Item>
+                            <Descriptions.Item label={t({ id: "titan.apps.descLabelDockerfile", defaultMessage: "Dockerfile 路径" })}>Dockerfile</Descriptions.Item>
+                            <Descriptions.Item label={t({ id: "titan.apps.descLabelContext", defaultMessage: "构建上下文路径" })}>.</Descriptions.Item>
+                            <Descriptions.Item label={t({ id: "titan.apps.descLabelBaseImage", defaultMessage: "基础镜像源" })}>golang:1.24-alpine</Descriptions.Item>
+                            <Descriptions.Item label={t({ id: "titan.apps.descLabelBuildArgs", defaultMessage: "编译参数" })}>CGO_ENABLED=0</Descriptions.Item>
+                            <Descriptions.Item label={t({ id: "titan.apps.descLabelIntegration", defaultMessage: "集成凭据" })}>
+                              {t({ id: "titan.apps.descValueIntegration", defaultMessage: "默认 Git/Harbor 凭据" })}
+                            </Descriptions.Item>
+                            <Descriptions.Item label={t({ id: "titan.apps.descLabelCache", defaultMessage: "缓存策略" })}>
+                              {t({ id: "titan.apps.descValueCache", defaultMessage: "Docker BuildKit Cache" })}
+                            </Descriptions.Item>
                           </Descriptions>
 
                           <Card
-                            title="构建上下文 JSON 配置"
+                            title={t({ id: "titan.apps.buildConfigTitle", defaultMessage: "构建上下文 JSON 配置" })}
                             size="small"
                             extra={
                               <Space>
@@ -553,14 +597,14 @@ spec:
                                   icon={<EditOutlined />}
                                   onClick={() => handleOpenEdit(currentApp)}
                                 >
-                                  修改构建配置
+                                  {t({ id: "titan.apps.editBuildConfig", defaultMessage: "修改构建配置" })}
                                 </Button>
                                 <Button
                                   size="small"
                                   icon={<CopyOutlined />}
-                                  onClick={() => copyToClipboard(currentApp.buildConfig || "{}")}
+                                  onClick={() => handleCopy(currentApp.buildConfig || "{}")}
                                 >
-                                  复制配置
+                                  {t({ id: "titan.apps.copyConfig", defaultMessage: "复制配置" })}
                                 </Button>
                               </Space>
                             }
@@ -578,14 +622,18 @@ spec:
                       label: (
                         <Space>
                           <FileTextOutlined />
-                          <span>Kubernetes 编排定义 (Deploy Spec)</span>
+                          <span>{t({ id: "titan.apps.tabDeploy", defaultMessage: "Kubernetes 编排定义 (Deploy Spec)" })}</span>
                         </Space>
                       ),
                       children: (
                         <div>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                             <Text type="secondary">
-                              K8s 交付模板，发布时将动态注入 `IMAGE`、`APP_NAME`、`REPLICAS` 等环境上下文变量：
+                              {t({
+                                id: "titan.apps.deployHint",
+                                defaultMessage:
+                                  "K8s 交付模板，发布时将动态注入 `IMAGE`、`APP_NAME`、`REPLICAS` 等环境上下文变量：",
+                              })}
                             </Text>
                             <Space>
                               <Button
@@ -595,20 +643,20 @@ spec:
                                 icon={<EditOutlined />}
                                 onClick={() => handleOpenEdit(currentApp)}
                               >
-                                修改 YAML 模板
+                                {t({ id: "titan.apps.editYamlTemplate", defaultMessage: "修改 YAML 模板" })}
                               </Button>
                               <Button
                                 size="small"
                                 icon={<CopyOutlined />}
-                                onClick={() => copyToClipboard(currentApp.deploySpec || "")}
+                                onClick={() => handleCopy(currentApp.deploySpec || "")}
                               >
-                                复制 YAML
+                                {t({ id: "titan.apps.copyYaml", defaultMessage: "复制 YAML" })}
                               </Button>
                             </Space>
                           </div>
                           <Card size="small" style={{ background: "#282c34", color: "#abb2bf", borderRadius: 6 }}>
                             <pre style={{ margin: 0, fontSize: 12, fontFamily: "Consolas, Menlo, monospace", maxHeight: 360, overflow: "auto" }}>
-                              {currentApp.deploySpec || "# 暂无 YAML 模板"}
+                              {currentApp.deploySpec || t({ id: "titan.apps.noYaml", defaultMessage: "# 暂无 YAML 模板" })}
                             </pre>
                           </Card>
                         </div>
@@ -619,7 +667,12 @@ spec:
                       label: (
                         <Space>
                           <RocketOutlined />
-                          <span>制品版本历史 ({serviceArtifacts.length})</span>
+                          <span>
+                            {t(
+                              { id: "titan.apps.tabArtifacts", defaultMessage: "制品版本历史 ({count})" },
+                              { count: serviceArtifacts.length }
+                            )}
+                          </span>
                         </Space>
                       ),
                       children: (
@@ -632,27 +685,29 @@ spec:
                             size="small"
                             columns={[
                               {
-                                title: "不可变镜像版本 (Image Tag)",
+                                title: t({ id: "titan.apps.colImageTag", defaultMessage: "不可变镜像版本 (Image Tag)" }),
                                 dataIndex: "imageTag",
                                 render: (tag) => <Tag color="cyan">{tag}</Tag>,
                               },
                               {
-                                title: "源码 Commit",
+                                title: t({ id: "titan.apps.colCommit", defaultMessage: "源码 Commit" }),
                                 dataIndex: "gitCommit",
                                 render: (commit, r) => (
                                   <Space>
                                     <Text code>{commit?.substring(0, 7)}</Text>
-                                    <Text type="secondary" style={{ fontSize: 12 }}>({r.commitMsg || "无说明"})</Text>
+                                    <Text type="secondary" style={{ fontSize: 12 }}>
+                                      ({r.commitMsg || t({ id: "titan.apps.noCommitMsg", defaultMessage: "无说明" })})
+                                    </Text>
                                   </Space>
                                 ),
                               },
                               {
-                                title: "产出时间",
+                                title: t({ id: "titan.apps.colCreateTime", defaultMessage: "产出时间" }),
                                 dataIndex: "createTime",
-                                render: (t) => <Text type="secondary">{t?.substring(0, 16)}</Text>,
+                                render: (time) => <Text type="secondary">{time?.substring(0, 16)}</Text>,
                               },
                               {
-                                title: "操作",
+                                title: t({ id: "titan.common.action", defaultMessage: "操作" }),
                                 render: () => (
                                   <Button
                                     size="small"
@@ -660,7 +715,7 @@ spec:
                                     icon={<RocketOutlined />}
                                     onClick={() => navigate("/environments")}
                                   >
-                                    去环境发布
+                                    {t({ id: "titan.apps.goDeploy", defaultMessage: "去环境发布" })}
                                   </Button>
                                 ),
                               },
@@ -673,7 +728,7 @@ spec:
                 />
               </Card>
             ) : (
-              <Empty description="请从左侧列表选择一个微服务应用查看详情" />
+              <Empty description={t({ id: "titan.apps.emptySelectApp", defaultMessage: "请从左侧列表选择一个微服务应用查看详情" })} />
             )}
           </Col>
         </Row>
@@ -687,7 +742,7 @@ spec:
             pagination={false}
             columns={[
               {
-                title: "微服务标识 / 显示名称",
+                title: t({ id: "titan.apps.colNameTable", defaultMessage: "微服务标识 / 显示名称" }),
                 render: (_, record) => (
                   <Space size={10}>
                     <div
@@ -712,23 +767,26 @@ spec:
                 ),
               },
               {
-                title: "代码仓与分支",
+                title: t({ id: "titan.apps.colRepoTable", defaultMessage: "代码仓与分支" }),
                 render: (_, record) => (
-                  <Space direction="vertical" size={2}>
+                  <Space orientation="vertical" size={2}>
                     <Space size={4}>
                       <GithubOutlined style={{ color: "#8c8c8c" }} />
                       <a href={record.repoUrl || "#"} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>
-                        {record.repoUrl?.split("/").slice(-2).join("/") || "未配置"}
+                        {record.repoUrl?.split("/").slice(-2).join("/") || t({ id: "titan.apps.noRepoShort", defaultMessage: "未配置" })}
                       </a>
                     </Space>
                     <Tag color="blue" style={{ fontSize: 10, width: "fit-content" }}>
-                      分支: {record.defaultBranch || "main"}
+                      {t(
+                        { id: "titan.apps.branchPrefix", defaultMessage: "分支: {branch}" },
+                        { branch: record.defaultBranch || "main" }
+                      )}
                     </Tag>
                   </Space>
                 ),
               },
               {
-                title: "构建与编排定义",
+                title: t({ id: "titan.apps.colBuildSpec", defaultMessage: "构建与编排定义" }),
                 render: (_, record) => (
                   <Button
                     size="small"
@@ -738,12 +796,12 @@ spec:
                       setLayoutMode("workbench");
                     }}
                   >
-                    查看 Dockerfile & YAML
+                    {t({ id: "titan.apps.viewSpec", defaultMessage: "查看 Dockerfile & YAML" })}
                   </Button>
                 ),
               },
               {
-                title: "操作",
+                title: t({ id: "titan.common.action", defaultMessage: "操作" }),
                 render: (_, record) => (
                   <Space>
                     <Button
@@ -753,16 +811,16 @@ spec:
                       style={{ background: "#52c41a", borderColor: "#52c41a" }}
                       onClick={() => handleOpenBuild(record)}
                     >
-                      构建制品
+                      {t({ id: "titan.apps.buildArtifactShort", defaultMessage: "构建制品" })}
                     </Button>
                     <Button size="small" icon={<EditOutlined />} onClick={() => handleOpenEdit(record)}>
-                      编辑
+                      {t({ id: "titan.common.edit", defaultMessage: "编辑" })}
                     </Button>
                     <Popconfirm
-                      title="确认删除此应用吗？"
+                      title={t({ id: "titan.apps.deleteConfirmTitle", defaultMessage: "确认删除此应用吗？" })}
                       onConfirm={() => handleDelete(record.id!)}
-                      okText="删除"
-                      cancelText="取消"
+                      okText={t({ id: "titan.common.delete", defaultMessage: "删除" })}
+                      cancelText={t({ id: "titan.common.cancel", defaultMessage: "取消" })}
                     >
                       <Button size="small" danger icon={<DeleteOutlined />} />
                     </Popconfirm>
@@ -776,7 +834,11 @@ spec:
 
       {/* 创建/编辑应用 Modal */}
       <Modal
-        title={editingApp ? "编辑微服务应用" : "添加微服务应用"}
+        title={
+          editingApp
+            ? t({ id: "titan.apps.modalEditTitle", defaultMessage: "编辑微服务应用" })
+            : t({ id: "titan.apps.add", defaultMessage: "添加微服务应用" })
+        }
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         onOk={handleSubmit}
@@ -789,23 +851,36 @@ spec:
             <Col span={12}>
               <Form.Item
                 name="name"
-                label="微服务唯一标识 (Name / Slug)"
-                tooltip="支持小写字母、数字与中划线，作为 Kubernetes Deployment 及容器命名的唯一标识"
+                label={t({ id: "titan.apps.labelName", defaultMessage: "微服务唯一标识 (Name / Slug)" })}
+                tooltip={t({
+                  id: "titan.apps.labelNameTooltip",
+                  defaultMessage: "支持小写字母、数字与中划线，作为 Kubernetes Deployment 及容器命名的唯一标识",
+                })}
                 rules={[
-                  { required: true, message: "请输入微服务标识" },
-                  { pattern: /^[a-z0-9-]+$/, message: "仅支持小写字母、数字及中划线" },
+                  { required: true, message: t({ id: "titan.apps.ruleNameRequired", defaultMessage: "请输入微服务标识" }) },
+                  {
+                    max: TITAN_NAME_MAX_LEN,
+                    message: t({ id: "titan.apps.ruleNameMax", defaultMessage: "长度不能超过 {max} 字符" }, { max: TITAN_NAME_MAX_LEN }),
+                  },
+                  {
+                    pattern: TITAN_NAME_PATTERN,
+                    message: t({
+                      id: "titan.apps.ruleNamePattern",
+                      defaultMessage: "仅允许小写字母、数字与中划线，且以字母或数字开头结尾",
+                    }),
+                  },
                 ]}
               >
-                <Input placeholder="例如: order-service" />
+                <Input placeholder={t({ id: "titan.apps.placeholderName", defaultMessage: "例如: order-service" })} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="displayName"
-                label="微服务显示名称"
-                rules={[{ required: true, message: "请输入显示名称" }]}
+                label={t({ id: "titan.apps.labelDisplayName", defaultMessage: "微服务显示名称" })}
+                rules={[{ required: true, message: t({ id: "titan.apps.ruleDisplayName", defaultMessage: "请输入显示名称" }) }]}
               >
-                <Input placeholder="例如: 订单中心微服务" />
+                <Input placeholder={t({ id: "titan.apps.placeholderDisplayName", defaultMessage: "例如: 订单中心微服务" })} />
               </Form.Item>
             </Col>
           </Row>
@@ -814,8 +889,8 @@ spec:
             <Col span={14}>
               <Form.Item
                 name="repoUrl"
-                label="Git 代码仓库地址"
-                rules={[{ required: true, message: "请输入代码仓地址" }]}
+                label={t({ id: "titan.apps.labelRepoUrl", defaultMessage: "Git 代码仓库地址" })}
+                rules={[{ required: true, message: t({ id: "titan.apps.ruleRepoUrl", defaultMessage: "请输入代码仓地址" }) }]}
               >
                 <Input placeholder="https://github.com/org/repo.git" />
               </Form.Item>
@@ -823,30 +898,31 @@ spec:
             <Col span={10}>
               <Form.Item
                 name="defaultBranch"
-                label="默认编译分支"
-                rules={[{ required: true, message: "请输入默认分支" }]}
+                label={t({ id: "titan.apps.labelBranch", defaultMessage: "默认编译分支" })}
+                rules={[{ required: true, message: t({ id: "titan.apps.ruleBranch", defaultMessage: "请输入默认分支" }) }]}
               >
                 <Input placeholder="main / master" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Form.Item name="description" label="服务描述">
-            <Input placeholder="说明该服务职责与技术栈" />
+          <Form.Item name="description" label={t({ id: "titan.apps.labelDescription", defaultMessage: "服务描述" })}>
+            <Input placeholder={t({ id: "titan.apps.placeholderDescription", defaultMessage: "说明该服务职责与技术栈" })} />
           </Form.Item>
 
           <Form.Item
             name="buildConfig"
-            label="Dockerfile 构建配置 (JSON)"
-            rules={[{ required: true, message: "请输入构建配置" }]}
+            label={t({ id: "titan.apps.labelBuildConfig", defaultMessage: "Dockerfile 构建配置 (JSON)" })}
+            extra={t({ id: "titan.apps.extraBuildConfig", defaultMessage: "构建配置可为空；填写时必须是合法的 JSON 格式" })}
+            rules={[{ validator: jsonValidator }]}
           >
             <Input.TextArea rows={4} style={{ fontFamily: "monospace", fontSize: 12 }} />
           </Form.Item>
 
           <Form.Item
             name="deploySpec"
-            label="Kubernetes 部署 YAML 模板 (Deploy Spec)"
-            rules={[{ required: true, message: "请输入部署模板" }]}
+            label={t({ id: "titan.apps.labelDeploySpec", defaultMessage: "Kubernetes 部署 YAML 模板 (Deploy Spec)" })}
+            rules={[{ required: true, message: t({ id: "titan.apps.ruleDeploySpec", defaultMessage: "请输入部署模板" }) }]}
           >
             <Input.TextArea rows={6} style={{ fontFamily: "monospace", fontSize: 12 }} />
           </Form.Item>
@@ -858,21 +934,30 @@ spec:
         title={
           <Space>
             <RocketOutlined style={{ color: "#52c41a" }} />
-            <span>构建应用制品 - {buildingApp?.displayName || buildingApp?.name}</span>
+            <span>
+              {t(
+                { id: "titan.apps.buildModalTitle", defaultMessage: "构建应用制品 - {name}" },
+                { name: buildingApp?.displayName || buildingApp?.name }
+              )}
+            </span>
           </Space>
         }
         open={buildModalOpen}
         onCancel={() => setBuildModalOpen(false)}
         onOk={handleExecuteBuild}
         confirmLoading={building}
-        okText="立即构建并注册制品"
-        cancelText="取消"
+        okText={t({ id: "titan.apps.buildOkText", defaultMessage: "立即构建并注册制品" })}
+        cancelText={t({ id: "titan.common.cancel", defaultMessage: "取消" })}
         width={600}
-        destroyOnClose
+        destroyOnHidden
       >
         <Alert
-          message="不可变镜像构建与注册 (Immutable Artifact Build)"
-          description="基于当前微服务代码仓分支与 Dockerfile 策略构建容器镜像制品，构建完成后自动落库制品中心，可直接用于多环境发布与回滚。"
+          title={t({ id: "titan.apps.buildAlertTitle2", defaultMessage: "不可变镜像构建与注册 (Immutable Artifact Build)" })}
+          description={t({
+            id: "titan.apps.buildAlertDesc2",
+            defaultMessage:
+              "基于当前微服务代码仓分支与 Dockerfile 策略构建容器镜像制品，构建完成后自动落库制品中心，可直接用于多环境发布与回滚。",
+          })}
           type="info"
           showIcon
           style={{ marginBottom: 16 }}
@@ -883,8 +968,8 @@ spec:
             <Col span={12}>
               <Form.Item
                 name="gitBranch"
-                label="代码分支 (Git Branch)"
-                rules={[{ required: true, message: "请输入分支名" }]}
+                label={t({ id: "titan.apps.labelGitBranch", defaultMessage: "代码分支 (Git Branch)" })}
+                rules={[{ required: true, message: t({ id: "titan.apps.ruleGitBranch", defaultMessage: "请输入分支名" }) }]}
               >
                 <Input placeholder="main / develop" />
               </Form.Item>
@@ -892,8 +977,8 @@ spec:
             <Col span={12}>
               <Form.Item
                 name="imageTag"
-                label="制品版本Tag (Image Tag)"
-                rules={[{ required: true, message: "请输入版本号" }]}
+                label={t({ id: "titan.apps.labelImageTag", defaultMessage: "制品版本Tag (Image Tag)" })}
+                rules={[{ required: true, message: t({ id: "titan.apps.ruleImageTag", defaultMessage: "请输入版本号" }) }]}
               >
                 <Input placeholder="v1.0.0-rc1" />
               </Form.Item>
@@ -902,21 +987,21 @@ spec:
 
           <Form.Item
             name="imageUrl"
-            label="目标镜像全名 (Image URL)"
-            rules={[{ required: true, message: "请输入镜像地址" }]}
+            label={t({ id: "titan.apps.labelImageUrl", defaultMessage: "目标镜像全名 (Image URL)" })}
+            rules={[{ required: true, message: t({ id: "titan.apps.ruleImageUrl", defaultMessage: "请输入镜像地址" }) }]}
           >
             <Input placeholder="harbor.example.com/repo/app:v1.0.0" />
           </Form.Item>
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item name="gitCommit" label="Git Commit (SHA)">
+              <Form.Item name="gitCommit" label={t({ id: "titan.apps.labelGitCommit", defaultMessage: "Git Commit (SHA)" })}>
                 <Input placeholder="e.g. 7f98d6c" />
               </Form.Item>
             </Col>
             <Col span={16}>
-              <Form.Item name="commitMsg" label="提交说明 (Commit Message)">
-                <Input placeholder="简要说明本次构建包含的改动" />
+              <Form.Item name="commitMsg" label={t({ id: "titan.apps.labelCommitMsg", defaultMessage: "提交说明 (Commit Message)" })}>
+                <Input placeholder={t({ id: "titan.apps.placeholderCommitMsg", defaultMessage: "简要说明本次构建包含的改动" })} />
               </Form.Item>
             </Col>
           </Row>

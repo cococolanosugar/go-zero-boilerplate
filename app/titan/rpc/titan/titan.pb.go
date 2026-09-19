@@ -169,13 +169,13 @@ type IntegrationItem struct {
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
-	AuthType      string                 `protobuf:"bytes,4,opt,name=authType,proto3" json:"authType,omitempty"`
+	AuthType      string                 `protobuf:"bytes,4,opt,name=auth_type,json=authType,proto3" json:"auth_type,omitempty"`
 	Config        string                 `protobuf:"bytes,5,opt,name=config,proto3" json:"config,omitempty"` // 安全过滤后的配置 JSON
 	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
 	Description   string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
-	CreatedBy     int64                  `protobuf:"varint,8,opt,name=createdBy,proto3" json:"createdBy,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,9,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime    string                 `protobuf:"bytes,10,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	CreatedBy     int64                  `protobuf:"varint,8,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,9,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,10,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -396,10 +396,10 @@ type CreateIntegrationReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Category      string                 `protobuf:"bytes,2,opt,name=category,proto3" json:"category,omitempty"`
-	AuthType      string                 `protobuf:"bytes,3,opt,name=authType,proto3" json:"authType,omitempty"`
+	AuthType      string                 `protobuf:"bytes,3,opt,name=auth_type,json=authType,proto3" json:"auth_type,omitempty"`
 	Config        string                 `protobuf:"bytes,4,opt,name=config,proto3" json:"config,omitempty"` // 原始配置 JSON（由服务端加密存储）
 	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	CreatedBy     int64                  `protobuf:"varint,6,opt,name=createdBy,proto3" json:"createdBy,omitempty"`
+	CreatedBy     int64                  `protobuf:"varint,6,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -520,14 +520,15 @@ func (x *CreateIntegrationResp) GetId() int64 {
 	return 0
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新，显式提供零值才更新
 type UpdateIntegrationReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	AuthType      string                 `protobuf:"bytes,3,opt,name=authType,proto3" json:"authType,omitempty"`
-	Config        string                 `protobuf:"bytes,4,opt,name=config,proto3" json:"config,omitempty"`
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	AuthType      *string                `protobuf:"bytes,3,opt,name=auth_type,json=authType,proto3,oneof" json:"auth_type,omitempty"`
+	Config        *string                `protobuf:"bytes,4,opt,name=config,proto3,oneof" json:"config,omitempty"` // 提交值匹配掩码格式（****开头）时跳过，保留库中原值
+	Status        *int32                 `protobuf:"varint,5,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Description   *string                `protobuf:"bytes,6,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -570,36 +571,36 @@ func (x *UpdateIntegrationReq) GetId() int64 {
 }
 
 func (x *UpdateIntegrationReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *UpdateIntegrationReq) GetAuthType() string {
-	if x != nil {
-		return x.AuthType
+	if x != nil && x.AuthType != nil {
+		return *x.AuthType
 	}
 	return ""
 }
 
 func (x *UpdateIntegrationReq) GetConfig() string {
-	if x != nil {
-		return x.Config
+	if x != nil && x.Config != nil {
+		return *x.Config
 	}
 	return ""
 }
 
 func (x *UpdateIntegrationReq) GetStatus() int32 {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return 0
 }
 
 func (x *UpdateIntegrationReq) GetDescription() string {
-	if x != nil {
-		return x.Description
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
@@ -752,13 +753,13 @@ type ClusterItem struct {
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Env           string                 `protobuf:"bytes,3,opt,name=env,proto3" json:"env,omitempty"`
-	ApiEndpoint   string                 `protobuf:"bytes,4,opt,name=apiEndpoint,proto3" json:"apiEndpoint,omitempty"`
+	ApiEndpoint   string                 `protobuf:"bytes,4,opt,name=api_endpoint,json=apiEndpoint,proto3" json:"api_endpoint,omitempty"`
 	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
 	Version       string                 `protobuf:"bytes,6,opt,name=version,proto3" json:"version,omitempty"`
 	Description   string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
-	CreatedBy     int64                  `protobuf:"varint,8,opt,name=createdBy,proto3" json:"createdBy,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,9,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime    string                 `protobuf:"bytes,10,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	CreatedBy     int64                  `protobuf:"varint,8,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,9,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,10,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -979,10 +980,10 @@ type CreateClusterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Env           string                 `protobuf:"bytes,2,opt,name=env,proto3" json:"env,omitempty"`
-	ApiEndpoint   string                 `protobuf:"bytes,3,opt,name=apiEndpoint,proto3" json:"apiEndpoint,omitempty"`
+	ApiEndpoint   string                 `protobuf:"bytes,3,opt,name=api_endpoint,json=apiEndpoint,proto3" json:"api_endpoint,omitempty"`
 	Kubeconfig    string                 `protobuf:"bytes,4,opt,name=kubeconfig,proto3" json:"kubeconfig,omitempty"` // Kubeconfig 文本
 	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	CreatedBy     int64                  `protobuf:"varint,6,opt,name=createdBy,proto3" json:"createdBy,omitempty"`
+	CreatedBy     int64                  `protobuf:"varint,6,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1103,14 +1104,15 @@ func (x *CreateClusterResp) GetId() int64 {
 	return 0
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 type UpdateClusterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Env           string                 `protobuf:"bytes,3,opt,name=env,proto3" json:"env,omitempty"`
-	ApiEndpoint   string                 `protobuf:"bytes,4,opt,name=apiEndpoint,proto3" json:"apiEndpoint,omitempty"`
-	Kubeconfig    string                 `protobuf:"bytes,5,opt,name=kubeconfig,proto3" json:"kubeconfig,omitempty"`
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Env           *string                `protobuf:"bytes,3,opt,name=env,proto3,oneof" json:"env,omitempty"`
+	ApiEndpoint   *string                `protobuf:"bytes,4,opt,name=api_endpoint,json=apiEndpoint,proto3,oneof" json:"api_endpoint,omitempty"`
+	Kubeconfig    *string                `protobuf:"bytes,5,opt,name=kubeconfig,proto3,oneof" json:"kubeconfig,omitempty"`
+	Description   *string                `protobuf:"bytes,6,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1153,36 +1155,36 @@ func (x *UpdateClusterReq) GetId() int64 {
 }
 
 func (x *UpdateClusterReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *UpdateClusterReq) GetEnv() string {
-	if x != nil {
-		return x.Env
+	if x != nil && x.Env != nil {
+		return *x.Env
 	}
 	return ""
 }
 
 func (x *UpdateClusterReq) GetApiEndpoint() string {
-	if x != nil {
-		return x.ApiEndpoint
+	if x != nil && x.ApiEndpoint != nil {
+		return *x.ApiEndpoint
 	}
 	return ""
 }
 
 func (x *UpdateClusterReq) GetKubeconfig() string {
-	if x != nil {
-		return x.Kubeconfig
+	if x != nil && x.Kubeconfig != nil {
+		return *x.Kubeconfig
 	}
 	return ""
 }
 
 func (x *UpdateClusterReq) GetDescription() string {
-	if x != nil {
-		return x.Description
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
@@ -1430,18 +1432,18 @@ type PipelineItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
 	Category      string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
-	GitRepo       string                 `protobuf:"bytes,5,opt,name=gitRepo,proto3" json:"gitRepo,omitempty"`
-	GitBranch     string                 `protobuf:"bytes,6,opt,name=gitBranch,proto3" json:"gitBranch,omitempty"`
+	GitRepo       string                 `protobuf:"bytes,5,opt,name=git_repo,json=gitRepo,proto3" json:"git_repo,omitempty"`
+	GitBranch     string                 `protobuf:"bytes,6,opt,name=git_branch,json=gitBranch,proto3" json:"git_branch,omitempty"`
 	Stages        string                 `protobuf:"bytes,7,opt,name=stages,proto3" json:"stages,omitempty"`     // JSON DSL
 	Params        string                 `protobuf:"bytes,8,opt,name=params,proto3" json:"params,omitempty"`     // JSON
 	Triggers      string                 `protobuf:"bytes,9,opt,name=triggers,proto3" json:"triggers,omitempty"` // JSON
 	Status        int32                  `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
 	Description   string                 `protobuf:"bytes,11,opt,name=description,proto3" json:"description,omitempty"`
-	CreatedBy     int64                  `protobuf:"varint,12,opt,name=createdBy,proto3" json:"createdBy,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,13,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime    string                 `protobuf:"bytes,14,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	CreatedBy     int64                  `protobuf:"varint,12,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,13,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,14,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1785,15 +1787,15 @@ func (x *PipelineDetailResp) GetPipeline() *PipelineItem {
 type CreatePipelineReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,2,opt,name=displayName,proto3" json:"displayName,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
 	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
-	GitRepo       string                 `protobuf:"bytes,4,opt,name=gitRepo,proto3" json:"gitRepo,omitempty"`
-	GitBranch     string                 `protobuf:"bytes,5,opt,name=gitBranch,proto3" json:"gitBranch,omitempty"`
+	GitRepo       string                 `protobuf:"bytes,4,opt,name=git_repo,json=gitRepo,proto3" json:"git_repo,omitempty"`
+	GitBranch     string                 `protobuf:"bytes,5,opt,name=git_branch,json=gitBranch,proto3" json:"git_branch,omitempty"`
 	Stages        string                 `protobuf:"bytes,6,opt,name=stages,proto3" json:"stages,omitempty"`
 	Params        string                 `protobuf:"bytes,7,opt,name=params,proto3" json:"params,omitempty"`
 	Triggers      string                 `protobuf:"bytes,8,opt,name=triggers,proto3" json:"triggers,omitempty"`
 	Description   string                 `protobuf:"bytes,9,opt,name=description,proto3" json:"description,omitempty"`
-	CreatedBy     int64                  `protobuf:"varint,10,opt,name=createdBy,proto3" json:"createdBy,omitempty"`
+	CreatedBy     int64                  `protobuf:"varint,10,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1942,18 +1944,19 @@ func (x *CreatePipelineResp) GetId() int64 {
 	return 0
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 type UpdatePipelineReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,2,opt,name=displayName,proto3" json:"displayName,omitempty"`
-	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
-	GitRepo       string                 `protobuf:"bytes,4,opt,name=gitRepo,proto3" json:"gitRepo,omitempty"`
-	GitBranch     string                 `protobuf:"bytes,5,opt,name=gitBranch,proto3" json:"gitBranch,omitempty"`
-	Stages        string                 `protobuf:"bytes,6,opt,name=stages,proto3" json:"stages,omitempty"`
-	Params        string                 `protobuf:"bytes,7,opt,name=params,proto3" json:"params,omitempty"`
-	Triggers      string                 `protobuf:"bytes,8,opt,name=triggers,proto3" json:"triggers,omitempty"`
-	Status        int32                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
-	Description   string                 `protobuf:"bytes,10,opt,name=description,proto3" json:"description,omitempty"`
+	DisplayName   *string                `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
+	Category      *string                `protobuf:"bytes,3,opt,name=category,proto3,oneof" json:"category,omitempty"`
+	GitRepo       *string                `protobuf:"bytes,4,opt,name=git_repo,json=gitRepo,proto3,oneof" json:"git_repo,omitempty"`
+	GitBranch     *string                `protobuf:"bytes,5,opt,name=git_branch,json=gitBranch,proto3,oneof" json:"git_branch,omitempty"`
+	Stages        *string                `protobuf:"bytes,6,opt,name=stages,proto3,oneof" json:"stages,omitempty"`
+	Params        *string                `protobuf:"bytes,7,opt,name=params,proto3,oneof" json:"params,omitempty"`
+	Triggers      *string                `protobuf:"bytes,8,opt,name=triggers,proto3,oneof" json:"triggers,omitempty"`
+	Status        *int32                 `protobuf:"varint,9,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Description   *string                `protobuf:"bytes,10,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1996,64 +1999,64 @@ func (x *UpdatePipelineReq) GetId() int64 {
 }
 
 func (x *UpdatePipelineReq) GetDisplayName() string {
-	if x != nil {
-		return x.DisplayName
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
 	}
 	return ""
 }
 
 func (x *UpdatePipelineReq) GetCategory() string {
-	if x != nil {
-		return x.Category
+	if x != nil && x.Category != nil {
+		return *x.Category
 	}
 	return ""
 }
 
 func (x *UpdatePipelineReq) GetGitRepo() string {
-	if x != nil {
-		return x.GitRepo
+	if x != nil && x.GitRepo != nil {
+		return *x.GitRepo
 	}
 	return ""
 }
 
 func (x *UpdatePipelineReq) GetGitBranch() string {
-	if x != nil {
-		return x.GitBranch
+	if x != nil && x.GitBranch != nil {
+		return *x.GitBranch
 	}
 	return ""
 }
 
 func (x *UpdatePipelineReq) GetStages() string {
-	if x != nil {
-		return x.Stages
+	if x != nil && x.Stages != nil {
+		return *x.Stages
 	}
 	return ""
 }
 
 func (x *UpdatePipelineReq) GetParams() string {
-	if x != nil {
-		return x.Params
+	if x != nil && x.Params != nil {
+		return *x.Params
 	}
 	return ""
 }
 
 func (x *UpdatePipelineReq) GetTriggers() string {
-	if x != nil {
-		return x.Triggers
+	if x != nil && x.Triggers != nil {
+		return *x.Triggers
 	}
 	return ""
 }
 
 func (x *UpdatePipelineReq) GetStatus() int32 {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return 0
 }
 
 func (x *UpdatePipelineReq) GetDescription() string {
-	if x != nil {
-		return x.Description
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
@@ -2259,6 +2262,7 @@ type ExecutionItem struct {
 	DurationMs    int64                  `protobuf:"varint,14,opt,name=durationMs,proto3" json:"durationMs,omitempty"`
 	Artifacts     string                 `protobuf:"bytes,15,opt,name=artifacts,proto3" json:"artifacts,omitempty"`
 	CreateTime    string                 `protobuf:"bytes,16,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,17,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2401,6 +2405,13 @@ func (x *ExecutionItem) GetArtifacts() string {
 func (x *ExecutionItem) GetCreateTime() string {
 	if x != nil {
 		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *ExecutionItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
 	}
 	return ""
 }
@@ -3416,13 +3427,14 @@ func (x *CreateProjectResp) GetId() int64 {
 	return 0
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 type UpdateProjectReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,2,opt,name=displayName,proto3" json:"displayName,omitempty"`
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	OwnerId       int64                  `protobuf:"varint,4,opt,name=ownerId,proto3" json:"ownerId,omitempty"`
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	DisplayName   *string                `protobuf:"bytes,2,opt,name=displayName,proto3,oneof" json:"displayName,omitempty"`
+	Description   *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	OwnerId       *int64                 `protobuf:"varint,4,opt,name=ownerId,proto3,oneof" json:"ownerId,omitempty"`
+	Status        *int32                 `protobuf:"varint,5,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3465,29 +3477,29 @@ func (x *UpdateProjectReq) GetId() int64 {
 }
 
 func (x *UpdateProjectReq) GetDisplayName() string {
-	if x != nil {
-		return x.DisplayName
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
 	}
 	return ""
 }
 
 func (x *UpdateProjectReq) GetDescription() string {
-	if x != nil {
-		return x.Description
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
 
 func (x *UpdateProjectReq) GetOwnerId() int64 {
-	if x != nil {
-		return x.OwnerId
+	if x != nil && x.OwnerId != nil {
+		return *x.OwnerId
 	}
 	return 0
 }
 
 func (x *UpdateProjectReq) GetStatus() int32 {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return 0
 }
@@ -3794,6 +3806,7 @@ func (x *ListAppsResp) GetList() []*AppItem {
 type GetAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ProjectId     int64                  `protobuf:"varint,2,opt,name=projectId,proto3" json:"projectId,omitempty"` // 归属校验：应用必须属于该项目
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3831,6 +3844,13 @@ func (*GetAppReq) Descriptor() ([]byte, []int) {
 func (x *GetAppReq) GetId() int64 {
 	if x != nil {
 		return x.Id
+	}
+	return 0
+}
+
+func (x *GetAppReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
 	}
 	return 0
 }
@@ -4031,18 +4051,19 @@ func (x *CreateAppResp) GetId() int64 {
 	return 0
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 type UpdateAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,2,opt,name=displayName,proto3" json:"displayName,omitempty"`
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	IntegrationId int64                  `protobuf:"varint,4,opt,name=integrationId,proto3" json:"integrationId,omitempty"`
-	RepoUrl       string                 `protobuf:"bytes,5,opt,name=repoUrl,proto3" json:"repoUrl,omitempty"`
-	DefaultBranch string                 `protobuf:"bytes,6,opt,name=defaultBranch,proto3" json:"defaultBranch,omitempty"`
-	BuildConfig   string                 `protobuf:"bytes,7,opt,name=buildConfig,proto3" json:"buildConfig,omitempty"`
-	DeploySpec    string                 `protobuf:"bytes,8,opt,name=deploySpec,proto3" json:"deploySpec,omitempty"`
-	Status        int32                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
-	Name          string                 `protobuf:"bytes,10,opt,name=name,proto3" json:"name,omitempty"`
+	DisplayName   *string                `protobuf:"bytes,2,opt,name=displayName,proto3,oneof" json:"displayName,omitempty"`
+	Description   *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	IntegrationId *int64                 `protobuf:"varint,4,opt,name=integrationId,proto3,oneof" json:"integrationId,omitempty"`
+	RepoUrl       *string                `protobuf:"bytes,5,opt,name=repoUrl,proto3,oneof" json:"repoUrl,omitempty"`
+	DefaultBranch *string                `protobuf:"bytes,6,opt,name=defaultBranch,proto3,oneof" json:"defaultBranch,omitempty"`
+	BuildConfig   *string                `protobuf:"bytes,7,opt,name=buildConfig,proto3,oneof" json:"buildConfig,omitempty"`
+	DeploySpec    *string                `protobuf:"bytes,8,opt,name=deploySpec,proto3,oneof" json:"deploySpec,omitempty"`
+	Status        *int32                 `protobuf:"varint,9,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Name          *string                `protobuf:"bytes,10,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4085,64 +4106,64 @@ func (x *UpdateAppReq) GetId() int64 {
 }
 
 func (x *UpdateAppReq) GetDisplayName() string {
-	if x != nil {
-		return x.DisplayName
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
 	}
 	return ""
 }
 
 func (x *UpdateAppReq) GetDescription() string {
-	if x != nil {
-		return x.Description
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
 
 func (x *UpdateAppReq) GetIntegrationId() int64 {
-	if x != nil {
-		return x.IntegrationId
+	if x != nil && x.IntegrationId != nil {
+		return *x.IntegrationId
 	}
 	return 0
 }
 
 func (x *UpdateAppReq) GetRepoUrl() string {
-	if x != nil {
-		return x.RepoUrl
+	if x != nil && x.RepoUrl != nil {
+		return *x.RepoUrl
 	}
 	return ""
 }
 
 func (x *UpdateAppReq) GetDefaultBranch() string {
-	if x != nil {
-		return x.DefaultBranch
+	if x != nil && x.DefaultBranch != nil {
+		return *x.DefaultBranch
 	}
 	return ""
 }
 
 func (x *UpdateAppReq) GetBuildConfig() string {
-	if x != nil {
-		return x.BuildConfig
+	if x != nil && x.BuildConfig != nil {
+		return *x.BuildConfig
 	}
 	return ""
 }
 
 func (x *UpdateAppReq) GetDeploySpec() string {
-	if x != nil {
-		return x.DeploySpec
+	if x != nil && x.DeploySpec != nil {
+		return *x.DeploySpec
 	}
 	return ""
 }
 
 func (x *UpdateAppReq) GetStatus() int32 {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return 0
 }
 
 func (x *UpdateAppReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -4150,6 +4171,7 @@ func (x *UpdateAppReq) GetName() string {
 type DeleteAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ProjectId     int64                  `protobuf:"varint,2,opt,name=projectId,proto3" json:"projectId,omitempty"` // 归属校验：应用必须属于该项目
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4187,6 +4209,13 @@ func (*DeleteAppReq) Descriptor() ([]byte, []int) {
 func (x *DeleteAppReq) GetId() int64 {
 	if x != nil {
 		return x.Id
+	}
+	return 0
+}
+
+func (x *DeleteAppReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
 	}
 	return 0
 }
@@ -4409,6 +4438,7 @@ func (x *ListEnvsResp) GetList() []*EnvItem {
 type GetEnvReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ProjectId     int64                  `protobuf:"varint,2,opt,name=projectId,proto3" json:"projectId,omitempty"` // 归属校验：环境必须属于该项目
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4446,6 +4476,13 @@ func (*GetEnvReq) Descriptor() ([]byte, []int) {
 func (x *GetEnvReq) GetId() int64 {
 	if x != nil {
 		return x.Id
+	}
+	return 0
+}
+
+func (x *GetEnvReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
 	}
 	return 0
 }
@@ -4614,13 +4651,14 @@ func (x *CreateEnvResp) GetId() int64 {
 	return 0
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 type UpdateEnvReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	ClusterId     int64                  `protobuf:"varint,3,opt,name=clusterId,proto3" json:"clusterId,omitempty"`
-	Namespace     string                 `protobuf:"bytes,4,opt,name=namespace,proto3" json:"namespace,omitempty"`
-	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	ClusterId     *int64                 `protobuf:"varint,3,opt,name=clusterId,proto3,oneof" json:"clusterId,omitempty"`
+	Namespace     *string                `protobuf:"bytes,4,opt,name=namespace,proto3,oneof" json:"namespace,omitempty"`
+	Status        *string                `protobuf:"bytes,5,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4663,29 +4701,29 @@ func (x *UpdateEnvReq) GetId() int64 {
 }
 
 func (x *UpdateEnvReq) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *UpdateEnvReq) GetClusterId() int64 {
-	if x != nil {
-		return x.ClusterId
+	if x != nil && x.ClusterId != nil {
+		return *x.ClusterId
 	}
 	return 0
 }
 
 func (x *UpdateEnvReq) GetNamespace() string {
-	if x != nil {
-		return x.Namespace
+	if x != nil && x.Namespace != nil {
+		return *x.Namespace
 	}
 	return ""
 }
 
 func (x *UpdateEnvReq) GetStatus() string {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return ""
 }
@@ -4693,6 +4731,7 @@ func (x *UpdateEnvReq) GetStatus() string {
 type DeleteEnvReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ProjectId     int64                  `protobuf:"varint,2,opt,name=projectId,proto3" json:"projectId,omitempty"` // 归属校验：环境必须属于该项目
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4730,6 +4769,13 @@ func (*DeleteEnvReq) Descriptor() ([]byte, []int) {
 func (x *DeleteEnvReq) GetId() int64 {
 	if x != nil {
 		return x.Id
+	}
+	return 0
+}
+
+func (x *DeleteEnvReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
 	}
 	return 0
 }
@@ -5013,6 +5059,7 @@ type ArtifactItem struct {
 	ImageSizeBytes int64                  `protobuf:"varint,12,opt,name=imageSizeBytes,proto3" json:"imageSizeBytes,omitempty"`
 	Status         string                 `protobuf:"bytes,13,opt,name=status,proto3" json:"status,omitempty"`
 	CreateTime     string                 `protobuf:"bytes,14,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	UpdateTime     string                 `protobuf:"bytes,15,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -5141,6 +5188,13 @@ func (x *ArtifactItem) GetStatus() string {
 func (x *ArtifactItem) GetCreateTime() string {
 	if x != nil {
 		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *ArtifactItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
 	}
 	return ""
 }
@@ -5430,6 +5484,8 @@ type DeployArtifactReq struct {
 	EnvId         int64                  `protobuf:"varint,1,opt,name=envId,proto3" json:"envId,omitempty"`
 	AppId         int64                  `protobuf:"varint,2,opt,name=appId,proto3" json:"appId,omitempty"`
 	ArtifactId    int64                  `protobuf:"varint,3,opt,name=artifactId,proto3" json:"artifactId,omitempty"`
+	ProjectId     int64                  `protobuf:"varint,4,opt,name=projectId,proto3" json:"projectId,omitempty"`   // 归属校验：环境与应用必须属于该项目
+	OperatorId    int64                  `protobuf:"varint,5,opt,name=operatorId,proto3" json:"operatorId,omitempty"` // 操作人（审计线索）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5485,6 +5541,1398 @@ func (x *DeployArtifactReq) GetArtifactId() int64 {
 	return 0
 }
 
+func (x *DeployArtifactReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
+	}
+	return 0
+}
+
+func (x *DeployArtifactReq) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
+// ----------------------
+// 5. 交付矩阵 (Delivery Matrix)
+// ----------------------
+type MatrixEnvHeader struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	EnvId         int64                  `protobuf:"varint,1,opt,name=envId,proto3" json:"envId,omitempty"`
+	EnvCode       string                 `protobuf:"bytes,2,opt,name=envCode,proto3" json:"envCode,omitempty"`
+	EnvName       string                 `protobuf:"bytes,3,opt,name=envName,proto3" json:"envName,omitempty"`
+	ClusterName   string                 `protobuf:"bytes,4,opt,name=clusterName,proto3" json:"clusterName,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MatrixEnvHeader) Reset() {
+	*x = MatrixEnvHeader{}
+	mi := &file_titan_proto_msgTypes[80]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MatrixEnvHeader) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MatrixEnvHeader) ProtoMessage() {}
+
+func (x *MatrixEnvHeader) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[80]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MatrixEnvHeader.ProtoReflect.Descriptor instead.
+func (*MatrixEnvHeader) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{80}
+}
+
+func (x *MatrixEnvHeader) GetEnvId() int64 {
+	if x != nil {
+		return x.EnvId
+	}
+	return 0
+}
+
+func (x *MatrixEnvHeader) GetEnvCode() string {
+	if x != nil {
+		return x.EnvCode
+	}
+	return ""
+}
+
+func (x *MatrixEnvHeader) GetEnvName() string {
+	if x != nil {
+		return x.EnvName
+	}
+	return ""
+}
+
+func (x *MatrixEnvHeader) GetClusterName() string {
+	if x != nil {
+		return x.ClusterName
+	}
+	return ""
+}
+
+type MatrixCellInfo struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	EnvId          int64                  `protobuf:"varint,1,opt,name=envId,proto3" json:"envId,omitempty"`
+	EnvCode        string                 `protobuf:"bytes,2,opt,name=envCode,proto3" json:"envCode,omitempty"`
+	AppId          int64                  `protobuf:"varint,3,opt,name=appId,proto3" json:"appId,omitempty"`
+	ArtifactId     int64                  `protobuf:"varint,4,opt,name=artifactId,proto3" json:"artifactId,omitempty"`
+	VersionTag     string                 `protobuf:"bytes,5,opt,name=versionTag,proto3" json:"versionTag,omitempty"`
+	GitCommit      string                 `protobuf:"bytes,6,opt,name=gitCommit,proto3" json:"gitCommit,omitempty"`
+	GitBranch      string                 `protobuf:"bytes,7,opt,name=gitBranch,proto3" json:"gitBranch,omitempty"`
+	DeployStatus   string                 `protobuf:"bytes,8,opt,name=deployStatus,proto3" json:"deployStatus,omitempty"` // PENDING, DEPLOYING, RUNNING, FAILED, STOPPED
+	HealthStatus   string                 `protobuf:"bytes,9,opt,name=healthStatus,proto3" json:"healthStatus,omitempty"` // HEALTHY, UNHEALTHY, UNKNOWN
+	ReadyReplicas  int32                  `protobuf:"varint,10,opt,name=readyReplicas,proto3" json:"readyReplicas,omitempty"`
+	TotalReplicas  int32                  `protobuf:"varint,11,opt,name=totalReplicas,proto3" json:"totalReplicas,omitempty"`
+	LastDeployedAt string                 `protobuf:"bytes,12,opt,name=lastDeployedAt,proto3" json:"lastDeployedAt,omitempty"`
+	DiffStatus     string                 `protobuf:"bytes,13,opt,name=diffStatus,proto3" json:"diffStatus,omitempty"` // IN_SYNC, AHEAD, BEHIND, NOT_DEPLOYED
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *MatrixCellInfo) Reset() {
+	*x = MatrixCellInfo{}
+	mi := &file_titan_proto_msgTypes[81]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MatrixCellInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MatrixCellInfo) ProtoMessage() {}
+
+func (x *MatrixCellInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[81]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MatrixCellInfo.ProtoReflect.Descriptor instead.
+func (*MatrixCellInfo) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{81}
+}
+
+func (x *MatrixCellInfo) GetEnvId() int64 {
+	if x != nil {
+		return x.EnvId
+	}
+	return 0
+}
+
+func (x *MatrixCellInfo) GetEnvCode() string {
+	if x != nil {
+		return x.EnvCode
+	}
+	return ""
+}
+
+func (x *MatrixCellInfo) GetAppId() int64 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
+}
+
+func (x *MatrixCellInfo) GetArtifactId() int64 {
+	if x != nil {
+		return x.ArtifactId
+	}
+	return 0
+}
+
+func (x *MatrixCellInfo) GetVersionTag() string {
+	if x != nil {
+		return x.VersionTag
+	}
+	return ""
+}
+
+func (x *MatrixCellInfo) GetGitCommit() string {
+	if x != nil {
+		return x.GitCommit
+	}
+	return ""
+}
+
+func (x *MatrixCellInfo) GetGitBranch() string {
+	if x != nil {
+		return x.GitBranch
+	}
+	return ""
+}
+
+func (x *MatrixCellInfo) GetDeployStatus() string {
+	if x != nil {
+		return x.DeployStatus
+	}
+	return ""
+}
+
+func (x *MatrixCellInfo) GetHealthStatus() string {
+	if x != nil {
+		return x.HealthStatus
+	}
+	return ""
+}
+
+func (x *MatrixCellInfo) GetReadyReplicas() int32 {
+	if x != nil {
+		return x.ReadyReplicas
+	}
+	return 0
+}
+
+func (x *MatrixCellInfo) GetTotalReplicas() int32 {
+	if x != nil {
+		return x.TotalReplicas
+	}
+	return 0
+}
+
+func (x *MatrixCellInfo) GetLastDeployedAt() string {
+	if x != nil {
+		return x.LastDeployedAt
+	}
+	return ""
+}
+
+func (x *MatrixCellInfo) GetDiffStatus() string {
+	if x != nil {
+		return x.DiffStatus
+	}
+	return ""
+}
+
+type MatrixServiceRow struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppId         int64                  `protobuf:"varint,1,opt,name=appId,proto3" json:"appId,omitempty"`
+	AppName       string                 `protobuf:"bytes,2,opt,name=appName,proto3" json:"appName,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`
+	RepoUrl       string                 `protobuf:"bytes,4,opt,name=repoUrl,proto3" json:"repoUrl,omitempty"`
+	DefaultBranch string                 `protobuf:"bytes,5,opt,name=defaultBranch,proto3" json:"defaultBranch,omitempty"`
+	Cells         []*MatrixCellInfo      `protobuf:"bytes,6,rep,name=cells,proto3" json:"cells,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MatrixServiceRow) Reset() {
+	*x = MatrixServiceRow{}
+	mi := &file_titan_proto_msgTypes[82]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MatrixServiceRow) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MatrixServiceRow) ProtoMessage() {}
+
+func (x *MatrixServiceRow) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[82]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MatrixServiceRow.ProtoReflect.Descriptor instead.
+func (*MatrixServiceRow) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{82}
+}
+
+func (x *MatrixServiceRow) GetAppId() int64 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
+}
+
+func (x *MatrixServiceRow) GetAppName() string {
+	if x != nil {
+		return x.AppName
+	}
+	return ""
+}
+
+func (x *MatrixServiceRow) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *MatrixServiceRow) GetRepoUrl() string {
+	if x != nil {
+		return x.RepoUrl
+	}
+	return ""
+}
+
+func (x *MatrixServiceRow) GetDefaultBranch() string {
+	if x != nil {
+		return x.DefaultBranch
+	}
+	return ""
+}
+
+func (x *MatrixServiceRow) GetCells() []*MatrixCellInfo {
+	if x != nil {
+		return x.Cells
+	}
+	return nil
+}
+
+type GetDeliveryMatrixReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProjectId     int64                  `protobuf:"varint,1,opt,name=projectId,proto3" json:"projectId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDeliveryMatrixReq) Reset() {
+	*x = GetDeliveryMatrixReq{}
+	mi := &file_titan_proto_msgTypes[83]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDeliveryMatrixReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDeliveryMatrixReq) ProtoMessage() {}
+
+func (x *GetDeliveryMatrixReq) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[83]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDeliveryMatrixReq.ProtoReflect.Descriptor instead.
+func (*GetDeliveryMatrixReq) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{83}
+}
+
+func (x *GetDeliveryMatrixReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
+	}
+	return 0
+}
+
+type GetDeliveryMatrixResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProjectId     int64                  `protobuf:"varint,1,opt,name=projectId,proto3" json:"projectId,omitempty"`
+	ProjectName   string                 `protobuf:"bytes,2,opt,name=projectName,proto3" json:"projectName,omitempty"`
+	Envs          []*MatrixEnvHeader     `protobuf:"bytes,3,rep,name=envs,proto3" json:"envs,omitempty"`
+	Services      []*MatrixServiceRow    `protobuf:"bytes,4,rep,name=services,proto3" json:"services,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDeliveryMatrixResp) Reset() {
+	*x = GetDeliveryMatrixResp{}
+	mi := &file_titan_proto_msgTypes[84]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDeliveryMatrixResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDeliveryMatrixResp) ProtoMessage() {}
+
+func (x *GetDeliveryMatrixResp) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[84]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDeliveryMatrixResp.ProtoReflect.Descriptor instead.
+func (*GetDeliveryMatrixResp) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{84}
+}
+
+func (x *GetDeliveryMatrixResp) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
+	}
+	return 0
+}
+
+func (x *GetDeliveryMatrixResp) GetProjectName() string {
+	if x != nil {
+		return x.ProjectName
+	}
+	return ""
+}
+
+func (x *GetDeliveryMatrixResp) GetEnvs() []*MatrixEnvHeader {
+	if x != nil {
+		return x.Envs
+	}
+	return nil
+}
+
+func (x *GetDeliveryMatrixResp) GetServices() []*MatrixServiceRow {
+	if x != nil {
+		return x.Services
+	}
+	return nil
+}
+
+type CompareMatrixEnvReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProjectId     int64                  `protobuf:"varint,1,opt,name=projectId,proto3" json:"projectId,omitempty"`
+	AppId         int64                  `protobuf:"varint,2,opt,name=appId,proto3" json:"appId,omitempty"`
+	SourceEnv     string                 `protobuf:"bytes,3,opt,name=sourceEnv,proto3" json:"sourceEnv,omitempty"`
+	TargetEnv     string                 `protobuf:"bytes,4,opt,name=targetEnv,proto3" json:"targetEnv,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompareMatrixEnvReq) Reset() {
+	*x = CompareMatrixEnvReq{}
+	mi := &file_titan_proto_msgTypes[85]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompareMatrixEnvReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompareMatrixEnvReq) ProtoMessage() {}
+
+func (x *CompareMatrixEnvReq) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[85]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompareMatrixEnvReq.ProtoReflect.Descriptor instead.
+func (*CompareMatrixEnvReq) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{85}
+}
+
+func (x *CompareMatrixEnvReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
+	}
+	return 0
+}
+
+func (x *CompareMatrixEnvReq) GetAppId() int64 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
+}
+
+func (x *CompareMatrixEnvReq) GetSourceEnv() string {
+	if x != nil {
+		return x.SourceEnv
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvReq) GetTargetEnv() string {
+	if x != nil {
+		return x.TargetEnv
+	}
+	return ""
+}
+
+type CommitDiffItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CommitId      string                 `protobuf:"bytes,1,opt,name=commitId,proto3" json:"commitId,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Author        string                 `protobuf:"bytes,3,opt,name=author,proto3" json:"author,omitempty"`
+	CommitTime    string                 `protobuf:"bytes,4,opt,name=commitTime,proto3" json:"commitTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CommitDiffItem) Reset() {
+	*x = CommitDiffItem{}
+	mi := &file_titan_proto_msgTypes[86]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CommitDiffItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CommitDiffItem) ProtoMessage() {}
+
+func (x *CommitDiffItem) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[86]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CommitDiffItem.ProtoReflect.Descriptor instead.
+func (*CommitDiffItem) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{86}
+}
+
+func (x *CommitDiffItem) GetCommitId() string {
+	if x != nil {
+		return x.CommitId
+	}
+	return ""
+}
+
+func (x *CommitDiffItem) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *CommitDiffItem) GetAuthor() string {
+	if x != nil {
+		return x.Author
+	}
+	return ""
+}
+
+func (x *CommitDiffItem) GetCommitTime() string {
+	if x != nil {
+		return x.CommitTime
+	}
+	return ""
+}
+
+type CompareMatrixEnvResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppId         int64                  `protobuf:"varint,1,opt,name=appId,proto3" json:"appId,omitempty"`
+	AppName       string                 `protobuf:"bytes,2,opt,name=appName,proto3" json:"appName,omitempty"`
+	SourceEnv     string                 `protobuf:"bytes,3,opt,name=sourceEnv,proto3" json:"sourceEnv,omitempty"`
+	SourceVersion string                 `protobuf:"bytes,4,opt,name=sourceVersion,proto3" json:"sourceVersion,omitempty"`
+	SourceCommit  string                 `protobuf:"bytes,5,opt,name=sourceCommit,proto3" json:"sourceCommit,omitempty"`
+	TargetEnv     string                 `protobuf:"bytes,6,opt,name=targetEnv,proto3" json:"targetEnv,omitempty"`
+	TargetVersion string                 `protobuf:"bytes,7,opt,name=targetVersion,proto3" json:"targetVersion,omitempty"`
+	TargetCommit  string                 `protobuf:"bytes,8,opt,name=targetCommit,proto3" json:"targetCommit,omitempty"`
+	Commits       []*CommitDiffItem      `protobuf:"bytes,9,rep,name=commits,proto3" json:"commits,omitempty"`
+	CanPromote    bool                   `protobuf:"varint,10,opt,name=canPromote,proto3" json:"canPromote,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompareMatrixEnvResp) Reset() {
+	*x = CompareMatrixEnvResp{}
+	mi := &file_titan_proto_msgTypes[87]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompareMatrixEnvResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompareMatrixEnvResp) ProtoMessage() {}
+
+func (x *CompareMatrixEnvResp) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[87]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompareMatrixEnvResp.ProtoReflect.Descriptor instead.
+func (*CompareMatrixEnvResp) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{87}
+}
+
+func (x *CompareMatrixEnvResp) GetAppId() int64 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
+}
+
+func (x *CompareMatrixEnvResp) GetAppName() string {
+	if x != nil {
+		return x.AppName
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvResp) GetSourceEnv() string {
+	if x != nil {
+		return x.SourceEnv
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvResp) GetSourceVersion() string {
+	if x != nil {
+		return x.SourceVersion
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvResp) GetSourceCommit() string {
+	if x != nil {
+		return x.SourceCommit
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvResp) GetTargetEnv() string {
+	if x != nil {
+		return x.TargetEnv
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvResp) GetTargetVersion() string {
+	if x != nil {
+		return x.TargetVersion
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvResp) GetTargetCommit() string {
+	if x != nil {
+		return x.TargetCommit
+	}
+	return ""
+}
+
+func (x *CompareMatrixEnvResp) GetCommits() []*CommitDiffItem {
+	if x != nil {
+		return x.Commits
+	}
+	return nil
+}
+
+func (x *CompareMatrixEnvResp) GetCanPromote() bool {
+	if x != nil {
+		return x.CanPromote
+	}
+	return false
+}
+
+// ----------------------
+// 6. 发布单与合规卡点 (Release Order)
+// ----------------------
+type ReleaseOrderItem struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	OrderNo           string                 `protobuf:"bytes,2,opt,name=orderNo,proto3" json:"orderNo,omitempty"`
+	ProjectId         int64                  `protobuf:"varint,3,opt,name=projectId,proto3" json:"projectId,omitempty"`
+	Title             string                 `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
+	Description       string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	TargetEnv         string                 `protobuf:"bytes,6,opt,name=targetEnv,proto3" json:"targetEnv,omitempty"`
+	ServicesJson      string                 `protobuf:"bytes,7,opt,name=servicesJson,proto3" json:"servicesJson,omitempty"`
+	Status            string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"` // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, EXECUTING, SUCCESS, FAILED, CANCELED
+	ItsmProcessInstId int64                  `protobuf:"varint,9,opt,name=itsmProcessInstId,proto3" json:"itsmProcessInstId,omitempty"`
+	ApplicantId       int64                  `protobuf:"varint,10,opt,name=applicantId,proto3" json:"applicantId,omitempty"`
+	ApplicantName     string                 `protobuf:"bytes,11,opt,name=applicantName,proto3" json:"applicantName,omitempty"`
+	ApproverId        int64                  `protobuf:"varint,12,opt,name=approverId,proto3" json:"approverId,omitempty"`
+	ApproverName      string                 `protobuf:"bytes,13,opt,name=approverName,proto3" json:"approverName,omitempty"`
+	ScheduledTime     string                 `protobuf:"bytes,14,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"`
+	StartTime         string                 `protobuf:"bytes,15,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime           string                 `protobuf:"bytes,16,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	CreateTime        string                 `protobuf:"bytes,17,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	UpdateTime        string                 `protobuf:"bytes,18,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ReleaseOrderItem) Reset() {
+	*x = ReleaseOrderItem{}
+	mi := &file_titan_proto_msgTypes[88]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReleaseOrderItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReleaseOrderItem) ProtoMessage() {}
+
+func (x *ReleaseOrderItem) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[88]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReleaseOrderItem.ProtoReflect.Descriptor instead.
+func (*ReleaseOrderItem) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{88}
+}
+
+func (x *ReleaseOrderItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *ReleaseOrderItem) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
+	}
+	return 0
+}
+
+func (x *ReleaseOrderItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetTargetEnv() string {
+	if x != nil {
+		return x.TargetEnv
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetServicesJson() string {
+	if x != nil {
+		return x.ServicesJson
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetItsmProcessInstId() int64 {
+	if x != nil {
+		return x.ItsmProcessInstId
+	}
+	return 0
+}
+
+func (x *ReleaseOrderItem) GetApplicantId() int64 {
+	if x != nil {
+		return x.ApplicantId
+	}
+	return 0
+}
+
+func (x *ReleaseOrderItem) GetApplicantName() string {
+	if x != nil {
+		return x.ApplicantName
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetApproverId() int64 {
+	if x != nil {
+		return x.ApproverId
+	}
+	return 0
+}
+
+func (x *ReleaseOrderItem) GetApproverName() string {
+	if x != nil {
+		return x.ApproverName
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetScheduledTime() string {
+	if x != nil {
+		return x.ScheduledTime
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetStartTime() string {
+	if x != nil {
+		return x.StartTime
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetEndTime() string {
+	if x != nil {
+		return x.EndTime
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *ReleaseOrderItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+type ListReleaseOrdersReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProjectId     int64                  `protobuf:"varint,1,opt,name=projectId,proto3" json:"projectId,omitempty"`
+	TargetEnv     string                 `protobuf:"bytes,2,opt,name=targetEnv,proto3" json:"targetEnv,omitempty"`
+	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	Keyword       string                 `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Page          int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,6,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListReleaseOrdersReq) Reset() {
+	*x = ListReleaseOrdersReq{}
+	mi := &file_titan_proto_msgTypes[89]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListReleaseOrdersReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListReleaseOrdersReq) ProtoMessage() {}
+
+func (x *ListReleaseOrdersReq) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[89]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListReleaseOrdersReq.ProtoReflect.Descriptor instead.
+func (*ListReleaseOrdersReq) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{89}
+}
+
+func (x *ListReleaseOrdersReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
+	}
+	return 0
+}
+
+func (x *ListReleaseOrdersReq) GetTargetEnv() string {
+	if x != nil {
+		return x.TargetEnv
+	}
+	return ""
+}
+
+func (x *ListReleaseOrdersReq) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *ListReleaseOrdersReq) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
+func (x *ListReleaseOrdersReq) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListReleaseOrdersReq) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type ListReleaseOrdersResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*ReleaseOrderItem    `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListReleaseOrdersResp) Reset() {
+	*x = ListReleaseOrdersResp{}
+	mi := &file_titan_proto_msgTypes[90]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListReleaseOrdersResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListReleaseOrdersResp) ProtoMessage() {}
+
+func (x *ListReleaseOrdersResp) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[90]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListReleaseOrdersResp.ProtoReflect.Descriptor instead.
+func (*ListReleaseOrdersResp) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{90}
+}
+
+func (x *ListReleaseOrdersResp) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListReleaseOrdersResp) GetList() []*ReleaseOrderItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type GetReleaseOrderReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetReleaseOrderReq) Reset() {
+	*x = GetReleaseOrderReq{}
+	mi := &file_titan_proto_msgTypes[91]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetReleaseOrderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetReleaseOrderReq) ProtoMessage() {}
+
+func (x *GetReleaseOrderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[91]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetReleaseOrderReq.ProtoReflect.Descriptor instead.
+func (*GetReleaseOrderReq) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{91}
+}
+
+func (x *GetReleaseOrderReq) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type ReleaseOrderDetailResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Order         *ReleaseOrderItem      `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
+	ItsmStatus    string                 `protobuf:"bytes,2,opt,name=itsmStatus,proto3" json:"itsmStatus,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReleaseOrderDetailResp) Reset() {
+	*x = ReleaseOrderDetailResp{}
+	mi := &file_titan_proto_msgTypes[92]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReleaseOrderDetailResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReleaseOrderDetailResp) ProtoMessage() {}
+
+func (x *ReleaseOrderDetailResp) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[92]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReleaseOrderDetailResp.ProtoReflect.Descriptor instead.
+func (*ReleaseOrderDetailResp) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{92}
+}
+
+func (x *ReleaseOrderDetailResp) GetOrder() *ReleaseOrderItem {
+	if x != nil {
+		return x.Order
+	}
+	return nil
+}
+
+func (x *ReleaseOrderDetailResp) GetItsmStatus() string {
+	if x != nil {
+		return x.ItsmStatus
+	}
+	return ""
+}
+
+type CreateReleaseOrderReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProjectId     int64                  `protobuf:"varint,1,opt,name=projectId,proto3" json:"projectId,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	TargetEnv     string                 `protobuf:"bytes,4,opt,name=targetEnv,proto3" json:"targetEnv,omitempty"`
+	ServicesJson  string                 `protobuf:"bytes,5,opt,name=servicesJson,proto3" json:"servicesJson,omitempty"`
+	ScheduledTime string                 `protobuf:"bytes,6,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"`
+	ApplicantId   int64                  `protobuf:"varint,7,opt,name=applicantId,proto3" json:"applicantId,omitempty"`
+	ApplicantName string                 `protobuf:"bytes,8,opt,name=applicantName,proto3" json:"applicantName,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateReleaseOrderReq) Reset() {
+	*x = CreateReleaseOrderReq{}
+	mi := &file_titan_proto_msgTypes[93]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReleaseOrderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReleaseOrderReq) ProtoMessage() {}
+
+func (x *CreateReleaseOrderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[93]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReleaseOrderReq.ProtoReflect.Descriptor instead.
+func (*CreateReleaseOrderReq) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{93}
+}
+
+func (x *CreateReleaseOrderReq) GetProjectId() int64 {
+	if x != nil {
+		return x.ProjectId
+	}
+	return 0
+}
+
+func (x *CreateReleaseOrderReq) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *CreateReleaseOrderReq) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *CreateReleaseOrderReq) GetTargetEnv() string {
+	if x != nil {
+		return x.TargetEnv
+	}
+	return ""
+}
+
+func (x *CreateReleaseOrderReq) GetServicesJson() string {
+	if x != nil {
+		return x.ServicesJson
+	}
+	return ""
+}
+
+func (x *CreateReleaseOrderReq) GetScheduledTime() string {
+	if x != nil {
+		return x.ScheduledTime
+	}
+	return ""
+}
+
+func (x *CreateReleaseOrderReq) GetApplicantId() int64 {
+	if x != nil {
+		return x.ApplicantId
+	}
+	return 0
+}
+
+func (x *CreateReleaseOrderReq) GetApplicantName() string {
+	if x != nil {
+		return x.ApplicantName
+	}
+	return ""
+}
+
+type CreateReleaseOrderResp struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	OrderNo           string                 `protobuf:"bytes,2,opt,name=orderNo,proto3" json:"orderNo,omitempty"`
+	Status            string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	ItsmProcessInstId int64                  `protobuf:"varint,4,opt,name=itsmProcessInstId,proto3" json:"itsmProcessInstId,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *CreateReleaseOrderResp) Reset() {
+	*x = CreateReleaseOrderResp{}
+	mi := &file_titan_proto_msgTypes[94]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReleaseOrderResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReleaseOrderResp) ProtoMessage() {}
+
+func (x *CreateReleaseOrderResp) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[94]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReleaseOrderResp.ProtoReflect.Descriptor instead.
+func (*CreateReleaseOrderResp) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{94}
+}
+
+func (x *CreateReleaseOrderResp) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *CreateReleaseOrderResp) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+func (x *CreateReleaseOrderResp) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *CreateReleaseOrderResp) GetItsmProcessInstId() int64 {
+	if x != nil {
+		return x.ItsmProcessInstId
+	}
+	return 0
+}
+
+type AuditReleaseOrderReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Approved      bool                   `protobuf:"varint,2,opt,name=approved,proto3" json:"approved,omitempty"`
+	Comment       string                 `protobuf:"bytes,3,opt,name=comment,proto3" json:"comment,omitempty"`
+	ApproverId    int64                  `protobuf:"varint,4,opt,name=approverId,proto3" json:"approverId,omitempty"`
+	ApproverName  string                 `protobuf:"bytes,5,opt,name=approverName,proto3" json:"approverName,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AuditReleaseOrderReq) Reset() {
+	*x = AuditReleaseOrderReq{}
+	mi := &file_titan_proto_msgTypes[95]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AuditReleaseOrderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AuditReleaseOrderReq) ProtoMessage() {}
+
+func (x *AuditReleaseOrderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[95]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AuditReleaseOrderReq.ProtoReflect.Descriptor instead.
+func (*AuditReleaseOrderReq) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{95}
+}
+
+func (x *AuditReleaseOrderReq) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *AuditReleaseOrderReq) GetApproved() bool {
+	if x != nil {
+		return x.Approved
+	}
+	return false
+}
+
+func (x *AuditReleaseOrderReq) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
+func (x *AuditReleaseOrderReq) GetApproverId() int64 {
+	if x != nil {
+		return x.ApproverId
+	}
+	return 0
+}
+
+func (x *AuditReleaseOrderReq) GetApproverName() string {
+	if x != nil {
+		return x.ApproverName
+	}
+	return ""
+}
+
+type ExecuteReleaseOrderReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	OperatorId    int64                  `protobuf:"varint,2,opt,name=operatorId,proto3" json:"operatorId,omitempty"`
+	OperatorName  string                 `protobuf:"bytes,3,opt,name=operatorName,proto3" json:"operatorName,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ExecuteReleaseOrderReq) Reset() {
+	*x = ExecuteReleaseOrderReq{}
+	mi := &file_titan_proto_msgTypes[96]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExecuteReleaseOrderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExecuteReleaseOrderReq) ProtoMessage() {}
+
+func (x *ExecuteReleaseOrderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_titan_proto_msgTypes[96]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExecuteReleaseOrderReq.ProtoReflect.Descriptor instead.
+func (*ExecuteReleaseOrderReq) Descriptor() ([]byte, []int) {
+	return file_titan_proto_rawDescGZIP(), []int{96}
+}
+
+func (x *ExecuteReleaseOrderReq) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *ExecuteReleaseOrderReq) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
+func (x *ExecuteReleaseOrderReq) GetOperatorName() string {
+	if x != nil {
+		return x.OperatorName
+	}
+	return ""
+}
+
 var File_titan_proto protoreflect.FileDescriptor
 
 const file_titan_proto_rawDesc = "" +
@@ -5497,21 +6945,20 @@ const file_titan_proto_rawDesc = "" +
 	"\aPingReq\x12\x12\n" +
 	"\x04ping\x18\x01 \x01(\tR\x04ping\"\x1e\n" +
 	"\bPingResp\x12\x12\n" +
-	"\x04pong\x18\x01 \x01(\tR\x04pong\"\x9d\x02\n" +
+	"\x04pong\x18\x01 \x01(\tR\x04pong\"\xa1\x02\n" +
 	"\x0fIntegrationItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
-	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x1a\n" +
-	"\bauthType\x18\x04 \x01(\tR\bauthType\x12\x16\n" +
+	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x1b\n" +
+	"\tauth_type\x18\x04 \x01(\tR\bauthType\x12\x16\n" +
 	"\x06config\x18\x05 \x01(\tR\x06config\x12\x16\n" +
 	"\x06status\x18\x06 \x01(\x05R\x06status\x12 \n" +
-	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1c\n" +
-	"\tcreatedBy\x18\b \x01(\x03R\tcreatedBy\x12\x1e\n" +
+	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1d\n" +
 	"\n" +
-	"createTime\x18\t \x01(\tR\n" +
-	"createTime\x12\x1e\n" +
-	"\n" +
-	"updateTime\x18\n" +
+	"created_by\x18\b \x01(\x03R\tcreatedBy\x12\x1f\n" +
+	"\vcreate_time\x18\t \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\n" +
 	" \x01(\tR\n" +
 	"updateTime\"a\n" +
 	"\x13ListIntegrationsReq\x12\x1a\n" +
@@ -5520,44 +6967,50 @@ const file_titan_proto_rawDesc = "" +
 	"\bpageSize\x18\x03 \x01(\x05R\bpageSize\"X\n" +
 	"\x14ListIntegrationsResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12*\n" +
-	"\x04list\x18\x02 \x03(\v2\x16.titan.IntegrationItemR\x04list\"\xba\x01\n" +
+	"\x04list\x18\x02 \x03(\v2\x16.titan.IntegrationItemR\x04list\"\xbc\x01\n" +
 	"\x14CreateIntegrationReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
-	"\bcategory\x18\x02 \x01(\tR\bcategory\x12\x1a\n" +
-	"\bauthType\x18\x03 \x01(\tR\bauthType\x12\x16\n" +
+	"\bcategory\x18\x02 \x01(\tR\bcategory\x12\x1b\n" +
+	"\tauth_type\x18\x03 \x01(\tR\bauthType\x12\x16\n" +
 	"\x06config\x18\x04 \x01(\tR\x06config\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x1c\n" +
-	"\tcreatedBy\x18\x06 \x01(\x03R\tcreatedBy\"'\n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x1d\n" +
+	"\n" +
+	"created_by\x18\x06 \x01(\x03R\tcreatedBy\"'\n" +
 	"\x15CreateIntegrationResp\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\xa8\x01\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\xff\x01\n" +
 	"\x14UpdateIntegrationReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
-	"\bauthType\x18\x03 \x01(\tR\bauthType\x12\x16\n" +
-	"\x06config\x18\x04 \x01(\tR\x06config\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"&\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12 \n" +
+	"\tauth_type\x18\x03 \x01(\tH\x01R\bauthType\x88\x01\x01\x12\x1b\n" +
+	"\x06config\x18\x04 \x01(\tH\x02R\x06config\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x05 \x01(\x05H\x03R\x06status\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x06 \x01(\tH\x04R\vdescription\x88\x01\x01B\a\n" +
+	"\x05_nameB\f\n" +
+	"\n" +
+	"_auth_typeB\t\n" +
+	"\a_configB\t\n" +
+	"\a_statusB\x0e\n" +
+	"\f_description\"&\n" +
 	"\x14DeleteIntegrationReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"$\n" +
 	"\x12TestIntegrationReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"I\n" +
 	"\x13TestIntegrationResp\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\x97\x02\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\x9b\x02\n" +
 	"\vClusterItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
-	"\x03env\x18\x03 \x01(\tR\x03env\x12 \n" +
-	"\vapiEndpoint\x18\x04 \x01(\tR\vapiEndpoint\x12\x16\n" +
+	"\x03env\x18\x03 \x01(\tR\x03env\x12!\n" +
+	"\fapi_endpoint\x18\x04 \x01(\tR\vapiEndpoint\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\tR\x06status\x12\x18\n" +
 	"\aversion\x18\x06 \x01(\tR\aversion\x12 \n" +
-	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1c\n" +
-	"\tcreatedBy\x18\b \x01(\x03R\tcreatedBy\x12\x1e\n" +
+	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1d\n" +
 	"\n" +
-	"createTime\x18\t \x01(\tR\n" +
-	"createTime\x12\x1e\n" +
-	"\n" +
-	"updateTime\x18\n" +
+	"created_by\x18\b \x01(\x03R\tcreatedBy\x12\x1f\n" +
+	"\vcreate_time\x18\t \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\n" +
 	" \x01(\tR\n" +
 	"updateTime\"S\n" +
 	"\x0fListClustersReq\x12\x10\n" +
@@ -5566,27 +7019,33 @@ const file_titan_proto_rawDesc = "" +
 	"\bpageSize\x18\x03 \x01(\x05R\bpageSize\"P\n" +
 	"\x10ListClustersResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12&\n" +
-	"\x04list\x18\x02 \x03(\v2\x12.titan.ClusterItemR\x04list\"\xba\x01\n" +
+	"\x04list\x18\x02 \x03(\v2\x12.titan.ClusterItemR\x04list\"\xbc\x01\n" +
 	"\x10CreateClusterReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
-	"\x03env\x18\x02 \x01(\tR\x03env\x12 \n" +
-	"\vapiEndpoint\x18\x03 \x01(\tR\vapiEndpoint\x12\x1e\n" +
+	"\x03env\x18\x02 \x01(\tR\x03env\x12!\n" +
+	"\fapi_endpoint\x18\x03 \x01(\tR\vapiEndpoint\x12\x1e\n" +
 	"\n" +
 	"kubeconfig\x18\x04 \x01(\tR\n" +
 	"kubeconfig\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x1c\n" +
-	"\tcreatedBy\x18\x06 \x01(\x03R\tcreatedBy\"#\n" +
-	"\x11CreateClusterResp\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\xac\x01\n" +
-	"\x10UpdateClusterReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
-	"\x03env\x18\x03 \x01(\tR\x03env\x12 \n" +
-	"\vapiEndpoint\x18\x04 \x01(\tR\vapiEndpoint\x12\x1e\n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x1d\n" +
 	"\n" +
-	"kubeconfig\x18\x05 \x01(\tR\n" +
-	"kubeconfig\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"\"\n" +
+	"created_by\x18\x06 \x01(\x03R\tcreatedBy\"#\n" +
+	"\x11CreateClusterResp\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\x87\x02\n" +
+	"\x10UpdateClusterReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x15\n" +
+	"\x03env\x18\x03 \x01(\tH\x01R\x03env\x88\x01\x01\x12&\n" +
+	"\fapi_endpoint\x18\x04 \x01(\tH\x02R\vapiEndpoint\x88\x01\x01\x12#\n" +
+	"\n" +
+	"kubeconfig\x18\x05 \x01(\tH\x03R\n" +
+	"kubeconfig\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x06 \x01(\tH\x04R\vdescription\x88\x01\x01B\a\n" +
+	"\x05_nameB\x06\n" +
+	"\x04_envB\x0f\n" +
+	"\r_api_endpointB\r\n" +
+	"\v_kubeconfigB\x0e\n" +
+	"\f_description\"\"\n" +
 	"\x10DeleteClusterReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\" \n" +
 	"\x0eTestClusterReq\x12\x0e\n" +
@@ -5600,26 +7059,26 @@ const file_titan_proto_rawDesc = "" +
 	"\x12ListNamespacesResp\x12\x1e\n" +
 	"\n" +
 	"namespaces\x18\x01 \x03(\tR\n" +
-	"namespaces\"\x8c\x03\n" +
+	"namespaces\"\x92\x03\n" +
 	"\fPipelineItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdisplayName\x18\x03 \x01(\tR\vdisplayName\x12\x1a\n" +
-	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x18\n" +
-	"\agitRepo\x18\x05 \x01(\tR\agitRepo\x12\x1c\n" +
-	"\tgitBranch\x18\x06 \x01(\tR\tgitBranch\x12\x16\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12!\n" +
+	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12\x1a\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x19\n" +
+	"\bgit_repo\x18\x05 \x01(\tR\agitRepo\x12\x1d\n" +
+	"\n" +
+	"git_branch\x18\x06 \x01(\tR\tgitBranch\x12\x16\n" +
 	"\x06stages\x18\a \x01(\tR\x06stages\x12\x16\n" +
 	"\x06params\x18\b \x01(\tR\x06params\x12\x1a\n" +
 	"\btriggers\x18\t \x01(\tR\btriggers\x12\x16\n" +
 	"\x06status\x18\n" +
 	" \x01(\x05R\x06status\x12 \n" +
-	"\vdescription\x18\v \x01(\tR\vdescription\x12\x1c\n" +
-	"\tcreatedBy\x18\f \x01(\x03R\tcreatedBy\x12\x1e\n" +
+	"\vdescription\x18\v \x01(\tR\vdescription\x12\x1d\n" +
 	"\n" +
-	"createTime\x18\r \x01(\tR\n" +
-	"createTime\x12\x1e\n" +
-	"\n" +
-	"updateTime\x18\x0e \x01(\tR\n" +
+	"created_by\x18\f \x01(\x03R\tcreatedBy\x12\x1f\n" +
+	"\vcreate_time\x18\r \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\x0e \x01(\tR\n" +
 	"updateTime\"x\n" +
 	"\x10ListPipelinesReq\x12\x1a\n" +
 	"\bcategory\x18\x01 \x01(\tR\bcategory\x12\x18\n" +
@@ -5632,33 +7091,45 @@ const file_titan_proto_rawDesc = "" +
 	"\x0eGetPipelineReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"E\n" +
 	"\x12PipelineDetailResp\x12/\n" +
-	"\bpipeline\x18\x01 \x01(\v2\x13.titan.PipelineItemR\bpipeline\"\xa9\x02\n" +
+	"\bpipeline\x18\x01 \x01(\v2\x13.titan.PipelineItemR\bpipeline\"\xad\x02\n" +
 	"\x11CreatePipelineReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
-	"\vdisplayName\x18\x02 \x01(\tR\vdisplayName\x12\x1a\n" +
-	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x18\n" +
-	"\agitRepo\x18\x04 \x01(\tR\agitRepo\x12\x1c\n" +
-	"\tgitBranch\x18\x05 \x01(\tR\tgitBranch\x12\x16\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12!\n" +
+	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12\x1a\n" +
+	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x19\n" +
+	"\bgit_repo\x18\x04 \x01(\tR\agitRepo\x12\x1d\n" +
+	"\n" +
+	"git_branch\x18\x05 \x01(\tR\tgitBranch\x12\x16\n" +
 	"\x06stages\x18\x06 \x01(\tR\x06stages\x12\x16\n" +
 	"\x06params\x18\a \x01(\tR\x06params\x12\x1a\n" +
 	"\btriggers\x18\b \x01(\tR\btriggers\x12 \n" +
-	"\vdescription\x18\t \x01(\tR\vdescription\x12\x1c\n" +
-	"\tcreatedBy\x18\n" +
+	"\vdescription\x18\t \x01(\tR\vdescription\x12\x1d\n" +
+	"\n" +
+	"created_by\x18\n" +
 	" \x01(\x03R\tcreatedBy\"$\n" +
 	"\x12CreatePipelineResp\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x9f\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\xc7\x03\n" +
 	"\x11UpdatePipelineReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12 \n" +
-	"\vdisplayName\x18\x02 \x01(\tR\vdisplayName\x12\x1a\n" +
-	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x18\n" +
-	"\agitRepo\x18\x04 \x01(\tR\agitRepo\x12\x1c\n" +
-	"\tgitBranch\x18\x05 \x01(\tR\tgitBranch\x12\x16\n" +
-	"\x06stages\x18\x06 \x01(\tR\x06stages\x12\x16\n" +
-	"\x06params\x18\a \x01(\tR\x06params\x12\x1a\n" +
-	"\btriggers\x18\b \x01(\tR\btriggers\x12\x16\n" +
-	"\x06status\x18\t \x01(\x05R\x06status\x12 \n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12&\n" +
+	"\fdisplay_name\x18\x02 \x01(\tH\x00R\vdisplayName\x88\x01\x01\x12\x1f\n" +
+	"\bcategory\x18\x03 \x01(\tH\x01R\bcategory\x88\x01\x01\x12\x1e\n" +
+	"\bgit_repo\x18\x04 \x01(\tH\x02R\agitRepo\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"git_branch\x18\x05 \x01(\tH\x03R\tgitBranch\x88\x01\x01\x12\x1b\n" +
+	"\x06stages\x18\x06 \x01(\tH\x04R\x06stages\x88\x01\x01\x12\x1b\n" +
+	"\x06params\x18\a \x01(\tH\x05R\x06params\x88\x01\x01\x12\x1f\n" +
+	"\btriggers\x18\b \x01(\tH\x06R\btriggers\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\t \x01(\x05H\aR\x06status\x88\x01\x01\x12%\n" +
 	"\vdescription\x18\n" +
-	" \x01(\tR\vdescription\"#\n" +
+	" \x01(\tH\bR\vdescription\x88\x01\x01B\x0f\n" +
+	"\r_display_nameB\v\n" +
+	"\t_categoryB\v\n" +
+	"\t_git_repoB\r\n" +
+	"\v_git_branchB\t\n" +
+	"\a_stagesB\t\n" +
+	"\a_paramsB\v\n" +
+	"\t_triggersB\t\n" +
+	"\a_statusB\x0e\n" +
+	"\f_description\"#\n" +
 	"\x11DeletePipelineReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\xd6\x01\n" +
 	"\x12TriggerPipelineReq\x12\x1e\n" +
@@ -5672,7 +7143,7 @@ const file_titan_proto_rawDesc = "" +
 	"\rruntimeParams\x18\x06 \x01(\tR\rruntimeParams\"E\n" +
 	"\x13TriggerPipelineResp\x12\x16\n" +
 	"\x06execId\x18\x01 \x01(\x03R\x06execId\x12\x16\n" +
-	"\x06execNo\x18\x02 \x01(\tR\x06execNo\"\xeb\x03\n" +
+	"\x06execNo\x18\x02 \x01(\tR\x06execNo\"\x8b\x04\n" +
 	"\rExecutionItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1e\n" +
 	"\n" +
@@ -5698,7 +7169,10 @@ const file_titan_proto_rawDesc = "" +
 	"\tartifacts\x18\x0f \x01(\tR\tartifacts\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\x10 \x01(\tR\n" +
-	"createTime\"\xc6\x02\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\x11 \x01(\tR\n" +
+	"updateTime\"\xc6\x02\n" +
 	"\fStepExecItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
 	"\x06execId\x18\x02 \x01(\x03R\x06execId\x12\x18\n" +
@@ -5784,13 +7258,18 @@ const file_titan_proto_rawDesc = "" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x18\n" +
 	"\aownerId\x18\x04 \x01(\x03R\aownerId\"#\n" +
 	"\x11CreateProjectResp\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x98\x01\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\xe3\x01\n" +
 	"\x10UpdateProjectReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12 \n" +
-	"\vdisplayName\x18\x02 \x01(\tR\vdisplayName\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x18\n" +
-	"\aownerId\x18\x04 \x01(\x03R\aownerId\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\"\"\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12%\n" +
+	"\vdisplayName\x18\x02 \x01(\tH\x00R\vdisplayName\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x01R\vdescription\x88\x01\x01\x12\x1d\n" +
+	"\aownerId\x18\x04 \x01(\x03H\x02R\aownerId\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x05 \x01(\x05H\x03R\x06status\x88\x01\x01B\x0e\n" +
+	"\f_displayNameB\x0e\n" +
+	"\f_descriptionB\n" +
+	"\n" +
+	"\b_ownerIdB\t\n" +
+	"\a_status\"\"\n" +
 	"\x10DeleteProjectReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x8f\x03\n" +
 	"\aAppItem\x12\x0e\n" +
@@ -5820,9 +7299,10 @@ const file_titan_proto_rawDesc = "" +
 	"\bpageSize\x18\x03 \x01(\x05R\bpageSize\"H\n" +
 	"\fListAppsResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12\"\n" +
-	"\x04list\x18\x02 \x03(\v2\x0e.titan.AppItemR\x04list\"\x1b\n" +
+	"\x04list\x18\x02 \x03(\v2\x0e.titan.AppItemR\x04list\"9\n" +
 	"\tGetAppReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"1\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
+	"\tprojectId\x18\x02 \x01(\x03R\tprojectId\"1\n" +
 	"\rAppDetailResp\x12 \n" +
 	"\x03app\x18\x01 \x01(\v2\x0e.titan.AppItemR\x03app\"\xac\x02\n" +
 	"\fCreateAppReq\x12\x1c\n" +
@@ -5838,23 +7318,34 @@ const file_titan_proto_rawDesc = "" +
 	"deploySpec\x18\t \x01(\tR\n" +
 	"deploySpec\"\x1f\n" +
 	"\rCreateAppResp\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\xb6\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\xe6\x03\n" +
 	"\fUpdateAppReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12 \n" +
-	"\vdisplayName\x18\x02 \x01(\tR\vdisplayName\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12$\n" +
-	"\rintegrationId\x18\x04 \x01(\x03R\rintegrationId\x12\x18\n" +
-	"\arepoUrl\x18\x05 \x01(\tR\arepoUrl\x12$\n" +
-	"\rdefaultBranch\x18\x06 \x01(\tR\rdefaultBranch\x12 \n" +
-	"\vbuildConfig\x18\a \x01(\tR\vbuildConfig\x12\x1e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12%\n" +
+	"\vdisplayName\x18\x02 \x01(\tH\x00R\vdisplayName\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x01R\vdescription\x88\x01\x01\x12)\n" +
+	"\rintegrationId\x18\x04 \x01(\x03H\x02R\rintegrationId\x88\x01\x01\x12\x1d\n" +
+	"\arepoUrl\x18\x05 \x01(\tH\x03R\arepoUrl\x88\x01\x01\x12)\n" +
+	"\rdefaultBranch\x18\x06 \x01(\tH\x04R\rdefaultBranch\x88\x01\x01\x12%\n" +
+	"\vbuildConfig\x18\a \x01(\tH\x05R\vbuildConfig\x88\x01\x01\x12#\n" +
 	"\n" +
-	"deploySpec\x18\b \x01(\tR\n" +
-	"deploySpec\x12\x16\n" +
-	"\x06status\x18\t \x01(\x05R\x06status\x12\x12\n" +
+	"deploySpec\x18\b \x01(\tH\x06R\n" +
+	"deploySpec\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\t \x01(\x05H\aR\x06status\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\n" +
-	" \x01(\tR\x04name\"\x1e\n" +
+	" \x01(\tH\bR\x04name\x88\x01\x01B\x0e\n" +
+	"\f_displayNameB\x0e\n" +
+	"\f_descriptionB\x10\n" +
+	"\x0e_integrationIdB\n" +
+	"\n" +
+	"\b_repoUrlB\x10\n" +
+	"\x0e_defaultBranchB\x0e\n" +
+	"\f_buildConfigB\r\n" +
+	"\v_deploySpecB\t\n" +
+	"\a_statusB\a\n" +
+	"\x05_name\"<\n" +
 	"\fDeleteAppReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\xb7\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
+	"\tprojectId\x18\x02 \x01(\x03R\tprojectId\"\xb7\x02\n" +
 	"\aEnvItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
 	"\tprojectId\x18\x02 \x01(\x03R\tprojectId\x12\x18\n" +
@@ -5875,9 +7366,10 @@ const file_titan_proto_rawDesc = "" +
 	"\vListEnvsReq\x12\x1c\n" +
 	"\tprojectId\x18\x01 \x01(\x03R\tprojectId\"2\n" +
 	"\fListEnvsResp\x12\"\n" +
-	"\x04list\x18\x01 \x03(\v2\x0e.titan.EnvItemR\x04list\"\x1b\n" +
+	"\x04list\x18\x01 \x03(\v2\x0e.titan.EnvItemR\x04list\"9\n" +
 	"\tGetEnvReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"1\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
+	"\tprojectId\x18\x02 \x01(\x03R\tprojectId\"1\n" +
 	"\rEnvDetailResp\x12 \n" +
 	"\x03env\x18\x01 \x01(\v2\x0e.titan.EnvItemR\x03env\"\x96\x01\n" +
 	"\fCreateEnvReq\x12\x1c\n" +
@@ -5887,15 +7379,22 @@ const file_titan_proto_rawDesc = "" +
 	"\tclusterId\x18\x04 \x01(\x03R\tclusterId\x12\x1c\n" +
 	"\tnamespace\x18\x05 \x01(\tR\tnamespace\"\x1f\n" +
 	"\rCreateEnvResp\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x86\x01\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\xca\x01\n" +
 	"\fUpdateEnvReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
-	"\tclusterId\x18\x03 \x01(\x03R\tclusterId\x12\x1c\n" +
-	"\tnamespace\x18\x04 \x01(\tR\tnamespace\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\tR\x06status\"\x1e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12!\n" +
+	"\tclusterId\x18\x03 \x01(\x03H\x01R\tclusterId\x88\x01\x01\x12!\n" +
+	"\tnamespace\x18\x04 \x01(\tH\x02R\tnamespace\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x05 \x01(\tH\x03R\x06status\x88\x01\x01B\a\n" +
+	"\x05_nameB\f\n" +
+	"\n" +
+	"_clusterIdB\f\n" +
+	"\n" +
+	"_namespaceB\t\n" +
+	"\a_status\"<\n" +
 	"\fDeleteEnvReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x8a\x03\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
+	"\tprojectId\x18\x02 \x01(\x03R\tprojectId\"\x8a\x03\n" +
 	"\x0eEnvAppLiveItem\x12\x14\n" +
 	"\x05appId\x18\x01 \x01(\x03R\x05appId\x12\x18\n" +
 	"\aappName\x18\x02 \x01(\tR\aappName\x12 \n" +
@@ -5918,7 +7417,7 @@ const file_titan_proto_rawDesc = "" +
 	"\aenvName\x18\x03 \x01(\tR\aenvName\x12 \n" +
 	"\vclusterName\x18\x04 \x01(\tR\vclusterName\x12\x1c\n" +
 	"\tnamespace\x18\x05 \x01(\tR\tnamespace\x12)\n" +
-	"\x04apps\x18\x06 \x03(\v2\x15.titan.EnvAppLiveItemR\x04apps\"\xa2\x03\n" +
+	"\x04apps\x18\x06 \x03(\v2\x15.titan.EnvAppLiveItemR\x04apps\"\xc2\x03\n" +
 	"\fArtifactItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
 	"\tprojectId\x18\x02 \x01(\x03R\tprojectId\x12\x14\n" +
@@ -5936,7 +7435,10 @@ const file_titan_proto_rawDesc = "" +
 	"\x06status\x18\r \x01(\tR\x06status\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\x0e \x01(\tR\n" +
-	"createTime\"v\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\x0f \x01(\tR\n" +
+	"updateTime\"v\n" +
 	"\x10ListArtifactsReq\x12\x1c\n" +
 	"\tprojectId\x18\x01 \x01(\x03R\tprojectId\x12\x14\n" +
 	"\x05appId\x18\x02 \x01(\x03R\x05appId\x12\x12\n" +
@@ -5958,13 +7460,154 @@ const file_titan_proto_rawDesc = "" +
 	"\x0eimageSizeBytes\x18\n" +
 	" \x01(\x03R\x0eimageSizeBytes\"$\n" +
 	"\x12CreateArtifactResp\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"_\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\x9d\x01\n" +
 	"\x11DeployArtifactReq\x12\x14\n" +
 	"\x05envId\x18\x01 \x01(\x03R\x05envId\x12\x14\n" +
 	"\x05appId\x18\x02 \x01(\x03R\x05appId\x12\x1e\n" +
 	"\n" +
 	"artifactId\x18\x03 \x01(\x03R\n" +
-	"artifactId2\xeb\x14\n" +
+	"artifactId\x12\x1c\n" +
+	"\tprojectId\x18\x04 \x01(\x03R\tprojectId\x12\x1e\n" +
+	"\n" +
+	"operatorId\x18\x05 \x01(\x03R\n" +
+	"operatorId\"}\n" +
+	"\x0fMatrixEnvHeader\x12\x14\n" +
+	"\x05envId\x18\x01 \x01(\x03R\x05envId\x12\x18\n" +
+	"\aenvCode\x18\x02 \x01(\tR\aenvCode\x12\x18\n" +
+	"\aenvName\x18\x03 \x01(\tR\aenvName\x12 \n" +
+	"\vclusterName\x18\x04 \x01(\tR\vclusterName\"\xae\x03\n" +
+	"\x0eMatrixCellInfo\x12\x14\n" +
+	"\x05envId\x18\x01 \x01(\x03R\x05envId\x12\x18\n" +
+	"\aenvCode\x18\x02 \x01(\tR\aenvCode\x12\x14\n" +
+	"\x05appId\x18\x03 \x01(\x03R\x05appId\x12\x1e\n" +
+	"\n" +
+	"artifactId\x18\x04 \x01(\x03R\n" +
+	"artifactId\x12\x1e\n" +
+	"\n" +
+	"versionTag\x18\x05 \x01(\tR\n" +
+	"versionTag\x12\x1c\n" +
+	"\tgitCommit\x18\x06 \x01(\tR\tgitCommit\x12\x1c\n" +
+	"\tgitBranch\x18\a \x01(\tR\tgitBranch\x12\"\n" +
+	"\fdeployStatus\x18\b \x01(\tR\fdeployStatus\x12\"\n" +
+	"\fhealthStatus\x18\t \x01(\tR\fhealthStatus\x12$\n" +
+	"\rreadyReplicas\x18\n" +
+	" \x01(\x05R\rreadyReplicas\x12$\n" +
+	"\rtotalReplicas\x18\v \x01(\x05R\rtotalReplicas\x12&\n" +
+	"\x0elastDeployedAt\x18\f \x01(\tR\x0elastDeployedAt\x12\x1e\n" +
+	"\n" +
+	"diffStatus\x18\r \x01(\tR\n" +
+	"diffStatus\"\xd1\x01\n" +
+	"\x10MatrixServiceRow\x12\x14\n" +
+	"\x05appId\x18\x01 \x01(\x03R\x05appId\x12\x18\n" +
+	"\aappName\x18\x02 \x01(\tR\aappName\x12 \n" +
+	"\vdisplayName\x18\x03 \x01(\tR\vdisplayName\x12\x18\n" +
+	"\arepoUrl\x18\x04 \x01(\tR\arepoUrl\x12$\n" +
+	"\rdefaultBranch\x18\x05 \x01(\tR\rdefaultBranch\x12+\n" +
+	"\x05cells\x18\x06 \x03(\v2\x15.titan.MatrixCellInfoR\x05cells\"4\n" +
+	"\x14GetDeliveryMatrixReq\x12\x1c\n" +
+	"\tprojectId\x18\x01 \x01(\x03R\tprojectId\"\xb8\x01\n" +
+	"\x15GetDeliveryMatrixResp\x12\x1c\n" +
+	"\tprojectId\x18\x01 \x01(\x03R\tprojectId\x12 \n" +
+	"\vprojectName\x18\x02 \x01(\tR\vprojectName\x12*\n" +
+	"\x04envs\x18\x03 \x03(\v2\x16.titan.MatrixEnvHeaderR\x04envs\x123\n" +
+	"\bservices\x18\x04 \x03(\v2\x17.titan.MatrixServiceRowR\bservices\"\x85\x01\n" +
+	"\x13CompareMatrixEnvReq\x12\x1c\n" +
+	"\tprojectId\x18\x01 \x01(\x03R\tprojectId\x12\x14\n" +
+	"\x05appId\x18\x02 \x01(\x03R\x05appId\x12\x1c\n" +
+	"\tsourceEnv\x18\x03 \x01(\tR\tsourceEnv\x12\x1c\n" +
+	"\ttargetEnv\x18\x04 \x01(\tR\ttargetEnv\"~\n" +
+	"\x0eCommitDiffItem\x12\x1a\n" +
+	"\bcommitId\x18\x01 \x01(\tR\bcommitId\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x16\n" +
+	"\x06author\x18\x03 \x01(\tR\x06author\x12\x1e\n" +
+	"\n" +
+	"commitTime\x18\x04 \x01(\tR\n" +
+	"commitTime\"\xe7\x02\n" +
+	"\x14CompareMatrixEnvResp\x12\x14\n" +
+	"\x05appId\x18\x01 \x01(\x03R\x05appId\x12\x18\n" +
+	"\aappName\x18\x02 \x01(\tR\aappName\x12\x1c\n" +
+	"\tsourceEnv\x18\x03 \x01(\tR\tsourceEnv\x12$\n" +
+	"\rsourceVersion\x18\x04 \x01(\tR\rsourceVersion\x12\"\n" +
+	"\fsourceCommit\x18\x05 \x01(\tR\fsourceCommit\x12\x1c\n" +
+	"\ttargetEnv\x18\x06 \x01(\tR\ttargetEnv\x12$\n" +
+	"\rtargetVersion\x18\a \x01(\tR\rtargetVersion\x12\"\n" +
+	"\ftargetCommit\x18\b \x01(\tR\ftargetCommit\x12/\n" +
+	"\acommits\x18\t \x03(\v2\x15.titan.CommitDiffItemR\acommits\x12\x1e\n" +
+	"\n" +
+	"canPromote\x18\n" +
+	" \x01(\bR\n" +
+	"canPromote\"\xc4\x04\n" +
+	"\x10ReleaseOrderItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
+	"\aorderNo\x18\x02 \x01(\tR\aorderNo\x12\x1c\n" +
+	"\tprojectId\x18\x03 \x01(\x03R\tprojectId\x12\x14\n" +
+	"\x05title\x18\x04 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x1c\n" +
+	"\ttargetEnv\x18\x06 \x01(\tR\ttargetEnv\x12\"\n" +
+	"\fservicesJson\x18\a \x01(\tR\fservicesJson\x12\x16\n" +
+	"\x06status\x18\b \x01(\tR\x06status\x12,\n" +
+	"\x11itsmProcessInstId\x18\t \x01(\x03R\x11itsmProcessInstId\x12 \n" +
+	"\vapplicantId\x18\n" +
+	" \x01(\x03R\vapplicantId\x12$\n" +
+	"\rapplicantName\x18\v \x01(\tR\rapplicantName\x12\x1e\n" +
+	"\n" +
+	"approverId\x18\f \x01(\x03R\n" +
+	"approverId\x12\"\n" +
+	"\fapproverName\x18\r \x01(\tR\fapproverName\x12$\n" +
+	"\rscheduledTime\x18\x0e \x01(\tR\rscheduledTime\x12\x1c\n" +
+	"\tstartTime\x18\x0f \x01(\tR\tstartTime\x12\x18\n" +
+	"\aendTime\x18\x10 \x01(\tR\aendTime\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\x11 \x01(\tR\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\x12 \x01(\tR\n" +
+	"updateTime\"\xb4\x01\n" +
+	"\x14ListReleaseOrdersReq\x12\x1c\n" +
+	"\tprojectId\x18\x01 \x01(\x03R\tprojectId\x12\x1c\n" +
+	"\ttargetEnv\x18\x02 \x01(\tR\ttargetEnv\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\x12\x18\n" +
+	"\akeyword\x18\x04 \x01(\tR\akeyword\x12\x12\n" +
+	"\x04page\x18\x05 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x06 \x01(\x05R\bpageSize\"Z\n" +
+	"\x15ListReleaseOrdersResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12+\n" +
+	"\x04list\x18\x02 \x03(\v2\x17.titan.ReleaseOrderItemR\x04list\"$\n" +
+	"\x12GetReleaseOrderReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"g\n" +
+	"\x16ReleaseOrderDetailResp\x12-\n" +
+	"\x05order\x18\x01 \x01(\v2\x17.titan.ReleaseOrderItemR\x05order\x12\x1e\n" +
+	"\n" +
+	"itsmStatus\x18\x02 \x01(\tR\n" +
+	"itsmStatus\"\x9d\x02\n" +
+	"\x15CreateReleaseOrderReq\x12\x1c\n" +
+	"\tprojectId\x18\x01 \x01(\x03R\tprojectId\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1c\n" +
+	"\ttargetEnv\x18\x04 \x01(\tR\ttargetEnv\x12\"\n" +
+	"\fservicesJson\x18\x05 \x01(\tR\fservicesJson\x12$\n" +
+	"\rscheduledTime\x18\x06 \x01(\tR\rscheduledTime\x12 \n" +
+	"\vapplicantId\x18\a \x01(\x03R\vapplicantId\x12$\n" +
+	"\rapplicantName\x18\b \x01(\tR\rapplicantName\"\x88\x01\n" +
+	"\x16CreateReleaseOrderResp\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
+	"\aorderNo\x18\x02 \x01(\tR\aorderNo\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\x12,\n" +
+	"\x11itsmProcessInstId\x18\x04 \x01(\x03R\x11itsmProcessInstId\"\xa0\x01\n" +
+	"\x14AuditReleaseOrderReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\bapproved\x18\x02 \x01(\bR\bapproved\x12\x18\n" +
+	"\acomment\x18\x03 \x01(\tR\acomment\x12\x1e\n" +
+	"\n" +
+	"approverId\x18\x04 \x01(\x03R\n" +
+	"approverId\x12\"\n" +
+	"\fapproverName\x18\x05 \x01(\tR\fapproverName\"l\n" +
+	"\x16ExecuteReleaseOrderReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1e\n" +
+	"\n" +
+	"operatorId\x18\x02 \x01(\x03R\n" +
+	"operatorId\x12\"\n" +
+	"\foperatorName\x18\x03 \x01(\tR\foperatorName2\x86\x19\n" +
 	"\x05titan\x12'\n" +
 	"\x04Ping\x12\x0e.titan.PingReq\x1a\x0f.titan.PingResp\x12K\n" +
 	"\x10ListIntegrations\x12\x1a.titan.ListIntegrationsReq\x1a\x1b.titan.ListIntegrationsResp\x12N\n" +
@@ -6009,7 +7652,14 @@ const file_titan_proto_rawDesc = "" +
 	"\x10GetEnvLiveDetail\x12\x1a.titan.GetEnvLiveDetailReq\x1a\x1b.titan.GetEnvLiveDetailResp\x12B\n" +
 	"\rListArtifacts\x12\x17.titan.ListArtifactsReq\x1a\x18.titan.ListArtifactsResp\x12E\n" +
 	"\x0eCreateArtifact\x12\x18.titan.CreateArtifactReq\x1a\x19.titan.CreateArtifactResp\x12=\n" +
-	"\x0eDeployArtifact\x12\x18.titan.DeployArtifactReq\x1a\x11.titan.CommonRespB\tZ\a./titanb\x06proto3"
+	"\x0eDeployArtifact\x12\x18.titan.DeployArtifactReq\x1a\x11.titan.CommonResp\x12N\n" +
+	"\x11GetDeliveryMatrix\x12\x1b.titan.GetDeliveryMatrixReq\x1a\x1c.titan.GetDeliveryMatrixResp\x12K\n" +
+	"\x10CompareMatrixEnv\x12\x1a.titan.CompareMatrixEnvReq\x1a\x1b.titan.CompareMatrixEnvResp\x12N\n" +
+	"\x11ListReleaseOrders\x12\x1b.titan.ListReleaseOrdersReq\x1a\x1c.titan.ListReleaseOrdersResp\x12K\n" +
+	"\x0fGetReleaseOrder\x12\x19.titan.GetReleaseOrderReq\x1a\x1d.titan.ReleaseOrderDetailResp\x12Q\n" +
+	"\x12CreateReleaseOrder\x12\x1c.titan.CreateReleaseOrderReq\x1a\x1d.titan.CreateReleaseOrderResp\x12C\n" +
+	"\x11AuditReleaseOrder\x12\x1b.titan.AuditReleaseOrderReq\x1a\x11.titan.CommonResp\x12G\n" +
+	"\x13ExecuteReleaseOrder\x12\x1d.titan.ExecuteReleaseOrderReq\x1a\x11.titan.CommonRespB\tZ\a./titanb\x06proto3"
 
 var (
 	file_titan_proto_rawDescOnce sync.Once
@@ -6023,88 +7673,105 @@ func file_titan_proto_rawDescGZIP() []byte {
 	return file_titan_proto_rawDescData
 }
 
-var file_titan_proto_msgTypes = make([]protoimpl.MessageInfo, 80)
+var file_titan_proto_msgTypes = make([]protoimpl.MessageInfo, 97)
 var file_titan_proto_goTypes = []any{
-	(*CommonResp)(nil),            // 0: titan.CommonResp
-	(*PingReq)(nil),               // 1: titan.PingReq
-	(*PingResp)(nil),              // 2: titan.PingResp
-	(*IntegrationItem)(nil),       // 3: titan.IntegrationItem
-	(*ListIntegrationsReq)(nil),   // 4: titan.ListIntegrationsReq
-	(*ListIntegrationsResp)(nil),  // 5: titan.ListIntegrationsResp
-	(*CreateIntegrationReq)(nil),  // 6: titan.CreateIntegrationReq
-	(*CreateIntegrationResp)(nil), // 7: titan.CreateIntegrationResp
-	(*UpdateIntegrationReq)(nil),  // 8: titan.UpdateIntegrationReq
-	(*DeleteIntegrationReq)(nil),  // 9: titan.DeleteIntegrationReq
-	(*TestIntegrationReq)(nil),    // 10: titan.TestIntegrationReq
-	(*TestIntegrationResp)(nil),   // 11: titan.TestIntegrationResp
-	(*ClusterItem)(nil),           // 12: titan.ClusterItem
-	(*ListClustersReq)(nil),       // 13: titan.ListClustersReq
-	(*ListClustersResp)(nil),      // 14: titan.ListClustersResp
-	(*CreateClusterReq)(nil),      // 15: titan.CreateClusterReq
-	(*CreateClusterResp)(nil),     // 16: titan.CreateClusterResp
-	(*UpdateClusterReq)(nil),      // 17: titan.UpdateClusterReq
-	(*DeleteClusterReq)(nil),      // 18: titan.DeleteClusterReq
-	(*TestClusterReq)(nil),        // 19: titan.TestClusterReq
-	(*TestClusterResp)(nil),       // 20: titan.TestClusterResp
-	(*ListNamespacesReq)(nil),     // 21: titan.ListNamespacesReq
-	(*ListNamespacesResp)(nil),    // 22: titan.ListNamespacesResp
-	(*PipelineItem)(nil),          // 23: titan.PipelineItem
-	(*ListPipelinesReq)(nil),      // 24: titan.ListPipelinesReq
-	(*ListPipelinesResp)(nil),     // 25: titan.ListPipelinesResp
-	(*GetPipelineReq)(nil),        // 26: titan.GetPipelineReq
-	(*PipelineDetailResp)(nil),    // 27: titan.PipelineDetailResp
-	(*CreatePipelineReq)(nil),     // 28: titan.CreatePipelineReq
-	(*CreatePipelineResp)(nil),    // 29: titan.CreatePipelineResp
-	(*UpdatePipelineReq)(nil),     // 30: titan.UpdatePipelineReq
-	(*DeletePipelineReq)(nil),     // 31: titan.DeletePipelineReq
-	(*TriggerPipelineReq)(nil),    // 32: titan.TriggerPipelineReq
-	(*TriggerPipelineResp)(nil),   // 33: titan.TriggerPipelineResp
-	(*ExecutionItem)(nil),         // 34: titan.ExecutionItem
-	(*StepExecItem)(nil),          // 35: titan.StepExecItem
-	(*ListExecutionsReq)(nil),     // 36: titan.ListExecutionsReq
-	(*ListExecutionsResp)(nil),    // 37: titan.ListExecutionsResp
-	(*GetExecutionDetailReq)(nil), // 38: titan.GetExecutionDetailReq
-	(*ExecutionDetailResp)(nil),   // 39: titan.ExecutionDetailResp
-	(*GetStepLogReq)(nil),         // 40: titan.GetStepLogReq
-	(*GetStepLogResp)(nil),        // 41: titan.GetStepLogResp
-	(*ApproveStepReq)(nil),        // 42: titan.ApproveStepReq
-	(*CancelExecutionReq)(nil),    // 43: titan.CancelExecutionReq
-	(*ProjectItem)(nil),           // 44: titan.ProjectItem
-	(*ListProjectsReq)(nil),       // 45: titan.ListProjectsReq
-	(*ListProjectsResp)(nil),      // 46: titan.ListProjectsResp
-	(*GetProjectReq)(nil),         // 47: titan.GetProjectReq
-	(*ProjectDetailResp)(nil),     // 48: titan.ProjectDetailResp
-	(*CreateProjectReq)(nil),      // 49: titan.CreateProjectReq
-	(*CreateProjectResp)(nil),     // 50: titan.CreateProjectResp
-	(*UpdateProjectReq)(nil),      // 51: titan.UpdateProjectReq
-	(*DeleteProjectReq)(nil),      // 52: titan.DeleteProjectReq
-	(*AppItem)(nil),               // 53: titan.AppItem
-	(*ListAppsReq)(nil),           // 54: titan.ListAppsReq
-	(*ListAppsResp)(nil),          // 55: titan.ListAppsResp
-	(*GetAppReq)(nil),             // 56: titan.GetAppReq
-	(*AppDetailResp)(nil),         // 57: titan.AppDetailResp
-	(*CreateAppReq)(nil),          // 58: titan.CreateAppReq
-	(*CreateAppResp)(nil),         // 59: titan.CreateAppResp
-	(*UpdateAppReq)(nil),          // 60: titan.UpdateAppReq
-	(*DeleteAppReq)(nil),          // 61: titan.DeleteAppReq
-	(*EnvItem)(nil),               // 62: titan.EnvItem
-	(*ListEnvsReq)(nil),           // 63: titan.ListEnvsReq
-	(*ListEnvsResp)(nil),          // 64: titan.ListEnvsResp
-	(*GetEnvReq)(nil),             // 65: titan.GetEnvReq
-	(*EnvDetailResp)(nil),         // 66: titan.EnvDetailResp
-	(*CreateEnvReq)(nil),          // 67: titan.CreateEnvReq
-	(*CreateEnvResp)(nil),         // 68: titan.CreateEnvResp
-	(*UpdateEnvReq)(nil),          // 69: titan.UpdateEnvReq
-	(*DeleteEnvReq)(nil),          // 70: titan.DeleteEnvReq
-	(*EnvAppLiveItem)(nil),        // 71: titan.EnvAppLiveItem
-	(*GetEnvLiveDetailReq)(nil),   // 72: titan.GetEnvLiveDetailReq
-	(*GetEnvLiveDetailResp)(nil),  // 73: titan.GetEnvLiveDetailResp
-	(*ArtifactItem)(nil),          // 74: titan.ArtifactItem
-	(*ListArtifactsReq)(nil),      // 75: titan.ListArtifactsReq
-	(*ListArtifactsResp)(nil),     // 76: titan.ListArtifactsResp
-	(*CreateArtifactReq)(nil),     // 77: titan.CreateArtifactReq
-	(*CreateArtifactResp)(nil),    // 78: titan.CreateArtifactResp
-	(*DeployArtifactReq)(nil),     // 79: titan.DeployArtifactReq
+	(*CommonResp)(nil),             // 0: titan.CommonResp
+	(*PingReq)(nil),                // 1: titan.PingReq
+	(*PingResp)(nil),               // 2: titan.PingResp
+	(*IntegrationItem)(nil),        // 3: titan.IntegrationItem
+	(*ListIntegrationsReq)(nil),    // 4: titan.ListIntegrationsReq
+	(*ListIntegrationsResp)(nil),   // 5: titan.ListIntegrationsResp
+	(*CreateIntegrationReq)(nil),   // 6: titan.CreateIntegrationReq
+	(*CreateIntegrationResp)(nil),  // 7: titan.CreateIntegrationResp
+	(*UpdateIntegrationReq)(nil),   // 8: titan.UpdateIntegrationReq
+	(*DeleteIntegrationReq)(nil),   // 9: titan.DeleteIntegrationReq
+	(*TestIntegrationReq)(nil),     // 10: titan.TestIntegrationReq
+	(*TestIntegrationResp)(nil),    // 11: titan.TestIntegrationResp
+	(*ClusterItem)(nil),            // 12: titan.ClusterItem
+	(*ListClustersReq)(nil),        // 13: titan.ListClustersReq
+	(*ListClustersResp)(nil),       // 14: titan.ListClustersResp
+	(*CreateClusterReq)(nil),       // 15: titan.CreateClusterReq
+	(*CreateClusterResp)(nil),      // 16: titan.CreateClusterResp
+	(*UpdateClusterReq)(nil),       // 17: titan.UpdateClusterReq
+	(*DeleteClusterReq)(nil),       // 18: titan.DeleteClusterReq
+	(*TestClusterReq)(nil),         // 19: titan.TestClusterReq
+	(*TestClusterResp)(nil),        // 20: titan.TestClusterResp
+	(*ListNamespacesReq)(nil),      // 21: titan.ListNamespacesReq
+	(*ListNamespacesResp)(nil),     // 22: titan.ListNamespacesResp
+	(*PipelineItem)(nil),           // 23: titan.PipelineItem
+	(*ListPipelinesReq)(nil),       // 24: titan.ListPipelinesReq
+	(*ListPipelinesResp)(nil),      // 25: titan.ListPipelinesResp
+	(*GetPipelineReq)(nil),         // 26: titan.GetPipelineReq
+	(*PipelineDetailResp)(nil),     // 27: titan.PipelineDetailResp
+	(*CreatePipelineReq)(nil),      // 28: titan.CreatePipelineReq
+	(*CreatePipelineResp)(nil),     // 29: titan.CreatePipelineResp
+	(*UpdatePipelineReq)(nil),      // 30: titan.UpdatePipelineReq
+	(*DeletePipelineReq)(nil),      // 31: titan.DeletePipelineReq
+	(*TriggerPipelineReq)(nil),     // 32: titan.TriggerPipelineReq
+	(*TriggerPipelineResp)(nil),    // 33: titan.TriggerPipelineResp
+	(*ExecutionItem)(nil),          // 34: titan.ExecutionItem
+	(*StepExecItem)(nil),           // 35: titan.StepExecItem
+	(*ListExecutionsReq)(nil),      // 36: titan.ListExecutionsReq
+	(*ListExecutionsResp)(nil),     // 37: titan.ListExecutionsResp
+	(*GetExecutionDetailReq)(nil),  // 38: titan.GetExecutionDetailReq
+	(*ExecutionDetailResp)(nil),    // 39: titan.ExecutionDetailResp
+	(*GetStepLogReq)(nil),          // 40: titan.GetStepLogReq
+	(*GetStepLogResp)(nil),         // 41: titan.GetStepLogResp
+	(*ApproveStepReq)(nil),         // 42: titan.ApproveStepReq
+	(*CancelExecutionReq)(nil),     // 43: titan.CancelExecutionReq
+	(*ProjectItem)(nil),            // 44: titan.ProjectItem
+	(*ListProjectsReq)(nil),        // 45: titan.ListProjectsReq
+	(*ListProjectsResp)(nil),       // 46: titan.ListProjectsResp
+	(*GetProjectReq)(nil),          // 47: titan.GetProjectReq
+	(*ProjectDetailResp)(nil),      // 48: titan.ProjectDetailResp
+	(*CreateProjectReq)(nil),       // 49: titan.CreateProjectReq
+	(*CreateProjectResp)(nil),      // 50: titan.CreateProjectResp
+	(*UpdateProjectReq)(nil),       // 51: titan.UpdateProjectReq
+	(*DeleteProjectReq)(nil),       // 52: titan.DeleteProjectReq
+	(*AppItem)(nil),                // 53: titan.AppItem
+	(*ListAppsReq)(nil),            // 54: titan.ListAppsReq
+	(*ListAppsResp)(nil),           // 55: titan.ListAppsResp
+	(*GetAppReq)(nil),              // 56: titan.GetAppReq
+	(*AppDetailResp)(nil),          // 57: titan.AppDetailResp
+	(*CreateAppReq)(nil),           // 58: titan.CreateAppReq
+	(*CreateAppResp)(nil),          // 59: titan.CreateAppResp
+	(*UpdateAppReq)(nil),           // 60: titan.UpdateAppReq
+	(*DeleteAppReq)(nil),           // 61: titan.DeleteAppReq
+	(*EnvItem)(nil),                // 62: titan.EnvItem
+	(*ListEnvsReq)(nil),            // 63: titan.ListEnvsReq
+	(*ListEnvsResp)(nil),           // 64: titan.ListEnvsResp
+	(*GetEnvReq)(nil),              // 65: titan.GetEnvReq
+	(*EnvDetailResp)(nil),          // 66: titan.EnvDetailResp
+	(*CreateEnvReq)(nil),           // 67: titan.CreateEnvReq
+	(*CreateEnvResp)(nil),          // 68: titan.CreateEnvResp
+	(*UpdateEnvReq)(nil),           // 69: titan.UpdateEnvReq
+	(*DeleteEnvReq)(nil),           // 70: titan.DeleteEnvReq
+	(*EnvAppLiveItem)(nil),         // 71: titan.EnvAppLiveItem
+	(*GetEnvLiveDetailReq)(nil),    // 72: titan.GetEnvLiveDetailReq
+	(*GetEnvLiveDetailResp)(nil),   // 73: titan.GetEnvLiveDetailResp
+	(*ArtifactItem)(nil),           // 74: titan.ArtifactItem
+	(*ListArtifactsReq)(nil),       // 75: titan.ListArtifactsReq
+	(*ListArtifactsResp)(nil),      // 76: titan.ListArtifactsResp
+	(*CreateArtifactReq)(nil),      // 77: titan.CreateArtifactReq
+	(*CreateArtifactResp)(nil),     // 78: titan.CreateArtifactResp
+	(*DeployArtifactReq)(nil),      // 79: titan.DeployArtifactReq
+	(*MatrixEnvHeader)(nil),        // 80: titan.MatrixEnvHeader
+	(*MatrixCellInfo)(nil),         // 81: titan.MatrixCellInfo
+	(*MatrixServiceRow)(nil),       // 82: titan.MatrixServiceRow
+	(*GetDeliveryMatrixReq)(nil),   // 83: titan.GetDeliveryMatrixReq
+	(*GetDeliveryMatrixResp)(nil),  // 84: titan.GetDeliveryMatrixResp
+	(*CompareMatrixEnvReq)(nil),    // 85: titan.CompareMatrixEnvReq
+	(*CommitDiffItem)(nil),         // 86: titan.CommitDiffItem
+	(*CompareMatrixEnvResp)(nil),   // 87: titan.CompareMatrixEnvResp
+	(*ReleaseOrderItem)(nil),       // 88: titan.ReleaseOrderItem
+	(*ListReleaseOrdersReq)(nil),   // 89: titan.ListReleaseOrdersReq
+	(*ListReleaseOrdersResp)(nil),  // 90: titan.ListReleaseOrdersResp
+	(*GetReleaseOrderReq)(nil),     // 91: titan.GetReleaseOrderReq
+	(*ReleaseOrderDetailResp)(nil), // 92: titan.ReleaseOrderDetailResp
+	(*CreateReleaseOrderReq)(nil),  // 93: titan.CreateReleaseOrderReq
+	(*CreateReleaseOrderResp)(nil), // 94: titan.CreateReleaseOrderResp
+	(*AuditReleaseOrderReq)(nil),   // 95: titan.AuditReleaseOrderReq
+	(*ExecuteReleaseOrderReq)(nil), // 96: titan.ExecuteReleaseOrderReq
 }
 var file_titan_proto_depIdxs = []int32{
 	3,  // 0: titan.ListIntegrationsResp.list:type_name -> titan.IntegrationItem
@@ -6122,95 +7789,115 @@ var file_titan_proto_depIdxs = []int32{
 	62, // 12: titan.EnvDetailResp.env:type_name -> titan.EnvItem
 	71, // 13: titan.GetEnvLiveDetailResp.apps:type_name -> titan.EnvAppLiveItem
 	74, // 14: titan.ListArtifactsResp.list:type_name -> titan.ArtifactItem
-	1,  // 15: titan.titan.Ping:input_type -> titan.PingReq
-	4,  // 16: titan.titan.ListIntegrations:input_type -> titan.ListIntegrationsReq
-	6,  // 17: titan.titan.CreateIntegration:input_type -> titan.CreateIntegrationReq
-	8,  // 18: titan.titan.UpdateIntegration:input_type -> titan.UpdateIntegrationReq
-	9,  // 19: titan.titan.DeleteIntegration:input_type -> titan.DeleteIntegrationReq
-	10, // 20: titan.titan.TestIntegration:input_type -> titan.TestIntegrationReq
-	13, // 21: titan.titan.ListClusters:input_type -> titan.ListClustersReq
-	15, // 22: titan.titan.CreateCluster:input_type -> titan.CreateClusterReq
-	17, // 23: titan.titan.UpdateCluster:input_type -> titan.UpdateClusterReq
-	18, // 24: titan.titan.DeleteCluster:input_type -> titan.DeleteClusterReq
-	19, // 25: titan.titan.TestCluster:input_type -> titan.TestClusterReq
-	21, // 26: titan.titan.ListNamespaces:input_type -> titan.ListNamespacesReq
-	24, // 27: titan.titan.ListPipelines:input_type -> titan.ListPipelinesReq
-	26, // 28: titan.titan.GetPipeline:input_type -> titan.GetPipelineReq
-	28, // 29: titan.titan.CreatePipeline:input_type -> titan.CreatePipelineReq
-	30, // 30: titan.titan.UpdatePipeline:input_type -> titan.UpdatePipelineReq
-	31, // 31: titan.titan.DeletePipeline:input_type -> titan.DeletePipelineReq
-	32, // 32: titan.titan.TriggerPipeline:input_type -> titan.TriggerPipelineReq
-	36, // 33: titan.titan.ListExecutions:input_type -> titan.ListExecutionsReq
-	38, // 34: titan.titan.GetExecutionDetail:input_type -> titan.GetExecutionDetailReq
-	40, // 35: titan.titan.GetStepLog:input_type -> titan.GetStepLogReq
-	42, // 36: titan.titan.ApproveStep:input_type -> titan.ApproveStepReq
-	43, // 37: titan.titan.CancelExecution:input_type -> titan.CancelExecutionReq
-	45, // 38: titan.titan.ListProjects:input_type -> titan.ListProjectsReq
-	47, // 39: titan.titan.GetProject:input_type -> titan.GetProjectReq
-	49, // 40: titan.titan.CreateProject:input_type -> titan.CreateProjectReq
-	51, // 41: titan.titan.UpdateProject:input_type -> titan.UpdateProjectReq
-	52, // 42: titan.titan.DeleteProject:input_type -> titan.DeleteProjectReq
-	54, // 43: titan.titan.ListApps:input_type -> titan.ListAppsReq
-	56, // 44: titan.titan.GetApp:input_type -> titan.GetAppReq
-	58, // 45: titan.titan.CreateApp:input_type -> titan.CreateAppReq
-	60, // 46: titan.titan.UpdateApp:input_type -> titan.UpdateAppReq
-	61, // 47: titan.titan.DeleteApp:input_type -> titan.DeleteAppReq
-	63, // 48: titan.titan.ListEnvs:input_type -> titan.ListEnvsReq
-	65, // 49: titan.titan.GetEnv:input_type -> titan.GetEnvReq
-	67, // 50: titan.titan.CreateEnv:input_type -> titan.CreateEnvReq
-	69, // 51: titan.titan.UpdateEnv:input_type -> titan.UpdateEnvReq
-	70, // 52: titan.titan.DeleteEnv:input_type -> titan.DeleteEnvReq
-	72, // 53: titan.titan.GetEnvLiveDetail:input_type -> titan.GetEnvLiveDetailReq
-	75, // 54: titan.titan.ListArtifacts:input_type -> titan.ListArtifactsReq
-	77, // 55: titan.titan.CreateArtifact:input_type -> titan.CreateArtifactReq
-	79, // 56: titan.titan.DeployArtifact:input_type -> titan.DeployArtifactReq
-	2,  // 57: titan.titan.Ping:output_type -> titan.PingResp
-	5,  // 58: titan.titan.ListIntegrations:output_type -> titan.ListIntegrationsResp
-	7,  // 59: titan.titan.CreateIntegration:output_type -> titan.CreateIntegrationResp
-	0,  // 60: titan.titan.UpdateIntegration:output_type -> titan.CommonResp
-	0,  // 61: titan.titan.DeleteIntegration:output_type -> titan.CommonResp
-	11, // 62: titan.titan.TestIntegration:output_type -> titan.TestIntegrationResp
-	14, // 63: titan.titan.ListClusters:output_type -> titan.ListClustersResp
-	16, // 64: titan.titan.CreateCluster:output_type -> titan.CreateClusterResp
-	0,  // 65: titan.titan.UpdateCluster:output_type -> titan.CommonResp
-	0,  // 66: titan.titan.DeleteCluster:output_type -> titan.CommonResp
-	20, // 67: titan.titan.TestCluster:output_type -> titan.TestClusterResp
-	22, // 68: titan.titan.ListNamespaces:output_type -> titan.ListNamespacesResp
-	25, // 69: titan.titan.ListPipelines:output_type -> titan.ListPipelinesResp
-	27, // 70: titan.titan.GetPipeline:output_type -> titan.PipelineDetailResp
-	29, // 71: titan.titan.CreatePipeline:output_type -> titan.CreatePipelineResp
-	0,  // 72: titan.titan.UpdatePipeline:output_type -> titan.CommonResp
-	0,  // 73: titan.titan.DeletePipeline:output_type -> titan.CommonResp
-	33, // 74: titan.titan.TriggerPipeline:output_type -> titan.TriggerPipelineResp
-	37, // 75: titan.titan.ListExecutions:output_type -> titan.ListExecutionsResp
-	39, // 76: titan.titan.GetExecutionDetail:output_type -> titan.ExecutionDetailResp
-	41, // 77: titan.titan.GetStepLog:output_type -> titan.GetStepLogResp
-	0,  // 78: titan.titan.ApproveStep:output_type -> titan.CommonResp
-	0,  // 79: titan.titan.CancelExecution:output_type -> titan.CommonResp
-	46, // 80: titan.titan.ListProjects:output_type -> titan.ListProjectsResp
-	48, // 81: titan.titan.GetProject:output_type -> titan.ProjectDetailResp
-	50, // 82: titan.titan.CreateProject:output_type -> titan.CreateProjectResp
-	0,  // 83: titan.titan.UpdateProject:output_type -> titan.CommonResp
-	0,  // 84: titan.titan.DeleteProject:output_type -> titan.CommonResp
-	55, // 85: titan.titan.ListApps:output_type -> titan.ListAppsResp
-	57, // 86: titan.titan.GetApp:output_type -> titan.AppDetailResp
-	59, // 87: titan.titan.CreateApp:output_type -> titan.CreateAppResp
-	0,  // 88: titan.titan.UpdateApp:output_type -> titan.CommonResp
-	0,  // 89: titan.titan.DeleteApp:output_type -> titan.CommonResp
-	64, // 90: titan.titan.ListEnvs:output_type -> titan.ListEnvsResp
-	66, // 91: titan.titan.GetEnv:output_type -> titan.EnvDetailResp
-	68, // 92: titan.titan.CreateEnv:output_type -> titan.CreateEnvResp
-	0,  // 93: titan.titan.UpdateEnv:output_type -> titan.CommonResp
-	0,  // 94: titan.titan.DeleteEnv:output_type -> titan.CommonResp
-	73, // 95: titan.titan.GetEnvLiveDetail:output_type -> titan.GetEnvLiveDetailResp
-	76, // 96: titan.titan.ListArtifacts:output_type -> titan.ListArtifactsResp
-	78, // 97: titan.titan.CreateArtifact:output_type -> titan.CreateArtifactResp
-	0,  // 98: titan.titan.DeployArtifact:output_type -> titan.CommonResp
-	57, // [57:99] is the sub-list for method output_type
-	15, // [15:57] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	81, // 15: titan.MatrixServiceRow.cells:type_name -> titan.MatrixCellInfo
+	80, // 16: titan.GetDeliveryMatrixResp.envs:type_name -> titan.MatrixEnvHeader
+	82, // 17: titan.GetDeliveryMatrixResp.services:type_name -> titan.MatrixServiceRow
+	86, // 18: titan.CompareMatrixEnvResp.commits:type_name -> titan.CommitDiffItem
+	88, // 19: titan.ListReleaseOrdersResp.list:type_name -> titan.ReleaseOrderItem
+	88, // 20: titan.ReleaseOrderDetailResp.order:type_name -> titan.ReleaseOrderItem
+	1,  // 21: titan.titan.Ping:input_type -> titan.PingReq
+	4,  // 22: titan.titan.ListIntegrations:input_type -> titan.ListIntegrationsReq
+	6,  // 23: titan.titan.CreateIntegration:input_type -> titan.CreateIntegrationReq
+	8,  // 24: titan.titan.UpdateIntegration:input_type -> titan.UpdateIntegrationReq
+	9,  // 25: titan.titan.DeleteIntegration:input_type -> titan.DeleteIntegrationReq
+	10, // 26: titan.titan.TestIntegration:input_type -> titan.TestIntegrationReq
+	13, // 27: titan.titan.ListClusters:input_type -> titan.ListClustersReq
+	15, // 28: titan.titan.CreateCluster:input_type -> titan.CreateClusterReq
+	17, // 29: titan.titan.UpdateCluster:input_type -> titan.UpdateClusterReq
+	18, // 30: titan.titan.DeleteCluster:input_type -> titan.DeleteClusterReq
+	19, // 31: titan.titan.TestCluster:input_type -> titan.TestClusterReq
+	21, // 32: titan.titan.ListNamespaces:input_type -> titan.ListNamespacesReq
+	24, // 33: titan.titan.ListPipelines:input_type -> titan.ListPipelinesReq
+	26, // 34: titan.titan.GetPipeline:input_type -> titan.GetPipelineReq
+	28, // 35: titan.titan.CreatePipeline:input_type -> titan.CreatePipelineReq
+	30, // 36: titan.titan.UpdatePipeline:input_type -> titan.UpdatePipelineReq
+	31, // 37: titan.titan.DeletePipeline:input_type -> titan.DeletePipelineReq
+	32, // 38: titan.titan.TriggerPipeline:input_type -> titan.TriggerPipelineReq
+	36, // 39: titan.titan.ListExecutions:input_type -> titan.ListExecutionsReq
+	38, // 40: titan.titan.GetExecutionDetail:input_type -> titan.GetExecutionDetailReq
+	40, // 41: titan.titan.GetStepLog:input_type -> titan.GetStepLogReq
+	42, // 42: titan.titan.ApproveStep:input_type -> titan.ApproveStepReq
+	43, // 43: titan.titan.CancelExecution:input_type -> titan.CancelExecutionReq
+	45, // 44: titan.titan.ListProjects:input_type -> titan.ListProjectsReq
+	47, // 45: titan.titan.GetProject:input_type -> titan.GetProjectReq
+	49, // 46: titan.titan.CreateProject:input_type -> titan.CreateProjectReq
+	51, // 47: titan.titan.UpdateProject:input_type -> titan.UpdateProjectReq
+	52, // 48: titan.titan.DeleteProject:input_type -> titan.DeleteProjectReq
+	54, // 49: titan.titan.ListApps:input_type -> titan.ListAppsReq
+	56, // 50: titan.titan.GetApp:input_type -> titan.GetAppReq
+	58, // 51: titan.titan.CreateApp:input_type -> titan.CreateAppReq
+	60, // 52: titan.titan.UpdateApp:input_type -> titan.UpdateAppReq
+	61, // 53: titan.titan.DeleteApp:input_type -> titan.DeleteAppReq
+	63, // 54: titan.titan.ListEnvs:input_type -> titan.ListEnvsReq
+	65, // 55: titan.titan.GetEnv:input_type -> titan.GetEnvReq
+	67, // 56: titan.titan.CreateEnv:input_type -> titan.CreateEnvReq
+	69, // 57: titan.titan.UpdateEnv:input_type -> titan.UpdateEnvReq
+	70, // 58: titan.titan.DeleteEnv:input_type -> titan.DeleteEnvReq
+	72, // 59: titan.titan.GetEnvLiveDetail:input_type -> titan.GetEnvLiveDetailReq
+	75, // 60: titan.titan.ListArtifacts:input_type -> titan.ListArtifactsReq
+	77, // 61: titan.titan.CreateArtifact:input_type -> titan.CreateArtifactReq
+	79, // 62: titan.titan.DeployArtifact:input_type -> titan.DeployArtifactReq
+	83, // 63: titan.titan.GetDeliveryMatrix:input_type -> titan.GetDeliveryMatrixReq
+	85, // 64: titan.titan.CompareMatrixEnv:input_type -> titan.CompareMatrixEnvReq
+	89, // 65: titan.titan.ListReleaseOrders:input_type -> titan.ListReleaseOrdersReq
+	91, // 66: titan.titan.GetReleaseOrder:input_type -> titan.GetReleaseOrderReq
+	93, // 67: titan.titan.CreateReleaseOrder:input_type -> titan.CreateReleaseOrderReq
+	95, // 68: titan.titan.AuditReleaseOrder:input_type -> titan.AuditReleaseOrderReq
+	96, // 69: titan.titan.ExecuteReleaseOrder:input_type -> titan.ExecuteReleaseOrderReq
+	2,  // 70: titan.titan.Ping:output_type -> titan.PingResp
+	5,  // 71: titan.titan.ListIntegrations:output_type -> titan.ListIntegrationsResp
+	7,  // 72: titan.titan.CreateIntegration:output_type -> titan.CreateIntegrationResp
+	0,  // 73: titan.titan.UpdateIntegration:output_type -> titan.CommonResp
+	0,  // 74: titan.titan.DeleteIntegration:output_type -> titan.CommonResp
+	11, // 75: titan.titan.TestIntegration:output_type -> titan.TestIntegrationResp
+	14, // 76: titan.titan.ListClusters:output_type -> titan.ListClustersResp
+	16, // 77: titan.titan.CreateCluster:output_type -> titan.CreateClusterResp
+	0,  // 78: titan.titan.UpdateCluster:output_type -> titan.CommonResp
+	0,  // 79: titan.titan.DeleteCluster:output_type -> titan.CommonResp
+	20, // 80: titan.titan.TestCluster:output_type -> titan.TestClusterResp
+	22, // 81: titan.titan.ListNamespaces:output_type -> titan.ListNamespacesResp
+	25, // 82: titan.titan.ListPipelines:output_type -> titan.ListPipelinesResp
+	27, // 83: titan.titan.GetPipeline:output_type -> titan.PipelineDetailResp
+	29, // 84: titan.titan.CreatePipeline:output_type -> titan.CreatePipelineResp
+	0,  // 85: titan.titan.UpdatePipeline:output_type -> titan.CommonResp
+	0,  // 86: titan.titan.DeletePipeline:output_type -> titan.CommonResp
+	33, // 87: titan.titan.TriggerPipeline:output_type -> titan.TriggerPipelineResp
+	37, // 88: titan.titan.ListExecutions:output_type -> titan.ListExecutionsResp
+	39, // 89: titan.titan.GetExecutionDetail:output_type -> titan.ExecutionDetailResp
+	41, // 90: titan.titan.GetStepLog:output_type -> titan.GetStepLogResp
+	0,  // 91: titan.titan.ApproveStep:output_type -> titan.CommonResp
+	0,  // 92: titan.titan.CancelExecution:output_type -> titan.CommonResp
+	46, // 93: titan.titan.ListProjects:output_type -> titan.ListProjectsResp
+	48, // 94: titan.titan.GetProject:output_type -> titan.ProjectDetailResp
+	50, // 95: titan.titan.CreateProject:output_type -> titan.CreateProjectResp
+	0,  // 96: titan.titan.UpdateProject:output_type -> titan.CommonResp
+	0,  // 97: titan.titan.DeleteProject:output_type -> titan.CommonResp
+	55, // 98: titan.titan.ListApps:output_type -> titan.ListAppsResp
+	57, // 99: titan.titan.GetApp:output_type -> titan.AppDetailResp
+	59, // 100: titan.titan.CreateApp:output_type -> titan.CreateAppResp
+	0,  // 101: titan.titan.UpdateApp:output_type -> titan.CommonResp
+	0,  // 102: titan.titan.DeleteApp:output_type -> titan.CommonResp
+	64, // 103: titan.titan.ListEnvs:output_type -> titan.ListEnvsResp
+	66, // 104: titan.titan.GetEnv:output_type -> titan.EnvDetailResp
+	68, // 105: titan.titan.CreateEnv:output_type -> titan.CreateEnvResp
+	0,  // 106: titan.titan.UpdateEnv:output_type -> titan.CommonResp
+	0,  // 107: titan.titan.DeleteEnv:output_type -> titan.CommonResp
+	73, // 108: titan.titan.GetEnvLiveDetail:output_type -> titan.GetEnvLiveDetailResp
+	76, // 109: titan.titan.ListArtifacts:output_type -> titan.ListArtifactsResp
+	78, // 110: titan.titan.CreateArtifact:output_type -> titan.CreateArtifactResp
+	0,  // 111: titan.titan.DeployArtifact:output_type -> titan.CommonResp
+	84, // 112: titan.titan.GetDeliveryMatrix:output_type -> titan.GetDeliveryMatrixResp
+	87, // 113: titan.titan.CompareMatrixEnv:output_type -> titan.CompareMatrixEnvResp
+	90, // 114: titan.titan.ListReleaseOrders:output_type -> titan.ListReleaseOrdersResp
+	92, // 115: titan.titan.GetReleaseOrder:output_type -> titan.ReleaseOrderDetailResp
+	94, // 116: titan.titan.CreateReleaseOrder:output_type -> titan.CreateReleaseOrderResp
+	0,  // 117: titan.titan.AuditReleaseOrder:output_type -> titan.CommonResp
+	0,  // 118: titan.titan.ExecuteReleaseOrder:output_type -> titan.CommonResp
+	70, // [70:119] is the sub-list for method output_type
+	21, // [21:70] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_titan_proto_init() }
@@ -6218,13 +7905,19 @@ func file_titan_proto_init() {
 	if File_titan_proto != nil {
 		return
 	}
+	file_titan_proto_msgTypes[8].OneofWrappers = []any{}
+	file_titan_proto_msgTypes[17].OneofWrappers = []any{}
+	file_titan_proto_msgTypes[30].OneofWrappers = []any{}
+	file_titan_proto_msgTypes[51].OneofWrappers = []any{}
+	file_titan_proto_msgTypes[60].OneofWrappers = []any{}
+	file_titan_proto_msgTypes[69].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_titan_proto_rawDesc), len(file_titan_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   80,
+			NumMessages:   97,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -2,11 +2,11 @@ package titanlogic
 
 import (
 	"context"
-	"fmt"
 
 	"go-zero-boilerplate/app/titan/model"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,44 +26,27 @@ func NewListProjectsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *List
 }
 
 func (l *ListProjectsLogic) ListProjects(in *titan.ListProjectsReq) (*titan.ListProjectsResp, error) {
-	page := in.Page
-	if page <= 0 {
-		page = 1
-	}
-	pageSize := in.PageSize
-	if pageSize <= 0 {
-		pageSize = 20
-	}
-	offset := (page - 1) * pageSize
+	offset, limit := normalizePage(int64(in.Page), int64(in.PageSize))
+	keyword := escapeLike(in.Keyword)
 
-	where := "WHERE 1=1"
-	var args []interface{}
-	if in.Keyword != "" {
-		where += " AND (name LIKE ? OR display_name LIKE ?)"
-		kw := "%" + in.Keyword + "%"
-		args = append(args, kw, kw)
+	projects, total, err := l.svcCtx.ProjectModel.ListByPage(l.ctx, keyword, offset, limit)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询项目列表失败: " + err.Error())
 	}
 
-	var total int64
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM titan_project %s", where)
-	if err := l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &total, countQuery, args...); err != nil {
-		return nil, err
-	}
-
-	var projects []*model.TitanProject
-	listQuery := fmt.Sprintf("SELECT id, name, display_name, description, owner_id, status, create_time, update_time FROM titan_project %s ORDER BY id DESC LIMIT %d, %d", where, offset, pageSize)
-	if err := l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &projects, listQuery, args...); err != nil {
-		return nil, err
+	// 一次聚合查询回填应用/环境计数（消除 N+1）
+	counts, err := l.svcCtx.ProjectModel.CountAppsAndEnvsByProject(l.ctx, projectIdsOf(projects))
+	if err != nil {
+		return nil, xerr.NewErrMsg("聚合项目资源计数失败: " + err.Error())
 	}
 
 	var list []*titan.ProjectItem
 	for _, p := range projects {
-		var appCount int32
-		_ = l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &appCount, "SELECT COUNT(*) FROM titan_app WHERE project_id = ?", p.Id)
-
-		var envCount int32
-		_ = l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &envCount, "SELECT COUNT(*) FROM titan_env WHERE project_id = ?", p.Id)
-
+		appCount, envCount := int32(0), int32(0)
+		if c, ok := counts[p.Id]; ok {
+			appCount = int32(c.AppCount)
+			envCount = int32(c.EnvCount)
+		}
 		list = append(list, &titan.ProjectItem{
 			Id:          p.Id,
 			Name:        p.Name,
@@ -73,8 +56,8 @@ func (l *ListProjectsLogic) ListProjects(in *titan.ListProjectsReq) (*titan.List
 			Status:      int32(p.Status),
 			AppCount:    appCount,
 			EnvCount:    envCount,
-			CreateTime:  p.CreateTime.Format("2006-01-02 15:04:05"),
-			UpdateTime:  p.UpdateTime.Format("2006-01-02 15:04:05"),
+			CreateTime:  formatTime(p.CreateTime),
+			UpdateTime:  formatTime(p.UpdateTime),
 		})
 	}
 
@@ -82,4 +65,12 @@ func (l *ListProjectsLogic) ListProjects(in *titan.ListProjectsReq) (*titan.List
 		Total: total,
 		List:  list,
 	}, nil
+}
+
+func projectIdsOf(projects []*model.TitanProject) []int64 {
+	ids := make([]int64, 0, len(projects))
+	for _, p := range projects {
+		ids = append(ids, p.Id)
+	}
+	return ids
 }

@@ -1,18 +1,18 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"go-zero-boilerplate/app/titan/model"
-	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
+	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/pkg/xerr"
 
+	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -43,27 +43,67 @@ type StepDef struct {
 	Config   map[string]string `json:"config"`
 }
 
+// genExecNo 生成唯一执行编号：时间戳 + UUID 短段，消除秒级时间戳+4 位随机数的高并发碰撞
+func genExecNo() string {
+	short := uuid.NewString()
+	if len(short) > 8 {
+		short = short[:8]
+	}
+	return fmt.Sprintf("TITAN-%s-%s", time.Now().Format("20060102150405"), short)
+}
+
 func (l *TriggerPipelineLogic) TriggerPipeline(in *titan.TriggerPipelineReq) (*titan.TriggerPipelineResp, error) {
 	p, err := l.svcCtx.PipelineModel.FindOne(l.ctx, in.PipelineId)
 	if err != nil {
-		return nil, xerr.NewErrMsg("目标流水线不存在")
+		return nil, notFoundOrError(err, "流水线")
+	}
+	if p.Status != model.CommonStatusEnabled {
+		return nil, xerr.NewErrMsg("流水线已停用，无法触发")
+	}
+
+	// stages 必须是合法 JSON，否则拒绝触发（不静默创建 0 步骤执行）
+	var stages []StageDef
+	if err := json.Unmarshal([]byte(p.Stages), &stages); err != nil {
+		return nil, xerr.NewErrMsg("流水线阶段定义 (stages) 不是合法 JSON，无法触发: " + err.Error())
 	}
 
 	gitBranch := in.GitBranch
 	if gitBranch == "" {
 		gitBranch = p.GitBranch
 	}
+	if gitBranch == "" {
+		gitBranch = "master"
+	}
 
 	now := time.Now()
-	execNo := fmt.Sprintf("TITAN-%s-%04d", now.Format("20060102150405"), rand.Intn(10000))
-	workflowId := fmt.Sprintf("wf-%s", execNo)
+	execNo := genExecNo()
+	workflowId := fmt.Sprintf("wf-%s", uuid.NewString())
 
 	runtimeParams := in.RuntimeParams
 	if runtimeParams == "" {
 		runtimeParams = "{}"
 	}
 
-	res, err := l.svcCtx.PipelineExecModel.Insert(l.ctx, &model.TitanPipelineExec{
+	// 执行记录与全部步骤在同一事务内写入：要么完整创建，要么整体回滚
+	nowNull := sql.NullTime{Time: now, Valid: true}
+	steps := make([]*model.TitanPipelineStepExec, 0, len(stages))
+	for _, stage := range stages {
+		for _, step := range stage.Steps {
+			steps = append(steps, &model.TitanPipelineStepExec{
+				ExecId:    0, // 事务内在 execId 确认后统一回填
+				StageId:   stage.ID,
+				StepId:    step.ID,
+				StepName:  step.Name,
+				StepType:  step.StepType,
+				Status:    model.ExecStatusPending,
+				LogPath:   fmt.Sprintf("/logs/titan/%s/%s.log", execNo, step.ID),
+				ErrorMsg:  "",
+				StartTime: nowNull,
+			})
+		}
+	}
+
+	execId, txErr := l.svcCtx.PipelineExecModel.TransactExecSteps(l.ctx, &model.TitanPipelineExec{
 		PipelineId:    p.Id,
 		PipelineName:  p.DisplayName,
 		ExecNo:        execNo,
@@ -72,36 +112,16 @@ func (l *TriggerPipelineLogic) TriggerPipeline(in *titan.TriggerPipelineReq) (*t
 		GitBranch:     gitBranch,
 		GitCommit:     in.GitCommit,
 		RuntimeParams: runtimeParams,
-		Status:        "RUNNING",
+		Status:        model.ExecStatusRunning,
 		WorkflowId:    workflowId,
-		StartTime:     sql.NullTime{Time: now, Valid: true},
+		StartTime:     nowNull,
 		Artifacts:     "[]",
-	})
-	if err != nil {
-		return nil, xerr.NewErrMsg("创建执行记录失败: " + err.Error())
+	}, steps)
+	if txErr != nil {
+		return nil, xerr.NewErrMsg("创建执行记录失败: " + txErr.Error())
 	}
 
-	execId, _ := res.LastInsertId()
-
-	// 解析 stages 并批量插入 step_exec
-	var stages []StageDef
-	_ = json.Unmarshal([]byte(p.Stages), &stages)
-
-	for _, stage := range stages {
-		for _, step := range stage.Steps {
-			_, _ = l.svcCtx.PipelineStepExecModel.Insert(l.ctx, &model.TitanPipelineStepExec{
-				ExecId:    execId,
-				StageId:   stage.ID,
-				StepId:    step.ID,
-				StepName:  step.Name,
-				StepType:  step.StepType,
-				Status:    "PENDING",
-				LogPath:   fmt.Sprintf("/logs/titan/%s/%s.log", execNo, step.ID),
-				ErrorMsg:  "",
-				StartTime: sql.NullTime{Time: now, Valid: true},
-			})
-		}
-	}
+	l.Infof("pipeline %s triggered by user %d, execNo=%s, steps=%d", p.Name, in.TriggerBy, execNo, len(steps))
 
 	return &titan.TriggerPipelineResp{
 		ExecId: execId,

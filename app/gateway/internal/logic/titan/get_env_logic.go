@@ -26,7 +26,8 @@ func NewGetEnvLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetEnvLogi
 
 func (l *GetEnvLogic) GetEnv(req *types.GetEnvReqVO) (resp *types.EnvVO, err error) {
 	res, err := l.svcCtx.TitanRpc.GetEnv(l.ctx, &titan.GetEnvReq{
-		Id: req.Id,
+		Id:        req.Id,
+		ProjectId: req.ProjectId,
 	})
 	if err != nil {
 		return nil, err

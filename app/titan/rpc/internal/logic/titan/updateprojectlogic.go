@@ -5,6 +5,7 @@ import (
 
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,27 +24,28 @@ func NewUpdateProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 	}
 }
 
+// UpdateProject 采用"字段显式提供才更新"语义：proto optional 指针为 nil 表示不更新。
 func (l *UpdateProjectLogic) UpdateProject(in *titan.UpdateProjectReq) (*titan.CommonResp, error) {
 	p, err := l.svcCtx.ProjectModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return nil, err
+		return nil, notFoundOrError(err, "项目")
 	}
 
-	if in.DisplayName != "" {
-		p.DisplayName = in.DisplayName
+	if in.DisplayName != nil {
+		p.DisplayName = *in.DisplayName
 	}
-	if in.Description != "" {
-		p.Description = in.Description
+	if in.Description != nil {
+		p.Description = *in.Description
 	}
-	if in.OwnerId > 0 {
-		p.OwnerId = in.OwnerId
+	if in.OwnerId != nil {
+		p.OwnerId = *in.OwnerId
 	}
-	if in.Status > 0 {
-		p.Status = int64(in.Status)
+	if in.Status != nil {
+		p.Status = int64(*in.Status)
 	}
 
 	if err := l.svcCtx.ProjectModel.Update(l.ctx, p); err != nil {
-		return nil, err
+		return nil, xerr.NewErrMsg("更新项目失败: " + err.Error())
 	}
 
 	return &titan.CommonResp{

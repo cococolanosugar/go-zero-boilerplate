@@ -3,6 +3,7 @@ import { App as AntdApp, Result, Button, Spin } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { casdoorLogin, setToken } from "@zero/api";
 import { parseCasdoorCallback } from "@zero/shared";
+import { getErrorMessage } from "../../utils/error";
 import { useInitialState } from "../../contexts/InitialStateContext";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -34,8 +35,8 @@ export const CallbackPage: React.FC = () => {
         await Promise.allSettled([refreshInitialState(), refreshProfile()]);
         message.success(`SSO 登录成功，欢迎回来：${res.realName || res.username}！`);
         navigate("/pipelines", { replace: true });
-      } catch (err: any) {
-        setError(err.message || "Casdoor SSO 登录校验失败，请重试");
+      } catch (err) {
+        setError(getErrorMessage(err, "Casdoor SSO 登录校验失败，请重试"));
       }
     })();
   }, [location.search, navigate, message, refreshInitialState, refreshProfile]);

@@ -5,6 +5,7 @@ import (
 
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +27,11 @@ func NewGetAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAppLogi
 func (l *GetAppLogic) GetApp(in *titan.GetAppReq) (*titan.AppDetailResp, error) {
 	a, err := l.svcCtx.AppModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return nil, err
+		return nil, notFoundOrError(err, "应用")
+	}
+	// 归属校验：应用必须属于路径中的项目，不符返回记录不存在（不泄露资源内容）
+	if in.ProjectId > 0 && a.ProjectId != in.ProjectId {
+		return nil, xerr.NewErrCode(xerr.RecordNotFound)
 	}
 
 	return &titan.AppDetailResp{

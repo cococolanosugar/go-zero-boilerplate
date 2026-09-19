@@ -9,12 +9,29 @@ import (
 	"errors"
 	"io"
 	"os"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 var (
-	// DefaultDevKey 默认开发秘钥（生产环境建议通过环境变量 TITAN_ENCRYPTION_KEY 覆盖）
+	// DefaultDevKey 默认开发秘钥（仅限开发/测试环境回退，生产环境必须通过环境变量 TITAN_ENCRYPTION_KEY 覆盖）
 	defaultKey = "titan-platform-secret-key"
+	prodMode   bool
 )
+
+// Init 在服务启动时初始化加密模块的运行模式判定。
+// mode 建议传入 go-zero 的 service.Mode（ProdMode / DevMode / TestMode）。
+// 生产环境未配置 TITAN_ENCRYPTION_KEY 时直接 panic 拒绝启动，避免凭据静默回退到内置默认密钥；
+// 开发与测试环境允许回退，但输出 WARN 提示。
+func Init(mode string) {
+	prodMode = mode == "prod" || mode == "production"
+	if os.Getenv("TITAN_ENCRYPTION_KEY") == "" {
+		if prodMode {
+			panic("cryptox: 生产环境必须配置 TITAN_ENCRYPTION_KEY 环境变量 (用于 kubeconfig/集成凭据的 AES-256-GCM 加密), 拒绝以默认密钥启动")
+		}
+		logx.Errorf("cryptox: TITAN_ENCRYPTION_KEY 未配置, 开发模式回退到内置默认密钥, 生产部署前必须覆盖")
+	}
+}
 
 // deriveKey 将任意长度的字符串通过 SHA-256 派生为固定的 32 字节 (256-bit) AES 秘钥
 func deriveKey(key string) []byte {

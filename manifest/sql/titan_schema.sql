@@ -14,6 +14,7 @@ CREATE TABLE `titan_integration` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_name` (`name`),
   KEY `idx_category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -92,6 +93,7 @@ CREATE TABLE `titan_pipeline_step_exec` (
   `end_time` datetime DEFAULT NULL,
   `duration_ms` bigint NOT NULL DEFAULT 0,
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_exec_stage` (`exec_id`, `stage_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -136,7 +138,7 @@ CREATE TABLE `titan_env` (
   `name` varchar(64) NOT NULL,
   `cluster_id` bigint NOT NULL,
   `namespace` varchar(64) NOT NULL,
-  `status` varchar(32) NOT NULL DEFAULT 'ACTIVE',
+  `status` varchar(32) NOT NULL DEFAULT 'ACTIVE' COMMENT '环境状态: ACTIVE-启用 INACTIVE-停用',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -173,11 +175,36 @@ CREATE TABLE `titan_env_app_binding` (
   `current_artifact_id` bigint NOT NULL DEFAULT 0,
   `ready_replicas` int NOT NULL DEFAULT 0,
   `total_replicas` int NOT NULL DEFAULT 0,
-  `status` varchar(32) NOT NULL DEFAULT 'PENDING',
+  `status` varchar(32) NOT NULL DEFAULT 'PENDING' COMMENT '绑定状态: PENDING-待部署 DEPLOYING-部署中 RUNNING-运行中 FAILED-部署失败 STOPPED-已停止',
   `last_deployed_time` datetime DEFAULT NULL,
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_env_app` (`env_id`, `app_id`),
   KEY `idx_env_id` (`env_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `titan_release_order` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '发布单ID',
+  `order_no` varchar(64) NOT NULL COMMENT '发布单号 (如 RO202609190001)',
+  `project_id` bigint NOT NULL COMMENT '所属项目ID',
+  `title` varchar(128) NOT NULL COMMENT '发布单标题',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '发布说明',
+  `target_env` varchar(32) NOT NULL COMMENT '目标环境 (dev, test, staging, prod)',
+  `services_json` json NOT NULL COMMENT '变更服务及目标版本详情 JSON',
+  `status` varchar(32) NOT NULL DEFAULT 'DRAFT' COMMENT 'DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, EXECUTING, SUCCESS, FAILED, CANCELED',
+  `itsm_process_inst_id` bigint NOT NULL DEFAULT 0 COMMENT '关联ITSM流程实例ID',
+  `applicant_id` bigint NOT NULL DEFAULT 0 COMMENT '申请人ID',
+  `applicant_name` varchar(64) NOT NULL DEFAULT '' COMMENT '申请人姓名',
+  `approver_id` bigint NOT NULL DEFAULT 0 COMMENT '审批人ID',
+  `approver_name` varchar(64) NOT NULL DEFAULT '' COMMENT '审批人姓名',
+  `scheduled_time` datetime DEFAULT NULL COMMENT '计划发布时间',
+  `start_time` datetime DEFAULT NULL COMMENT '实际开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '实际完成时间',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_order_no` (`order_no`),
+  KEY `idx_project_status` (`project_id`, `status`),
+  KEY `idx_target_env` (`target_env`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Titan发布单与合规卡点表';
 

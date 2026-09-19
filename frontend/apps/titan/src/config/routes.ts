@@ -18,12 +18,21 @@ export const routes: AppRouteItem[] = [
         component: lazy(() => import("../pages/Dashboard")),
       },
 
+      // 全景交付矩阵大盘 (Matrix)
+      {
+        path: "/matrix",
+        name: "menu.matrix",
+        locale: "menu.matrix",
+        icon: "DeploymentUnitOutlined",
+        component: lazy(() => import("../pages/Matrix")),
+      },
+
       // 1. 项目与微服务空间
       {
         path: "/space",
         name: "menu.space",
         locale: "menu.space",
-        icon: "DeploymentUnitOutlined",
+        icon: "ProjectOutlined",
         redirect: "/projects",
         routes: [
           {
@@ -51,6 +60,13 @@ export const routes: AppRouteItem[] = [
         icon: "RocketOutlined",
         redirect: "/environments",
         routes: [
+          {
+            path: "/release-orders",
+            name: "menu.releaseOrders",
+            locale: "menu.releaseOrders",
+            icon: "AuditOutlined",
+            component: lazy(() => import("../pages/ReleaseOrders")),
+          },
           {
             path: "/environments",
             name: "menu.environments",

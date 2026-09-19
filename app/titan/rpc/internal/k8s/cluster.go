@@ -178,6 +178,19 @@ func (m *ClusterManager) CheckDeploymentReady(ctx context.Context, namespace, de
 	return false, fmt.Sprintf("Progressing %d/%d ready", ready, desired), nil
 }
 
+// GetDeploymentReplicas 回读 Deployment 的就绪与期望副本数（部署状态真实回读，不虚构）
+func (m *ClusterManager) GetDeploymentReplicas(ctx context.Context, namespace, deploymentName string) (ready, total int32, err error) {
+	deploy, err := m.ClientSet.AppsV1().Deployments(namespace).Get(ctx, deploymentName, metav1.GetOptions{})
+	if err != nil {
+		return 0, 0, err
+	}
+	desired := int32(1)
+	if deploy.Spec.Replicas != nil {
+		desired = *deploy.Spec.Replicas
+	}
+	return deploy.Status.ReadyReplicas, desired, nil
+}
+
 // EnsureNamespace 确保命名空间存在
 func (m *ClusterManager) EnsureNamespace(ctx context.Context, namespace string) error {
 	_, err := m.ClientSet.CoreV1().Namespaces().Get(ctx, namespace, metav1.GetOptions{})

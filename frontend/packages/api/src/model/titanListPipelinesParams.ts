@@ -8,6 +8,14 @@
 export type TitanListPipelinesParams = {
 category?: string;
 keyword?: string;
+/**
+ * @minimum 1
+ * @maximum 100000
+ */
 page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
 pageSize?: number;
 };

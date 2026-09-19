@@ -1,4 +1,4 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
@@ -39,7 +39,7 @@ func (l *CreateClusterLogic) CreateCluster(in *titan.CreateClusterReq) (*titan.C
 	}
 
 	version := "unknown"
-	status := "HEALTHY"
+	status := model.ClusterStatusHealthy
 	cm, err := k8s.NewClusterManager(restCfg)
 	if err == nil {
 		if ver, err := cm.TestConnection(l.ctx); err == nil {

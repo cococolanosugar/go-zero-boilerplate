@@ -6,6 +6,9 @@
  */
 import type {
   TitanApproveStepBody,
+  TitanAuditReleaseOrderBody,
+  TitanCompareMatrixEnv200,
+  TitanCompareMatrixEnvParams,
   TitanCreateApp200,
   TitanCreateAppBody,
   TitanCreateArtifact200,
@@ -20,13 +23,18 @@ import type {
   TitanCreatePipelineBody,
   TitanCreateProject200,
   TitanCreateProjectBody,
+  TitanCreateReleaseOrder200,
+  TitanCreateReleaseOrderBody,
   TitanDeployArtifactBody,
   TitanGetApp200,
+  TitanGetDeliveryMatrix200,
+  TitanGetDeliveryMatrixParams,
   TitanGetEnv200,
   TitanGetEnvLiveDetail200,
   TitanGetExecutionDetail200,
   TitanGetPipeline200,
   TitanGetProject200,
+  TitanGetReleaseOrder200,
   TitanGetStepLog200,
   TitanGetStepLogParams,
   TitanListApps200,
@@ -45,6 +53,8 @@ import type {
   TitanListPipelinesParams,
   TitanListProjects200,
   TitanListProjectsParams,
+  TitanListReleaseOrders200,
+  TitanListReleaseOrdersParams,
   TitanTestCluster200,
   TitanTestIntegration200,
   TitanTriggerPipeline200,
@@ -132,20 +142,6 @@ export const titanTestCluster = (
  options?: SecondParameter<typeof customInstance<TitanTestCluster200>>,) => {
       return customInstance<TitanTestCluster200>(
       {url: `/api/v1/titan/clusters/${id}/test`, method: 'POST'
-    },
-      options);
-    }
-  /**
- * @summary deployArtifact
- */
-export const titanDeployArtifact = (
-    id: number,
-    titanDeployArtifactBody: TitanDeployArtifactBody,
- options?: SecondParameter<typeof customInstance<void>>,) => {
-      return customInstance<void>(
-      {url: `/api/v1/titan/envs/${id}/deploy`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: titanDeployArtifactBody
     },
       options);
     }
@@ -252,6 +248,30 @@ export const titanTestIntegration = (
  options?: SecondParameter<typeof customInstance<TitanTestIntegration200>>,) => {
       return customInstance<TitanTestIntegration200>(
       {url: `/api/v1/titan/integrations/${id}/test`, method: 'POST'
+    },
+      options);
+    }
+  /**
+ * @summary getDeliveryMatrix
+ */
+export const titanGetDeliveryMatrix = (
+    params: TitanGetDeliveryMatrixParams,
+ options?: SecondParameter<typeof customInstance<TitanGetDeliveryMatrix200>>,) => {
+      return customInstance<TitanGetDeliveryMatrix200>(
+      {url: `/api/v1/titan/matrix`, method: 'GET',
+        params
+    },
+      options);
+    }
+  /**
+ * @summary compareMatrixEnv
+ */
+export const titanCompareMatrixEnv = (
+    params: TitanCompareMatrixEnvParams,
+ options?: SecondParameter<typeof customInstance<TitanCompareMatrixEnv200>>,) => {
+      return customInstance<TitanCompareMatrixEnv200>(
+      {url: `/api/v1/titan/matrix/compare`, method: 'GET',
+        params
     },
       options);
     }
@@ -549,6 +569,82 @@ export const titanUpdateEnv = (
       options);
     }
   /**
+ * @summary deployArtifact
+ */
+export const titanDeployArtifact = (
+    projectId: number,
+    id: number,
+    titanDeployArtifactBody: TitanDeployArtifactBody,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/projects/${projectId}/envs/${id}/deploy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanDeployArtifactBody
+    },
+      options);
+    }
+  /**
+ * @summary listReleaseOrders
+ */
+export const titanListReleaseOrders = (
+    params: TitanListReleaseOrdersParams,
+ options?: SecondParameter<typeof customInstance<TitanListReleaseOrders200>>,) => {
+      return customInstance<TitanListReleaseOrders200>(
+      {url: `/api/v1/titan/release-orders`, method: 'GET',
+        params
+    },
+      options);
+    }
+  /**
+ * @summary createReleaseOrder
+ */
+export const titanCreateReleaseOrder = (
+    titanCreateReleaseOrderBody: TitanCreateReleaseOrderBody,
+ options?: SecondParameter<typeof customInstance<TitanCreateReleaseOrder200>>,) => {
+      return customInstance<TitanCreateReleaseOrder200>(
+      {url: `/api/v1/titan/release-orders`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanCreateReleaseOrderBody
+    },
+      options);
+    }
+  /**
+ * @summary getReleaseOrder
+ */
+export const titanGetReleaseOrder = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<TitanGetReleaseOrder200>>,) => {
+      return customInstance<TitanGetReleaseOrder200>(
+      {url: `/api/v1/titan/release-orders/${id}`, method: 'GET'
+    },
+      options);
+    }
+  /**
+ * @summary auditReleaseOrder
+ */
+export const titanAuditReleaseOrder = (
+    id: number,
+    titanAuditReleaseOrderBody: TitanAuditReleaseOrderBody,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/release-orders/${id}/audit`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: titanAuditReleaseOrderBody
+    },
+      options);
+    }
+  /**
+ * @summary executeReleaseOrder
+ */
+export const titanExecuteReleaseOrder = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<void>>,) => {
+      return customInstance<void>(
+      {url: `/api/v1/titan/release-orders/${id}/execute`, method: 'POST'
+    },
+      options);
+    }
+  /**
  * @summary approveStep
  */
 export const titanApproveStep = (
@@ -586,7 +682,6 @@ export type TitanDeleteClusterResult = NonNullable<Awaited<ReturnType<typeof tit
 export type TitanUpdateClusterResult = NonNullable<Awaited<ReturnType<typeof titanUpdateCluster>>>
 export type TitanListNamespacesResult = NonNullable<Awaited<ReturnType<typeof titanListNamespaces>>>
 export type TitanTestClusterResult = NonNullable<Awaited<ReturnType<typeof titanTestCluster>>>
-export type TitanDeployArtifactResult = NonNullable<Awaited<ReturnType<typeof titanDeployArtifact>>>
 export type TitanGetEnvLiveDetailResult = NonNullable<Awaited<ReturnType<typeof titanGetEnvLiveDetail>>>
 export type TitanListExecutionsResult = NonNullable<Awaited<ReturnType<typeof titanListExecutions>>>
 export type TitanGetExecutionDetailResult = NonNullable<Awaited<ReturnType<typeof titanGetExecutionDetail>>>
@@ -596,6 +691,8 @@ export type TitanCreateIntegrationResult = NonNullable<Awaited<ReturnType<typeof
 export type TitanDeleteIntegrationResult = NonNullable<Awaited<ReturnType<typeof titanDeleteIntegration>>>
 export type TitanUpdateIntegrationResult = NonNullable<Awaited<ReturnType<typeof titanUpdateIntegration>>>
 export type TitanTestIntegrationResult = NonNullable<Awaited<ReturnType<typeof titanTestIntegration>>>
+export type TitanGetDeliveryMatrixResult = NonNullable<Awaited<ReturnType<typeof titanGetDeliveryMatrix>>>
+export type TitanCompareMatrixEnvResult = NonNullable<Awaited<ReturnType<typeof titanCompareMatrixEnv>>>
 export type TitanListPipelinesResult = NonNullable<Awaited<ReturnType<typeof titanListPipelines>>>
 export type TitanCreatePipelineResult = NonNullable<Awaited<ReturnType<typeof titanCreatePipeline>>>
 export type TitanDeletePipelineResult = NonNullable<Awaited<ReturnType<typeof titanDeletePipeline>>>
@@ -619,5 +716,11 @@ export type TitanCreateEnvResult = NonNullable<Awaited<ReturnType<typeof titanCr
 export type TitanDeleteEnvResult = NonNullable<Awaited<ReturnType<typeof titanDeleteEnv>>>
 export type TitanGetEnvResult = NonNullable<Awaited<ReturnType<typeof titanGetEnv>>>
 export type TitanUpdateEnvResult = NonNullable<Awaited<ReturnType<typeof titanUpdateEnv>>>
+export type TitanDeployArtifactResult = NonNullable<Awaited<ReturnType<typeof titanDeployArtifact>>>
+export type TitanListReleaseOrdersResult = NonNullable<Awaited<ReturnType<typeof titanListReleaseOrders>>>
+export type TitanCreateReleaseOrderResult = NonNullable<Awaited<ReturnType<typeof titanCreateReleaseOrder>>>
+export type TitanGetReleaseOrderResult = NonNullable<Awaited<ReturnType<typeof titanGetReleaseOrder>>>
+export type TitanAuditReleaseOrderResult = NonNullable<Awaited<ReturnType<typeof titanAuditReleaseOrder>>>
+export type TitanExecuteReleaseOrderResult = NonNullable<Awaited<ReturnType<typeof titanExecuteReleaseOrder>>>
 export type TitanApproveStepResult = NonNullable<Awaited<ReturnType<typeof titanApproveStep>>>
 export type TitanGetStepLogResult = NonNullable<Awaited<ReturnType<typeof titanGetStepLog>>>

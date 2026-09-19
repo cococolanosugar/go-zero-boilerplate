@@ -1,12 +1,11 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
-	"fmt"
 
-	"go-zero-boilerplate/app/titan/model"
-	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
+	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,38 +25,12 @@ func NewListPipelinesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 }
 
 func (l *ListPipelinesLogic) ListPipelines(in *titan.ListPipelinesReq) (*titan.ListPipelinesResp, error) {
-	page := in.Page
-	if page <= 0 {
-		page = 1
-	}
-	pageSize := in.PageSize
-	if pageSize <= 0 {
-		pageSize = 20
-	}
-	offset := (page - 1) * pageSize
+	offset, limit := normalizePage(int64(in.Page), int64(in.PageSize))
+	keyword := escapeLike(in.Keyword)
 
-	where := "WHERE 1=1"
-	var args []interface{}
-	if in.Category != "" {
-		where += " AND category = ?"
-		args = append(args, in.Category)
-	}
-	if in.Keyword != "" {
-		where += " AND (name LIKE ? OR display_name LIKE ?)"
-		pattern := "%" + in.Keyword + "%"
-		args = append(args, pattern, pattern)
-	}
-
-	var total int64
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM titan_pipeline %s", where)
-	if err := l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &total, countQuery, args...); err != nil {
-		return nil, err
-	}
-
-	var pipelines []*model.TitanPipeline
-	listQuery := fmt.Sprintf("SELECT id, name, display_name, category, git_repo, git_branch, stages, params, triggers, status, description, created_by, create_time, update_time FROM titan_pipeline %s ORDER BY id DESC LIMIT %d, %d", where, offset, pageSize)
-	if err := l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &pipelines, listQuery, args...); err != nil {
-		return nil, err
+	pipelines, total, err := l.svcCtx.PipelineModel.ListByPage(l.ctx, in.Category, keyword, offset, limit)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询流水线列表失败: " + err.Error())
 	}
 
 	var list []*titan.PipelineItem
@@ -75,8 +48,8 @@ func (l *ListPipelinesLogic) ListPipelines(in *titan.ListPipelinesReq) (*titan.L
 			Status:      int32(p.Status),
 			Description: p.Description,
 			CreatedBy:   p.CreatedBy,
-			CreateTime:  p.CreateTime.Format("2006-01-02 15:04:05"),
-			UpdateTime:  p.UpdateTime.Format("2006-01-02 15:04:05"),
+			CreateTime:  formatTime(p.CreateTime),
+			UpdateTime:  formatTime(p.UpdateTime),
 		})
 	}
 

@@ -14,86 +14,103 @@ import (
 )
 
 type (
-	AppDetailResp         = titan.AppDetailResp
-	AppItem               = titan.AppItem
-	ApproveStepReq        = titan.ApproveStepReq
-	ArtifactItem          = titan.ArtifactItem
-	CancelExecutionReq    = titan.CancelExecutionReq
-	ClusterItem           = titan.ClusterItem
-	CommonResp            = titan.CommonResp
-	CreateAppReq          = titan.CreateAppReq
-	CreateAppResp         = titan.CreateAppResp
-	CreateArtifactReq     = titan.CreateArtifactReq
-	CreateArtifactResp    = titan.CreateArtifactResp
-	CreateClusterReq      = titan.CreateClusterReq
-	CreateClusterResp     = titan.CreateClusterResp
-	CreateEnvReq          = titan.CreateEnvReq
-	CreateEnvResp         = titan.CreateEnvResp
-	CreateIntegrationReq  = titan.CreateIntegrationReq
-	CreateIntegrationResp = titan.CreateIntegrationResp
-	CreatePipelineReq     = titan.CreatePipelineReq
-	CreatePipelineResp    = titan.CreatePipelineResp
-	CreateProjectReq      = titan.CreateProjectReq
-	CreateProjectResp     = titan.CreateProjectResp
-	DeleteAppReq          = titan.DeleteAppReq
-	DeleteClusterReq      = titan.DeleteClusterReq
-	DeleteEnvReq          = titan.DeleteEnvReq
-	DeleteIntegrationReq  = titan.DeleteIntegrationReq
-	DeletePipelineReq     = titan.DeletePipelineReq
-	DeleteProjectReq      = titan.DeleteProjectReq
-	DeployArtifactReq     = titan.DeployArtifactReq
-	EnvAppLiveItem        = titan.EnvAppLiveItem
-	EnvDetailResp         = titan.EnvDetailResp
-	EnvItem               = titan.EnvItem
-	ExecutionDetailResp   = titan.ExecutionDetailResp
-	ExecutionItem         = titan.ExecutionItem
-	GetAppReq             = titan.GetAppReq
-	GetEnvLiveDetailReq   = titan.GetEnvLiveDetailReq
-	GetEnvLiveDetailResp  = titan.GetEnvLiveDetailResp
-	GetEnvReq             = titan.GetEnvReq
-	GetExecutionDetailReq = titan.GetExecutionDetailReq
-	GetPipelineReq        = titan.GetPipelineReq
-	GetProjectReq         = titan.GetProjectReq
-	GetStepLogReq         = titan.GetStepLogReq
-	GetStepLogResp        = titan.GetStepLogResp
-	IntegrationItem       = titan.IntegrationItem
-	ListAppsReq           = titan.ListAppsReq
-	ListAppsResp          = titan.ListAppsResp
-	ListArtifactsReq      = titan.ListArtifactsReq
-	ListArtifactsResp     = titan.ListArtifactsResp
-	ListClustersReq       = titan.ListClustersReq
-	ListClustersResp      = titan.ListClustersResp
-	ListEnvsReq           = titan.ListEnvsReq
-	ListEnvsResp          = titan.ListEnvsResp
-	ListExecutionsReq     = titan.ListExecutionsReq
-	ListExecutionsResp    = titan.ListExecutionsResp
-	ListIntegrationsReq   = titan.ListIntegrationsReq
-	ListIntegrationsResp  = titan.ListIntegrationsResp
-	ListNamespacesReq     = titan.ListNamespacesReq
-	ListNamespacesResp    = titan.ListNamespacesResp
-	ListPipelinesReq      = titan.ListPipelinesReq
-	ListPipelinesResp     = titan.ListPipelinesResp
-	ListProjectsReq       = titan.ListProjectsReq
-	ListProjectsResp      = titan.ListProjectsResp
-	PingReq               = titan.PingReq
-	PingResp              = titan.PingResp
-	PipelineDetailResp    = titan.PipelineDetailResp
-	PipelineItem          = titan.PipelineItem
-	ProjectDetailResp     = titan.ProjectDetailResp
-	ProjectItem           = titan.ProjectItem
-	StepExecItem          = titan.StepExecItem
-	TestClusterReq        = titan.TestClusterReq
-	TestClusterResp       = titan.TestClusterResp
-	TestIntegrationReq    = titan.TestIntegrationReq
-	TestIntegrationResp   = titan.TestIntegrationResp
-	TriggerPipelineReq    = titan.TriggerPipelineReq
-	TriggerPipelineResp   = titan.TriggerPipelineResp
-	UpdateAppReq          = titan.UpdateAppReq
-	UpdateClusterReq      = titan.UpdateClusterReq
-	UpdateEnvReq          = titan.UpdateEnvReq
-	UpdateIntegrationReq  = titan.UpdateIntegrationReq
-	UpdatePipelineReq     = titan.UpdatePipelineReq
-	UpdateProjectReq      = titan.UpdateProjectReq
+	AppDetailResp          = titan.AppDetailResp
+	AppItem                = titan.AppItem
+	ApproveStepReq         = titan.ApproveStepReq
+	ArtifactItem           = titan.ArtifactItem
+	AuditReleaseOrderReq   = titan.AuditReleaseOrderReq
+	CancelExecutionReq     = titan.CancelExecutionReq
+	ClusterItem            = titan.ClusterItem
+	CommitDiffItem         = titan.CommitDiffItem
+	CommonResp             = titan.CommonResp
+	CompareMatrixEnvReq    = titan.CompareMatrixEnvReq
+	CompareMatrixEnvResp   = titan.CompareMatrixEnvResp
+	CreateAppReq           = titan.CreateAppReq
+	CreateAppResp          = titan.CreateAppResp
+	CreateArtifactReq      = titan.CreateArtifactReq
+	CreateArtifactResp     = titan.CreateArtifactResp
+	CreateClusterReq       = titan.CreateClusterReq
+	CreateClusterResp      = titan.CreateClusterResp
+	CreateEnvReq           = titan.CreateEnvReq
+	CreateEnvResp          = titan.CreateEnvResp
+	CreateIntegrationReq   = titan.CreateIntegrationReq
+	CreateIntegrationResp  = titan.CreateIntegrationResp
+	CreatePipelineReq      = titan.CreatePipelineReq
+	CreatePipelineResp     = titan.CreatePipelineResp
+	CreateProjectReq       = titan.CreateProjectReq
+	CreateProjectResp      = titan.CreateProjectResp
+	CreateReleaseOrderReq  = titan.CreateReleaseOrderReq
+	CreateReleaseOrderResp = titan.CreateReleaseOrderResp
+	DeleteAppReq           = titan.DeleteAppReq
+	DeleteClusterReq       = titan.DeleteClusterReq
+	DeleteEnvReq           = titan.DeleteEnvReq
+	DeleteIntegrationReq   = titan.DeleteIntegrationReq
+	DeletePipelineReq      = titan.DeletePipelineReq
+	DeleteProjectReq       = titan.DeleteProjectReq
+	DeployArtifactReq      = titan.DeployArtifactReq
+	EnvAppLiveItem         = titan.EnvAppLiveItem
+	EnvDetailResp          = titan.EnvDetailResp
+	EnvItem                = titan.EnvItem
+	ExecuteReleaseOrderReq = titan.ExecuteReleaseOrderReq
+	ExecutionDetailResp    = titan.ExecutionDetailResp
+	ExecutionItem          = titan.ExecutionItem
+	GetAppReq              = titan.GetAppReq
+	GetDeliveryMatrixReq   = titan.GetDeliveryMatrixReq
+	GetDeliveryMatrixResp  = titan.GetDeliveryMatrixResp
+	GetEnvLiveDetailReq    = titan.GetEnvLiveDetailReq
+	GetEnvLiveDetailResp   = titan.GetEnvLiveDetailResp
+	GetEnvReq              = titan.GetEnvReq
+	GetExecutionDetailReq  = titan.GetExecutionDetailReq
+	GetPipelineReq         = titan.GetPipelineReq
+	GetProjectReq          = titan.GetProjectReq
+	GetReleaseOrderReq     = titan.GetReleaseOrderReq
+	GetStepLogReq          = titan.GetStepLogReq
+	GetStepLogResp         = titan.GetStepLogResp
+	IntegrationItem        = titan.IntegrationItem
+	ListAppsReq            = titan.ListAppsReq
+	ListAppsResp           = titan.ListAppsResp
+	ListArtifactsReq       = titan.ListArtifactsReq
+	ListArtifactsResp      = titan.ListArtifactsResp
+	ListClustersReq        = titan.ListClustersReq
+	ListClustersResp       = titan.ListClustersResp
+	ListEnvsReq            = titan.ListEnvsReq
+	ListEnvsResp           = titan.ListEnvsResp
+	ListExecutionsReq      = titan.ListExecutionsReq
+	ListExecutionsResp     = titan.ListExecutionsResp
+	ListIntegrationsReq    = titan.ListIntegrationsReq
+	ListIntegrationsResp   = titan.ListIntegrationsResp
+	ListNamespacesReq      = titan.ListNamespacesReq
+	ListNamespacesResp     = titan.ListNamespacesResp
+	ListPipelinesReq       = titan.ListPipelinesReq
+	ListPipelinesResp      = titan.ListPipelinesResp
+	ListProjectsReq        = titan.ListProjectsReq
+	ListProjectsResp       = titan.ListProjectsResp
+	ListReleaseOrdersReq   = titan.ListReleaseOrdersReq
+	ListReleaseOrdersResp  = titan.ListReleaseOrdersResp
+	MatrixCellInfo         = titan.MatrixCellInfo
+	MatrixEnvHeader        = titan.MatrixEnvHeader
+	MatrixServiceRow       = titan.MatrixServiceRow
+	PingReq                = titan.PingReq
+	PingResp               = titan.PingResp
+	PipelineDetailResp     = titan.PipelineDetailResp
+	PipelineItem           = titan.PipelineItem
+	ProjectDetailResp      = titan.ProjectDetailResp
+	ProjectItem            = titan.ProjectItem
+	ReleaseOrderDetailResp = titan.ReleaseOrderDetailResp
+	ReleaseOrderItem       = titan.ReleaseOrderItem
+	StepExecItem           = titan.StepExecItem
+	TestClusterReq         = titan.TestClusterReq
+	TestClusterResp        = titan.TestClusterResp
+	TestIntegrationReq     = titan.TestIntegrationReq
+	TestIntegrationResp    = titan.TestIntegrationResp
+	TriggerPipelineReq     = titan.TriggerPipelineReq
+	TriggerPipelineResp    = titan.TriggerPipelineResp
+	UpdateAppReq           = titan.UpdateAppReq
+	UpdateClusterReq       = titan.UpdateClusterReq
+	UpdateEnvReq           = titan.UpdateEnvReq
+	UpdateIntegrationReq   = titan.UpdateIntegrationReq
+	UpdatePipelineReq      = titan.UpdatePipelineReq
+	UpdateProjectReq       = titan.UpdateProjectReq
 
 	Titan interface {
 		Ping(ctx context.Context, in *PingReq, opts ...grpc.CallOption) (*PingResp, error)
@@ -146,6 +163,15 @@ type (
 		ListArtifacts(ctx context.Context, in *ListArtifactsReq, opts ...grpc.CallOption) (*ListArtifactsResp, error)
 		CreateArtifact(ctx context.Context, in *CreateArtifactReq, opts ...grpc.CallOption) (*CreateArtifactResp, error)
 		DeployArtifact(ctx context.Context, in *DeployArtifactReq, opts ...grpc.CallOption) (*CommonResp, error)
+		// 5. 交付大盘 (Matrix)
+		GetDeliveryMatrix(ctx context.Context, in *GetDeliveryMatrixReq, opts ...grpc.CallOption) (*GetDeliveryMatrixResp, error)
+		CompareMatrixEnv(ctx context.Context, in *CompareMatrixEnvReq, opts ...grpc.CallOption) (*CompareMatrixEnvResp, error)
+		// 6. 发布单 (Release Order)
+		ListReleaseOrders(ctx context.Context, in *ListReleaseOrdersReq, opts ...grpc.CallOption) (*ListReleaseOrdersResp, error)
+		GetReleaseOrder(ctx context.Context, in *GetReleaseOrderReq, opts ...grpc.CallOption) (*ReleaseOrderDetailResp, error)
+		CreateReleaseOrder(ctx context.Context, in *CreateReleaseOrderReq, opts ...grpc.CallOption) (*CreateReleaseOrderResp, error)
+		AuditReleaseOrder(ctx context.Context, in *AuditReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error)
+		ExecuteReleaseOrder(ctx context.Context, in *ExecuteReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error)
 	}
 
 	defaultTitan struct {
@@ -375,4 +401,41 @@ func (m *defaultTitan) CreateArtifact(ctx context.Context, in *CreateArtifactReq
 func (m *defaultTitan) DeployArtifact(ctx context.Context, in *DeployArtifactReq, opts ...grpc.CallOption) (*CommonResp, error) {
 	client := titan.NewTitanClient(m.cli.Conn())
 	return client.DeployArtifact(ctx, in, opts...)
+}
+
+// 5. 交付大盘 (Matrix)
+func (m *defaultTitan) GetDeliveryMatrix(ctx context.Context, in *GetDeliveryMatrixReq, opts ...grpc.CallOption) (*GetDeliveryMatrixResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.GetDeliveryMatrix(ctx, in, opts...)
+}
+
+func (m *defaultTitan) CompareMatrixEnv(ctx context.Context, in *CompareMatrixEnvReq, opts ...grpc.CallOption) (*CompareMatrixEnvResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.CompareMatrixEnv(ctx, in, opts...)
+}
+
+// 6. 发布单 (Release Order)
+func (m *defaultTitan) ListReleaseOrders(ctx context.Context, in *ListReleaseOrdersReq, opts ...grpc.CallOption) (*ListReleaseOrdersResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.ListReleaseOrders(ctx, in, opts...)
+}
+
+func (m *defaultTitan) GetReleaseOrder(ctx context.Context, in *GetReleaseOrderReq, opts ...grpc.CallOption) (*ReleaseOrderDetailResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.GetReleaseOrder(ctx, in, opts...)
+}
+
+func (m *defaultTitan) CreateReleaseOrder(ctx context.Context, in *CreateReleaseOrderReq, opts ...grpc.CallOption) (*CreateReleaseOrderResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.CreateReleaseOrder(ctx, in, opts...)
+}
+
+func (m *defaultTitan) AuditReleaseOrder(ctx context.Context, in *AuditReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.AuditReleaseOrder(ctx, in, opts...)
+}
+
+func (m *defaultTitan) ExecuteReleaseOrder(ctx context.Context, in *ExecuteReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	client := titan.NewTitanClient(m.cli.Conn())
+	return client.ExecuteReleaseOrder(ctx, in, opts...)
 }

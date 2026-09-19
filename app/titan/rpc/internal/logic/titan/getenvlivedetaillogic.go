@@ -8,6 +8,7 @@ import (
 	"go-zero-boilerplate/app/titan/rpc/internal/k8s"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -28,33 +29,59 @@ func NewGetEnvLiveDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
+// GetEnvLiveDetail 环境实时大盘：绑定/制品批量查询（消除 N+1），Pod 与副本数来自真实集群回读，
+// 状态只反映 DB 绑定状态与真实 Pod 探测结果，不虚构 Pod 与副本数。
 func (l *GetEnvLiveDetailLogic) GetEnvLiveDetail(in *titan.GetEnvLiveDetailReq) (*titan.GetEnvLiveDetailResp, error) {
 	env, err := l.svcCtx.EnvModel.FindOne(l.ctx, in.EnvId)
 	if err != nil {
-		return nil, err
+		return nil, notFoundOrError(err, "环境")
 	}
 
 	var clusterName string
 	var clusterKubeconfig string
 	cluster, err := l.svcCtx.ClusterModel.FindOne(l.ctx, env.ClusterId)
-	if err == nil && cluster != nil {
-		clusterName = cluster.Name
-		clusterKubeconfig = cluster.Kubeconfig
+	if err != nil {
+		return nil, notFoundOrError(err, "集群")
 	}
+	clusterName = cluster.Name
+	clusterKubeconfig = cluster.Kubeconfig
 
-	// 尝试初始化 Kubernetes 客户端
+	// 尝试初始化 Kubernetes 客户端（失败记录日志，大盘降级为仅展示 DB 绑定状态）
 	var clusterMgr *k8s.ClusterManager
 	if clusterKubeconfig != "" {
-		cfg, err := k8s.BuildConfigFromKubeconfig(clusterKubeconfig)
-		if err == nil {
-			clusterMgr, _ = k8s.NewClusterManager(cfg)
+		cfg, cErr := k8s.BuildConfigFromKubeconfig(clusterKubeconfig)
+		if cErr != nil {
+			l.Errorf("解析集群配置失败 clusterId=%d: %v", env.ClusterId, cErr)
+		} else if mgr, mErr := k8s.NewClusterManager(cfg); mErr != nil {
+			l.Errorf("初始化集群客户端失败 clusterId=%d: %v", env.ClusterId, mErr)
+		} else {
+			clusterMgr = mgr
 		}
 	}
 
-	// 查询该项目下所有应用
-	var apps []*model.TitanApp
-	queryApps := "SELECT id, project_id, name, display_name, description, integration_id, repo_url, default_branch, build_config, deploy_spec, status, create_time, update_time FROM titan_app WHERE project_id = ? ORDER BY id ASC"
-	_ = l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &apps, queryApps, env.ProjectId)
+	// 项目下应用（轻量列）
+	apps, err := l.svcCtx.AppModel.ListLightByProject(l.ctx, env.ProjectId)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询项目应用列表失败: " + err.Error())
+	}
+
+	// 环境绑定与制品批量查询（消除 N+1）
+	bindings, err := l.svcCtx.EnvAppBindingModel.ListByEnvId(l.ctx, env.Id)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询环境绑定失败: " + err.Error())
+	}
+	bindingByApp := make(map[int64]*model.TitanEnvAppBinding, len(bindings))
+	artifactIds := make([]int64, 0, len(bindings))
+	for _, b := range bindings {
+		bindingByApp[b.AppId] = b
+		if b.CurrentArtifactId > 0 {
+			artifactIds = append(artifactIds, b.CurrentArtifactId)
+		}
+	}
+	artifacts, err := l.svcCtx.ArtifactModel.FindByIds(l.ctx, artifactIds)
+	if err != nil {
+		return nil, xerr.NewErrMsg("批量查询制品失败: " + err.Error())
+	}
 
 	var liveApps []*titan.EnvAppLiveItem
 	for _, app := range apps {
@@ -62,39 +89,31 @@ func (l *GetEnvLiveDetailLogic) GetEnvLiveDetail(in *titan.GetEnvLiveDetailReq) 
 			AppId:         app.Id,
 			AppName:       app.Name,
 			DisplayName:   app.DisplayName,
-			Status:        "STOPPED",
+			Status:        model.BindingStatusStopped,
 			ReadyReplicas: 0,
 			TotalReplicas: 0,
 		}
 
-		// 查询环境与应用绑定态
-		binding, bErr := l.svcCtx.EnvAppBindingModel.FindOneByEnvIdAppId(l.ctx, env.Id, app.Id)
-		if bErr == nil && binding != nil {
+		if binding, ok := bindingByApp[app.Id]; ok {
 			item.CurrentArtifactId = binding.CurrentArtifactId
 			item.ReadyReplicas = int32(binding.ReadyReplicas)
 			item.TotalReplicas = int32(binding.TotalReplicas)
 			item.Status = binding.Status
-			if binding.LastDeployedTime.Valid {
-				item.LastDeployedTime = binding.LastDeployedTime.Time.Format("2006-01-02 15:04:05")
-			}
+			item.LastDeployedTime = formatNullTime(binding.LastDeployedTime)
 
-			// 查询制品详情
-			if binding.CurrentArtifactId > 0 {
-				art, aErr := l.svcCtx.ArtifactModel.FindOne(l.ctx, binding.CurrentArtifactId)
-				if aErr == nil && art != nil {
-					item.ImageTag = art.ImageTag
-					item.ImageUrl = art.ImageUrl
-					item.GitCommit = art.GitCommit
-				}
+			if art, ok := artifacts[binding.CurrentArtifactId]; ok {
+				item.ImageTag = art.ImageTag
+				item.ImageUrl = art.ImageUrl
+				item.GitCommit = art.GitCommit
 			}
 		}
 
-		// 若 K8s 集群已直连，动态探测 Pod 列表
+		// 若 K8s 集群已直连，动态探测 Pod 列表（真实回读，不虚构）
 		if clusterMgr != nil && clusterMgr.ClientSet != nil {
-			podList, err := clusterMgr.ClientSet.CoreV1().Pods(env.Namespace).List(l.ctx, metav1.ListOptions{
+			podList, pErr := clusterMgr.ClientSet.CoreV1().Pods(env.Namespace).List(l.ctx, metav1.ListOptions{
 				LabelSelector: fmt.Sprintf("app=%s", app.Name),
 			})
-			if err == nil && len(podList.Items) > 0 {
+			if pErr == nil && len(podList.Items) > 0 {
 				var podNames []string
 				var readyCount int32
 				for _, p := range podList.Items {
@@ -106,19 +125,10 @@ func (l *GetEnvLiveDetailLogic) GetEnvLiveDetail(in *titan.GetEnvLiveDetailReq) 
 				item.Pods = podNames
 				item.ReadyReplicas = readyCount
 				item.TotalReplicas = int32(len(podList.Items))
-				if readyCount == item.TotalReplicas {
-					item.Status = "RUNNING"
-				} else {
-					item.Status = "UPDATING"
+				// 全部就绪且绑定状态为部署中/待部署时推进为 RUNNING（真实探测结果）
+				if readyCount == item.TotalReplicas && item.Status != model.BindingStatusFailed {
+					item.Status = model.BindingStatusRunning
 				}
-			}
-		}
-
-		if len(item.Pods) == 0 && item.Status == "RUNNING" {
-			// 演示环境容底 Pod 标识
-			item.Pods = []string{
-				fmt.Sprintf("%s-deployment-7f98d6c8b-x2k9l", app.Name),
-				fmt.Sprintf("%s-deployment-7f98d6c8b-v8m4q", app.Name),
 			}
 		}
 

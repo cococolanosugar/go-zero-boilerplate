@@ -240,3 +240,40 @@ func (s *TitanServer) DeployArtifact(ctx context.Context, in *titan.DeployArtifa
 	l := titanlogic.NewDeployArtifactLogic(ctx, s.svcCtx)
 	return l.DeployArtifact(in)
 }
+
+// 5. 交付大盘 (Matrix)
+func (s *TitanServer) GetDeliveryMatrix(ctx context.Context, in *titan.GetDeliveryMatrixReq) (*titan.GetDeliveryMatrixResp, error) {
+	l := titanlogic.NewGetDeliveryMatrixLogic(ctx, s.svcCtx)
+	return l.GetDeliveryMatrix(in)
+}
+
+func (s *TitanServer) CompareMatrixEnv(ctx context.Context, in *titan.CompareMatrixEnvReq) (*titan.CompareMatrixEnvResp, error) {
+	l := titanlogic.NewCompareMatrixEnvLogic(ctx, s.svcCtx)
+	return l.CompareMatrixEnv(in)
+}
+
+// 6. 发布单 (Release Order)
+func (s *TitanServer) ListReleaseOrders(ctx context.Context, in *titan.ListReleaseOrdersReq) (*titan.ListReleaseOrdersResp, error) {
+	l := titanlogic.NewListReleaseOrdersLogic(ctx, s.svcCtx)
+	return l.ListReleaseOrders(in)
+}
+
+func (s *TitanServer) GetReleaseOrder(ctx context.Context, in *titan.GetReleaseOrderReq) (*titan.ReleaseOrderDetailResp, error) {
+	l := titanlogic.NewGetReleaseOrderLogic(ctx, s.svcCtx)
+	return l.GetReleaseOrder(in)
+}
+
+func (s *TitanServer) CreateReleaseOrder(ctx context.Context, in *titan.CreateReleaseOrderReq) (*titan.CreateReleaseOrderResp, error) {
+	l := titanlogic.NewCreateReleaseOrderLogic(ctx, s.svcCtx)
+	return l.CreateReleaseOrder(in)
+}
+
+func (s *TitanServer) AuditReleaseOrder(ctx context.Context, in *titan.AuditReleaseOrderReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewAuditReleaseOrderLogic(ctx, s.svcCtx)
+	return l.AuditReleaseOrder(in)
+}
+
+func (s *TitanServer) ExecuteReleaseOrder(ctx context.Context, in *titan.ExecuteReleaseOrderReq) (*titan.CommonResp, error) {
+	l := titanlogic.NewExecuteReleaseOrderLogic(ctx, s.svcCtx)
+	return l.ExecuteReleaseOrder(in)
+}

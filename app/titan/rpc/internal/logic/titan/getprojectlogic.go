@@ -5,6 +5,7 @@ import (
 
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,14 +27,17 @@ func NewGetProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPro
 func (l *GetProjectLogic) GetProject(in *titan.GetProjectReq) (*titan.ProjectDetailResp, error) {
 	p, err := l.svcCtx.ProjectModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return nil, err
+		return nil, notFoundOrError(err, "项目")
 	}
 
-	var appCount int32
-	_ = l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &appCount, "SELECT COUNT(*) FROM titan_app WHERE project_id = ?", p.Id)
-
-	var envCount int32
-	_ = l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &envCount, "SELECT COUNT(*) FROM titan_env WHERE project_id = ?", p.Id)
+	appCount, err := l.svcCtx.AppModel.CountByProject(l.ctx, p.Id)
+	if err != nil {
+		return nil, xerr.NewErrMsg("统计项目应用数失败: " + err.Error())
+	}
+	envCount, err := l.svcCtx.EnvModel.CountByProject(l.ctx, p.Id)
+	if err != nil {
+		return nil, xerr.NewErrMsg("统计项目环境数失败: " + err.Error())
+	}
 
 	return &titan.ProjectDetailResp{
 		Project: &titan.ProjectItem{
@@ -43,10 +47,10 @@ func (l *GetProjectLogic) GetProject(in *titan.GetProjectReq) (*titan.ProjectDet
 			Description: p.Description,
 			OwnerId:     p.OwnerId,
 			Status:      int32(p.Status),
-			AppCount:    appCount,
-			EnvCount:    envCount,
-			CreateTime:  p.CreateTime.Format("2006-01-02 15:04:05"),
-			UpdateTime:  p.UpdateTime.Format("2006-01-02 15:04:05"),
+			AppCount:    int32(appCount),
+			EnvCount:    int32(envCount),
+			CreateTime:  formatTime(p.CreateTime),
+			UpdateTime:  formatTime(p.UpdateTime),
 		},
 	}, nil
 }

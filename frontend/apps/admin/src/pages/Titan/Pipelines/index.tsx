@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   App as AntdApp,
@@ -44,6 +44,9 @@ import {
   type TitanListExecutions200ListItem,
 } from '@zero/api';
 import { DesignerModal } from './DesignerModal';
+import { jsonValidator } from '../validation';
+import { execStatusMap } from '../status';
+import { getErrorMessage } from '../utils/error';
 
 const { Text } = Typography;
 
@@ -52,15 +55,6 @@ const categoryMetaMap: Record<string, { label: string; color: string }> = {
   frontend: { label: '前端应用', color: 'cyan' },
   data: { label: '数据批处理', color: 'purple' },
   other: { label: '通用流水线', color: 'default' },
-};
-
-const execStatusMap: Record<string, { color: string; label: string }> = {
-  PENDING: { color: 'default', label: '就绪' },
-  RUNNING: { color: 'processing', label: '执行中' },
-  WAITING_APPROVAL: { color: 'warning', label: '等待审批' },
-  SUCCESS: { color: 'success', label: '发布成功' },
-  FAILED: { color: 'error', label: '失败' },
-  CANCELLED: { color: 'default', label: '已终止' },
 };
 
 export const PipelinesPage: React.FC = () => {
@@ -147,20 +141,18 @@ export const PipelinesPage: React.FC = () => {
       });
 
       actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err?.message || '触发流水线运行失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, '触发流水线运行失败'));
     } finally {
       setTriggering(false);
     }
   };
 
-  // 打开执行历史 Drawer
+  // 打开执行历史 Drawer（ProTable reload 同步安全，微任务内触发即可，无需 setTimeout hack）
   const handleOpenHistory = (pipelineId?: number) => {
     setHistoryPipelineId(pipelineId);
     setHistoryDrawerOpen(true);
-    setTimeout(() => {
-      historyActionRef.current?.reload();
-    }, 100);
+    void Promise.resolve().then(() => historyActionRef.current?.reload());
   };
 
   // 删除流水线
@@ -169,8 +161,8 @@ export const PipelinesPage: React.FC = () => {
       await titanDeletePipeline(id);
       message.success('流水线已成功删除');
       actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err?.message || '删除失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, '删除失败'));
     }
   };
 
@@ -328,8 +320,8 @@ export const PipelinesPage: React.FC = () => {
               success: true,
               total: res.total || 0,
             };
-          } catch (err: any) {
-            message.error(err?.message || '加载流水线列表失败');
+          } catch (err) {
+            message.error(getErrorMessage(err, '加载流水线列表失败'));
             return { data: [], success: false, total: 0 };
           }
         }}
@@ -380,6 +372,7 @@ export const PipelinesPage: React.FC = () => {
             name="runtimeParams"
             label="动态运行时参数 (JSON)"
             tooltip="透传给各个步骤活动的自定义参数字典"
+            rules={[{ validator: jsonValidator }]}
           >
             <Input.TextArea rows={3} placeholder='{"ENV": "test", "REPLICAS": 2}' />
           </Form.Item>

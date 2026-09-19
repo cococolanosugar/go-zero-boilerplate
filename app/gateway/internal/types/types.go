@@ -18,6 +18,7 @@ type ArtifactVO struct {
 	ImageSizeBytes int64  `json:"imageSizeBytes"`
 	Status         string `json:"status"`
 	CreateTime     string `json:"createTime"`
+	UpdateTime     string `json:"updateTime"`
 }
 
 type ClusterVO struct {
@@ -31,6 +32,13 @@ type ClusterVO struct {
 	CreatedBy   int64  `json:"createdBy"`
 	CreateTime  string `json:"createTime"`
 	UpdateTime  string `json:"updateTime"`
+}
+
+type CommitDiffItemVO struct {
+	CommitId   string `json:"commitId"`
+	Message    string `json:"message"`
+	Author     string `json:"author"`
+	CommitTime string `json:"commitTime"`
 }
 
 type DashboardSystemStats struct {
@@ -72,6 +80,7 @@ type ExecutionVO struct {
 	DurationMs    int64  `json:"durationMs"`
 	Artifacts     string `json:"artifacts"`
 	CreateTime    string `json:"createTime"`
+	UpdateTime    string `json:"updateTime"`
 }
 
 type IntegrationVO struct {
@@ -85,6 +94,38 @@ type IntegrationVO struct {
 	CreatedBy   int64  `json:"createdBy"`
 	CreateTime  string `json:"createTime"`
 	UpdateTime  string `json:"updateTime"`
+}
+
+type MatrixCellInfoVO struct {
+	EnvId          int64  `json:"envId"`
+	EnvCode        string `json:"envCode"`
+	AppId          int64  `json:"appId"`
+	ArtifactId     int64  `json:"artifactId"`
+	VersionTag     string `json:"versionTag"`
+	GitCommit      string `json:"gitCommit"`
+	GitBranch      string `json:"gitBranch"`
+	DeployStatus   string `json:"deployStatus"`
+	HealthStatus   string `json:"healthStatus"`
+	ReadyReplicas  int32  `json:"readyReplicas"`
+	TotalReplicas  int32  `json:"totalReplicas"`
+	LastDeployedAt string `json:"lastDeployedAt"`
+	DiffStatus     string `json:"diffStatus"`
+}
+
+type MatrixEnvHeaderVO struct {
+	EnvId       int64  `json:"envId"`
+	EnvCode     string `json:"envCode"`
+	EnvName     string `json:"envName"`
+	ClusterName string `json:"clusterName"`
+}
+
+type MatrixServiceRowVO struct {
+	AppId         int64              `json:"appId"`
+	AppName       string             `json:"appName"`
+	DisplayName   string             `json:"displayName"`
+	RepoUrl       string             `json:"repoUrl"`
+	DefaultBranch string             `json:"defaultBranch"`
+	Cells         []MatrixCellInfoVO `json:"cells"`
 }
 
 type NoticeFeedItem struct {
@@ -112,6 +153,27 @@ type OnlineSessionItem struct {
 	Os            string `json:"os"`
 	LoginTime     string `json:"loginTime"`
 	IsCurrent     bool   `json:"isCurrent"`
+}
+
+type ReleaseOrderVO struct {
+	Id                int64  `json:"id"`
+	OrderNo           string `json:"orderNo"`
+	ProjectId         int64  `json:"projectId"`
+	Title             string `json:"title"`
+	Description       string `json:"description"`
+	TargetEnv         string `json:"targetEnv"`
+	ServicesJson      string `json:"servicesJson"`
+	Status            string `json:"status"`
+	ItsmProcessInstId int64  `json:"itsmProcessInstId"`
+	ApplicantId       int64  `json:"applicantId"`
+	ApplicantName     string `json:"applicantName"`
+	ApproverId        int64  `json:"approverId"`
+	ApproverName      string `json:"approverName"`
+	ScheduledTime     string `json:"scheduledTime"`
+	StartTime         string `json:"startTime"`
+	EndTime           string `json:"endTime"`
+	CreateTime        string `json:"createTime"`
+	UpdateTime        string `json:"updateTime"`
 }
 
 type SlaPolicyVO struct {

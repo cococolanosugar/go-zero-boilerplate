@@ -1,5 +1,6 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
+  App as AntdApp,
   Modal,
   Form,
   Input,
@@ -35,6 +36,7 @@ import {
   titanUpdatePipeline,
   type TitanListPipelines200ListItem,
 } from '@zero/api';
+import { getErrorMessage, isFormValidateError } from '../utils/error';
 
 const { Text, Paragraph } = Typography;
 
@@ -129,6 +131,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const { message } = AntdApp.useApp();
   const [form] = Form.useForm();
   const [activeTab, setActiveTab] = useState<'visual' | 'json'>('visual');
   const [stages, setStages] = useState<PipelineStage[]>(defaultStages);
@@ -287,13 +290,14 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
           stages: stagesPayload,
           params: '[]',
           triggers: '{}',
-          status: values.status ?? 1,
+          status: values.status,
           description: values.description,
         });
       }
       onSuccess();
-    } catch (err: any) {
-      // Form validation errors handled automatically
+    } catch (err) {
+      if (isFormValidateError(err)) return; // 表单校验错误已由表单内提示
+      message.error(getErrorMessage(err, '保存失败，请稍后重试'));
     } finally {
       setSubmitting(false);
     }

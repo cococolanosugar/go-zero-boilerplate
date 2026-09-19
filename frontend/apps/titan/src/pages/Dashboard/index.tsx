@@ -37,20 +37,24 @@ import {
   type TitanListExecutions200ListItem,
   type TitanListClusters200ListItem,
 } from '@zero/api';
+import { useIntl } from '../../contexts/LocaleContext';
+import { execStatusMap } from '../../constants/status';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
-const statusTagMap: Record<string, { color: string; text: string; icon: React.ReactNode }> = {
-  PENDING: { color: 'default', text: '排队就绪', icon: <SyncOutlined /> },
-  RUNNING: { color: 'processing', text: '执行中', icon: <SyncOutlined spin /> },
-  WAITING_APPROVAL: { color: 'warning', text: '等待审批', icon: <SyncOutlined /> },
-  SUCCESS: { color: 'success', text: '成功', icon: <CheckCircleOutlined /> },
-  FAILED: { color: 'error', text: '失败', icon: <CloseCircleOutlined /> },
-  CANCELLED: { color: 'default', text: '已取消', icon: <CloseCircleOutlined /> },
+// 图标属于视图层细节，保留在页面内；颜色/文案统一引用 constants/status.ts
+const statusIconMap: Record<string, React.ReactNode> = {
+  PENDING: <SyncOutlined />,
+  RUNNING: <SyncOutlined spin />,
+  WAITING_APPROVAL: <SyncOutlined />,
+  SUCCESS: <CheckCircleOutlined />,
+  FAILED: <CloseCircleOutlined />,
+  CANCELLED: <CloseCircleOutlined />,
 };
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
+  const { formatMessage: t } = useIntl();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalProjects: 0,
@@ -107,8 +111,11 @@ export const DashboardPage: React.FC = () => {
   return (
     <PageContainer
       header={{
-        title: 'Titan 研发交付大盘',
-        subTitle: '云原生持续交付、Kubernetes 多集群发布与持续集成流水线调度中枢',
+        title: t({ id: 'titan.dashboard.title', defaultMessage: 'Titan 研发交付大盘' }),
+        subTitle: t({
+          id: 'titan.dashboard.subTitle',
+          defaultMessage: '云原生持续交付、Kubernetes 多集群发布与持续集成流水线调度中枢',
+        }),
         extra: [
           <Button
             key="create-pipeline"
@@ -116,14 +123,14 @@ export const DashboardPage: React.FC = () => {
             icon={<PlusOutlined />}
             onClick={() => navigate('/pipelines')}
           >
-            新建流水线
+            {t({ id: 'titan.dashboard.newPipeline', defaultMessage: '新建流水线' })}
           </Button>,
           <Button
             key="cluster"
             icon={<ClusterOutlined />}
             onClick={() => navigate('/clusters')}
           >
-            纳管集群
+            {t({ id: 'titan.dashboard.manageClusters', defaultMessage: '纳管集群' })}
           </Button>,
         ],
       }}
@@ -134,14 +141,14 @@ export const DashboardPage: React.FC = () => {
           <Col xs={24} sm={12} md={8} lg={5}>
             <Card variant="borderless" hoverable onClick={() => navigate('/projects')}>
               <Statistic
-                title="交付项目 (Projects)"
+                title={t({ id: 'titan.dashboard.statProjects', defaultMessage: '交付项目 (Projects)' })}
                 value={stats.totalProjects}
                 prefix={<ProjectOutlined style={{ color: '#1677ff' }} />}
-                suffix="个"
+                suffix={t({ id: 'titan.dashboard.unitProjects', defaultMessage: '个' })}
               />
               <div style={{ marginTop: 8 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
-                  项目 → 应用 → 制品 → 环境
+                  {t({ id: 'titan.dashboard.statProjectsDesc', defaultMessage: '项目 → 应用 → 制品 → 环境' })}
                 </Text>
               </div>
             </Card>
@@ -150,14 +157,14 @@ export const DashboardPage: React.FC = () => {
           <Col xs={24} sm={12} md={8} lg={4}>
             <Card variant="borderless" hoverable onClick={() => navigate('/pipelines')}>
               <Statistic
-                title="自定义流水线"
+                title={t({ id: 'titan.dashboard.statPipelines', defaultMessage: '自定义流水线' })}
                 value={stats.totalPipelines}
                 prefix={<BranchesOutlined style={{ color: '#722ed1' }} />}
-                suffix="条"
+                suffix={t({ id: 'titan.dashboard.unitPipelines', defaultMessage: '条' })}
               />
               <div style={{ marginTop: 8 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
-                  扩展 CI/CD 编排
+                  {t({ id: 'titan.dashboard.statPipelinesDesc', defaultMessage: '扩展 CI/CD 编排' })}
                 </Text>
               </div>
             </Card>
@@ -166,14 +173,14 @@ export const DashboardPage: React.FC = () => {
           <Col xs={24} sm={12} md={8} lg={5}>
             <Card variant="borderless" hoverable onClick={() => navigate('/pipelines')}>
               <Statistic
-                title="累计运行次数 (Runs)"
+                title={t({ id: 'titan.dashboard.statRuns', defaultMessage: '累计运行次数 (Runs)' })}
                 value={stats.totalExecutions}
                 prefix={<RocketOutlined style={{ color: '#52c41a' }} />}
-                suffix="次"
+                suffix={t({ id: 'titan.dashboard.unitRuns', defaultMessage: '次' })}
               />
               <div style={{ marginTop: 8 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
-                  Temporal DAG 状态机编排
+                  {t({ id: 'titan.dashboard.statRunsDesc', defaultMessage: 'Temporal DAG 状态机编排' })}
                 </Text>
               </div>
             </Card>
@@ -182,14 +189,14 @@ export const DashboardPage: React.FC = () => {
           <Col xs={24} sm={12} md={12} lg={5}>
             <Card variant="borderless" hoverable onClick={() => navigate('/clusters')}>
               <Statistic
-                title="Kubernetes 集群 (Clusters)"
+                title={t({ id: 'titan.dashboard.statClusters', defaultMessage: 'Kubernetes 集群 (Clusters)' })}
                 value={stats.totalClusters}
                 prefix={<ClusterOutlined style={{ color: '#722ed1' }} />}
-                suffix="个"
+                suffix={t({ id: 'titan.dashboard.unitClusters', defaultMessage: '个' })}
               />
               <div style={{ marginTop: 8 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
-                  支持 Helm 3 与原生 YAML SSA
+                  {t({ id: 'titan.dashboard.statClustersDesc', defaultMessage: '支持 Helm 3 与原生 YAML SSA' })}
                 </Text>
               </div>
             </Card>
@@ -198,14 +205,14 @@ export const DashboardPage: React.FC = () => {
           <Col xs={24} sm={12} md={12} lg={5}>
             <Card variant="borderless" hoverable onClick={() => navigate('/integrations')}>
               <Statistic
-                title="系统集成凭据 (Integrations)"
+                title={t({ id: 'titan.dashboard.statIntegrations', defaultMessage: '系统集成凭据 (Integrations)' })}
                 value={stats.totalIntegrations}
                 prefix={<ApiOutlined style={{ color: '#fa8c16' }} />}
-                suffix="套"
+                suffix={t({ id: 'titan.dashboard.unitIntegrations', defaultMessage: '套' })}
               />
               <div style={{ marginTop: 8 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
-                  Git / Harbor / Jenkins 认证桥接
+                  {t({ id: 'titan.dashboard.statIntegrationsDesc', defaultMessage: 'Git / Harbor / Jenkins 认证桥接' })}
                 </Text>
               </div>
             </Card>
@@ -219,12 +226,12 @@ export const DashboardPage: React.FC = () => {
               title={
                 <Space>
                   <PlayCircleOutlined style={{ color: '#1677ff' }} />
-                  <span>最近执行流水 (Recent Executions)</span>
+                  <span>{t({ id: 'titan.dashboard.recentExecutions', defaultMessage: '最近执行流水 (Recent Executions)' })}</span>
                 </Space>
               }
               extra={
                 <Button type="link" onClick={() => navigate('/pipelines')}>
-                  查看全部 <ArrowRightOutlined />
+                  {t({ id: 'titan.dashboard.viewAll', defaultMessage: '查看全部' })} <ArrowRightOutlined />
                 </Button>
               }
               variant="borderless"
@@ -236,7 +243,7 @@ export const DashboardPage: React.FC = () => {
                 size="middle"
                 columns={[
                   {
-                    title: '运行编号',
+                    title: t({ id: 'titan.dashboard.colExecNo', defaultMessage: '运行编号' }),
                     dataIndex: 'execNo',
                     key: 'execNo',
                     render: (text, record) => (
@@ -250,7 +257,7 @@ export const DashboardPage: React.FC = () => {
                     ),
                   },
                   {
-                    title: '分支 / Commit',
+                    title: t({ id: 'titan.dashboard.colBranch', defaultMessage: '分支 / Commit' }),
                     dataIndex: 'gitBranch',
                     key: 'gitBranch',
                     render: (text, record) => (
@@ -265,26 +272,28 @@ export const DashboardPage: React.FC = () => {
                     ),
                   },
                   {
-                    title: '状态',
+                    title: t({ id: 'titan.common.status', defaultMessage: '状态' }),
                     dataIndex: 'status',
                     key: 'status',
                     render: (status) => {
-                      const meta = statusTagMap[status] || { color: 'default', text: status, icon: null };
+                      const meta = execStatusMap[status] || { color: 'default', textKey: status, labelKey: status };
+                      const icon = statusIconMap[status];
                       return (
-                        <Tag color={meta.color} icon={meta.icon}>
-                          {meta.text}
+                        <Tag color={meta.color} icon={icon}>
+                          {t({ id: meta.textKey, defaultMessage: meta.textKey })}
                         </Tag>
                       );
                     },
                   },
                   {
-                    title: '触发人',
+                    title: t({ id: 'titan.dashboard.colTriggerBy', defaultMessage: '触发人' }),
                     dataIndex: 'triggerBy',
                     key: 'triggerBy',
-                    render: (val) => val || '管理员',
+                    render: (val) =>
+                      val || t({ id: 'titan.dashboard.defaultTrigger', defaultMessage: '管理员' }),
                   },
                   {
-                    title: '开始时间',
+                    title: t({ id: 'titan.dashboard.colStartTime', defaultMessage: '开始时间' }),
                     dataIndex: 'startTime',
                     key: 'startTime',
                     render: (val) => (val ? new Date(val * 1000).toLocaleString() : '-'),
@@ -299,18 +308,18 @@ export const DashboardPage: React.FC = () => {
               title={
                 <Space>
                   <ClusterOutlined style={{ color: '#722ed1' }} />
-                  <span>集群就绪状态 (Clusters)</span>
+                  <span>{t({ id: 'titan.dashboard.clustersCard', defaultMessage: '集群就绪状态 (Clusters)' })}</span>
                 </Space>
               }
               extra={
                 <Button type="link" onClick={() => navigate('/clusters')}>
-                  管理 <ArrowRightOutlined />
+                  {t({ id: 'titan.dashboard.manage', defaultMessage: '管理' })} <ArrowRightOutlined />
                 </Button>
               }
               variant="borderless"
             >
               {clusters.length === 0 ? (
-                <Empty description="暂无纳管集群" />
+                <Empty description={t({ id: 'titan.dashboard.emptyClusters', defaultMessage: '暂无纳管集群' })} />
               ) : (
                 <Space orientation="vertical" style={{ width: '100%' }} size="middle">
                   {clusters.slice(0, 5).map((c) => (

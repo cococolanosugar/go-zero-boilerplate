@@ -1,23 +1,20 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   App as AntdApp,
   Card,
   Space,
   Tag,
-  Badge,
   Button,
   Row,
   Col,
   Descriptions,
   Typography,
-  Steps,
   Alert,
   Input,
   Popconfirm,
   Drawer,
   Spin,
-  Divider,
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -28,7 +25,6 @@ import {
   ClockCircleOutlined,
   BranchesOutlined,
   CodeOutlined,
-  AuditOutlined,
   FileTextOutlined,
   PlayCircleOutlined,
   ExclamationCircleOutlined,
@@ -42,16 +38,19 @@ import {
   type TitanGetExecutionDetail200Execution,
   type TitanGetExecutionDetail200StepsItem,
 } from '@zero/api';
+import { execStatusMap } from '../status';
+import { getErrorMessage } from '../utils/error';
 
-const { Text, Title, Paragraph } = Typography;
+const { Text } = Typography;
 
-const statusTagMap: Record<string, { color: string; text: string; icon: React.ReactNode }> = {
-  PENDING: { color: 'default', text: '排队就绪', icon: <ClockCircleOutlined /> },
-  RUNNING: { color: 'processing', text: '执行中', icon: <SyncOutlined spin /> },
-  WAITING_APPROVAL: { color: 'warning', text: '等待人工审批', icon: <ExclamationCircleOutlined /> },
-  SUCCESS: { color: 'success', text: '发布成功', icon: <CheckCircleOutlined /> },
-  FAILED: { color: 'error', text: '执行失败', icon: <CloseCircleOutlined /> },
-  CANCELLED: { color: 'default', text: '已终止', icon: <StopOutlined /> },
+// 图标属于视图层细节，保留在页面内；颜色/文案统一引用 status.ts
+const statusIconMap: Record<string, React.ReactNode> = {
+  PENDING: <ClockCircleOutlined />,
+  RUNNING: <SyncOutlined spin />,
+  WAITING_APPROVAL: <ExclamationCircleOutlined />,
+  SUCCESS: <CheckCircleOutlined />,
+  FAILED: <CloseCircleOutlined />,
+  CANCELLED: <StopOutlined />,
 };
 
 export const ExecutionDetailPage: React.FC = () => {
@@ -75,29 +74,31 @@ export const ExecutionDetailPage: React.FC = () => {
   const [approvalComment, setApprovalComment] = useState('');
   const [approvalSubmitting, setApprovalSubmitting] = useState(false);
 
-  const fetchDetail = async () => {
+  // silent=true 表示轮询刷新：不触发整页 loading，仅静默更新数据（保留局部刷新）
+  const fetchDetail = async (silent = false) => {
     if (!execId) return;
+    if (!silent) setLoading(true);
     try {
-      setLoading(true);
       const res = await titanGetExecutionDetail(execId);
       setExecution(res.execution || null);
       setSteps(res.steps || []);
       if (!selectedStep && res.steps && res.steps.length > 0) {
         setSelectedStep(res.steps[0]);
       }
-    } catch (err: any) {
-      message.error(err?.message || '加载流水线执行详情失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, '加载流水线执行详情失败'));
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchDetail();
-    // 轮询处于 RUNNING 或 WAITING_APPROVAL 状态的任务
+    // 轮询处于 RUNNING 或 WAITING_APPROVAL 状态的任务；页面不可见时跳过本轮（保留定时器）
     const timer = setInterval(() => {
       if (execution?.status === 'RUNNING' || execution?.status === 'WAITING_APPROVAL') {
-        fetchDetail();
+        if (document.visibilityState === 'hidden') return;
+        void fetchDetail(true);
       }
     }, 4000);
     return () => clearInterval(timer);
@@ -111,8 +112,8 @@ export const ExecutionDetailPage: React.FC = () => {
     try {
       const res = await titanGetStepLog(step.id || 0, { offset: 0 });
       setLogContent(res.content || '暂无实时控制台日志输出');
-    } catch (err: any) {
-      setLogContent(`获取日志失败: ${err?.message || '未知错误'}`);
+    } catch (err) {
+      setLogContent(`获取日志失败: ${getErrorMessage(err, '未知错误')}`);
     } finally {
       setLogLoading(false);
     }
@@ -125,8 +126,8 @@ export const ExecutionDetailPage: React.FC = () => {
       await titanCancelExecution(execId);
       message.success('流水线已发出终止信号');
       fetchDetail();
-    } catch (err: any) {
-      message.error(err?.message || '终止流水线失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, '终止流水线失败'));
     }
   };
 
@@ -141,14 +142,14 @@ export const ExecutionDetailPage: React.FC = () => {
       message.success(approved ? '门禁已审批通过，流水线继续流转' : '已驳回，流水线终止');
       setApprovalComment('');
       fetchDetail();
-    } catch (err: any) {
-      message.error(err?.message || '审批操作异常');
+    } catch (err) {
+      message.error(getErrorMessage(err, '审批操作异常'));
     } finally {
       setApprovalSubmitting(false);
     }
   };
 
-  const statusMeta = statusTagMap[execution?.status || 'PENDING'] || statusTagMap.PENDING;
+  const statusMeta = execStatusMap[execution?.status || 'PENDING'] || execStatusMap.PENDING;
 
   return (
     <PageContainer
@@ -161,13 +162,17 @@ export const ExecutionDetailPage: React.FC = () => {
               onClick={() => navigate('/titan/pipelines')}
             />
             <span>流水线执行详情 #{execution?.execNo || execId}</span>
-            <Tag color={statusMeta.color} icon={statusMeta.icon} style={{ fontSize: 13, padding: '2px 8px' }}>
+            <Tag
+              color={statusMeta.color}
+              icon={statusIconMap[execution?.status || ''] || statusIconMap.PENDING}
+              style={{ fontSize: 13, padding: '2px 8px' }}
+            >
               {statusMeta.text}
             </Tag>
           </Space>
         ),
         extra: [
-          <Button key="refresh" icon={<SyncOutlined />} onClick={fetchDetail}>
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => fetchDetail()}>
             刷新
           </Button>,
           (execution?.status === 'RUNNING' || execution?.status === 'WAITING_APPROVAL') && (
@@ -234,7 +239,7 @@ export const ExecutionDetailPage: React.FC = () => {
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {steps.map((step, index) => {
-              const meta = statusTagMap[step.status || 'PENDING'] || statusTagMap.PENDING;
+              const meta = execStatusMap[step.status || 'PENDING'] || execStatusMap.PENDING;
               const isWaiting = step.status === 'WAITING_APPROVAL';
 
               return (
@@ -255,7 +260,7 @@ export const ExecutionDetailPage: React.FC = () => {
                           {step.stepName}
                         </Text>
                         <Tag color="geekblue">{step.stepType}</Tag>
-                        <Tag color={meta.color} icon={meta.icon}>
+                        <Tag color={meta.color} icon={statusIconMap[step.status || '']}>
                           {meta.text}
                         </Tag>
                         {step.durationMs ? (

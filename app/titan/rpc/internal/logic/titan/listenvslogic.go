@@ -3,9 +3,9 @@ package titanlogic
 import (
 	"context"
 
-	"go-zero-boilerplate/app/titan/model"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,23 +25,37 @@ func NewListEnvsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListEnvs
 }
 
 func (l *ListEnvsLogic) ListEnvs(in *titan.ListEnvsReq) (*titan.ListEnvsResp, error) {
-	var envs []*model.TitanEnv
-	query := "SELECT id, project_id, env_code, name, cluster_id, namespace, status, create_time, update_time FROM titan_env WHERE project_id = ? ORDER BY id ASC"
-	if err := l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &envs, query, in.ProjectId); err != nil {
-		return nil, err
+	envs, err := l.svcCtx.EnvModel.ListByProject(l.ctx, in.ProjectId)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询环境列表失败: " + err.Error())
+	}
+
+	// 批量取集群名与绑定计数（消除 N+1）
+	clusterIds := make([]int64, 0, len(envs))
+	envIds := make([]int64, 0, len(envs))
+	for _, e := range envs {
+		clusterIds = append(clusterIds, e.ClusterId)
+		envIds = append(envIds, e.Id)
+	}
+	clusters, err := l.svcCtx.ClusterModel.FindByIds(l.ctx, clusterIds)
+	if err != nil {
+		return nil, xerr.NewErrMsg("批量查询集群失败: " + err.Error())
+	}
+	bindingCounts, err := l.svcCtx.EnvAppBindingModel.CountByEnvIds(l.ctx, envIds)
+	if err != nil {
+		return nil, xerr.NewErrMsg("聚合环境应用计数失败: " + err.Error())
 	}
 
 	var list []*titan.EnvItem
 	for _, e := range envs {
 		var clusterName string
-		cluster, err := l.svcCtx.ClusterModel.FindOne(l.ctx, e.ClusterId)
-		if err == nil && cluster != nil {
-			clusterName = cluster.Name
+		if c, ok := clusters[e.ClusterId]; ok {
+			clusterName = c.Name
 		}
-
 		var appCount int32
-		_ = l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &appCount, "SELECT COUNT(*) FROM titan_env_app_binding WHERE env_id = ?", e.Id)
-
+		if c, ok := bindingCounts[e.Id]; ok {
+			appCount = int32(c)
+		}
 		list = append(list, &titan.EnvItem{
 			Id:          e.Id,
 			ProjectId:   e.ProjectId,
@@ -52,8 +66,8 @@ func (l *ListEnvsLogic) ListEnvs(in *titan.ListEnvsReq) (*titan.ListEnvsResp, er
 			Namespace:   e.Namespace,
 			Status:      e.Status,
 			AppCount:    appCount,
-			CreateTime:  e.CreateTime.Format("2006-01-02 15:04:05"),
-			UpdateTime:  e.UpdateTime.Format("2006-01-02 15:04:05"),
+			CreateTime:  formatTime(e.CreateTime),
+			UpdateTime:  formatTime(e.UpdateTime),
 		})
 	}
 

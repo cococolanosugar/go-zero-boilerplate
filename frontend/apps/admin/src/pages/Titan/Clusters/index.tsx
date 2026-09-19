@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   App as AntdApp,
   Button,
@@ -46,6 +46,8 @@ import {
   type TitanListClusters200ListItem,
 } from '@zero/api';
 import { copyToClipboard } from '@zero/shared';
+import { urlValidator } from '../validation';
+import { getErrorMessage } from '../utils/error';
 
 const { Text, Paragraph } = Typography;
 
@@ -126,9 +128,10 @@ export const ClustersPage: React.FC = () => {
       }
       setModalOpen(false);
       actionRef.current?.reload();
-    } catch (err: any) {
-      if (err?.message) {
-        message.error(err.message);
+    } catch (err) {
+      const errMsg = getErrorMessage(err, '');
+      if (errMsg) {
+        message.error(errMsg);
       }
     } finally {
       setSubmitting(false);
@@ -147,8 +150,8 @@ export const ClustersPage: React.FC = () => {
         message.error(`集群连通失败: ${res.message || '网络无法访问'}`);
       }
       actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err?.message || '测试连通性异常');
+    } catch (err) {
+      message.error(getErrorMessage(err, '测试连通性异常'));
     } finally {
       setTestingId(null);
     }
@@ -164,8 +167,8 @@ export const ClustersPage: React.FC = () => {
     try {
       const res = await titanListNamespaces(record.id);
       setNamespaces(res.namespaces || []);
-    } catch (err: any) {
-      message.error(err?.message || '获取命名空间列表失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, '获取命名空间列表失败'));
       setNamespaces([]);
     } finally {
       setNsLoading(false);
@@ -178,8 +181,8 @@ export const ClustersPage: React.FC = () => {
       await titanDeleteCluster(id);
       message.success('集群已成功注销');
       actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err?.message || '删除集群失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, '删除集群失败'));
     }
   };
 
@@ -348,8 +351,8 @@ export const ClustersPage: React.FC = () => {
               success: true,
               total: res.total || 0,
             };
-          } catch (err: any) {
-            message.error(err?.message || '加载集群列表失败');
+          } catch (err) {
+            message.error(getErrorMessage(err, '加载集群列表失败'));
             return { data: [], success: false, total: 0 };
           }
         }}
@@ -395,6 +398,7 @@ export const ClustersPage: React.FC = () => {
             name="apiEndpoint"
             label="Kubernetes API Server 端点 (可选)"
             tooltip="留空时系统将自动从 Kubeconfig 中的 server 字段解析"
+            rules={[{ validator: urlValidator }]}
           >
             <Input placeholder="https://10.0.0.1:6443" />
           </Form.Item>

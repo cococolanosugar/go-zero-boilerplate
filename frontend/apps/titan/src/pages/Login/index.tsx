@@ -5,6 +5,7 @@ import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from "@ant-desi
 import { useNavigate, useLocation } from "react-router-dom";
 import { adminLogin, setToken } from "@zero/api";
 import { buildCasdoorAuthUrl } from "@zero/shared";
+import { getErrorMessage } from "../../utils/error";
 import { useInitialState } from "../../contexts/InitialStateContext";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -37,8 +38,8 @@ export const LoginPage: React.FC = () => {
           : undefined;
       const from = statePath || queryFrom || "/pipelines";
       navigate(from, { replace: true });
-    } catch (err: any) {
-      message.error(err.message || "登录失败，请检查账号密码");
+    } catch (err) {
+      message.error(getErrorMessage(err, "登录失败，请检查账号密码"));
     } finally {
       setLoading(false);
     }

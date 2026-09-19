@@ -699,15 +699,6 @@ export function testCluster(params: components.TestClusterReqVOParams, id: numbe
 /**
  * @description 
  * @param params
- * @param req
- */
-export function deployArtifact(params: components.DeployArtifactReqVOParams, req: components.DeployArtifactReqVO, id: number) {
-	return webapi.post<null>(`/api/v1/titan/envs/${id}/deploy`, params, req)
-}
-
-/**
- * @description 
- * @param params
  */
 export function getEnvLiveDetail(params: components.GetEnvLiveDetailReqVOParams, id: number) {
 	return webapi.get<components.GetEnvLiveDetailRespVO>(`/api/v1/titan/envs/${id}/live`, params)
@@ -776,6 +767,22 @@ export function deleteIntegration(params: components.DeleteIntegrationReqVOParam
  */
 export function testIntegration(params: components.TestIntegrationReqVOParams, id: number) {
 	return webapi.post<components.TestIntegrationRespVO>(`/api/v1/titan/integrations/${id}/test`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getDeliveryMatrix(params: components.GetDeliveryMatrixReqVOParams) {
+	return webapi.get<components.GetDeliveryMatrixRespVO>(`/api/v1/titan/matrix`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function compareMatrixEnv(params: components.CompareMatrixEnvReqVOParams) {
+	return webapi.get<components.CompareMatrixEnvRespVO>(`/api/v1/titan/matrix/compare`, params)
 }
 
 /**
@@ -968,6 +975,56 @@ export function updateEnv(params: components.UpdateEnvReqVOParams, req: componen
  */
 export function deleteEnv(params: components.DeleteEnvReqVOParams, projectId: number, id: number) {
 	return webapi.delete<null>(`/api/v1/titan/projects/${projectId}/envs/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function deployArtifact(params: components.DeployArtifactReqVOParams, req: components.DeployArtifactReqVO, projectId: number, id: number) {
+	return webapi.post<null>(`/api/v1/titan/projects/${projectId}/envs/${id}/deploy`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listReleaseOrders(params: components.ListReleaseOrdersReqVOParams) {
+	return webapi.get<components.ListReleaseOrdersRespVO>(`/api/v1/titan/release-orders`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createReleaseOrder(req: components.CreateReleaseOrderReqVO) {
+	return webapi.post<components.CreateReleaseOrderRespVO>(`/api/v1/titan/release-orders`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getReleaseOrder(params: components.GetReleaseOrderReqVOParams, id: number) {
+	return webapi.get<components.ReleaseOrderDetailRespVO>(`/api/v1/titan/release-orders/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function auditReleaseOrder(params: components.AuditReleaseOrderReqVOParams, req: components.AuditReleaseOrderReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/titan/release-orders/${id}/audit`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function executeReleaseOrder(params: components.ExecuteReleaseOrderReqVOParams, id: number) {
+	return webapi.post<null>(`/api/v1/titan/release-orders/${id}/execute`, params)
 }
 
 /**

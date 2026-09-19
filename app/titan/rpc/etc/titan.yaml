@@ -13,3 +13,15 @@ Cache:
 #   Host: ${NACOS_HOST:127.0.0.1}
 #   Port: ${NACOS_PORT:8848}
 #   NamespaceId: ${NACOS_NAMESPACE:public}
+
+# ================= 出站安全防护 =================
+# 开发环境放行私有网段目标（本地集成/K8s API 常驻内网/环回）；
+# 生产环境默认拒绝私有网段，仅需放行云元数据与环回的始终拒绝规则
+Guard:
+  AllowPrivateNetwork: ${TITAN_GUARD_ALLOW_PRIVATE:true}
+
+# ================= ITSM 微服务联动 =================
+ItsmRpc:
+  Endpoints:
+    - ${ITSM_RPC_HOST:127.0.0.1:8084}
+  NonBlock: true

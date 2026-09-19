@@ -15,7 +15,6 @@ import {
   Segmented,
   Table,
   Badge,
-  Tooltip,
 } from "antd";
 import {
   PlusOutlined,
@@ -27,19 +26,20 @@ import {
   SearchOutlined,
   AppstoreAddOutlined,
   UnorderedListOutlined,
-  BranchesOutlined,
-  SettingOutlined,
 } from "@ant-design/icons";
 import { PageContainer } from "@ant-design/pro-components";
 import { useNavigate } from "react-router-dom";
 import { useProject } from "../../contexts/ProjectContext";
+import { useIntl } from "../../contexts/LocaleContext";
 import { titanCreateProject, type TitanListProjects200ListItem } from "@zero/api";
+import { getErrorMessage, isFormValidateError } from "../../utils/error";
 
 const { Title, Text, Paragraph } = Typography;
 
 export const ProjectsPage: React.FC = () => {
   const { message } = AntdApp.useApp();
   const navigate = useNavigate();
+  const { formatMessage: t } = useIntl();
   const { projects, currentProjectId, setCurrentProjectId, refreshProjects, loading } = useProject();
   const [modalOpen, setModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -68,22 +68,25 @@ export const ProjectsPage: React.FC = () => {
       projectCount: projects.length,
       totalApps,
       totalEnvs,
-      activeProjectName: activeProject?.displayName || activeProject?.name || "未选择",
+      activeProjectName:
+        activeProject?.displayName ||
+        activeProject?.name ||
+        t({ id: "titan.projects.noneSelected", defaultMessage: "未选择" }),
     };
-  }, [projects, currentProjectId]);
+  }, [projects, currentProjectId, t]);
 
   const handleCreate = async () => {
     try {
       const values = await form.validateFields();
       setSubmitting(true);
       await titanCreateProject(values);
-      message.success("项目创建成功");
+      message.success(t({ id: "titan.projects.createSuccess", defaultMessage: "项目创建成功" }));
       setModalOpen(false);
       form.resetFields();
       await refreshProjects();
-    } catch (err: any) {
-      if (err.errorFields) return;
-      message.error(err.message || "创建失败");
+    } catch (err) {
+      if (isFormValidateError(err)) return;
+      message.error(getErrorMessage(err, t({ id: "titan.common.createFailed", defaultMessage: "创建失败" })));
     } finally {
       setSubmitting(false);
     }
@@ -101,8 +104,12 @@ export const ProjectsPage: React.FC = () => {
   return (
     <PageContainer
       header={{
-        title: "交付项目空间 (Projects)",
-        subTitle: "对齐 Zadig 云原生项目模型：以交付项目为核心组织微服务群组、代码仓、多环境资源与发布工作流",
+        title: t({ id: "titan.projects.title", defaultMessage: "交付项目空间 (Projects)" }),
+        subTitle: t({
+          id: "titan.projects.subTitle",
+          defaultMessage:
+            "对齐 Zadig 云原生项目模型：以交付项目为核心组织微服务群组、代码仓、多环境资源与发布工作流",
+        }),
         extra: [
           <Button
             key="create"
@@ -110,7 +117,7 @@ export const ProjectsPage: React.FC = () => {
             icon={<PlusOutlined />}
             onClick={() => setModalOpen(true)}
           >
-            新建项目
+            {t({ id: "titan.projects.create", defaultMessage: "新建项目" })}
           </Button>,
         ],
       }}
@@ -120,43 +127,43 @@ export const ProjectsPage: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <Card variant="borderless" style={{ background: "#ffffff", borderRadius: 8 }}>
             <Statistic
-              title={<span style={{ color: "#8c8c8c" }}>交付项目总数</span>}
+              title={<span style={{ color: "#8c8c8c" }}>{t({ id: "titan.projects.statTotalProjects", defaultMessage: "交付项目总数" })}</span>}
               value={stats.projectCount}
               prefix={<ProjectOutlined style={{ color: "#1677ff", marginRight: 8 }} />}
-              suffix={<span style={{ fontSize: 13, color: "#8c8c8c" }}>个</span>}
-              valueStyle={{ fontWeight: 600 }}
+              suffix={<span style={{ fontSize: 13, color: "#8c8c8c" }}>{t({ id: "titan.projects.statUnitProjects", defaultMessage: "个" })}</span>}
+              styles={{content: { fontWeight: 600 }}}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card variant="borderless" style={{ background: "#ffffff", borderRadius: 8 }}>
             <Statistic
-              title={<span style={{ color: "#8c8c8c" }}>当前生效项目</span>}
+              title={<span style={{ color: "#8c8c8c" }}>{t({ id: "titan.projects.statActiveProject", defaultMessage: "当前生效项目" })}</span>}
               value={stats.activeProjectName}
               prefix={<CheckCircleOutlined style={{ color: "#52c41a", marginRight: 8 }} />}
-              valueStyle={{ fontWeight: 600, fontSize: 18 }}
+              styles={{content: { fontWeight: 600, fontSize: 18 }}}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card variant="borderless" style={{ background: "#ffffff", borderRadius: 8 }}>
             <Statistic
-              title={<span style={{ color: "#8c8c8c" }}>纳管微服务应用</span>}
+              title={<span style={{ color: "#8c8c8c" }}>{t({ id: "titan.projects.statTotalApps", defaultMessage: "纳管微服务应用" })}</span>}
               value={stats.totalApps}
               prefix={<AppstoreOutlined style={{ color: "#722ed1", marginRight: 8 }} />}
-              suffix={<span style={{ fontSize: 13, color: "#8c8c8c" }}>个服务</span>}
-              valueStyle={{ fontWeight: 600 }}
+              suffix={<span style={{ fontSize: 13, color: "#8c8c8c" }}>{t({ id: "titan.projects.statUnitApps", defaultMessage: "个服务" })}</span>}
+              styles={{content: { fontWeight: 600 }}}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
           <Card variant="borderless" style={{ background: "#ffffff", borderRadius: 8 }}>
             <Statistic
-              title={<span style={{ color: "#8c8c8c" }}>活跃交付环境</span>}
+              title={<span style={{ color: "#8c8c8c" }}>{t({ id: "titan.projects.statTotalEnvs", defaultMessage: "活跃交付环境" })}</span>}
               value={stats.totalEnvs}
               prefix={<CloudServerOutlined style={{ color: "#fa8c16", marginRight: 8 }} />}
-              suffix={<span style={{ fontSize: 13, color: "#8c8c8c" }}>套环境</span>}
-              valueStyle={{ fontWeight: 600 }}
+              suffix={<span style={{ fontSize: 13, color: "#8c8c8c" }}>{t({ id: "titan.projects.statUnitEnvs", defaultMessage: "套环境" })}</span>}
+              styles={{content: { fontWeight: 600 }}}
             />
           </Card>
         </Col>
@@ -175,7 +182,7 @@ export const ProjectsPage: React.FC = () => {
       >
         <Input
           prefix={<SearchOutlined style={{ color: "#bfbfbf" }} />}
-          placeholder="按项目唯一标识、名称或描述过滤搜索..."
+          placeholder={t({ id: "titan.projects.searchPlaceholder", defaultMessage: "按项目唯一标识、名称或描述过滤搜索..." })}
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
           allowClear
@@ -187,8 +194,8 @@ export const ProjectsPage: React.FC = () => {
             value={viewMode}
             onChange={(val) => setViewMode(val as "card" | "table")}
             options={[
-              { label: "卡片大盘", value: "card", icon: <AppstoreAddOutlined /> },
-              { label: "紧凑列表", value: "table", icon: <UnorderedListOutlined /> },
+              { label: t({ id: "titan.projects.viewCard", defaultMessage: "卡片大盘" }), value: "card", icon: <AppstoreAddOutlined /> },
+              { label: t({ id: "titan.projects.viewTable", defaultMessage: "紧凑列表" }), value: "table", icon: <UnorderedListOutlined /> },
             ]}
           />
         </Space>
@@ -261,13 +268,13 @@ export const ProjectsPage: React.FC = () => {
                       </div>
                     </Space>
 
-                    <Space direction="vertical" align="end" size={2}>
+                    <Space orientation="vertical" align="end" size={2}>
                       {isSelected ? (
                         <Tag color="processing" icon={<CheckCircleOutlined />}>
-                          当前生效
+                          {t({ id: "titan.projects.tagActive", defaultMessage: "当前生效" })}
                         </Tag>
                       ) : (
-                        <Tag color="default">就绪</Tag>
+                        <Tag color="default">{t({ id: "titan.projects.tagReady", defaultMessage: "就绪" })}</Tag>
                       )}
                       <Tag color="blue" style={{ fontSize: 11, margin: 0 }}>
                         K8s YAML
@@ -281,7 +288,7 @@ export const ProjectsPage: React.FC = () => {
                     ellipsis={{ rows: 2 }}
                     style={{ flex: 1, minHeight: 40, marginBottom: 16, fontSize: 13 }}
                   >
-                    {proj.description || "暂无项目描述"}
+                    {proj.description || t({ id: "titan.projects.noDescription", defaultMessage: "暂无项目描述" })}
                   </Paragraph>
 
                   {/* 环境拓扑小圆点提示 - Zadig 标志性指标 */}
@@ -297,7 +304,7 @@ export const ProjectsPage: React.FC = () => {
                     }}
                   >
                     <Text type="secondary" style={{ fontSize: 12 }}>
-                      环境链路健康度:
+                      {t({ id: "titan.projects.envHealthLabel", defaultMessage: "环境链路健康度:" })}
                     </Text>
                     <Space size={6}>
                       <Badge status="success" text={<span style={{ fontSize: 11 }}>DEV</span>} />
@@ -318,18 +325,18 @@ export const ProjectsPage: React.FC = () => {
                   >
                     <Col span={12}>
                       <Statistic
-                        title={<span style={{ fontSize: 12 }}>微服务单元</span>}
+                        title={<span style={{ fontSize: 12 }}>{t({ id: "titan.projects.statAppUnits", defaultMessage: "微服务单元" })}</span>}
                         value={proj.appCount || 0}
                         prefix={<AppstoreOutlined style={{ fontSize: 13, color: "#1677ff" }} />}
-                        valueStyle={{ fontSize: 18, fontWeight: 600 }}
+                        styles={{content: { fontSize: 18, fontWeight: 600 }}}
                       />
                     </Col>
                     <Col span={12}>
                       <Statistic
-                        title={<span style={{ fontSize: 12 }}>交付环境组</span>}
+                        title={<span style={{ fontSize: 12 }}>{t({ id: "titan.projects.statEnvGroups", defaultMessage: "交付环境组" })}</span>}
                         value={proj.envCount || 0}
                         prefix={<CloudServerOutlined style={{ fontSize: 13, color: "#52c41a" }} />}
-                        valueStyle={{ fontSize: 18, fontWeight: 600 }}
+                        styles={{content: { fontSize: 18, fontWeight: 600 }}}
                       />
                     </Col>
                   </Row>
@@ -345,7 +352,7 @@ export const ProjectsPage: React.FC = () => {
                     }}
                   >
                     <Text type="secondary" style={{ fontSize: 12 }}>
-                      创建于 {proj.createTime?.substring(0, 10)}
+                      {t({ id: "titan.projects.createdAt", defaultMessage: "创建于 {date}" }, { date: proj.createTime?.substring(0, 10) })}
                     </Text>
                     <Space>
                       {!isSelected ? (
@@ -353,10 +360,15 @@ export const ProjectsPage: React.FC = () => {
                           size="small"
                           onClick={() => {
                             setCurrentProjectId(proj.id!);
-                            message.success(`已切换生效项目：${proj.displayName || proj.name}`);
+                            message.success(
+                              t(
+                                { id: "titan.projects.switchedToProject", defaultMessage: "已切换生效项目：{name}" },
+                                { name: proj.displayName || proj.name }
+                              )
+                            );
                           }}
                         >
-                          设为当前
+                          {t({ id: "titan.projects.setAsCurrent", defaultMessage: "设为当前" })}
                         </Button>
                       ) : null}
                       <Button
@@ -367,7 +379,7 @@ export const ProjectsPage: React.FC = () => {
                           navigate("/apps");
                         }}
                       >
-                        应用
+                        {t({ id: "titan.projects.goApps", defaultMessage: "应用" })}
                       </Button>
                       <Button
                         type="primary"
@@ -378,7 +390,7 @@ export const ProjectsPage: React.FC = () => {
                           navigate("/environments");
                         }}
                       >
-                        环境大盘
+                        {t({ id: "titan.projects.goEnvs", defaultMessage: "环境大盘" })}
                       </Button>
                     </Space>
                   </div>
@@ -396,7 +408,7 @@ export const ProjectsPage: React.FC = () => {
             pagination={false}
             columns={[
               {
-                title: "项目标识 / 名称",
+                title: t({ id: "titan.projects.colName", defaultMessage: "项目标识 / 名称" }),
                 render: (_, record) => (
                   <Space size={12}>
                     <div
@@ -425,11 +437,11 @@ export const ProjectsPage: React.FC = () => {
                 ),
               },
               {
-                title: "交付模式",
+                title: t({ id: "titan.projects.colDeliveryMode", defaultMessage: "交付模式" }),
                 render: () => <Tag color="blue">Kubernetes YAML</Tag>,
               },
               {
-                title: "微服务数量",
+                title: t({ id: "titan.projects.colAppCount", defaultMessage: "微服务数量" }),
                 dataIndex: "appCount",
                 render: (cnt) => (
                   <Space>
@@ -439,7 +451,7 @@ export const ProjectsPage: React.FC = () => {
                 ),
               },
               {
-                title: "交付环境",
+                title: t({ id: "titan.projects.colEnvCount", defaultMessage: "交付环境" }),
                 dataIndex: "envCount",
                 render: (cnt) => (
                   <Space>
@@ -449,23 +461,23 @@ export const ProjectsPage: React.FC = () => {
                 ),
               },
               {
-                title: "当前状态",
+                title: t({ id: "titan.projects.colStatus", defaultMessage: "当前状态" }),
                 render: (_, record) =>
                   record.id === currentProjectId ? (
                     <Tag color="processing" icon={<CheckCircleOutlined />}>
-                      当前生效
+                      {t({ id: "titan.projects.tagActive", defaultMessage: "当前生效" })}
                     </Tag>
                   ) : (
-                    <Tag color="default">就绪</Tag>
+                    <Tag color="default">{t({ id: "titan.projects.tagReady", defaultMessage: "就绪" })}</Tag>
                   ),
               },
               {
-                title: "创建时间",
+                title: t({ id: "titan.common.createTime", defaultMessage: "创建时间" }),
                 dataIndex: "createTime",
-                render: (t) => <Text type="secondary">{t?.substring(0, 16)}</Text>,
+                render: (time) => <Text type="secondary">{time?.substring(0, 16)}</Text>,
               },
               {
-                title: "操作",
+                title: t({ id: "titan.common.action", defaultMessage: "操作" }),
                 render: (_, record) => (
                   <Space>
                     {record.id !== currentProjectId && (
@@ -473,10 +485,15 @@ export const ProjectsPage: React.FC = () => {
                         size="small"
                         onClick={() => {
                           setCurrentProjectId(record.id!);
-                          message.success(`已切换生效项目：${record.displayName || record.name}`);
+                          message.success(
+                            t(
+                              { id: "titan.projects.switchedToProject", defaultMessage: "已切换生效项目：{name}" },
+                              { name: record.displayName || record.name }
+                            )
+                          );
                         }}
                       >
-                        设为当前
+                        {t({ id: "titan.projects.setAsCurrent", defaultMessage: "设为当前" })}
                       </Button>
                     )}
                     <Button
@@ -487,7 +504,7 @@ export const ProjectsPage: React.FC = () => {
                         navigate("/apps");
                       }}
                     >
-                      服务应用
+                      {t({ id: "titan.projects.goAppsTable", defaultMessage: "服务应用" })}
                     </Button>
                     <Button
                       type="primary"
@@ -498,7 +515,7 @@ export const ProjectsPage: React.FC = () => {
                         navigate("/environments");
                       }}
                     >
-                      进入环境
+                      {t({ id: "titan.projects.enterEnvs", defaultMessage: "进入环境" })}
                     </Button>
                   </Space>
                 ),
@@ -510,33 +527,33 @@ export const ProjectsPage: React.FC = () => {
 
       {/* 新建项目 Modal */}
       <Modal
-        title="新建交付项目"
+        title={t({ id: "titan.projects.modalTitle", defaultMessage: "新建交付项目" })}
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         onOk={handleCreate}
         confirmLoading={submitting}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form form={form} layout="vertical" initialValues={{ status: 1 }}>
           <Form.Item
             name="name"
-            label="项目唯一标识 (Slug)"
+            label={t({ id: "titan.projects.labelSlug", defaultMessage: "项目唯一标识 (Slug)" })}
             rules={[
-              { required: true, message: "请输入项目英文标识" },
-              { pattern: /^[a-z0-9-]+$/, message: "仅支持小写字母、数字及中划线" },
+              { required: true, message: t({ id: "titan.projects.ruleSlugRequired", defaultMessage: "请输入项目英文标识" }) },
+              { pattern: /^[a-z0-9-]+$/, message: t({ id: "titan.projects.ruleSlugPattern", defaultMessage: "仅支持小写字母、数字及中划线" }) },
             ]}
           >
-            <Input placeholder="例如: mall-center / ai-hub" />
+            <Input placeholder={t({ id: "titan.projects.placeholderSlug", defaultMessage: "例如: mall-center / ai-hub" })} />
           </Form.Item>
           <Form.Item
             name="displayName"
-            label="项目显示名称"
-            rules={[{ required: true, message: "请输入显示名称" }]}
+            label={t({ id: "titan.projects.labelDisplayName", defaultMessage: "项目显示名称" })}
+            rules={[{ required: true, message: t({ id: "titan.projects.ruleDisplayName", defaultMessage: "请输入显示名称" }) }]}
           >
-            <Input placeholder="例如: 电商微服务中台" />
+            <Input placeholder={t({ id: "titan.projects.placeholderDisplayName", defaultMessage: "例如: 电商微服务中台" })} />
           </Form.Item>
-          <Form.Item name="description" label="项目描述">
-            <Input.TextArea rows={3} placeholder="简要说明本项目的业务边界与包含的服务单元" />
+          <Form.Item name="description" label={t({ id: "titan.projects.labelDescription", defaultMessage: "项目描述" })}>
+            <Input.TextArea rows={3} placeholder={t({ id: "titan.projects.placeholderDescription", defaultMessage: "简要说明本项目的业务边界与包含的服务单元" })} />
           </Form.Item>
         </Form>
       </Modal>

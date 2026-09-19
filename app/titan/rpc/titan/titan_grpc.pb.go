@@ -19,48 +19,55 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Titan_Ping_FullMethodName               = "/titan.titan/Ping"
-	Titan_ListIntegrations_FullMethodName   = "/titan.titan/ListIntegrations"
-	Titan_CreateIntegration_FullMethodName  = "/titan.titan/CreateIntegration"
-	Titan_UpdateIntegration_FullMethodName  = "/titan.titan/UpdateIntegration"
-	Titan_DeleteIntegration_FullMethodName  = "/titan.titan/DeleteIntegration"
-	Titan_TestIntegration_FullMethodName    = "/titan.titan/TestIntegration"
-	Titan_ListClusters_FullMethodName       = "/titan.titan/ListClusters"
-	Titan_CreateCluster_FullMethodName      = "/titan.titan/CreateCluster"
-	Titan_UpdateCluster_FullMethodName      = "/titan.titan/UpdateCluster"
-	Titan_DeleteCluster_FullMethodName      = "/titan.titan/DeleteCluster"
-	Titan_TestCluster_FullMethodName        = "/titan.titan/TestCluster"
-	Titan_ListNamespaces_FullMethodName     = "/titan.titan/ListNamespaces"
-	Titan_ListPipelines_FullMethodName      = "/titan.titan/ListPipelines"
-	Titan_GetPipeline_FullMethodName        = "/titan.titan/GetPipeline"
-	Titan_CreatePipeline_FullMethodName     = "/titan.titan/CreatePipeline"
-	Titan_UpdatePipeline_FullMethodName     = "/titan.titan/UpdatePipeline"
-	Titan_DeletePipeline_FullMethodName     = "/titan.titan/DeletePipeline"
-	Titan_TriggerPipeline_FullMethodName    = "/titan.titan/TriggerPipeline"
-	Titan_ListExecutions_FullMethodName     = "/titan.titan/ListExecutions"
-	Titan_GetExecutionDetail_FullMethodName = "/titan.titan/GetExecutionDetail"
-	Titan_GetStepLog_FullMethodName         = "/titan.titan/GetStepLog"
-	Titan_ApproveStep_FullMethodName        = "/titan.titan/ApproveStep"
-	Titan_CancelExecution_FullMethodName    = "/titan.titan/CancelExecution"
-	Titan_ListProjects_FullMethodName       = "/titan.titan/ListProjects"
-	Titan_GetProject_FullMethodName         = "/titan.titan/GetProject"
-	Titan_CreateProject_FullMethodName      = "/titan.titan/CreateProject"
-	Titan_UpdateProject_FullMethodName      = "/titan.titan/UpdateProject"
-	Titan_DeleteProject_FullMethodName      = "/titan.titan/DeleteProject"
-	Titan_ListApps_FullMethodName           = "/titan.titan/ListApps"
-	Titan_GetApp_FullMethodName             = "/titan.titan/GetApp"
-	Titan_CreateApp_FullMethodName          = "/titan.titan/CreateApp"
-	Titan_UpdateApp_FullMethodName          = "/titan.titan/UpdateApp"
-	Titan_DeleteApp_FullMethodName          = "/titan.titan/DeleteApp"
-	Titan_ListEnvs_FullMethodName           = "/titan.titan/ListEnvs"
-	Titan_GetEnv_FullMethodName             = "/titan.titan/GetEnv"
-	Titan_CreateEnv_FullMethodName          = "/titan.titan/CreateEnv"
-	Titan_UpdateEnv_FullMethodName          = "/titan.titan/UpdateEnv"
-	Titan_DeleteEnv_FullMethodName          = "/titan.titan/DeleteEnv"
-	Titan_GetEnvLiveDetail_FullMethodName   = "/titan.titan/GetEnvLiveDetail"
-	Titan_ListArtifacts_FullMethodName      = "/titan.titan/ListArtifacts"
-	Titan_CreateArtifact_FullMethodName     = "/titan.titan/CreateArtifact"
-	Titan_DeployArtifact_FullMethodName     = "/titan.titan/DeployArtifact"
+	Titan_Ping_FullMethodName                = "/titan.titan/Ping"
+	Titan_ListIntegrations_FullMethodName    = "/titan.titan/ListIntegrations"
+	Titan_CreateIntegration_FullMethodName   = "/titan.titan/CreateIntegration"
+	Titan_UpdateIntegration_FullMethodName   = "/titan.titan/UpdateIntegration"
+	Titan_DeleteIntegration_FullMethodName   = "/titan.titan/DeleteIntegration"
+	Titan_TestIntegration_FullMethodName     = "/titan.titan/TestIntegration"
+	Titan_ListClusters_FullMethodName        = "/titan.titan/ListClusters"
+	Titan_CreateCluster_FullMethodName       = "/titan.titan/CreateCluster"
+	Titan_UpdateCluster_FullMethodName       = "/titan.titan/UpdateCluster"
+	Titan_DeleteCluster_FullMethodName       = "/titan.titan/DeleteCluster"
+	Titan_TestCluster_FullMethodName         = "/titan.titan/TestCluster"
+	Titan_ListNamespaces_FullMethodName      = "/titan.titan/ListNamespaces"
+	Titan_ListPipelines_FullMethodName       = "/titan.titan/ListPipelines"
+	Titan_GetPipeline_FullMethodName         = "/titan.titan/GetPipeline"
+	Titan_CreatePipeline_FullMethodName      = "/titan.titan/CreatePipeline"
+	Titan_UpdatePipeline_FullMethodName      = "/titan.titan/UpdatePipeline"
+	Titan_DeletePipeline_FullMethodName      = "/titan.titan/DeletePipeline"
+	Titan_TriggerPipeline_FullMethodName     = "/titan.titan/TriggerPipeline"
+	Titan_ListExecutions_FullMethodName      = "/titan.titan/ListExecutions"
+	Titan_GetExecutionDetail_FullMethodName  = "/titan.titan/GetExecutionDetail"
+	Titan_GetStepLog_FullMethodName          = "/titan.titan/GetStepLog"
+	Titan_ApproveStep_FullMethodName         = "/titan.titan/ApproveStep"
+	Titan_CancelExecution_FullMethodName     = "/titan.titan/CancelExecution"
+	Titan_ListProjects_FullMethodName        = "/titan.titan/ListProjects"
+	Titan_GetProject_FullMethodName          = "/titan.titan/GetProject"
+	Titan_CreateProject_FullMethodName       = "/titan.titan/CreateProject"
+	Titan_UpdateProject_FullMethodName       = "/titan.titan/UpdateProject"
+	Titan_DeleteProject_FullMethodName       = "/titan.titan/DeleteProject"
+	Titan_ListApps_FullMethodName            = "/titan.titan/ListApps"
+	Titan_GetApp_FullMethodName              = "/titan.titan/GetApp"
+	Titan_CreateApp_FullMethodName           = "/titan.titan/CreateApp"
+	Titan_UpdateApp_FullMethodName           = "/titan.titan/UpdateApp"
+	Titan_DeleteApp_FullMethodName           = "/titan.titan/DeleteApp"
+	Titan_ListEnvs_FullMethodName            = "/titan.titan/ListEnvs"
+	Titan_GetEnv_FullMethodName              = "/titan.titan/GetEnv"
+	Titan_CreateEnv_FullMethodName           = "/titan.titan/CreateEnv"
+	Titan_UpdateEnv_FullMethodName           = "/titan.titan/UpdateEnv"
+	Titan_DeleteEnv_FullMethodName           = "/titan.titan/DeleteEnv"
+	Titan_GetEnvLiveDetail_FullMethodName    = "/titan.titan/GetEnvLiveDetail"
+	Titan_ListArtifacts_FullMethodName       = "/titan.titan/ListArtifacts"
+	Titan_CreateArtifact_FullMethodName      = "/titan.titan/CreateArtifact"
+	Titan_DeployArtifact_FullMethodName      = "/titan.titan/DeployArtifact"
+	Titan_GetDeliveryMatrix_FullMethodName   = "/titan.titan/GetDeliveryMatrix"
+	Titan_CompareMatrixEnv_FullMethodName    = "/titan.titan/CompareMatrixEnv"
+	Titan_ListReleaseOrders_FullMethodName   = "/titan.titan/ListReleaseOrders"
+	Titan_GetReleaseOrder_FullMethodName     = "/titan.titan/GetReleaseOrder"
+	Titan_CreateReleaseOrder_FullMethodName  = "/titan.titan/CreateReleaseOrder"
+	Titan_AuditReleaseOrder_FullMethodName   = "/titan.titan/AuditReleaseOrder"
+	Titan_ExecuteReleaseOrder_FullMethodName = "/titan.titan/ExecuteReleaseOrder"
 )
 
 // TitanClient is the client API for Titan service.
@@ -124,6 +131,15 @@ type TitanClient interface {
 	ListArtifacts(ctx context.Context, in *ListArtifactsReq, opts ...grpc.CallOption) (*ListArtifactsResp, error)
 	CreateArtifact(ctx context.Context, in *CreateArtifactReq, opts ...grpc.CallOption) (*CreateArtifactResp, error)
 	DeployArtifact(ctx context.Context, in *DeployArtifactReq, opts ...grpc.CallOption) (*CommonResp, error)
+	// 5. 交付大盘 (Matrix)
+	GetDeliveryMatrix(ctx context.Context, in *GetDeliveryMatrixReq, opts ...grpc.CallOption) (*GetDeliveryMatrixResp, error)
+	CompareMatrixEnv(ctx context.Context, in *CompareMatrixEnvReq, opts ...grpc.CallOption) (*CompareMatrixEnvResp, error)
+	// 6. 发布单 (Release Order)
+	ListReleaseOrders(ctx context.Context, in *ListReleaseOrdersReq, opts ...grpc.CallOption) (*ListReleaseOrdersResp, error)
+	GetReleaseOrder(ctx context.Context, in *GetReleaseOrderReq, opts ...grpc.CallOption) (*ReleaseOrderDetailResp, error)
+	CreateReleaseOrder(ctx context.Context, in *CreateReleaseOrderReq, opts ...grpc.CallOption) (*CreateReleaseOrderResp, error)
+	AuditReleaseOrder(ctx context.Context, in *AuditReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error)
+	ExecuteReleaseOrder(ctx context.Context, in *ExecuteReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error)
 }
 
 type titanClient struct {
@@ -554,6 +570,76 @@ func (c *titanClient) DeployArtifact(ctx context.Context, in *DeployArtifactReq,
 	return out, nil
 }
 
+func (c *titanClient) GetDeliveryMatrix(ctx context.Context, in *GetDeliveryMatrixReq, opts ...grpc.CallOption) (*GetDeliveryMatrixResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDeliveryMatrixResp)
+	err := c.cc.Invoke(ctx, Titan_GetDeliveryMatrix_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) CompareMatrixEnv(ctx context.Context, in *CompareMatrixEnvReq, opts ...grpc.CallOption) (*CompareMatrixEnvResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompareMatrixEnvResp)
+	err := c.cc.Invoke(ctx, Titan_CompareMatrixEnv_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) ListReleaseOrders(ctx context.Context, in *ListReleaseOrdersReq, opts ...grpc.CallOption) (*ListReleaseOrdersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListReleaseOrdersResp)
+	err := c.cc.Invoke(ctx, Titan_ListReleaseOrders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) GetReleaseOrder(ctx context.Context, in *GetReleaseOrderReq, opts ...grpc.CallOption) (*ReleaseOrderDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReleaseOrderDetailResp)
+	err := c.cc.Invoke(ctx, Titan_GetReleaseOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) CreateReleaseOrder(ctx context.Context, in *CreateReleaseOrderReq, opts ...grpc.CallOption) (*CreateReleaseOrderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateReleaseOrderResp)
+	err := c.cc.Invoke(ctx, Titan_CreateReleaseOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) AuditReleaseOrder(ctx context.Context, in *AuditReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_AuditReleaseOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *titanClient) ExecuteReleaseOrder(ctx context.Context, in *ExecuteReleaseOrderReq, opts ...grpc.CallOption) (*CommonResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CommonResp)
+	err := c.cc.Invoke(ctx, Titan_ExecuteReleaseOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TitanServer is the server API for Titan service.
 // All implementations must embed UnimplementedTitanServer
 // for forward compatibility.
@@ -615,6 +701,15 @@ type TitanServer interface {
 	ListArtifacts(context.Context, *ListArtifactsReq) (*ListArtifactsResp, error)
 	CreateArtifact(context.Context, *CreateArtifactReq) (*CreateArtifactResp, error)
 	DeployArtifact(context.Context, *DeployArtifactReq) (*CommonResp, error)
+	// 5. 交付大盘 (Matrix)
+	GetDeliveryMatrix(context.Context, *GetDeliveryMatrixReq) (*GetDeliveryMatrixResp, error)
+	CompareMatrixEnv(context.Context, *CompareMatrixEnvReq) (*CompareMatrixEnvResp, error)
+	// 6. 发布单 (Release Order)
+	ListReleaseOrders(context.Context, *ListReleaseOrdersReq) (*ListReleaseOrdersResp, error)
+	GetReleaseOrder(context.Context, *GetReleaseOrderReq) (*ReleaseOrderDetailResp, error)
+	CreateReleaseOrder(context.Context, *CreateReleaseOrderReq) (*CreateReleaseOrderResp, error)
+	AuditReleaseOrder(context.Context, *AuditReleaseOrderReq) (*CommonResp, error)
+	ExecuteReleaseOrder(context.Context, *ExecuteReleaseOrderReq) (*CommonResp, error)
 	mustEmbedUnimplementedTitanServer()
 }
 
@@ -750,6 +845,27 @@ func (UnimplementedTitanServer) CreateArtifact(context.Context, *CreateArtifactR
 }
 func (UnimplementedTitanServer) DeployArtifact(context.Context, *DeployArtifactReq) (*CommonResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeployArtifact not implemented")
+}
+func (UnimplementedTitanServer) GetDeliveryMatrix(context.Context, *GetDeliveryMatrixReq) (*GetDeliveryMatrixResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDeliveryMatrix not implemented")
+}
+func (UnimplementedTitanServer) CompareMatrixEnv(context.Context, *CompareMatrixEnvReq) (*CompareMatrixEnvResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompareMatrixEnv not implemented")
+}
+func (UnimplementedTitanServer) ListReleaseOrders(context.Context, *ListReleaseOrdersReq) (*ListReleaseOrdersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListReleaseOrders not implemented")
+}
+func (UnimplementedTitanServer) GetReleaseOrder(context.Context, *GetReleaseOrderReq) (*ReleaseOrderDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetReleaseOrder not implemented")
+}
+func (UnimplementedTitanServer) CreateReleaseOrder(context.Context, *CreateReleaseOrderReq) (*CreateReleaseOrderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateReleaseOrder not implemented")
+}
+func (UnimplementedTitanServer) AuditReleaseOrder(context.Context, *AuditReleaseOrderReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AuditReleaseOrder not implemented")
+}
+func (UnimplementedTitanServer) ExecuteReleaseOrder(context.Context, *ExecuteReleaseOrderReq) (*CommonResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ExecuteReleaseOrder not implemented")
 }
 func (UnimplementedTitanServer) mustEmbedUnimplementedTitanServer() {}
 func (UnimplementedTitanServer) testEmbeddedByValue()               {}
@@ -1528,6 +1644,132 @@ func _Titan_DeployArtifact_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Titan_GetDeliveryMatrix_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeliveryMatrixReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).GetDeliveryMatrix(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_GetDeliveryMatrix_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).GetDeliveryMatrix(ctx, req.(*GetDeliveryMatrixReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_CompareMatrixEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompareMatrixEnvReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).CompareMatrixEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_CompareMatrixEnv_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).CompareMatrixEnv(ctx, req.(*CompareMatrixEnvReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_ListReleaseOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReleaseOrdersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).ListReleaseOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_ListReleaseOrders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).ListReleaseOrders(ctx, req.(*ListReleaseOrdersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_GetReleaseOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReleaseOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).GetReleaseOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_GetReleaseOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).GetReleaseOrder(ctx, req.(*GetReleaseOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_CreateReleaseOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReleaseOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).CreateReleaseOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_CreateReleaseOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).CreateReleaseOrder(ctx, req.(*CreateReleaseOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_AuditReleaseOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuditReleaseOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).AuditReleaseOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_AuditReleaseOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).AuditReleaseOrder(ctx, req.(*AuditReleaseOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Titan_ExecuteReleaseOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExecuteReleaseOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TitanServer).ExecuteReleaseOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Titan_ExecuteReleaseOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TitanServer).ExecuteReleaseOrder(ctx, req.(*ExecuteReleaseOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Titan_ServiceDesc is the grpc.ServiceDesc for Titan service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1702,6 +1944,34 @@ var Titan_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeployArtifact",
 			Handler:    _Titan_DeployArtifact_Handler,
+		},
+		{
+			MethodName: "GetDeliveryMatrix",
+			Handler:    _Titan_GetDeliveryMatrix_Handler,
+		},
+		{
+			MethodName: "CompareMatrixEnv",
+			Handler:    _Titan_CompareMatrixEnv_Handler,
+		},
+		{
+			MethodName: "ListReleaseOrders",
+			Handler:    _Titan_ListReleaseOrders_Handler,
+		},
+		{
+			MethodName: "GetReleaseOrder",
+			Handler:    _Titan_GetReleaseOrder_Handler,
+		},
+		{
+			MethodName: "CreateReleaseOrder",
+			Handler:    _Titan_CreateReleaseOrder_Handler,
+		},
+		{
+			MethodName: "AuditReleaseOrder",
+			Handler:    _Titan_AuditReleaseOrder_Handler,
+		},
+		{
+			MethodName: "ExecuteReleaseOrder",
+			Handler:    _Titan_ExecuteReleaseOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

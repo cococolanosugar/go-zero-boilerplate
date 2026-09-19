@@ -21,5 +21,6 @@ export type TitanListExecutions200ListItem = {
   status: string;
   triggerBy: number;
   triggerType: string;
+  updateTime: string;
   workflowId: string;
 };

@@ -1,4 +1,4 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"

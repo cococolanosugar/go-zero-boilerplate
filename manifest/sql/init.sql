@@ -618,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `titan_integration` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_name` (`name`),
   KEY `idx_category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan 外部系统集成与凭据表';
 
@@ -696,6 +697,7 @@ CREATE TABLE IF NOT EXISTS `titan_pipeline_step_exec` (
   `end_time` datetime DEFAULT NULL,
   `duration_ms` bigint NOT NULL DEFAULT 0,
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_exec_stage` (`exec_id`, `stage_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan 流水线步骤执行记录表';
@@ -740,7 +742,7 @@ CREATE TABLE IF NOT EXISTS `titan_env` (
   `name` varchar(64) NOT NULL COMMENT '环境名称 (如 开发环境、生产环境)',
   `cluster_id` bigint NOT NULL COMMENT '关联物理K8s集群ID (titan_cluster)',
   `namespace` varchar(64) NOT NULL COMMENT '对应的Kubernetes命名空间',
-  `status` varchar(32) NOT NULL DEFAULT 'ACTIVE' COMMENT '状态: ACTIVE, CREATING, DELETED',
+  `status` varchar(32) NOT NULL DEFAULT 'ACTIVE' COMMENT '环境状态: ACTIVE-启用 INACTIVE-停用',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -777,13 +779,37 @@ CREATE TABLE IF NOT EXISTS `titan_env_app_binding` (
   `current_artifact_id` bigint NOT NULL DEFAULT 0 COMMENT '当前运行的制品ID',
   `ready_replicas` int NOT NULL DEFAULT 0 COMMENT '就绪Pod副本数',
   `total_replicas` int NOT NULL DEFAULT 0 COMMENT '期望总副本数',
-  `status` varchar(32) NOT NULL DEFAULT 'PENDING' COMMENT '状态: RUNNING, UPDATING, FAILED, STOPPED',
+  `status` varchar(32) NOT NULL DEFAULT 'PENDING' COMMENT '绑定状态: PENDING-待部署 DEPLOYING-部署中 RUNNING-运行中 FAILED-部署失败 STOPPED-已停止',
   `last_deployed_time` datetime DEFAULT NULL COMMENT '最后一次部署时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_env_app` (`env_id`, `app_id`),
-  KEY `idx_env_id` (`env_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Titan环境应用运行态绑定表';
+
+CREATE TABLE IF NOT EXISTS `titan_release_order` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '发布单ID',
+  `order_no` varchar(64) NOT NULL COMMENT '发布单号 (如 RO202609190001)',
+  `project_id` bigint NOT NULL COMMENT '所属项目ID',
+  `title` varchar(128) NOT NULL COMMENT '发布单标题',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '发布说明',
+  `target_env` varchar(32) NOT NULL COMMENT '目标环境 (dev, test, staging, prod)',
+  `services_json` json NOT NULL COMMENT '变更服务及目标版本详情 JSON',
+  `status` varchar(32) NOT NULL DEFAULT 'DRAFT' COMMENT 'DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, EXECUTING, SUCCESS, FAILED, CANCELED',
+  `itsm_process_inst_id` bigint NOT NULL DEFAULT 0 COMMENT '关联ITSM流程实例ID',
+  `applicant_id` bigint NOT NULL DEFAULT 0 COMMENT '申请人ID',
+  `applicant_name` varchar(64) NOT NULL DEFAULT '' COMMENT '申请人姓名',
+  `approver_id` bigint NOT NULL DEFAULT 0 COMMENT '审批人ID',
+  `approver_name` varchar(64) NOT NULL DEFAULT '' COMMENT '审批人姓名',
+  `scheduled_time` datetime DEFAULT NULL COMMENT '计划发布时间',
+  `start_time` datetime DEFAULT NULL COMMENT '实际开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '实际完成时间',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_order_no` (`order_no`),
+  KEY `idx_project_status` (`project_id`, `status`),
+  KEY `idx_target_env` (`target_env`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Titan发布单与合规卡点表';
 
 -- 挂载管理后台菜单项：Titan 研发交付平台
 INSERT INTO `sys_menu` (`id`, `parent_id`, `title`, `type`, `path`, `component`, `permission_code`, `icon`, `sort`, `visible`, `status`)
@@ -801,9 +827,9 @@ ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 -- 预置 Titan 初始演示数据 (集群、集成凭证、流水线模型与执行记录)
 INSERT IGNORE INTO `titan_cluster` (`id`, `name`, `env`, `api_endpoint`, `kubeconfig`, `status`, `version`, `description`, `created_by`)
 VALUES 
-  (1, 'k8s-local-dev', 'dev', 'https://kubernetes.docker.internal:6443', 'apiVersion: v1\nclusters: []\n', 'ACTIVE', 'v1.30.2', '本地 Kubernetes 联调集群', 1),
-  (2, 'k8s-staging-cluster', 'staging', 'https://k8s.staging.company.internal:6443', 'apiVersion: v1\nclusters: []\n', 'ACTIVE', 'v1.28.8', '预发验证环境混合集群', 1),
-  (3, 'k8s-prod-primary', 'prod', 'https://k8s.prod.company.internal:6443', 'apiVersion: v1\nclusters: []\n', 'ACTIVE', 'v1.28.8', '生产环境多可用区高可用集群', 1);
+  (1, 'k8s-local-dev', 'dev', 'https://kubernetes.docker.internal:6443', 'apiVersion: v1\nclusters: []\n', 'HEALTHY', 'v1.30.2', '本地 Kubernetes 联调集群', 1),
+  (2, 'k8s-staging-cluster', 'staging', 'https://k8s.staging.company.internal:6443', 'apiVersion: v1\nclusters: []\n', 'HEALTHY', 'v1.28.8', '预发验证环境混合集群', 1),
+  (3, 'k8s-prod-primary', 'prod', 'https://k8s.prod.company.internal:6443', 'apiVersion: v1\nclusters: []\n', 'HEALTHY', 'v1.28.8', '生产环境多可用区高可用集群', 1);
 
 INSERT IGNORE INTO `titan_integration` (`id`, `name`, `category`, `auth_type`, `config`, `status`, `description`, `created_by`)
 VALUES
@@ -827,3 +853,35 @@ INSERT IGNORE INTO `titan_pipeline_exec` (`id`, `pipeline_id`, `pipeline_name`, 
 VALUES
   (1, 1, 'go-zero-boilerplate-ci', 'EXEC-20260918-001', 'MANUAL', 1, 'master', '3115943a', '{"ENV":"prod"}', 'SUCCESS', 'titan-exec-1', NOW() - INTERVAL 1 HOUR, NOW() - INTERVAL 55 MINUTE, 300000, '[{"name":"docker-image","path":"registry.internal/app:v1.0"}]'),
   (2, 1, 'go-zero-boilerplate-ci', 'EXEC-20260918-002', 'MANUAL', 1, 'feat/devops', 'fed7926b', '{"ENV":"dev"}', 'RUNNING', 'titan-exec-2', NOW() - INTERVAL 5 MINUTE, NULL, 0, '[]');
+
+-- Zadig 交付模型演示数据（与 migration 20260919000000 对齐，使 init.sql-only 引导路径数据完整）
+-- 初始种子数据预置
+INSERT IGNORE INTO `titan_project` (`id`, `name`, `display_name`, `description`, `owner_id`, `status`)
+VALUES 
+  (1, 'shop-system', '微服务电商中台', '包含网关、用户中心、订单微服务的高并发微服务集群', 1, 1),
+  (2, 'ai-agent-hub', 'AI Agent 协同调度平台', '基于大模型的智能协同平台与工作流流水线', 1, 1);
+
+INSERT IGNORE INTO `titan_app` (`id`, `project_id`, `name`, `display_name`, `description`, `integration_id`, `repo_url`, `default_branch`, `build_config`, `deploy_spec`, `status`)
+VALUES
+  (1, 1, 'order-service', '订单中心微服务', '处理电商交易、履约与退款状态机', 1, 'https://github.com/cococolanosugar/go-zero-boilerplate.git', 'main', 
+  '{"dockerfilePath":"app/order/Dockerfile","contextPath":".","baseImage":"golang:1.24-alpine","buildArgs":{"CGO_ENABLED":"0"}}',
+  'apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: order-service\n  labels:\n    app: order-service\nspec:\n  replicas: {{.REPLICAS}}\n  selector:\n    matchLabels:\n      app: order-service\n  template:\n    metadata:\n      labels:\n        app: order-service\n    spec:\n      containers:\n      - name: app\n        image: {{.IMAGE}}\n        ports:\n        - containerPort: 8080\n', 1),
+  (2, 1, 'gateway', '统一 API 网关', '全站唯一对外暴露的流量接入与鉴权中心', 1, 'https://github.com/cococolanosugar/go-zero-boilerplate.git', 'main',
+  '{"dockerfilePath":"app/gateway/Dockerfile","contextPath":".","baseImage":"golang:1.24-alpine","buildArgs":{"CGO_ENABLED":"0"}}',
+  'apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: gateway\n  labels:\n    app: gateway\nspec:\n  replicas: {{.REPLICAS}}\n  selector:\n    matchLabels:\n      app: gateway\n  template:\n    metadata:\n      labels:\n        app: gateway\n    spec:\n      containers:\n      - name: app\n        image: {{.IMAGE}}\n        ports:\n        - containerPort: 8888\n', 1);
+
+INSERT IGNORE INTO `titan_env` (`id`, `project_id`, `env_code`, `name`, `cluster_id`, `namespace`, `status`)
+VALUES
+  (1, 1, 'dev', '联调开发环境', 1, 'shop-dev', 'ACTIVE'),
+  (2, 1, 'staging', '预发布测试环境', 2, 'shop-staging', 'ACTIVE'),
+  (3, 1, 'prod', '生产环境', 3, 'shop-prod', 'ACTIVE');
+
+INSERT IGNORE INTO `titan_artifact` (`id`, `project_id`, `app_id`, `image_url`, `image_tag`, `image_digest`, `git_branch`, `git_commit`, `commit_msg`, `build_exec_id`, `image_size_bytes`, `status`)
+VALUES
+  (1, 1, 1, 'registry.company.internal/shop/order-service', 'v1.0.0-git-3115943', 'sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069', 'main', '3115943a', 'feat: 增加订单履约状态机', 1, 45210000, 'AVAILABLE'),
+  (2, 1, 2, 'registry.company.internal/shop/gateway', 'v1.0.0-git-3115943', 'sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 'main', '3115943a', 'feat: 优化统一鉴权中间件', 1, 38100000, 'AVAILABLE');
+
+INSERT IGNORE INTO `titan_env_app_binding` (`id`, `env_id`, `app_id`, `current_artifact_id`, `ready_replicas`, `total_replicas`, `status`, `last_deployed_time`)
+VALUES
+  (1, 1, 1, 1, 2, 2, 'RUNNING', NOW() - INTERVAL 2 HOUR),
+  (2, 1, 2, 2, 2, 2, 'RUNNING', NOW() - INTERVAL 2 HOUR);

@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   App as AntdApp,
   Button,
@@ -41,6 +41,7 @@ import {
   titanTestIntegration,
   type TitanListIntegrations200ListItem,
 } from '@zero/api';
+import { getErrorMessage } from '../utils/error';
 
 const { Text } = Typography;
 
@@ -122,9 +123,10 @@ export const IntegrationsPage: React.FC = () => {
       }
       setModalOpen(false);
       actionRef.current?.reload();
-    } catch (err: any) {
-      if (err?.message) {
-        message.error(err.message);
+    } catch (err) {
+      const errMsg = getErrorMessage(err, '');
+      if (errMsg) {
+        message.error(errMsg);
       }
     } finally {
       setSubmitting(false);
@@ -141,8 +143,8 @@ export const IntegrationsPage: React.FC = () => {
       } else {
         message.error(`集成连通失败: ${res.message || '远程服务响应异常'}`);
       }
-    } catch (err: any) {
-      message.error(err?.message || '连通性测试出现错误');
+    } catch (err) {
+      message.error(getErrorMessage(err, '连通性测试出现错误'));
     } finally {
       setTestingId(null);
     }
@@ -153,8 +155,8 @@ export const IntegrationsPage: React.FC = () => {
       await titanDeleteIntegration(id);
       message.success('集成凭据已删除');
       actionRef.current?.reload();
-    } catch (err: any) {
-      message.error(err?.message || '删除失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, '删除失败'));
     }
   };
 
@@ -310,8 +312,8 @@ export const IntegrationsPage: React.FC = () => {
               success: true,
               total: res.total || 0,
             };
-          } catch (err: any) {
-            message.error(err?.message || '加载集成列表失败');
+          } catch (err) {
+            message.error(getErrorMessage(err, '加载集成列表失败'));
             return { data: [], success: false, total: 0 };
           }
         }}

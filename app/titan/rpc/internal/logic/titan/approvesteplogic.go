@@ -1,10 +1,11 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
 
-	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/app/titan/model"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
+	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -27,7 +28,7 @@ func NewApproveStepLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Appro
 func (l *ApproveStepLogic) ApproveStep(in *titan.ApproveStepReq) (*titan.CommonResp, error) {
 	step, err := l.svcCtx.PipelineStepExecModel.FindOne(l.ctx, in.StepExecId)
 	if err != nil {
-		return nil, xerr.NewErrMsg("步骤记录不存在")
+		return nil, notFoundOrError(err, "步骤执行记录")
 	}
 
 	if step.Status != "WAITING_APPROVAL" {
@@ -35,10 +36,10 @@ func (l *ApproveStepLogic) ApproveStep(in *titan.ApproveStepReq) (*titan.CommonR
 	}
 
 	if in.Approved {
-		step.Status = "SUCCESS"
+		step.Status = model.ExecStatusSuccess
 		step.ErrorMsg = in.Comment
 	} else {
-		step.Status = "FAILED"
+		step.Status = model.ExecStatusFailed
 		step.ErrorMsg = "审批驳回: " + in.Comment
 	}
 

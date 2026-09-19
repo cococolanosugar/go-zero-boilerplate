@@ -1,5 +1,6 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
+  App as AntdApp,
   Modal,
   Form,
   Input,
@@ -11,10 +12,7 @@ import {
   Tag,
   Divider,
   Typography,
-  Radio,
-  Tooltip,
   Popconfirm,
-  Alert,
   Row,
   Col,
 } from 'antd';
@@ -24,7 +22,6 @@ import {
   CodeOutlined,
   AppstoreOutlined,
   BranchesOutlined,
-  CheckCircleOutlined,
   ApiOutlined,
   CloudUploadOutlined,
   AuditOutlined,
@@ -35,8 +32,10 @@ import {
   titanUpdatePipeline,
   type TitanListPipelines200ListItem,
 } from '@zero/api';
+import { useIntl } from '../../contexts/LocaleContext';
+import { getErrorMessage, isFormValidateError } from '../../utils/error';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 export interface DesignerModalProps {
   open: boolean;
@@ -59,6 +58,7 @@ export interface PipelineStage {
   steps: PipelineStep[];
 }
 
+// 默认编排阶段名/步骤名为落库数据（新流水线初始值），保留中文默认
 const defaultStages: PipelineStage[] = [
   {
     id: 'stage-build',
@@ -112,14 +112,15 @@ const defaultStages: PipelineStage[] = [
   },
 ];
 
-const stepTypeMeta: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
-  CHECKOUT: { label: 'Git 检出', color: 'green', icon: <BranchesOutlined /> },
-  BUILD: { label: '容器构建', color: 'blue', icon: <CodeOutlined /> },
-  TEST: { label: '测试扫描', color: 'cyan', icon: <ToolOutlined /> },
-  JENKINS: { label: 'Jenkins 任务', color: 'geekblue', icon: <ApiOutlined /> },
-  HELM_DEPLOY: { label: 'Helm 发布', color: 'volcano', icon: <CloudUploadOutlined /> },
-  YAML_DEPLOY: { label: 'K8s YAML 发布', color: 'orange', icon: <CloudUploadOutlined /> },
-  APPROVAL: { label: '人工审批卡点', color: 'purple', icon: <AuditOutlined /> },
+// 步骤类型 → 配色/图标/i18n key（文案统一走 titan.pipelines.designer.step*）
+const stepTypeMeta: Record<string, { color: string; icon: React.ReactNode; key: string }> = {
+  CHECKOUT: { color: 'green', icon: <BranchesOutlined />, key: 'titan.pipelines.designer.stepCheckout' },
+  BUILD: { color: 'blue', icon: <CodeOutlined />, key: 'titan.pipelines.designer.stepBuild' },
+  TEST: { color: 'cyan', icon: <ToolOutlined />, key: 'titan.pipelines.designer.stepTest' },
+  JENKINS: { color: 'geekblue', icon: <ApiOutlined />, key: 'titan.pipelines.designer.stepJenkins' },
+  HELM_DEPLOY: { color: 'volcano', icon: <CloudUploadOutlined />, key: 'titan.pipelines.designer.stepHelmDeploy' },
+  YAML_DEPLOY: { color: 'orange', icon: <CloudUploadOutlined />, key: 'titan.pipelines.designer.stepYamlDeploy' },
+  APPROVAL: { color: 'purple', icon: <AuditOutlined />, key: 'titan.pipelines.designer.stepApproval' },
 };
 
 export const DesignerModal: React.FC<DesignerModalProps> = ({
@@ -129,6 +130,8 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const { message } = AntdApp.useApp();
+  const { formatMessage: t } = useIntl();
   const [form] = Form.useForm();
   const [activeTab, setActiveTab] = useState<'visual' | 'json'>('visual');
   const [stages, setStages] = useState<PipelineStage[]>(defaultStages);
@@ -191,11 +194,11 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
     const stageIdx = stages.length + 1;
     const newStage: PipelineStage = {
       id: `stage-${Date.now()}`,
-      name: `新编排阶段 ${stageIdx}`,
+      name: t({ id: 'titan.pipelines.designer.defaultStageName', defaultMessage: '新编排阶段 {index}' }, { index: stageIdx }),
       steps: [
         {
           id: `step-${Date.now()}`,
-          name: '新步骤任务',
+          name: t({ id: 'titan.pipelines.designer.defaultStepName', defaultMessage: '新步骤任务' }),
           type: 'BUILD',
           params: {},
         },
@@ -222,7 +225,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
     const updated = [...stages];
     const newStep: PipelineStep = {
       id: `step-${Date.now()}`,
-      name: '新任务步骤',
+      name: t({ id: 'titan.pipelines.designer.newStepName', defaultMessage: '新任务步骤' }),
       type: 'BUILD',
       params: {},
     };
@@ -287,13 +290,14 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
           stages: stagesPayload,
           params: '[]',
           triggers: '{}',
-          status: values.status ?? 1,
+          status: values.status,
           description: values.description,
         });
       }
       onSuccess();
-    } catch (err: any) {
-      // Form validation errors handled automatically
+    } catch (err) {
+      if (isFormValidateError(err)) return; // 表单校验错误已由表单内提示
+      message.error(getErrorMessage(err, t({ id: 'titan.common.saveFailed', defaultMessage: '保存失败，请稍后重试' })));
     } finally {
       setSubmitting(false);
     }
@@ -301,7 +305,14 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
 
   return (
     <Modal
-      title={mode === 'create' ? '新建 Titan 交付流水线' : `流水线可视化编排: ${pipeline?.displayName || pipeline?.name}`}
+      title={
+        mode === 'create'
+          ? t({ id: 'titan.pipelines.designer.createTitle', defaultMessage: '新建 Titan 交付流水线' })
+          : t(
+              { id: 'titan.pipelines.designer.editTitle', defaultMessage: '流水线可视化编排: {name}' },
+              { name: pipeline?.displayName || pipeline?.name }
+            )
+      }
       open={open}
       onCancel={onClose}
       onOk={handleSave}
@@ -315,60 +326,63 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
           <Col span={12}>
             <Form.Item
               name="name"
-              label="流水线标识 (唯一编码)"
-              rules={[{ required: true, message: '请输入流水线标识' }]}
-              tooltip="不可变更，通常对应微服务项目代码工程名"
+              label={t({ id: 'titan.pipelines.designer.labelName', defaultMessage: '流水线标识 (唯一编码)' })}
+              rules={[{ required: true, message: t({ id: 'titan.pipelines.designer.ruleName', defaultMessage: '请输入流水线标识' }) }]}
+              tooltip={t({
+                id: 'titan.pipelines.designer.labelNameTooltip',
+                defaultMessage: '不可变更，通常对应微服务项目代码工程名',
+              })}
             >
               <Input
                 disabled={mode === 'edit'}
-                placeholder="例如：order-service-ci, portal-web-pipeline"
+                placeholder={t({ id: 'titan.pipelines.designer.placeholderName', defaultMessage: '例如：order-service-ci, portal-web-pipeline' })}
               />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
               name="displayName"
-              label="显示名称"
-              rules={[{ required: true, message: '请输入流水线显示名称' }]}
+              label={t({ id: 'titan.pipelines.designer.labelDisplayName', defaultMessage: '显示名称' })}
+              rules={[{ required: true, message: t({ id: 'titan.pipelines.designer.ruleDisplayName', defaultMessage: '请输入流水线显示名称' }) }]}
             >
-              <Input placeholder="例如：订单服务持续交付主干线" />
+              <Input placeholder={t({ id: 'titan.pipelines.designer.placeholderDisplayName', defaultMessage: '例如：订单服务持续交付主干线' })} />
             </Form.Item>
           </Col>
         </Row>
 
         <Row gutter={16}>
           <Col span={8}>
-            <Form.Item name="category" label="服务分类">
+            <Form.Item name="category" label={t({ id: 'titan.pipelines.designer.labelCategory', defaultMessage: '服务分类' })}>
               <Select
                 options={[
-                  { label: '后端微服务 (Microservice)', value: 'microservice' },
-                  { label: '前端多端应用 (Frontend)', value: 'frontend' },
-                  { label: '数据分析/批处理 (Data)', value: 'data' },
-                  { label: '其它混合形态 (Other)', value: 'other' },
+                  { label: t({ id: 'titan.pipelines.designer.categoryMicroservice', defaultMessage: '后端微服务 (Microservice)' }), value: 'microservice' },
+                  { label: t({ id: 'titan.pipelines.designer.categoryFrontend', defaultMessage: '前端多端应用 (Frontend)' }), value: 'frontend' },
+                  { label: t({ id: 'titan.pipelines.designer.categoryData', defaultMessage: '数据分析/批处理 (Data)' }), value: 'data' },
+                  { label: t({ id: 'titan.pipelines.designer.categoryOther', defaultMessage: '其它混合形态 (Other)' }), value: 'other' },
                 ]}
               />
             </Form.Item>
           </Col>
           <Col span={10}>
-            <Form.Item name="gitRepo" label="Git 代码仓库地址">
+            <Form.Item name="gitRepo" label={t({ id: 'titan.pipelines.designer.labelGitRepo', defaultMessage: 'Git 代码仓库地址' })}>
               <Input placeholder="https://github.com/org/repo.git" />
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="gitBranch" label="默认分支">
+            <Form.Item name="gitBranch" label={t({ id: 'titan.pipelines.designer.labelGitBranch', defaultMessage: '默认分支' })}>
               <Input placeholder="master" />
             </Form.Item>
           </Col>
         </Row>
 
-        <Form.Item name="description" label="流水线描述说明">
-          <Input.TextArea rows={2} placeholder="描述此流水线构建发布的业务范围与通知策略" />
+        <Form.Item name="description" label={t({ id: 'titan.pipelines.designer.labelDescription', defaultMessage: '流水线描述说明' })}>
+          <Input.TextArea rows={2} placeholder={t({ id: 'titan.pipelines.designer.placeholderDescription', defaultMessage: '描述此流水线构建发布的业务范围与通知策略' })} />
         </Form.Item>
 
         <Divider titlePlacement="start" style={{ margin: '12px 0 16px' }}>
           <Space>
             <AppstoreOutlined style={{ color: '#1677ff' }} />
-            <Text strong>流水线阶段与任务编排 (Stages & Steps)</Text>
+            <Text strong>{t({ id: 'titan.pipelines.designer.sectionStages', defaultMessage: '流水线阶段与任务编排 (Stages & Steps)' })}</Text>
           </Space>
         </Divider>
 
@@ -381,7 +395,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
               label: (
                 <Space>
                   <AppstoreOutlined />
-                  <span>可视化设计器</span>
+                  <span>{t({ id: 'titan.pipelines.designer.tabVisual', defaultMessage: '可视化设计器' })}</span>
                 </Space>
               ),
               children: (
@@ -394,7 +408,9 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
                       style={{ background: '#fafafa' }}
                       title={
                         <Space>
-                          <Tag color="blue">阶段 {stageIdx + 1}</Tag>
+                          <Tag color="blue">
+                            {t({ id: 'titan.pipelines.designer.stageTag', defaultMessage: '阶段 {index}' }, { index: stageIdx + 1 })}
+                          </Tag>
                           <Input
                             size="small"
                             value={stage.name}
@@ -411,11 +427,11 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
                             icon={<PlusOutlined />}
                             onClick={() => handleAddStep(stageIdx)}
                           >
-                            添加步骤
+                            {t({ id: 'titan.pipelines.designer.addStep', defaultMessage: '添加步骤' })}
                           </Button>
                           {stages.length > 1 && (
                             <Popconfirm
-                              title="确定移除此阶段及内部所有步骤？"
+                              title={t({ id: 'titan.pipelines.designer.deleteStageConfirm', defaultMessage: '确定移除此阶段及内部所有步骤？' })}
                               onConfirm={() => handleDeleteStage(stageIdx)}
                             >
                               <Button size="small" type="text" danger icon={<DeleteOutlined />} />
@@ -427,9 +443,9 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         {stage.steps.map((step, stepIdx) => {
                           const meta = stepTypeMeta[step.type] || {
-                            label: step.type,
                             color: 'default',
                             icon: null,
+                            key: '',
                           };
                           return (
                             <Card
@@ -464,7 +480,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
                                       label: (
                                         <Space size={4}>
                                           {v.icon}
-                                          <span>{v.label}</span>
+                                          <span>{t({ id: v.key, defaultMessage: v.key })}</span>
                                         </Space>
                                       ),
                                       value: k,
@@ -474,7 +490,10 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
                                 <Col span={10}>
                                   <Input
                                     size="small"
-                                    placeholder={'步骤配置 JSON 参数，如 {"image": "app:v1"}'}
+                                    placeholder={t({
+                                      id: 'titan.pipelines.designer.stepParamsPlaceholder',
+                                      defaultMessage: '步骤配置 JSON 参数，如 {"image": "app:v1"}',
+                                    })}
                                     value={
                                       typeof step.params === 'object'
                                         ? JSON.stringify(step.params)
@@ -511,7 +530,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
                     onClick={handleAddStage}
                     style={{ height: 40 }}
                   >
-                    添加流水线阶段 (Add Stage)
+                    {t({ id: 'titan.pipelines.designer.addStage', defaultMessage: '添加流水线阶段 (Add Stage)' })}
                   </Button>
                 </div>
               ),
@@ -521,7 +540,7 @@ export const DesignerModal: React.FC<DesignerModalProps> = ({
               label: (
                 <Space>
                   <CodeOutlined />
-                  <span>DSL 源码编辑</span>
+                  <span>{t({ id: 'titan.pipelines.designer.tabJson', defaultMessage: 'DSL 源码编辑' })}</span>
                 </Space>
               ),
               children: (

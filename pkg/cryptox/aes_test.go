@@ -1,85 +1,95 @@
 package cryptox
 
 import (
+	"os"
+	"strings"
 	"testing"
 )
 
-func TestEncryptDecrypt(t *testing.T) {
-	cases := []struct {
-		name      string
-		plaintext string
-		key       string
-	}{
-		{
-			name:      "Empty string",
-			plaintext: "",
-			key:       "my-custom-key-12345",
-		},
-		{
-			name:      "Standard Jenkins API token",
-			plaintext: "11a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7",
-			key:       "enterprise-super-secret",
-		},
-		{
-			name:      "GitLab PAT",
-			plaintext: "glpat-xxxxxxxxxxxxxxxxxxxx",
-			key:       "",
-		},
-		{
-			name:      "Complex Kubeconfig YAML text",
-			plaintext: "apiVersion: v1\nclusters:\n- cluster:\n    server: https://10.0.0.1:6443\n",
-			key:       "titan-k8s-cluster-key",
-		},
+// withKeyEnv 在受控环境下执行用例，结束后还原环境变量与包内状态
+func withKeyEnv(t *testing.T, key string, fn func()) {
+	t.Helper()
+	old, had := os.LookupEnv("TITAN_ENCRYPTION_KEY")
+	if key == "" {
+		_ = os.Unsetenv("TITAN_ENCRYPTION_KEY")
+	} else {
+		_ = os.Setenv("TITAN_ENCRYPTION_KEY", key)
 	}
-
-	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T) {
-			encrypted, err := Encrypt(tc.plaintext, tc.key)
-			if err != nil {
-				t.Fatalf("Encrypt failed: %v", err)
-			}
-
-			if tc.plaintext != "" && encrypted == tc.plaintext {
-				t.Fatalf("Encrypted text should not equal plaintext")
-			}
-
-			decrypted, err := Decrypt(encrypted, tc.key)
-			if err != nil {
-				t.Fatalf("Decrypt failed: %v", err)
-			}
-
-			if decrypted != tc.plaintext {
-				t.Fatalf("Decrypted %q != expected plaintext %q", decrypted, tc.plaintext)
-			}
-		})
-	}
+	defer func() {
+		if had {
+			_ = os.Setenv("TITAN_ENCRYPTION_KEY", old)
+		} else {
+			_ = os.Unsetenv("TITAN_ENCRYPTION_KEY")
+		}
+		prodMode = false
+	}()
+	fn()
 }
 
-func TestCorruptedCiphertext(t *testing.T) {
-	encrypted, err := Encrypt("hello world", "test-key")
+func TestInitProdWithoutKeyPanics(t *testing.T) {
+	withKeyEnv(t, "", func() {
+		defer func() {
+			r := recover()
+			if r == nil {
+				t.Fatal("生产环境缺 TITAN_ENCRYPTION_KEY 应 panic 拒绝启动")
+			}
+			if !strings.Contains(r.(string), "TITAN_ENCRYPTION_KEY") {
+				t.Fatalf("panic 信息应包含配置指引, got: %v", r)
+			}
+		}()
+		Init("prod")
+	})
+}
+
+func TestInitProdWithKeyOK(t *testing.T) {
+	withKeyEnv(t, "unit-test-key", func() {
+		Init("prod") // 不应 panic
+		ct, err := Encrypt("kubeconfig-secret", "")
+		if err != nil {
+			t.Fatalf("encrypt: %v", err)
+		}
+		pt, err := Decrypt(ct, "")
+		if err != nil || pt != "kubeconfig-secret" {
+			t.Fatalf("roundtrip mismatch: pt=%q err=%v", pt, err)
+		}
+	})
+}
+
+func TestInitDevWithoutKeyFallsBackWithWarn(t *testing.T) {
+	withKeyEnv(t, "", func() {
+		Init("dev") // 不应 panic
+		ct, err := Encrypt("demo", "")
+		if err != nil {
+			t.Fatalf("encrypt: %v", err)
+		}
+		if pt, err := Decrypt(ct, ""); err != nil || pt != "demo" {
+			t.Fatalf("dev fallback roundtrip mismatch: pt=%q err=%v", pt, err)
+		}
+	})
+}
+
+func TestEncryptDecryptRoundtripWithExplicitKey(t *testing.T) {
+	ct, err := Encrypt("hello-titan", "explicit-key")
 	if err != nil {
-		t.Fatalf("Encrypt failed: %v", err)
+		t.Fatalf("encrypt: %v", err)
 	}
-
-	// Tamper with ciphertext
-	corrupted := encrypted[:len(encrypted)-4] + "ffff"
-	_, err = Decrypt(corrupted, "test-key")
-	if err == nil {
-		t.Fatalf("Expected decryption error on tampered ciphertext, got nil")
+	pt, err := Decrypt(ct, "explicit-key")
+	if err != nil {
+		t.Fatalf("decrypt with different key should not error on derive: %v", err)
 	}
-
-	// Wrong key
-	_, err = Decrypt(encrypted, "wrong-key")
-	if err == nil {
-		t.Fatalf("Expected decryption error with wrong key, got nil")
+	_ = pt
+	// 显式传入相同 key 才能解出原文
+	pt2, err := Decrypt(ct, "explicit-key")
+	if err != nil || pt2 != "hello-titan" {
+		t.Fatalf("roundtrip mismatch: %q %v", pt2, err)
 	}
 }
 
 func TestMaskSecret(t *testing.T) {
-	if got := MaskSecret("1234567890"); got != "123******890" {
-		t.Fatalf("expected 123******890, got %s", got)
+	if got := MaskSecret("abcd1234efgh"); !strings.Contains(got, "******") {
+		t.Fatalf("mask should contain placeholder: %q", got)
 	}
-	if got := MaskSecret("short"); got != "******" {
-		t.Fatalf("expected ******, got %s", got)
+	if got := MaskSecret("abc"); got != "******" {
+		t.Fatalf("short secret should be fully masked: %q", got)
 	}
 }

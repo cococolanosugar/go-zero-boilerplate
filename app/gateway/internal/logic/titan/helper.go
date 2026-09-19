@@ -204,3 +204,29 @@ func toArtifactVO(item *titan.ArtifactItem) types.ArtifactVO {
 	}
 }
 
+func toReleaseOrderVO(item *titan.ReleaseOrderItem) types.ReleaseOrderVO {
+	if item == nil {
+		return types.ReleaseOrderVO{}
+	}
+	return types.ReleaseOrderVO{
+		Id:                item.Id,
+		OrderNo:           item.OrderNo,
+		ProjectId:         item.ProjectId,
+		Title:             item.Title,
+		Description:       item.Description,
+		TargetEnv:         item.TargetEnv,
+		ServicesJson:      item.ServicesJson,
+		Status:            item.Status,
+		ItsmProcessInstId: item.ItsmProcessInstId,
+		ApplicantId:       item.ApplicantId,
+		ApplicantName:     item.ApplicantName,
+		ApproverId:        item.ApproverId,
+		ApproverName:      item.ApproverName,
+		ScheduledTime:     item.ScheduledTime,
+		StartTime:         item.StartTime,
+		EndTime:           item.EndTime,
+		CreateTime:        item.CreateTime,
+		UpdateTime:        item.UpdateTime,
+	}
+}
+

@@ -5,19 +5,16 @@ import {
   Card,
   Space,
   Tag,
-  Badge,
   Button,
   Row,
   Col,
   Descriptions,
   Typography,
-  Steps,
   Alert,
   Input,
   Popconfirm,
   Drawer,
   Spin,
-  Divider,
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -28,7 +25,6 @@ import {
   ClockCircleOutlined,
   BranchesOutlined,
   CodeOutlined,
-  AuditOutlined,
   FileTextOutlined,
   PlayCircleOutlined,
   ExclamationCircleOutlined,
@@ -42,16 +38,20 @@ import {
   type TitanGetExecutionDetail200Execution,
   type TitanGetExecutionDetail200StepsItem,
 } from '@zero/api';
+import { execStatusMap } from '../../constants/status';
+import { useIntl } from '../../contexts/LocaleContext';
+import { getErrorMessage } from '../../utils/error';
 
-const { Text, Title, Paragraph } = Typography;
+const { Text } = Typography;
 
-const statusTagMap: Record<string, { color: string; text: string; icon: React.ReactNode }> = {
-  PENDING: { color: 'default', text: '排队就绪', icon: <ClockCircleOutlined /> },
-  RUNNING: { color: 'processing', text: '执行中', icon: <SyncOutlined spin /> },
-  WAITING_APPROVAL: { color: 'warning', text: '等待人工审批', icon: <ExclamationCircleOutlined /> },
-  SUCCESS: { color: 'success', text: '发布成功', icon: <CheckCircleOutlined /> },
-  FAILED: { color: 'error', text: '执行失败', icon: <CloseCircleOutlined /> },
-  CANCELLED: { color: 'default', text: '已终止', icon: <StopOutlined /> },
+// 图标属于视图层细节，保留在页面内；颜色/文案统一引用 constants/status.ts
+const statusIconMap: Record<string, React.ReactNode> = {
+  PENDING: <ClockCircleOutlined />,
+  RUNNING: <SyncOutlined spin />,
+  WAITING_APPROVAL: <ExclamationCircleOutlined />,
+  SUCCESS: <CheckCircleOutlined />,
+  FAILED: <CloseCircleOutlined />,
+  CANCELLED: <StopOutlined />,
 };
 
 export const ExecutionDetailPage: React.FC = () => {
@@ -59,6 +59,7 @@ export const ExecutionDetailPage: React.FC = () => {
   const execId = Number(id);
   const navigate = useNavigate();
   const { message } = AntdApp.useApp();
+  const { formatMessage: t } = useIntl();
 
   const [loading, setLoading] = useState(true);
   const [execution, setExecution] = useState<TitanGetExecutionDetail200Execution | null>(null);
@@ -75,29 +76,31 @@ export const ExecutionDetailPage: React.FC = () => {
   const [approvalComment, setApprovalComment] = useState('');
   const [approvalSubmitting, setApprovalSubmitting] = useState(false);
 
-  const fetchDetail = async () => {
+  // silent=true 表示轮询刷新：不触发整页 loading，仅静默更新数据（保留局部刷新）
+  const fetchDetail = async (silent = false) => {
     if (!execId) return;
+    if (!silent) setLoading(true);
     try {
-      setLoading(true);
       const res = await titanGetExecutionDetail(execId);
       setExecution(res.execution || null);
       setSteps(res.steps || []);
       if (!selectedStep && res.steps && res.steps.length > 0) {
         setSelectedStep(res.steps[0]);
       }
-    } catch (err: any) {
-      message.error(err?.message || '加载流水线执行详情失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, t({ id: 'titan.pipelines.execution.loadFailed', defaultMessage: '加载流水线执行详情失败' })));
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchDetail();
-    // 轮询处于 RUNNING 或 WAITING_APPROVAL 状态的任务
+    // 轮询处于 RUNNING 或 WAITING_APPROVAL 状态的任务；页面不可见时跳过本轮（保留定时器）
     const timer = setInterval(() => {
       if (execution?.status === 'RUNNING' || execution?.status === 'WAITING_APPROVAL') {
-        fetchDetail();
+        if (document.visibilityState === 'hidden') return;
+        void fetchDetail(true);
       }
     }, 4000);
     return () => clearInterval(timer);
@@ -110,9 +113,14 @@ export const ExecutionDetailPage: React.FC = () => {
     setLogLoading(true);
     try {
       const res = await titanGetStepLog(step.id || 0, { offset: 0 });
-      setLogContent(res.content || '暂无实时控制台日志输出');
-    } catch (err: any) {
-      setLogContent(`获取日志失败: ${err?.message || '未知错误'}`);
+      setLogContent(res.content || t({ id: 'titan.pipelines.execution.logEmpty', defaultMessage: '暂无实时控制台日志输出' }));
+    } catch (err) {
+      setLogContent(
+        t(
+          { id: 'titan.pipelines.execution.logFetchFailed', defaultMessage: '获取日志失败: {message}' },
+          { message: getErrorMessage(err, t({ id: 'titan.pipelines.execution.unknownError', defaultMessage: '未知错误' })) }
+        )
+      );
     } finally {
       setLogLoading(false);
     }
@@ -123,10 +131,10 @@ export const ExecutionDetailPage: React.FC = () => {
     if (!execId) return;
     try {
       await titanCancelExecution(execId);
-      message.success('流水线已发出终止信号');
+      message.success(t({ id: 'titan.pipelines.execution.cancelSuccess', defaultMessage: '流水线已发出终止信号' }));
       fetchDetail();
-    } catch (err: any) {
-      message.error(err?.message || '终止流水线失败');
+    } catch (err) {
+      message.error(getErrorMessage(err, t({ id: 'titan.pipelines.execution.cancelFailed', defaultMessage: '终止流水线失败' })));
     }
   };
 
@@ -138,17 +146,21 @@ export const ExecutionDetailPage: React.FC = () => {
         approved,
         comment: approvalComment,
       });
-      message.success(approved ? '门禁已审批通过，流水线继续流转' : '已驳回，流水线终止');
+      message.success(
+        approved
+          ? t({ id: 'titan.pipelines.execution.approveSuccess', defaultMessage: '门禁已审批通过，流水线继续流转' })
+          : t({ id: 'titan.pipelines.execution.rejectSuccess', defaultMessage: '已驳回，流水线终止' })
+      );
       setApprovalComment('');
       fetchDetail();
-    } catch (err: any) {
-      message.error(err?.message || '审批操作异常');
+    } catch (err) {
+      message.error(getErrorMessage(err, t({ id: 'titan.pipelines.execution.approvalFailed', defaultMessage: '审批操作异常' })));
     } finally {
       setApprovalSubmitting(false);
     }
   };
 
-  const statusMeta = statusTagMap[execution?.status || 'PENDING'] || statusTagMap.PENDING;
+  const statusMeta = execStatusMap[execution?.status || 'PENDING'] || execStatusMap.PENDING;
 
   return (
     <PageContainer
@@ -160,25 +172,34 @@ export const ExecutionDetailPage: React.FC = () => {
               icon={<ArrowLeftOutlined />}
               onClick={() => navigate('/pipelines')}
             />
-            <span>流水线执行详情 #{execution?.execNo || execId}</span>
-            <Tag color={statusMeta.color} icon={statusMeta.icon} style={{ fontSize: 13, padding: '2px 8px' }}>
-              {statusMeta.text}
+            <span>
+              {t({ id: 'titan.pipelines.execution.title', defaultMessage: '流水线执行详情 #{no}' }, { no: execution?.execNo || execId })}
+            </span>
+            <Tag
+              color={statusMeta.color}
+              icon={statusIconMap[execution?.status || ''] || statusIconMap.PENDING}
+              style={{ fontSize: 13, padding: '2px 8px' }}
+            >
+              {t({ id: statusMeta.textKey, defaultMessage: statusMeta.textKey })}
             </Tag>
           </Space>
         ),
         extra: [
-          <Button key="refresh" icon={<SyncOutlined />} onClick={fetchDetail}>
-            刷新
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => fetchDetail()}>
+            {t({ id: 'titan.common.refresh', defaultMessage: '刷新' })}
           </Button>,
           (execution?.status === 'RUNNING' || execution?.status === 'WAITING_APPROVAL') && (
             <Popconfirm
               key="cancel"
-              title="确定立即终止此流水线？"
-              description="终止后将向编排引擎发送 Cancel 信号，终止进行中的构建任务。"
+              title={t({ id: 'titan.pipelines.execution.cancelConfirmTitle', defaultMessage: '确定立即终止此流水线？' })}
+              description={t({
+                id: 'titan.pipelines.execution.cancelConfirmDesc',
+                defaultMessage: '终止后将向编排引擎发送 Cancel 信号，终止进行中的构建任务。',
+              })}
               onConfirm={handleCancel}
             >
               <Button danger icon={<StopOutlined />}>
-                终止执行
+                {t({ id: 'titan.pipelines.execution.cancelAction', defaultMessage: '终止执行' })}
               </Button>
             </Popconfirm>
           ),
@@ -189,31 +210,36 @@ export const ExecutionDetailPage: React.FC = () => {
         {/* 执行基础元数据卡片 */}
         <Card variant="outlined" style={{ marginBottom: 16 }}>
           <Descriptions column={{ xs: 1, sm: 2, md: 4 }}>
-            <Descriptions.Item label="所属流水线">
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descPipeline', defaultMessage: '所属流水线' })}>
               <Text strong>{execution?.pipelineName || '-'}</Text>
             </Descriptions.Item>
-            <Descriptions.Item label="触发方式">
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descTrigger', defaultMessage: '触发方式' })}>
               <Tag color="cyan">{execution?.triggerType || 'MANUAL'}</Tag>
             </Descriptions.Item>
-            <Descriptions.Item label="代码分支">
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descBranch', defaultMessage: '代码分支' })}>
               <Space>
                 <BranchesOutlined style={{ color: '#1677ff' }} />
                 <Text code>{execution?.gitBranch || 'master'}</Text>
               </Space>
             </Descriptions.Item>
-            <Descriptions.Item label="Commit 提交">
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descCommit', defaultMessage: 'Commit 提交' })}>
               <Text code>{execution?.gitCommit ? execution.gitCommit.slice(0, 8) : '-'}</Text>
             </Descriptions.Item>
-            <Descriptions.Item label="开始时间">
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descStartTime', defaultMessage: '开始时间' })}>
               {execution?.startTime || '-'}
             </Descriptions.Item>
-            <Descriptions.Item label="结束时间">
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descEndTime', defaultMessage: '结束时间' })}>
               {execution?.endTime || '-'}
             </Descriptions.Item>
-            <Descriptions.Item label="总计耗时">
-              {execution?.durationMs ? `${(execution.durationMs / 1000).toFixed(1)} 秒` : '-'}
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descDuration', defaultMessage: '总计耗时' })}>
+              {execution?.durationMs
+                ? t(
+                    { id: 'titan.pipelines.execution.durationSeconds', defaultMessage: '{seconds} 秒' },
+                    { seconds: (execution.durationMs / 1000).toFixed(1) }
+                  )
+                : '-'}
             </Descriptions.Item>
-            <Descriptions.Item label="编排 Workflow ID">
+            <Descriptions.Item label={t({ id: 'titan.pipelines.execution.descWorkflowId', defaultMessage: '编排 Workflow ID' })}>
               <Text code copyable ellipsis style={{ maxWidth: 180 }}>
                 {execution?.workflowId || '-'}
               </Text>
@@ -226,7 +252,7 @@ export const ExecutionDetailPage: React.FC = () => {
           title={
             <Space>
               <PlayCircleOutlined style={{ color: '#1677ff' }} />
-              <span>流水线阶段与步骤拓扑状态 (Execution DAG)</span>
+              <span>{t({ id: 'titan.pipelines.execution.dagTitle', defaultMessage: '流水线阶段与步骤拓扑状态 (Execution DAG)' })}</span>
             </Space>
           }
           variant="outlined"
@@ -234,7 +260,7 @@ export const ExecutionDetailPage: React.FC = () => {
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {steps.map((step, index) => {
-              const meta = statusTagMap[step.status || 'PENDING'] || statusTagMap.PENDING;
+              const meta = execStatusMap[step.status || 'PENDING'] || execStatusMap.PENDING;
               const isWaiting = step.status === 'WAITING_APPROVAL';
 
               return (
@@ -250,17 +276,22 @@ export const ExecutionDetailPage: React.FC = () => {
                   <Row justify="space-between" align="middle">
                     <Col>
                       <Space size="middle">
-                        <Tag color="blue">步骤 {index + 1}</Tag>
+                        <Tag color="blue">
+                          {t({ id: 'titan.pipelines.execution.stepTag', defaultMessage: '步骤 {index}' }, { index: index + 1 })}
+                        </Tag>
                         <Text strong style={{ fontSize: 15 }}>
                           {step.stepName}
                         </Text>
                         <Tag color="geekblue">{step.stepType}</Tag>
-                        <Tag color={meta.color} icon={meta.icon}>
-                          {meta.text}
+                        <Tag color={meta.color} icon={statusIconMap[step.status || '']}>
+                          {t({ id: meta.textKey, defaultMessage: meta.textKey })}
                         </Tag>
                         {step.durationMs ? (
                           <Text type="secondary" style={{ fontSize: 12 }}>
-                            耗时: {(step.durationMs / 1000).toFixed(1)}s
+                            {t(
+                              { id: 'titan.pipelines.execution.stepDuration', defaultMessage: '耗时: {duration}s' },
+                              { duration: (step.durationMs / 1000).toFixed(1) }
+                            )}
                           </Text>
                         ) : null}
                       </Space>
@@ -272,7 +303,7 @@ export const ExecutionDetailPage: React.FC = () => {
                           icon={<FileTextOutlined />}
                           onClick={() => handleOpenLog(step)}
                         >
-                          控制台日志
+                          {t({ id: 'titan.pipelines.execution.consoleLog', defaultMessage: '控制台日志' })}
                         </Button>
                       </Space>
                     </Col>
@@ -281,7 +312,7 @@ export const ExecutionDetailPage: React.FC = () => {
                   {/* 步骤异常信息 */}
                   {step.errorMsg ? (
                     <Alert
-                      title="执行异常中断"
+                      title={t({ id: 'titan.pipelines.execution.errorTitle', defaultMessage: '执行异常中断' })}
                       description={step.errorMsg}
                       type="error"
                       showIcon
@@ -293,15 +324,21 @@ export const ExecutionDetailPage: React.FC = () => {
                   {isWaiting && (
                     <div style={{ marginTop: 16, padding: '12px 16px', background: '#fff', borderRadius: 6, border: '1px solid #ffe58f' }}>
                       <Alert
-                        title="人工质量门禁卡点挂起中"
-                        description="该流水线包含生产/准入人工审批，请确认灰度验收指标与变更单就绪后进行决策。"
+                        title={t({ id: 'titan.pipelines.execution.approvalTitle', defaultMessage: '人工质量门禁卡点挂起中' })}
+                        description={t({
+                          id: 'titan.pipelines.execution.approvalDesc',
+                          defaultMessage: '该流水线包含生产/准入人工审批，请确认灰度验收指标与变更单就绪后进行决策。',
+                        })}
                         type="warning"
                         showIcon
                         style={{ marginBottom: 12 }}
                       />
                       <Input.TextArea
                         rows={2}
-                        placeholder="请输入审批审核意见与发布变更单号（可选）..."
+                        placeholder={t({
+                          id: 'titan.pipelines.execution.approvalPlaceholder',
+                          defaultMessage: '请输入审批审核意见与发布变更单号（可选）...',
+                        })}
                         value={approvalComment}
                         onChange={(e) => setApprovalComment(e.target.value)}
                         style={{ marginBottom: 12 }}
@@ -313,15 +350,18 @@ export const ExecutionDetailPage: React.FC = () => {
                           loading={approvalSubmitting}
                           onClick={() => step.id && handleApproval(step.id, true)}
                         >
-                          同意并推进后续发布 (Approve)
+                          {t({ id: 'titan.pipelines.execution.approveBtn', defaultMessage: '同意并推进后续发布 (Approve)' })}
                         </Button>
                         <Popconfirm
-                          title="确定驳回发布请求？"
-                          description="驳回后流水线将标记为 FAILED 并终止执行！"
+                          title={t({ id: 'titan.pipelines.execution.rejectConfirmTitle', defaultMessage: '确定驳回发布请求？' })}
+                          description={t({
+                            id: 'titan.pipelines.execution.rejectConfirmDesc',
+                            defaultMessage: '驳回后流水线将标记为 FAILED 并终止执行！',
+                          })}
                           onConfirm={() => step.id && handleApproval(step.id, false)}
                         >
                           <Button danger loading={approvalSubmitting}>
-                            驳回并中止流水线 (Reject)
+                            {t({ id: 'titan.pipelines.execution.rejectBtn', defaultMessage: '驳回并中止流水线 (Reject)' })}
                           </Button>
                         </Popconfirm>
                       </Space>
@@ -339,7 +379,12 @@ export const ExecutionDetailPage: React.FC = () => {
         title={
           <Space>
             <CodeOutlined style={{ color: '#52c41a' }} />
-            <span>实时终端日志: {selectedStep?.stepName}</span>
+            <span>
+              {t(
+                { id: 'titan.pipelines.execution.logDrawerTitle', defaultMessage: '实时终端日志: {name}' },
+                { name: selectedStep?.stepName }
+              )}
+            </span>
           </Space>
         }
         open={logDrawerOpen}
@@ -352,7 +397,7 @@ export const ExecutionDetailPage: React.FC = () => {
             loading={logLoading}
             onClick={() => selectedStep && handleOpenLog(selectedStep)}
           >
-            刷新日志
+            {t({ id: 'titan.pipelines.execution.refreshLog', defaultMessage: '刷新日志' })}
           </Button>
         }
       >
@@ -371,7 +416,11 @@ export const ExecutionDetailPage: React.FC = () => {
             lineHeight: 1.6,
           }}
         >
-          {logLoading ? <Spin description="正在增量拉取控制台日志..." /> : logContent}
+          {logLoading ? (
+            <Spin description={t({ id: 'titan.pipelines.execution.logLoadingText', defaultMessage: '正在增量拉取控制台日志...' })} />
+          ) : (
+            logContent
+          )}
         </div>
       </Drawer>
     </PageContainer>

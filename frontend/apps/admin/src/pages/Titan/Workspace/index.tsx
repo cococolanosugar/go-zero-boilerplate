@@ -56,7 +56,7 @@ export const TitanWorkspacePage: React.FC = () => {
       }}
     >
       <Alert
-        message="Titan 研发交付平台已全面演进为微服务云原生独立工作台"
+        title="Titan 研发交付平台已全面演进为微服务云原生独立工作台"
         description="支持项目空间、微服务应用、代码仓绑定、不可变镜像制品与 Kubernetes 多集群发布。您可以在下方直接无缝操作，或点击右上角按钮以全屏独立工作台模式运行。"
         type="info"
         showIcon

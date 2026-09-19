@@ -23,13 +23,13 @@ message IntegrationItem {
   int64 id = 1;
   string name = 2;
   string category = 3;
-  string authType = 4;
+  string auth_type = 4;
   string config = 5; // 安全过滤后的配置 JSON
   int32 status = 6;
   string description = 7;
-  int64 createdBy = 8;
-  string createTime = 9;
-  string updateTime = 10;
+  int64 created_by = 8;
+  string create_time = 9;
+  string update_time = 10;
 }
 
 message ListIntegrationsReq {
@@ -46,23 +46,24 @@ message ListIntegrationsResp {
 message CreateIntegrationReq {
   string name = 1;
   string category = 2;
-  string authType = 3;
+  string auth_type = 3;
   string config = 4; // 原始配置 JSON（由服务端加密存储）
   string description = 5;
-  int64 createdBy = 6;
+  int64 created_by = 6;
 }
 
 message CreateIntegrationResp {
   int64 id = 1;
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新，显式提供零值才更新
 message UpdateIntegrationReq {
   int64 id = 1;
-  string name = 2;
-  string authType = 3;
-  string config = 4;
-  int32 status = 5;
-  string description = 6;
+  optional string name = 2;
+  optional string auth_type = 3;
+  optional string config = 4; // 提交值匹配掩码格式（****开头）时跳过，保留库中原值
+  optional int32 status = 5;
+  optional string description = 6;
 }
 
 message DeleteIntegrationReq {
@@ -85,13 +86,13 @@ message ClusterItem {
   int64 id = 1;
   string name = 2;
   string env = 3;
-  string apiEndpoint = 4;
+  string api_endpoint = 4;
   string status = 5;
   string version = 6;
   string description = 7;
-  int64 createdBy = 8;
-  string createTime = 9;
-  string updateTime = 10;
+  int64 created_by = 8;
+  string create_time = 9;
+  string update_time = 10;
 }
 
 message ListClustersReq {
@@ -108,23 +109,24 @@ message ListClustersResp {
 message CreateClusterReq {
   string name = 1;
   string env = 2;
-  string apiEndpoint = 3;
+  string api_endpoint = 3;
   string kubeconfig = 4; // Kubeconfig 文本
   string description = 5;
-  int64 createdBy = 6;
+  int64 created_by = 6;
 }
 
 message CreateClusterResp {
   int64 id = 1;
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 message UpdateClusterReq {
   int64 id = 1;
-  string name = 2;
-  string env = 3;
-  string apiEndpoint = 4;
-  string kubeconfig = 5;
-  string description = 6;
+  optional string name = 2;
+  optional string env = 3;
+  optional string api_endpoint = 4;
+  optional string kubeconfig = 5;
+  optional string description = 6;
 }
 
 message DeleteClusterReq {
@@ -155,18 +157,18 @@ message ListNamespacesResp {
 message PipelineItem {
   int64 id = 1;
   string name = 2;
-  string displayName = 3;
+  string display_name = 3;
   string category = 4;
-  string gitRepo = 5;
-  string gitBranch = 6;
+  string git_repo = 5;
+  string git_branch = 6;
   string stages = 7; // JSON DSL
   string params = 8; // JSON
   string triggers = 9; // JSON
   int32 status = 10;
   string description = 11;
-  int64 createdBy = 12;
-  string createTime = 13;
-  string updateTime = 14;
+  int64 created_by = 12;
+  string create_time = 13;
+  string update_time = 14;
 }
 
 message ListPipelinesReq {
@@ -191,32 +193,33 @@ message PipelineDetailResp {
 
 message CreatePipelineReq {
   string name = 1;
-  string displayName = 2;
+  string display_name = 2;
   string category = 3;
-  string gitRepo = 4;
-  string gitBranch = 5;
+  string git_repo = 4;
+  string git_branch = 5;
   string stages = 6;
   string params = 7;
   string triggers = 8;
   string description = 9;
-  int64 createdBy = 10;
+  int64 created_by = 10;
 }
 
 message CreatePipelineResp {
   int64 id = 1;
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 message UpdatePipelineReq {
   int64 id = 1;
-  string displayName = 2;
-  string category = 3;
-  string gitRepo = 4;
-  string gitBranch = 5;
-  string stages = 6;
-  string params = 7;
-  string triggers = 8;
-  int32 status = 9;
-  string description = 10;
+  optional string display_name = 2;
+  optional string category = 3;
+  optional string git_repo = 4;
+  optional string git_branch = 5;
+  optional string stages = 6;
+  optional string params = 7;
+  optional string triggers = 8;
+  optional int32 status = 9;
+  optional string description = 10;
 }
 
 message DeletePipelineReq {
@@ -257,6 +260,7 @@ message ExecutionItem {
   int64 durationMs = 14;
   string artifacts = 15;
   string createTime = 16;
+  string updateTime = 17;
 }
 
 message StepExecItem {
@@ -364,12 +368,13 @@ message CreateProjectResp {
   int64 id = 1;
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 message UpdateProjectReq {
   int64 id = 1;
-  string displayName = 2;
-  string description = 3;
-  int64 ownerId = 4;
-  int32 status = 5;
+  optional string displayName = 2;
+  optional string description = 3;
+  optional int64 ownerId = 4;
+  optional int32 status = 5;
 }
 
 message DeleteProjectReq {
@@ -408,6 +413,7 @@ message ListAppsResp {
 
 message GetAppReq {
   int64 id = 1;
+  int64 projectId = 2; // 归属校验：应用必须属于该项目
 }
 
 message AppDetailResp {
@@ -430,21 +436,23 @@ message CreateAppResp {
   int64 id = 1;
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 message UpdateAppReq {
   int64 id = 1;
-  string displayName = 2;
-  string description = 3;
-  int64 integrationId = 4;
-  string repoUrl = 5;
-  string defaultBranch = 6;
-  string buildConfig = 7;
-  string deploySpec = 8;
-  int32 status = 9;
-  string name = 10;
+  optional string displayName = 2;
+  optional string description = 3;
+  optional int64 integrationId = 4;
+  optional string repoUrl = 5;
+  optional string defaultBranch = 6;
+  optional string buildConfig = 7;
+  optional string deploySpec = 8;
+  optional int32 status = 9;
+  optional string name = 10;
 }
 
 message DeleteAppReq {
   int64 id = 1;
+  int64 projectId = 2; // 归属校验：应用必须属于该项目
 }
 
 // ----------------------
@@ -474,6 +482,7 @@ message ListEnvsResp {
 
 message GetEnvReq {
   int64 id = 1;
+  int64 projectId = 2; // 归属校验：环境必须属于该项目
 }
 
 message EnvDetailResp {
@@ -492,16 +501,18 @@ message CreateEnvResp {
   int64 id = 1;
 }
 
+// 可选字段采用 proto3 optional 语义：未提供（nil）表示不更新
 message UpdateEnvReq {
   int64 id = 1;
-  string name = 2;
-  int64 clusterId = 3;
-  string namespace = 4;
-  string status = 5;
+  optional string name = 2;
+  optional int64 clusterId = 3;
+  optional string namespace = 4;
+  optional string status = 5;
 }
 
 message DeleteEnvReq {
   int64 id = 1;
+  int64 projectId = 2; // 归属校验：环境必须属于该项目
 }
 
 message EnvAppLiveItem {
@@ -550,6 +561,7 @@ message ArtifactItem {
   int64 imageSizeBytes = 12;
   string status = 13;
   string createTime = 14;
+  string updateTime = 15;
 }
 
 message ListArtifactsReq {
@@ -585,6 +597,8 @@ message DeployArtifactReq {
   int64 envId = 1;
   int64 appId = 2;
   int64 artifactId = 3;
+  int64 projectId = 4; // 归属校验：环境与应用必须属于该项目
+  int64 operatorId = 5; // 操作人（审计线索）
 }
 
 // ----------------------
@@ -652,4 +666,167 @@ service titan {
   rpc ListArtifacts(ListArtifactsReq) returns (ListArtifactsResp);
   rpc CreateArtifact(CreateArtifactReq) returns (CreateArtifactResp);
   rpc DeployArtifact(DeployArtifactReq) returns (CommonResp);
+
+  // 5. 交付大盘 (Matrix)
+  rpc GetDeliveryMatrix(GetDeliveryMatrixReq) returns (GetDeliveryMatrixResp);
+  rpc CompareMatrixEnv(CompareMatrixEnvReq) returns (CompareMatrixEnvResp);
+
+  // 6. 发布单 (Release Order)
+  rpc ListReleaseOrders(ListReleaseOrdersReq) returns (ListReleaseOrdersResp);
+  rpc GetReleaseOrder(GetReleaseOrderReq) returns (ReleaseOrderDetailResp);
+  rpc CreateReleaseOrder(CreateReleaseOrderReq) returns (CreateReleaseOrderResp);
+  rpc AuditReleaseOrder(AuditReleaseOrderReq) returns (CommonResp);
+  rpc ExecuteReleaseOrder(ExecuteReleaseOrderReq) returns (CommonResp);
+}
+
+// ----------------------
+// 5. 交付矩阵 (Delivery Matrix)
+// ----------------------
+message MatrixEnvHeader {
+  int64 envId = 1;
+  string envCode = 2;
+  string envName = 3;
+  string clusterName = 4;
+}
+
+message MatrixCellInfo {
+  int64 envId = 1;
+  string envCode = 2;
+  int64 appId = 3;
+  int64 artifactId = 4;
+  string versionTag = 5;
+  string gitCommit = 6;
+  string gitBranch = 7;
+  string deployStatus = 8;     // PENDING, DEPLOYING, RUNNING, FAILED, STOPPED
+  string healthStatus = 9;     // HEALTHY, UNHEALTHY, UNKNOWN
+  int32 readyReplicas = 10;
+  int32 totalReplicas = 11;
+  string lastDeployedAt = 12;
+  string diffStatus = 13;      // IN_SYNC, AHEAD, BEHIND, NOT_DEPLOYED
+}
+
+message MatrixServiceRow {
+  int64 appId = 1;
+  string appName = 2;
+  string displayName = 3;
+  string repoUrl = 4;
+  string defaultBranch = 5;
+  repeated MatrixCellInfo cells = 6;
+}
+
+message GetDeliveryMatrixReq {
+  int64 projectId = 1;
+}
+
+message GetDeliveryMatrixResp {
+  int64 projectId = 1;
+  string projectName = 2;
+  repeated MatrixEnvHeader envs = 3;
+  repeated MatrixServiceRow services = 4;
+}
+
+message CompareMatrixEnvReq {
+  int64 projectId = 1;
+  int64 appId = 2;
+  string sourceEnv = 3;
+  string targetEnv = 4;
+}
+
+message CommitDiffItem {
+  string commitId = 1;
+  string message = 2;
+  string author = 3;
+  string commitTime = 4;
+}
+
+message CompareMatrixEnvResp {
+  int64 appId = 1;
+  string appName = 2;
+  string sourceEnv = 3;
+  string sourceVersion = 4;
+  string sourceCommit = 5;
+  string targetEnv = 6;
+  string targetVersion = 7;
+  string targetCommit = 8;
+  repeated CommitDiffItem commits = 9;
+  bool canPromote = 10;
+}
+
+// ----------------------
+// 6. 发布单与合规卡点 (Release Order)
+// ----------------------
+message ReleaseOrderItem {
+  int64 id = 1;
+  string orderNo = 2;
+  int64 projectId = 3;
+  string title = 4;
+  string description = 5;
+  string targetEnv = 6;
+  string servicesJson = 7;
+  string status = 8; // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, EXECUTING, SUCCESS, FAILED, CANCELED
+  int64 itsmProcessInstId = 9;
+  int64 applicantId = 10;
+  string applicantName = 11;
+  int64 approverId = 12;
+  string approverName = 13;
+  string scheduledTime = 14;
+  string startTime = 15;
+  string endTime = 16;
+  string createTime = 17;
+  string updateTime = 18;
+}
+
+message ListReleaseOrdersReq {
+  int64 projectId = 1;
+  string targetEnv = 2;
+  string status = 3;
+  string keyword = 4;
+  int32 page = 5;
+  int32 pageSize = 6;
+}
+
+message ListReleaseOrdersResp {
+  int64 total = 1;
+  repeated ReleaseOrderItem list = 2;
+}
+
+message GetReleaseOrderReq {
+  int64 id = 1;
+}
+
+message ReleaseOrderDetailResp {
+  ReleaseOrderItem order = 1;
+  string itsmStatus = 2;
+}
+
+message CreateReleaseOrderReq {
+  int64 projectId = 1;
+  string title = 2;
+  string description = 3;
+  string targetEnv = 4;
+  string servicesJson = 5;
+  string scheduledTime = 6;
+  int64 applicantId = 7;
+  string applicantName = 8;
+}
+
+message CreateReleaseOrderResp {
+  int64 id = 1;
+  string orderNo = 2;
+  string status = 3;
+  int64 itsmProcessInstId = 4;
+}
+
+message AuditReleaseOrderReq {
+  int64 id = 1;
+  bool approved = 2;
+  string comment = 3;
+  int64 approverId = 4;
+  string approverName = 5;
+}
+
+message ExecuteReleaseOrderReq {
+  int64 id = 1;
+  int64 operatorId = 2;
+  string operatorName = 3;
 }

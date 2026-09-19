@@ -1,12 +1,10 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
-	"fmt"
 
-	"go-zero-boilerplate/app/titan/model"
-	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
+	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -26,19 +24,11 @@ func NewGetExecutionDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 	}
 }
 
+// GetExecutionDetail 执行详情：含 runtime_params / artifacts / 全部步骤（详情接口返回完整字段）
 func (l *GetExecutionDetailLogic) GetExecutionDetail(in *titan.GetExecutionDetailReq) (*titan.ExecutionDetailResp, error) {
 	e, err := l.svcCtx.PipelineExecModel.FindOne(l.ctx, in.ExecId)
 	if err != nil {
-		return nil, xerr.NewErrMsg("执行记录不存在")
-	}
-
-	startTimeStr := ""
-	if e.StartTime.Valid && !e.StartTime.Time.IsZero() {
-		startTimeStr = e.StartTime.Time.Format("2006-01-02 15:04:05")
-	}
-	endTimeStr := ""
-	if e.EndTime.Valid && !e.EndTime.Time.IsZero() {
-		endTimeStr = e.EndTime.Time.Format("2006-01-02 15:04:05")
+		return nil, notFoundOrError(err, "执行记录")
 	}
 
 	execItem := &titan.ExecutionItem{
@@ -53,28 +43,21 @@ func (l *GetExecutionDetailLogic) GetExecutionDetail(in *titan.GetExecutionDetai
 		RuntimeParams: e.RuntimeParams,
 		Status:        e.Status,
 		WorkflowId:    e.WorkflowId,
-		StartTime:     startTimeStr,
-		EndTime:       endTimeStr,
+		StartTime:     formatNullTime(e.StartTime),
+		EndTime:       formatNullTime(e.EndTime),
 		DurationMs:    e.DurationMs,
 		Artifacts:     e.Artifacts,
-		CreateTime:    e.CreateTime.Format("2006-01-02 15:04:05"),
+		CreateTime:    formatTime(e.CreateTime),
+		UpdateTime:    formatTime(e.UpdateTime),
 	}
 
-	var stepExecs []*model.TitanPipelineStepExec
-	query := fmt.Sprintf("SELECT id, exec_id, stage_id, step_id, step_name, step_type, status, log_path, error_msg, start_time, end_time, duration_ms, create_time FROM titan_pipeline_step_exec WHERE exec_id = ? ORDER BY id ASC")
-	_ = l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &stepExecs, query, in.ExecId)
+	stepExecs, err := l.svcCtx.PipelineStepExecModel.ListByExecId(l.ctx, in.ExecId)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询执行步骤失败: " + err.Error())
+	}
 
 	var stepList []*titan.StepExecItem
 	for _, s := range stepExecs {
-		sStart := ""
-		if s.StartTime.Valid && !s.StartTime.Time.IsZero() {
-			sStart = s.StartTime.Time.Format("2006-01-02 15:04:05")
-		}
-		sEnd := ""
-		if s.EndTime.Valid && !s.EndTime.Time.IsZero() {
-			sEnd = s.EndTime.Time.Format("2006-01-02 15:04:05")
-		}
-
 		stepList = append(stepList, &titan.StepExecItem{
 			Id:         s.Id,
 			ExecId:     s.ExecId,
@@ -85,8 +68,8 @@ func (l *GetExecutionDetailLogic) GetExecutionDetail(in *titan.GetExecutionDetai
 			Status:     s.Status,
 			LogPath:    s.LogPath,
 			ErrorMsg:   s.ErrorMsg,
-			StartTime:  sStart,
-			EndTime:    sEnd,
+			StartTime:  formatNullTime(s.StartTime),
+			EndTime:    formatNullTime(s.EndTime),
 			DurationMs: s.DurationMs,
 		})
 	}

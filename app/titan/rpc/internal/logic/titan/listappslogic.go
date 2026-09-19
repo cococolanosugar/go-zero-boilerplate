@@ -2,11 +2,10 @@ package titanlogic
 
 import (
 	"context"
-	"fmt"
 
-	"go-zero-boilerplate/app/titan/model"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,38 +24,18 @@ func NewListAppsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListApps
 	}
 }
 
+// ListApps 列表返回轻量列（不含 deploy_spec / build_config 大字段，详情接口 GetApp 单独取）
 func (l *ListAppsLogic) ListApps(in *titan.ListAppsReq) (*titan.ListAppsResp, error) {
-	page := in.Page
-	if page <= 0 {
-		page = 1
-	}
-	pageSize := in.PageSize
-	if pageSize <= 0 {
-		pageSize = 20
-	}
-	offset := (page - 1) * pageSize
+	offset, limit := normalizePage(int64(in.Page), int64(in.PageSize))
 
-	where := "WHERE 1=1"
-	var args []interface{}
-	if in.ProjectId > 0 {
-		where += " AND project_id = ?"
-		args = append(args, in.ProjectId)
-	}
-
-	var total int64
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM titan_app %s", where)
-	if err := l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &total, countQuery, args...); err != nil {
-		return nil, err
-	}
-
-	var apps []*model.TitanApp
-	listQuery := fmt.Sprintf("SELECT id, project_id, name, display_name, description, integration_id, repo_url, default_branch, build_config, deploy_spec, status, create_time, update_time FROM titan_app %s ORDER BY id DESC LIMIT %d, %d", where, offset, pageSize)
-	if err := l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &apps, listQuery, args...); err != nil {
-		return nil, err
+	apps, total, err := l.svcCtx.AppModel.ListLightByPage(l.ctx, in.ProjectId, offset, limit)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询应用列表失败: " + err.Error())
 	}
 
 	var list []*titan.AppItem
 	for _, a := range apps {
+		// 轻量结构不含 buildConfig/deploySpec 大字段：列表响应留空，详情接口单独取
 		list = append(list, &titan.AppItem{
 			Id:            a.Id,
 			ProjectId:     a.ProjectId,
@@ -66,11 +45,11 @@ func (l *ListAppsLogic) ListApps(in *titan.ListAppsReq) (*titan.ListAppsResp, er
 			IntegrationId: a.IntegrationId,
 			RepoUrl:       a.RepoUrl,
 			DefaultBranch: a.DefaultBranch,
-			BuildConfig:   a.BuildConfig,
-			DeploySpec:    a.DeploySpec,
+			BuildConfig:   "",
+			DeploySpec:    "",
 			Status:        int32(a.Status),
-			CreateTime:    a.CreateTime.Format("2006-01-02 15:04:05"),
-			UpdateTime:    a.UpdateTime.Format("2006-01-02 15:04:05"),
+			CreateTime:    formatTime(a.CreateTime),
+			UpdateTime:    formatTime(a.UpdateTime),
 		})
 	}
 

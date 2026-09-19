@@ -1,4 +1,4 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
@@ -29,7 +29,7 @@ func NewListNamespacesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 func (l *ListNamespacesLogic) ListNamespaces(in *titan.ListNamespacesReq) (*titan.ListNamespacesResp, error) {
 	cluster, err := l.svcCtx.ClusterModel.FindOne(l.ctx, in.ClusterId)
 	if err != nil {
-		return nil, xerr.NewErrMsg("集群不存在")
+		return nil, notFoundOrError(err, "集群")
 	}
 
 	kubeconfig, err := cryptox.Decrypt(cluster.Kubeconfig, "")

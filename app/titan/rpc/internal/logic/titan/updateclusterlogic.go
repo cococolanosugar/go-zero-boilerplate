@@ -1,4 +1,4 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
@@ -25,29 +25,32 @@ func NewUpdateClusterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 	}
 }
 
+// UpdateCluster 采用"字段显式提供才更新"语义：proto optional 指针为 nil 表示不更新。
 func (l *UpdateClusterLogic) UpdateCluster(in *titan.UpdateClusterReq) (*titan.CommonResp, error) {
 	cluster, err := l.svcCtx.ClusterModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return nil, xerr.NewErrMsg("集群不存在")
+		return nil, notFoundOrError(err, "集群")
 	}
 
-	if in.Name != "" {
-		cluster.Name = in.Name
+	if in.Name != nil {
+		cluster.Name = *in.Name
 	}
-	if in.Env != "" {
-		cluster.Env = in.Env
+	if in.Env != nil {
+		cluster.Env = *in.Env
 	}
-	if in.ApiEndpoint != "" {
-		cluster.ApiEndpoint = in.ApiEndpoint
+	if in.ApiEndpoint != nil {
+		cluster.ApiEndpoint = *in.ApiEndpoint
 	}
-	if in.Kubeconfig != "" {
-		encryptedKube, err := cryptox.Encrypt(in.Kubeconfig, "")
+	if in.Kubeconfig != nil {
+		encryptedKube, err := cryptox.Encrypt(*in.Kubeconfig, "")
 		if err != nil {
 			return nil, xerr.NewErrMsg("加密 Kubeconfig 失败: " + err.Error())
 		}
 		cluster.Kubeconfig = encryptedKube
 	}
-	cluster.Description = in.Description
+	if in.Description != nil {
+		cluster.Description = *in.Description
+	}
 
 	if err := l.svcCtx.ClusterModel.Update(l.ctx, cluster); err != nil {
 		return nil, xerr.NewErrMsg("更新集群失败: " + err.Error())

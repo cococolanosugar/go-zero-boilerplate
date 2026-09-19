@@ -605,11 +605,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: titan.TestClusterHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
-				Path:    "/envs/:id/deploy",
-				Handler: titan.DeployArtifactHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodGet,
 				Path:    "/envs/:id/live",
 				Handler: titan.GetEnvLiveDetailHandler(serverCtx),
@@ -653,6 +648,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/integrations/:id/test",
 				Handler: titan.TestIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/matrix",
+				Handler: titan.GetDeliveryMatrixHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/matrix/compare",
+				Handler: titan.CompareMatrixEnvHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
@@ -768,6 +773,36 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodDelete,
 				Path:    "/projects/:projectId/envs/:id",
 				Handler: titan.DeleteEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/envs/:id/deploy",
+				Handler: titan.DeployArtifactHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/release-orders",
+				Handler: titan.ListReleaseOrdersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/release-orders",
+				Handler: titan.CreateReleaseOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/release-orders/:id",
+				Handler: titan.GetReleaseOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/release-orders/:id/audit",
+				Handler: titan.AuditReleaseOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/release-orders/:id/execute",
+				Handler: titan.ExecuteReleaseOrderHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

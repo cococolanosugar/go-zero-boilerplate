@@ -1,11 +1,10 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
 
 	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
-	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +26,7 @@ func NewGetPipelineLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPi
 func (l *GetPipelineLogic) GetPipeline(in *titan.GetPipelineReq) (*titan.PipelineDetailResp, error) {
 	p, err := l.svcCtx.PipelineModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return nil, xerr.NewErrMsg("流水线不存在")
+		return nil, notFoundOrError(err, "流水线")
 	}
 
 	return &titan.PipelineDetailResp{

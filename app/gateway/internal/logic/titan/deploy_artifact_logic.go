@@ -25,10 +25,13 @@ func NewDeployArtifactLogic(ctx context.Context, svcCtx *svc.ServiceContext) *De
 }
 
 func (l *DeployArtifactLogic) DeployArtifact(req *types.DeployArtifactReqVO) error {
+	userId := getUserIdFromCtx(l.ctx)
 	_, err := l.svcCtx.TitanRpc.DeployArtifact(l.ctx, &titan.DeployArtifactReq{
 		EnvId:      req.Id,
 		AppId:      req.AppId,
 		ArtifactId: req.ArtifactId,
+		ProjectId:  req.ProjectId,
+		OperatorId: userId,
 	})
 	return err
 }

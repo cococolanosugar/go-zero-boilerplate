@@ -21,5 +21,6 @@ export type TitanGetExecutionDetail200Execution = {
   status: string;
   triggerBy: number;
   triggerType: string;
+  updateTime: string;
   workflowId: string;
 };

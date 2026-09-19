@@ -76,6 +76,7 @@ export interface ArtifactVO {
 	imageSizeBytes: number
 	status: string
 	createTime: string
+	updateTime: string
 }
 
 export interface AssignRolePermReq {
@@ -98,6 +99,13 @@ export interface AsyncTaskItem {
 	remark: string
 	createTime: string
 	updateTime: string
+}
+
+export interface AuditReleaseOrderReqVO {
+	approved: boolean
+	comment?: string
+}
+export interface AuditReleaseOrderReqVOParams {
 }
 
 export interface CancelExecutionReqVO {
@@ -138,6 +146,35 @@ export interface ClusterVO {
 	createdBy: number
 	createTime: string
 	updateTime: string
+}
+
+export interface CommitDiffItemVO {
+	commitId: string
+	message: string
+	author: string
+	commitTime: string
+}
+
+export interface CompareMatrixEnvReqVO {
+}
+export interface CompareMatrixEnvReqVOParams {
+	projectId: number
+	appId: number
+	sourceEnv: string
+	targetEnv: string
+}
+
+export interface CompareMatrixEnvRespVO {
+	appId: number
+	appName: string
+	sourceEnv: string
+	sourceVersion: string
+	sourceCommit: string
+	targetEnv: string
+	targetVersion: string
+	targetCommit: string
+	commits: Array<CommitDiffItemVO>
+	canPromote: boolean
 }
 
 export interface CreateAppReqVO {
@@ -246,6 +283,22 @@ export interface CreateProjectReqVO {
 
 export interface CreateProjectRespVO {
 	id: number
+}
+
+export interface CreateReleaseOrderReqVO {
+	projectId: number
+	title: string
+	description?: string
+	targetEnv: string
+	servicesJson: string
+	scheduledTime?: string
+}
+
+export interface CreateReleaseOrderRespVO {
+	id: number
+	orderNo: string
+	status: string
+	itsmProcessInstId: number
 }
 
 export interface CreateSysConfigReq {
@@ -467,6 +520,11 @@ export interface EnvVO {
 	updateTime: string
 }
 
+export interface ExecuteReleaseOrderReqVO {
+}
+export interface ExecuteReleaseOrderReqVOParams {
+}
+
 export interface ExecutionDetailRespVO {
 	execution: ExecutionVO
 	steps: Array<StepExecVO>
@@ -489,6 +547,7 @@ export interface ExecutionVO {
 	durationMs: number
 	artifacts: string
 	createTime: string
+	updateTime: string
 }
 
 export interface FileUploadResp {
@@ -508,6 +567,19 @@ export interface ForceLogoutReqParams {
 export interface GetAppReqVO {
 }
 export interface GetAppReqVOParams {
+}
+
+export interface GetDeliveryMatrixReqVO {
+}
+export interface GetDeliveryMatrixReqVOParams {
+	projectId: number
+}
+
+export interface GetDeliveryMatrixRespVO {
+	projectId: number
+	projectName: string
+	envs: Array<MatrixEnvHeaderVO>
+	services: Array<MatrixServiceRowVO>
 }
 
 export interface GetDictDataByTypeReq {
@@ -578,6 +650,11 @@ export interface GetProcessDefReqParams {
 export interface GetProjectReqVO {
 }
 export interface GetProjectReqVOParams {
+}
+
+export interface GetReleaseOrderReqVO {
+}
+export interface GetReleaseOrderReqVOParams {
 }
 
 export interface GetStepLogReqVO {
@@ -766,6 +843,22 @@ export interface ListProjectsReqVOParams {
 export interface ListProjectsRespVO {
 	total: number
 	list: Array<ProjectVO>
+}
+
+export interface ListReleaseOrdersReqVO {
+}
+export interface ListReleaseOrdersReqVOParams {
+	projectId?: number
+	targetEnv?: string
+	status?: string
+	keyword?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListReleaseOrdersRespVO {
+	total: number
+	list: Array<ReleaseOrderVO>
 }
 
 export interface ListSlaPoliciesRespVO {
@@ -979,6 +1072,38 @@ export interface MarkNoticeReadReq {
 	noticeId: number
 }
 
+export interface MatrixCellInfoVO {
+	envId: number
+	envCode: string
+	appId: number
+	artifactId: number
+	versionTag: string
+	gitCommit: string
+	gitBranch: string
+	deployStatus: string
+	healthStatus: string
+	readyReplicas: number
+	totalReplicas: number
+	lastDeployedAt: string
+	diffStatus: string
+}
+
+export interface MatrixEnvHeaderVO {
+	envId: number
+	envCode: string
+	envName: string
+	clusterName: string
+}
+
+export interface MatrixServiceRowVO {
+	appId: number
+	appName: string
+	displayName: string
+	repoUrl: string
+	defaultBranch: string
+	cells: Array<MatrixCellInfoVO>
+}
+
 export interface NoticeFeedItem {
 	id: number
 	noticeTitle: string
@@ -1081,6 +1206,32 @@ export interface RejectTaskReqVO {
 	opinion?: string
 }
 export interface RejectTaskReqVOParams {
+}
+
+export interface ReleaseOrderDetailRespVO {
+	order: ReleaseOrderVO
+	itsmStatus: string
+}
+
+export interface ReleaseOrderVO {
+	id: number
+	orderNo: string
+	projectId: number
+	title: string
+	description: string
+	targetEnv: string
+	servicesJson: string
+	status: string
+	itsmProcessInstId: number
+	applicantId: number
+	applicantName: string
+	approverId: number
+	approverName: string
+	scheduledTime: string
+	startTime: string
+	endTime: string
+	createTime: string
+	updateTime: string
 }
 
 export interface RunTaskOnceReq {

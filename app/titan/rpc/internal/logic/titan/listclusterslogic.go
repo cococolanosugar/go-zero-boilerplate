@@ -1,12 +1,11 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
-	"fmt"
 
-	"go-zero-boilerplate/app/titan/model"
-	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
+	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,34 +24,13 @@ func NewListClustersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *List
 	}
 }
 
+// ListClusters 列表不含 kubeconfig 凭据文本
 func (l *ListClustersLogic) ListClusters(in *titan.ListClustersReq) (*titan.ListClustersResp, error) {
-	page := in.Page
-	if page <= 0 {
-		page = 1
-	}
-	pageSize := in.PageSize
-	if pageSize <= 0 {
-		pageSize = 20
-	}
-	offset := (page - 1) * pageSize
+	offset, limit := normalizePage(int64(in.Page), int64(in.PageSize))
 
-	where := "WHERE 1=1"
-	var args []interface{}
-	if in.Env != "" {
-		where += " AND env = ?"
-		args = append(args, in.Env)
-	}
-
-	var total int64
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM titan_cluster %s", where)
-	if err := l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &total, countQuery, args...); err != nil {
-		return nil, err
-	}
-
-	var clusters []*model.TitanCluster
-	listQuery := fmt.Sprintf("SELECT id, name, env, api_endpoint, kubeconfig, status, version, description, created_by, create_time, update_time FROM titan_cluster %s ORDER BY id DESC LIMIT %d, %d", where, offset, pageSize)
-	if err := l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &clusters, listQuery, args...); err != nil {
-		return nil, err
+	clusters, total, err := l.svcCtx.ClusterModel.ListByPage(l.ctx, in.Env, offset, limit)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询集群列表失败: " + err.Error())
 	}
 
 	var list []*titan.ClusterItem
@@ -66,8 +44,8 @@ func (l *ListClustersLogic) ListClusters(in *titan.ListClustersReq) (*titan.List
 			Version:     c.Version,
 			Description: c.Description,
 			CreatedBy:   c.CreatedBy,
-			CreateTime:  c.CreateTime.Format("2006-01-02 15:04:05"),
-			UpdateTime:  c.UpdateTime.Format("2006-01-02 15:04:05"),
+			CreateTime:  formatTime(c.CreateTime),
+			UpdateTime:  formatTime(c.UpdateTime),
 		})
 	}
 

@@ -1,4 +1,4 @@
-﻿package titan
+package titan
 
 import (
 	"context"

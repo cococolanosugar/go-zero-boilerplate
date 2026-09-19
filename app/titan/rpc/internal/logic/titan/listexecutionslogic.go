@@ -1,12 +1,11 @@
-﻿package titanlogic
+package titanlogic
 
 import (
 	"context"
-	"fmt"
 
-	"go-zero-boilerplate/app/titan/model"
-	"go-zero-boilerplate/app/titan/rpc/titan"
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
+	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,68 +24,33 @@ func NewListExecutionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 	}
 }
 
+// ListExecutions 列表返回轻量列（runtime_params / artifacts JSON 由详情接口 GetExecutionDetail 返回）
 func (l *ListExecutionsLogic) ListExecutions(in *titan.ListExecutionsReq) (*titan.ListExecutionsResp, error) {
-	page := in.Page
-	if page <= 0 {
-		page = 1
-	}
-	pageSize := in.PageSize
-	if pageSize <= 0 {
-		pageSize = 20
-	}
-	offset := (page - 1) * pageSize
+	offset, limit := normalizePage(int64(in.Page), int64(in.PageSize))
 
-	where := "WHERE 1=1"
-	var args []interface{}
-	if in.PipelineId > 0 {
-		where += " AND pipeline_id = ?"
-		args = append(args, in.PipelineId)
-	}
-	if in.Status != "" {
-		where += " AND status = ?"
-		args = append(args, in.Status)
-	}
-
-	var total int64
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM titan_pipeline_exec %s", where)
-	if err := l.svcCtx.SqlConn.QueryRowCtx(l.ctx, &total, countQuery, args...); err != nil {
-		return nil, err
-	}
-
-	var execs []*model.TitanPipelineExec
-	listQuery := fmt.Sprintf("SELECT id, pipeline_id, pipeline_name, exec_no, trigger_type, trigger_by, git_branch, git_commit, runtime_params, status, workflow_id, start_time, end_time, duration_ms, artifacts, create_time, update_time FROM titan_pipeline_exec %s ORDER BY id DESC LIMIT %d, %d", where, offset, pageSize)
-	if err := l.svcCtx.SqlConn.QueryRowsCtx(l.ctx, &execs, listQuery, args...); err != nil {
-		return nil, err
+	execs, total, err := l.svcCtx.PipelineExecModel.ListLightByPage(l.ctx, in.PipelineId, in.Status, offset, limit)
+	if err != nil {
+		return nil, xerr.NewErrMsg("查询执行记录列表失败: " + err.Error())
 	}
 
 	var list []*titan.ExecutionItem
 	for _, e := range execs {
-		startTimeStr := ""
-		if e.StartTime.Valid && !e.StartTime.Time.IsZero() {
-			startTimeStr = e.StartTime.Time.Format("2006-01-02 15:04:05")
-		}
-		endTimeStr := ""
-		if e.EndTime.Valid && !e.EndTime.Time.IsZero() {
-			endTimeStr = e.EndTime.Time.Format("2006-01-02 15:04:05")
-		}
-
 		list = append(list, &titan.ExecutionItem{
-			Id:            e.Id,
-			PipelineId:    e.PipelineId,
-			PipelineName:  e.PipelineName,
-			ExecNo:        e.ExecNo,
-			TriggerType:   e.TriggerType,
-			TriggerBy:     e.TriggerBy,
-			GitBranch:     e.GitBranch,
-			GitCommit:     e.GitCommit,
-			RuntimeParams: e.RuntimeParams,
-			Status:        e.Status,
-			WorkflowId:    e.WorkflowId,
-			StartTime:     startTimeStr,
-			EndTime:       endTimeStr,
-			DurationMs:    e.DurationMs,
-			Artifacts:     e.Artifacts,
-			CreateTime:    e.CreateTime.Format("2006-01-02 15:04:05"),
+			Id:           e.Id,
+			PipelineId:   e.PipelineId,
+			PipelineName: e.PipelineName,
+			ExecNo:       e.ExecNo,
+			TriggerType:  e.TriggerType,
+			TriggerBy:    e.TriggerBy,
+			GitBranch:    e.GitBranch,
+			GitCommit:    e.GitCommit,
+			Status:       e.Status,
+			WorkflowId:   e.WorkflowId,
+			StartTime:    formatNullTime(e.StartTime),
+			EndTime:      formatNullTime(e.EndTime),
+			DurationMs:   e.DurationMs,
+			CreateTime:   formatTime(e.CreateTime),
+			UpdateTime:   formatTime(e.UpdateTime),
 		})
 	}
 

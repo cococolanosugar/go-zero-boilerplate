@@ -5,6 +5,7 @@ import (
 
 	"go-zero-boilerplate/app/titan/rpc/internal/svc"
 	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,42 +24,44 @@ func NewUpdateAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateA
 	}
 }
 
+// UpdateApp 采用"字段显式提供才更新"语义：proto optional 指针为 nil 表示不更新，
+// 显式提供零值（如空串、0）才允许清空/重置该字段。
 func (l *UpdateAppLogic) UpdateApp(in *titan.UpdateAppReq) (*titan.CommonResp, error) {
 	a, err := l.svcCtx.AppModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return nil, err
+		return nil, notFoundOrError(err, "应用")
 	}
 
-	if in.Name != "" {
-		a.Name = in.Name
+	if in.Name != nil {
+		a.Name = *in.Name
 	}
-	if in.DisplayName != "" {
-		a.DisplayName = in.DisplayName
+	if in.DisplayName != nil {
+		a.DisplayName = *in.DisplayName
 	}
-	if in.Description != "" {
-		a.Description = in.Description
+	if in.Description != nil {
+		a.Description = *in.Description
 	}
-	if in.IntegrationId > 0 {
-		a.IntegrationId = in.IntegrationId
+	if in.IntegrationId != nil {
+		a.IntegrationId = *in.IntegrationId
 	}
-	if in.RepoUrl != "" {
-		a.RepoUrl = in.RepoUrl
+	if in.RepoUrl != nil {
+		a.RepoUrl = *in.RepoUrl
 	}
-	if in.DefaultBranch != "" {
-		a.DefaultBranch = in.DefaultBranch
+	if in.DefaultBranch != nil {
+		a.DefaultBranch = *in.DefaultBranch
 	}
-	if in.BuildConfig != "" {
-		a.BuildConfig = in.BuildConfig
+	if in.BuildConfig != nil {
+		a.BuildConfig = *in.BuildConfig
 	}
-	if in.DeploySpec != "" {
-		a.DeploySpec = in.DeploySpec
+	if in.DeploySpec != nil {
+		a.DeploySpec = *in.DeploySpec
 	}
-	if in.Status > 0 {
-		a.Status = int64(in.Status)
+	if in.Status != nil {
+		a.Status = int64(*in.Status)
 	}
 
 	if err := l.svcCtx.AppModel.Update(l.ctx, a); err != nil {
-		return nil, err
+		return nil, xerr.NewErrMsg("更新应用失败: " + err.Error())
 	}
 
 	return &titan.CommonResp{

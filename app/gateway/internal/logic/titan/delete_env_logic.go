@@ -26,7 +26,8 @@ func NewDeleteEnvLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteE
 
 func (l *DeleteEnvLogic) DeleteEnv(req *types.DeleteEnvReqVO) error {
 	_, err := l.svcCtx.TitanRpc.DeleteEnv(l.ctx, &titan.DeleteEnvReq{
-		Id: req.Id,
+		Id:        req.Id,
+		ProjectId: req.ProjectId,
 	})
 	return err
 }
