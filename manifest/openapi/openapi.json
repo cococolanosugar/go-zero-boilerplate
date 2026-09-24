@@ -4552,6 +4552,3508 @@
         ]
       }
     },
+    "/api/v1/titan/clusters": {
+      "get": {
+        "operationId": "titanListClusters",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "env",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "apiEndpoint": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "env": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "env",
+                          "apiEndpoint",
+                          "status",
+                          "version",
+                          "description",
+                          "createdBy",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listClusters",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreateCluster",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "apiEndpoint": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "env": {
+                    "type": "string"
+                  },
+                  "kubeconfig": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "env",
+                  "kubeconfig"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createCluster",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/clusters/{id}": {
+      "delete": {
+        "operationId": "titanDeleteCluster",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deleteCluster",
+        "tags": [
+          "titan"
+        ]
+      },
+      "put": {
+        "operationId": "titanUpdateCluster",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "apiEndpoint": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "env": {
+                    "type": "string"
+                  },
+                  "kubeconfig": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateCluster",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/clusters/{id}/namespaces": {
+      "get": {
+        "operationId": "titanListNamespaces",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "namespaces": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listNamespaces",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/clusters/{id}/test": {
+      "post": {
+        "operationId": "titanTestCluster",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "version": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "testCluster",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/envs/{id}/live": {
+      "get": {
+        "operationId": "titanGetEnvLiveDetail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "apps": {
+                      "items": {
+                        "properties": {
+                          "appId": {
+                            "type": "integer"
+                          },
+                          "appName": {
+                            "type": "string"
+                          },
+                          "currentArtifactId": {
+                            "type": "integer"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "gitCommit": {
+                            "type": "string"
+                          },
+                          "imageTag": {
+                            "type": "string"
+                          },
+                          "imageUrl": {
+                            "type": "string"
+                          },
+                          "lastDeployedTime": {
+                            "type": "string"
+                          },
+                          "pods": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "readyReplicas": {
+                            "type": "integer"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "totalReplicas": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "appId",
+                          "appName",
+                          "displayName",
+                          "currentArtifactId",
+                          "imageTag",
+                          "imageUrl",
+                          "gitCommit",
+                          "readyReplicas",
+                          "totalReplicas",
+                          "status",
+                          "lastDeployedTime",
+                          "pods"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "clusterName": {
+                      "type": "string"
+                    },
+                    "envCode": {
+                      "type": "string"
+                    },
+                    "envId": {
+                      "type": "integer"
+                    },
+                    "envName": {
+                      "type": "string"
+                    },
+                    "namespace": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getEnvLiveDetail",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/executions": {
+      "get": {
+        "operationId": "titanListExecutions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pipelineId",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "artifacts": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "durationMs": {
+                            "type": "integer"
+                          },
+                          "endTime": {
+                            "type": "string"
+                          },
+                          "execNo": {
+                            "type": "string"
+                          },
+                          "gitBranch": {
+                            "type": "string"
+                          },
+                          "gitCommit": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "pipelineId": {
+                            "type": "integer"
+                          },
+                          "pipelineName": {
+                            "type": "string"
+                          },
+                          "runtimeParams": {
+                            "type": "string"
+                          },
+                          "startTime": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "triggerBy": {
+                            "type": "integer"
+                          },
+                          "triggerType": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          },
+                          "workflowId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "pipelineId",
+                          "pipelineName",
+                          "execNo",
+                          "triggerType",
+                          "triggerBy",
+                          "gitBranch",
+                          "gitCommit",
+                          "runtimeParams",
+                          "status",
+                          "workflowId",
+                          "startTime",
+                          "endTime",
+                          "durationMs",
+                          "artifacts",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listExecutions",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/executions/{id}": {
+      "get": {
+        "operationId": "titanGetExecutionDetail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "execution": {
+                      "properties": {
+                        "artifacts": {
+                          "type": "string"
+                        },
+                        "createTime": {
+                          "type": "string"
+                        },
+                        "durationMs": {
+                          "type": "integer"
+                        },
+                        "endTime": {
+                          "type": "string"
+                        },
+                        "execNo": {
+                          "type": "string"
+                        },
+                        "gitBranch": {
+                          "type": "string"
+                        },
+                        "gitCommit": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "pipelineId": {
+                          "type": "integer"
+                        },
+                        "pipelineName": {
+                          "type": "string"
+                        },
+                        "runtimeParams": {
+                          "type": "string"
+                        },
+                        "startTime": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "triggerBy": {
+                          "type": "integer"
+                        },
+                        "triggerType": {
+                          "type": "string"
+                        },
+                        "updateTime": {
+                          "type": "string"
+                        },
+                        "workflowId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "pipelineId",
+                        "pipelineName",
+                        "execNo",
+                        "triggerType",
+                        "triggerBy",
+                        "gitBranch",
+                        "gitCommit",
+                        "runtimeParams",
+                        "status",
+                        "workflowId",
+                        "startTime",
+                        "endTime",
+                        "durationMs",
+                        "artifacts",
+                        "createTime",
+                        "updateTime"
+                      ],
+                      "type": "object"
+                    },
+                    "steps": {
+                      "items": {
+                        "properties": {
+                          "durationMs": {
+                            "type": "integer"
+                          },
+                          "endTime": {
+                            "type": "string"
+                          },
+                          "errorMsg": {
+                            "type": "string"
+                          },
+                          "execId": {
+                            "type": "integer"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "logPath": {
+                            "type": "string"
+                          },
+                          "stageId": {
+                            "type": "string"
+                          },
+                          "startTime": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "stepId": {
+                            "type": "string"
+                          },
+                          "stepName": {
+                            "type": "string"
+                          },
+                          "stepType": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "execId",
+                          "stageId",
+                          "stepId",
+                          "stepName",
+                          "stepType",
+                          "status",
+                          "logPath",
+                          "errorMsg",
+                          "startTime",
+                          "endTime",
+                          "durationMs"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getExecutionDetail",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/executions/{id}/cancel": {
+      "post": {
+        "operationId": "titanCancelExecution",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "cancelExecution",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/integrations": {
+      "get": {
+        "operationId": "titanListIntegrations",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "authType": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "config": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "category",
+                          "authType",
+                          "config",
+                          "status",
+                          "description",
+                          "createdBy",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listIntegrations",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreateIntegration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "authType": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "config": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "category",
+                  "authType",
+                  "config"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createIntegration",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/integrations/{id}": {
+      "delete": {
+        "operationId": "titanDeleteIntegration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deleteIntegration",
+        "tags": [
+          "titan"
+        ]
+      },
+      "put": {
+        "operationId": "titanUpdateIntegration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "authType": {
+                    "type": "string"
+                  },
+                  "config": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateIntegration",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/integrations/{id}/test": {
+      "post": {
+        "operationId": "titanTestIntegration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "testIntegration",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/matrix": {
+      "get": {
+        "operationId": "titanGetDeliveryMatrix",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "envs": {
+                      "items": {
+                        "properties": {
+                          "clusterName": {
+                            "type": "string"
+                          },
+                          "envCode": {
+                            "type": "string"
+                          },
+                          "envId": {
+                            "type": "integer"
+                          },
+                          "envName": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "envId",
+                          "envCode",
+                          "envName",
+                          "clusterName"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "projectId": {
+                      "type": "integer"
+                    },
+                    "projectName": {
+                      "type": "string"
+                    },
+                    "services": {
+                      "items": {
+                        "properties": {
+                          "appId": {
+                            "type": "integer"
+                          },
+                          "appName": {
+                            "type": "string"
+                          },
+                          "cells": {
+                            "items": {
+                              "properties": {
+                                "appId": {
+                                  "type": "integer"
+                                },
+                                "artifactId": {
+                                  "type": "integer"
+                                },
+                                "deployStatus": {
+                                  "type": "string"
+                                },
+                                "diffStatus": {
+                                  "type": "string"
+                                },
+                                "envCode": {
+                                  "type": "string"
+                                },
+                                "envId": {
+                                  "type": "integer"
+                                },
+                                "gitBranch": {
+                                  "type": "string"
+                                },
+                                "gitCommit": {
+                                  "type": "string"
+                                },
+                                "healthStatus": {
+                                  "type": "string"
+                                },
+                                "lastDeployedAt": {
+                                  "type": "string"
+                                },
+                                "readyReplicas": {
+                                  "type": "integer"
+                                },
+                                "totalReplicas": {
+                                  "type": "integer"
+                                },
+                                "versionTag": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "envId",
+                                "envCode",
+                                "appId",
+                                "artifactId",
+                                "versionTag",
+                                "gitCommit",
+                                "gitBranch",
+                                "deployStatus",
+                                "healthStatus",
+                                "readyReplicas",
+                                "totalReplicas",
+                                "lastDeployedAt",
+                                "diffStatus"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "defaultBranch": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "repoUrl": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "appId",
+                          "appName",
+                          "displayName",
+                          "repoUrl",
+                          "defaultBranch",
+                          "cells"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getDeliveryMatrix",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/matrix/compare": {
+      "get": {
+        "operationId": "titanCompareMatrixEnv",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "appId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sourceEnv",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "targetEnv",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "appId": {
+                      "type": "integer"
+                    },
+                    "appName": {
+                      "type": "string"
+                    },
+                    "canPromote": {
+                      "type": "boolean"
+                    },
+                    "commits": {
+                      "items": {
+                        "properties": {
+                          "author": {
+                            "type": "string"
+                          },
+                          "commitId": {
+                            "type": "string"
+                          },
+                          "commitTime": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "commitId",
+                          "message",
+                          "author",
+                          "commitTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "sourceCommit": {
+                      "type": "string"
+                    },
+                    "sourceEnv": {
+                      "type": "string"
+                    },
+                    "sourceVersion": {
+                      "type": "string"
+                    },
+                    "targetCommit": {
+                      "type": "string"
+                    },
+                    "targetEnv": {
+                      "type": "string"
+                    },
+                    "targetVersion": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "compareMatrixEnv",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/pipelines": {
+      "get": {
+        "operationId": "titanListPipelines",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "category": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "gitBranch": {
+                            "type": "string"
+                          },
+                          "gitRepo": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "params": {
+                            "type": "string"
+                          },
+                          "stages": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "triggers": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "displayName",
+                          "category",
+                          "gitRepo",
+                          "gitBranch",
+                          "stages",
+                          "params",
+                          "triggers",
+                          "status",
+                          "description",
+                          "createdBy",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listPipelines",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreatePipeline",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "category": {
+                    "default": "microservice",
+                    "example": "microservice",
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "gitBranch": {
+                    "default": "master",
+                    "example": "master",
+                    "type": "string"
+                  },
+                  "gitRepo": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "params": {
+                    "default": "[]",
+                    "example": "[]",
+                    "type": "string"
+                  },
+                  "stages": {
+                    "type": "string"
+                  },
+                  "triggers": {
+                    "default": "{}",
+                    "example": "{}",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "displayName",
+                  "stages"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createPipeline",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/pipelines/{id}": {
+      "delete": {
+        "operationId": "titanDeletePipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deletePipeline",
+        "tags": [
+          "titan"
+        ]
+      },
+      "get": {
+        "operationId": "titanGetPipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "category": {
+                      "type": "string"
+                    },
+                    "createTime": {
+                      "type": "string"
+                    },
+                    "createdBy": {
+                      "type": "integer"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "gitBranch": {
+                      "type": "string"
+                    },
+                    "gitRepo": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "params": {
+                      "type": "string"
+                    },
+                    "stages": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "triggers": {
+                      "type": "string"
+                    },
+                    "updateTime": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getPipeline",
+        "tags": [
+          "titan"
+        ]
+      },
+      "put": {
+        "operationId": "titanUpdatePipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "gitBranch": {
+                    "type": "string"
+                  },
+                  "gitRepo": {
+                    "type": "string"
+                  },
+                  "params": {
+                    "type": "string"
+                  },
+                  "stages": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "integer"
+                  },
+                  "triggers": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updatePipeline",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/pipelines/{id}/trigger": {
+      "post": {
+        "operationId": "titanTriggerPipeline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "gitBranch": {
+                    "type": "string"
+                  },
+                  "gitCommit": {
+                    "type": "string"
+                  },
+                  "runtimeParams": {
+                    "default": "{}",
+                    "example": "{}",
+                    "type": "string"
+                  },
+                  "triggerType": {
+                    "default": "MANUAL",
+                    "example": "MANUAL",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "execId": {
+                      "type": "integer"
+                    },
+                    "execNo": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "triggerPipeline",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects": {
+      "get": {
+        "operationId": "titanListProjects",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "appCount": {
+                            "type": "integer"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "envCount": {
+                            "type": "integer"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "ownerId": {
+                            "type": "integer"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "displayName",
+                          "description",
+                          "ownerId",
+                          "status",
+                          "appCount",
+                          "envCount",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listProjects",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreateProject",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "ownerId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "displayName"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createProject",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects/{id}": {
+      "delete": {
+        "operationId": "titanDeleteProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deleteProject",
+        "tags": [
+          "titan"
+        ]
+      },
+      "get": {
+        "operationId": "titanGetProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "appCount": {
+                      "type": "integer"
+                    },
+                    "createTime": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "envCount": {
+                      "type": "integer"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "updateTime": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getProject",
+        "tags": [
+          "titan"
+        ]
+      },
+      "put": {
+        "operationId": "titanUpdateProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "ownerId": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateProject",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects/{projectId}/apps": {
+      "get": {
+        "operationId": "titanListApps",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "buildConfig": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "defaultBranch": {
+                            "type": "string"
+                          },
+                          "deploySpec": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "integrationId": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "projectId": {
+                            "type": "integer"
+                          },
+                          "repoUrl": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "projectId",
+                          "name",
+                          "displayName",
+                          "description",
+                          "integrationId",
+                          "repoUrl",
+                          "defaultBranch",
+                          "buildConfig",
+                          "deploySpec",
+                          "status",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listApps",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreateApp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "buildConfig": {
+                    "type": "string"
+                  },
+                  "defaultBranch": {
+                    "default": "main",
+                    "example": "main",
+                    "type": "string"
+                  },
+                  "deploySpec": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "integrationId": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "repoUrl": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "displayName",
+                  "defaultBranch"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createApp",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects/{projectId}/apps/{id}": {
+      "delete": {
+        "operationId": "titanDeleteApp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deleteApp",
+        "tags": [
+          "titan"
+        ]
+      },
+      "get": {
+        "operationId": "titanGetApp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "buildConfig": {
+                      "type": "string"
+                    },
+                    "createTime": {
+                      "type": "string"
+                    },
+                    "defaultBranch": {
+                      "type": "string"
+                    },
+                    "deploySpec": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "integrationId": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "projectId": {
+                      "type": "integer"
+                    },
+                    "repoUrl": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "updateTime": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getApp",
+        "tags": [
+          "titan"
+        ]
+      },
+      "put": {
+        "operationId": "titanUpdateApp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "buildConfig": {
+                    "type": "string"
+                  },
+                  "defaultBranch": {
+                    "type": "string"
+                  },
+                  "deploySpec": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "integrationId": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "repoUrl": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateApp",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects/{projectId}/artifacts": {
+      "get": {
+        "operationId": "titanListArtifacts",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "appId",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "appId": {
+                            "type": "integer"
+                          },
+                          "appName": {
+                            "type": "string"
+                          },
+                          "buildExecId": {
+                            "type": "integer"
+                          },
+                          "commitMsg": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "gitBranch": {
+                            "type": "string"
+                          },
+                          "gitCommit": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "imageDigest": {
+                            "type": "string"
+                          },
+                          "imageSizeBytes": {
+                            "type": "integer"
+                          },
+                          "imageTag": {
+                            "type": "string"
+                          },
+                          "imageUrl": {
+                            "type": "string"
+                          },
+                          "projectId": {
+                            "type": "integer"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "projectId",
+                          "appId",
+                          "appName",
+                          "imageUrl",
+                          "imageTag",
+                          "imageDigest",
+                          "gitBranch",
+                          "gitCommit",
+                          "commitMsg",
+                          "buildExecId",
+                          "imageSizeBytes",
+                          "status",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listArtifacts",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreateArtifact",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "appId": {
+                    "type": "integer"
+                  },
+                  "buildExecId": {
+                    "type": "integer"
+                  },
+                  "commitMsg": {
+                    "type": "string"
+                  },
+                  "gitBranch": {
+                    "type": "string"
+                  },
+                  "gitCommit": {
+                    "type": "string"
+                  },
+                  "imageDigest": {
+                    "type": "string"
+                  },
+                  "imageSizeBytes": {
+                    "type": "integer"
+                  },
+                  "imageTag": {
+                    "type": "string"
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "appId",
+                  "imageUrl",
+                  "imageTag"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createArtifact",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects/{projectId}/envs": {
+      "get": {
+        "operationId": "titanListEnvs",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "appCount": {
+                            "type": "integer"
+                          },
+                          "clusterId": {
+                            "type": "integer"
+                          },
+                          "clusterName": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "envCode": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "namespace": {
+                            "type": "string"
+                          },
+                          "projectId": {
+                            "type": "integer"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "projectId",
+                          "envCode",
+                          "name",
+                          "clusterId",
+                          "clusterName",
+                          "namespace",
+                          "status",
+                          "appCount",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listEnvs",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreateEnv",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "clusterId": {
+                    "type": "integer"
+                  },
+                  "envCode": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "envCode",
+                  "name",
+                  "clusterId",
+                  "namespace"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createEnv",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects/{projectId}/envs/{id}": {
+      "delete": {
+        "operationId": "titanDeleteEnv",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deleteEnv",
+        "tags": [
+          "titan"
+        ]
+      },
+      "get": {
+        "operationId": "titanGetEnv",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "appCount": {
+                      "type": "integer"
+                    },
+                    "clusterId": {
+                      "type": "integer"
+                    },
+                    "clusterName": {
+                      "type": "string"
+                    },
+                    "createTime": {
+                      "type": "string"
+                    },
+                    "envCode": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "projectId": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "updateTime": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getEnv",
+        "tags": [
+          "titan"
+        ]
+      },
+      "put": {
+        "operationId": "titanUpdateEnv",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "clusterId": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "updateEnv",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/projects/{projectId}/envs/{id}/deploy": {
+      "post": {
+        "operationId": "titanDeployArtifact",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "appId": {
+                    "type": "integer"
+                  },
+                  "artifactId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "appId",
+                  "artifactId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "deployArtifact",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/release-orders": {
+      "get": {
+        "operationId": "titanListReleaseOrders",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "projectId",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "targetEnv",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "applicantId": {
+                            "type": "integer"
+                          },
+                          "applicantName": {
+                            "type": "string"
+                          },
+                          "approverId": {
+                            "type": "integer"
+                          },
+                          "approverName": {
+                            "type": "string"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "endTime": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "itsmProcessInstId": {
+                            "type": "integer"
+                          },
+                          "orderNo": {
+                            "type": "string"
+                          },
+                          "projectId": {
+                            "type": "integer"
+                          },
+                          "scheduledTime": {
+                            "type": "string"
+                          },
+                          "servicesJson": {
+                            "type": "string"
+                          },
+                          "startTime": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "targetEnv": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "orderNo",
+                          "projectId",
+                          "title",
+                          "description",
+                          "targetEnv",
+                          "servicesJson",
+                          "status",
+                          "itsmProcessInstId",
+                          "applicantId",
+                          "applicantName",
+                          "approverId",
+                          "approverName",
+                          "scheduledTime",
+                          "startTime",
+                          "endTime",
+                          "createTime",
+                          "updateTime"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "listReleaseOrders",
+        "tags": [
+          "titan"
+        ]
+      },
+      "post": {
+        "operationId": "titanCreateReleaseOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "type": "integer"
+                  },
+                  "scheduledTime": {
+                    "type": "string"
+                  },
+                  "servicesJson": {
+                    "type": "string"
+                  },
+                  "targetEnv": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "title",
+                  "targetEnv",
+                  "servicesJson"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "itsmProcessInstId": {
+                      "type": "integer"
+                    },
+                    "orderNo": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "createReleaseOrder",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/release-orders/{id}": {
+      "get": {
+        "operationId": "titanGetReleaseOrder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "itsmStatus": {
+                      "type": "string"
+                    },
+                    "order": {
+                      "properties": {
+                        "applicantId": {
+                          "type": "integer"
+                        },
+                        "applicantName": {
+                          "type": "string"
+                        },
+                        "approverId": {
+                          "type": "integer"
+                        },
+                        "approverName": {
+                          "type": "string"
+                        },
+                        "createTime": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "endTime": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "itsmProcessInstId": {
+                          "type": "integer"
+                        },
+                        "orderNo": {
+                          "type": "string"
+                        },
+                        "projectId": {
+                          "type": "integer"
+                        },
+                        "scheduledTime": {
+                          "type": "string"
+                        },
+                        "servicesJson": {
+                          "type": "string"
+                        },
+                        "startTime": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "targetEnv": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "updateTime": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "orderNo",
+                        "projectId",
+                        "title",
+                        "description",
+                        "targetEnv",
+                        "servicesJson",
+                        "status",
+                        "itsmProcessInstId",
+                        "applicantId",
+                        "applicantName",
+                        "approverId",
+                        "approverName",
+                        "scheduledTime",
+                        "startTime",
+                        "endTime",
+                        "createTime",
+                        "updateTime"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getReleaseOrder",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/release-orders/{id}/audit": {
+      "post": {
+        "operationId": "titanAuditReleaseOrder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "approved": {
+                    "type": "boolean"
+                  },
+                  "comment": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "approved"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "auditReleaseOrder",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/release-orders/{id}/execute": {
+      "post": {
+        "operationId": "titanExecuteReleaseOrder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "executeReleaseOrder",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/steps/{id}/approve": {
+      "post": {
+        "operationId": "titanApproveStep",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "approved": {
+                    "type": "boolean"
+                  },
+                  "comment": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "approved"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "approveStep",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
+    "/api/v1/titan/steps/{id}/log": {
+      "get": {
+        "operationId": "titanGetStepLog",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": true,
+            "schema": {
+              "default": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "isEnd": {
+                      "type": "boolean"
+                    },
+                    "nextOffset": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "getStepLog",
+        "tags": [
+          "titan"
+        ]
+      }
+    },
     "/api/v1/user/dept": {
       "get": {
         "operationId": "sysDeptListSysDept",
@@ -6429,7 +9931,7 @@
       }
     }
   },
-  "x-date": "2026-09-16 00:19:15",
+  "x-date": "2026-09-19 23:12:01",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

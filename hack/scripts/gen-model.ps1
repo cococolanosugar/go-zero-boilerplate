@@ -27,4 +27,9 @@ if ($Table -eq "all" -or $Table -eq "itsm") {
     goctl model mysql ddl -src manifest/sql/itsm_schema.sql -dir app/itsm/model -c --style go_zero
 }
 
+if ($Table -eq "all" -or $Table -eq "devops" -or $Table -eq "titan") {
+    Write-Host "Generating Titan models from manifest/sql/titan_schema.sql..." -ForegroundColor Cyan
+    goctl model mysql ddl -src manifest/sql/titan_schema.sql -dir app/titan/model -c --style go_zero
+}
+
 Write-Host "Done generating database models!" -ForegroundColor Green

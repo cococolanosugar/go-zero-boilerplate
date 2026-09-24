@@ -20,6 +20,14 @@ jobs:
           go-version: '1.25'
           cache: true
 
+      - name: Setup Atlas
+        uses: ariga/setup-atlas@v1
+
+      - name: Verify Migration Directory Integrity
+        run: |
+          atlas migrate hash --dir file://manifest/sql/migrations
+          git diff --exit-code -- manifest/sql/migrations/atlas.sum
+
       - name: Verify Dependencies
         run: go mod verify
 
@@ -58,6 +66,7 @@ jobs:
         run: |
           npx @ant-design/cli lint ./apps/admin/src
           npx @ant-design/cli lint ./apps/portal/src
+          npx @ant-design/cli lint ./apps/titan/src
 
       - name: Run Frontend Unit Tests
         working-directory: frontend

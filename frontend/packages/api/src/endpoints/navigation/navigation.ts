@@ -61,6 +61,17 @@ export const sysNavListSysPortalNav = (
       options);
     }
   /**
+ * @summary 删除系统导航站点
+ */
+export const sysNavDeleteSysPortalNav = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<SysNavDeleteSysPortalNav200>>,) => {
+      return customInstance<SysNavDeleteSysPortalNav200>(
+      {url: `/api/v1/system/navigation/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  /**
  * @summary 获取导航站点详情
  */
 export const sysNavGetSysPortalNav = (
@@ -85,17 +96,6 @@ export const sysNavUpdateSysPortalNav = (
     },
       options);
     }
-  /**
- * @summary 删除系统导航站点
- */
-export const sysNavDeleteSysPortalNav = (
-    id: number,
- options?: SecondParameter<typeof customInstance<SysNavDeleteSysPortalNav200>>,) => {
-      return customInstance<SysNavDeleteSysPortalNav200>(
-      {url: `/api/v1/system/navigation/${id}`, method: 'DELETE'
-    },
-      options);
-    }
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -104,6 +104,6 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 export type PortalNavGetPortalNavListResult = NonNullable<Awaited<ReturnType<typeof portalNavGetPortalNavList>>>
 export type SysNavCreateSysPortalNavResult = NonNullable<Awaited<ReturnType<typeof sysNavCreateSysPortalNav>>>
 export type SysNavListSysPortalNavResult = NonNullable<Awaited<ReturnType<typeof sysNavListSysPortalNav>>>
+export type SysNavDeleteSysPortalNavResult = NonNullable<Awaited<ReturnType<typeof sysNavDeleteSysPortalNav>>>
 export type SysNavGetSysPortalNavResult = NonNullable<Awaited<ReturnType<typeof sysNavGetSysPortalNav>>>
 export type SysNavUpdateSysPortalNavResult = NonNullable<Awaited<ReturnType<typeof sysNavUpdateSysPortalNav>>>
-export type SysNavDeleteSysPortalNavResult = NonNullable<Awaited<ReturnType<typeof sysNavDeleteSysPortalNav>>>

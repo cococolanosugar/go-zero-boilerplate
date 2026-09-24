@@ -41,19 +41,6 @@ export const dictListSysDictData = (
       options);
     }
   /**
- * @summary 更新字典数据项
- */
-export const dictUpdateSysDictData = (
-    dictUpdateSysDictDataBody: DictUpdateSysDictDataBody,
- options?: SecondParameter<typeof customInstance<DictUpdateSysDictData200>>,) => {
-      return customInstance<DictUpdateSysDictData200>(
-      {url: `/api/v1/system/dict/data`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: dictUpdateSysDictDataBody
-    },
-      options);
-    }
-  /**
  * @summary 创建字典数据项
  */
 export const dictCreateSysDictData = (
@@ -63,6 +50,19 @@ export const dictCreateSysDictData = (
       {url: `/api/v1/system/dict/data`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: dictCreateSysDictDataBody
+    },
+      options);
+    }
+  /**
+ * @summary 更新字典数据项
+ */
+export const dictUpdateSysDictData = (
+    dictUpdateSysDictDataBody: DictUpdateSysDictDataBody,
+ options?: SecondParameter<typeof customInstance<DictUpdateSysDictData200>>,) => {
+      return customInstance<DictUpdateSysDictData200>(
+      {url: `/api/v1/system/dict/data`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: dictUpdateSysDictDataBody
     },
       options);
     }
@@ -101,19 +101,6 @@ export const dictListSysDictTypes = (
       options);
     }
   /**
- * @summary 更新字典类型
- */
-export const dictUpdateSysDictType = (
-    dictUpdateSysDictTypeBody: DictUpdateSysDictTypeBody,
- options?: SecondParameter<typeof customInstance<DictUpdateSysDictType200>>,) => {
-      return customInstance<DictUpdateSysDictType200>(
-      {url: `/api/v1/system/dict/types`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: dictUpdateSysDictTypeBody
-    },
-      options);
-    }
-  /**
  * @summary 创建字典类型
  */
 export const dictCreateSysDictType = (
@@ -123,6 +110,19 @@ export const dictCreateSysDictType = (
       {url: `/api/v1/system/dict/types`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: dictCreateSysDictTypeBody
+    },
+      options);
+    }
+  /**
+ * @summary 更新字典类型
+ */
+export const dictUpdateSysDictType = (
+    dictUpdateSysDictTypeBody: DictUpdateSysDictTypeBody,
+ options?: SecondParameter<typeof customInstance<DictUpdateSysDictType200>>,) => {
+      return customInstance<DictUpdateSysDictType200>(
+      {url: `/api/v1/system/dict/types`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: dictUpdateSysDictTypeBody
     },
       options);
     }
@@ -143,11 +143,11 @@ type AwaitedInput<T> = PromiseLike<T> | T;
     type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 export type DictListSysDictDataResult = NonNullable<Awaited<ReturnType<typeof dictListSysDictData>>>
-export type DictUpdateSysDictDataResult = NonNullable<Awaited<ReturnType<typeof dictUpdateSysDictData>>>
 export type DictCreateSysDictDataResult = NonNullable<Awaited<ReturnType<typeof dictCreateSysDictData>>>
+export type DictUpdateSysDictDataResult = NonNullable<Awaited<ReturnType<typeof dictUpdateSysDictData>>>
 export type DictGetDictDataByTypeResult = NonNullable<Awaited<ReturnType<typeof dictGetDictDataByType>>>
 export type DictDeleteSysDictDataResult = NonNullable<Awaited<ReturnType<typeof dictDeleteSysDictData>>>
 export type DictListSysDictTypesResult = NonNullable<Awaited<ReturnType<typeof dictListSysDictTypes>>>
-export type DictUpdateSysDictTypeResult = NonNullable<Awaited<ReturnType<typeof dictUpdateSysDictType>>>
 export type DictCreateSysDictTypeResult = NonNullable<Awaited<ReturnType<typeof dictCreateSysDictType>>>
+export type DictUpdateSysDictTypeResult = NonNullable<Awaited<ReturnType<typeof dictUpdateSysDictType>>>
 export type DictDeleteSysDictTypeResult = NonNullable<Awaited<ReturnType<typeof dictDeleteSysDictType>>>

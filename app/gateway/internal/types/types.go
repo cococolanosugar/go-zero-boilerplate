@@ -3,11 +3,129 @@
 
 package types
 
+type ArtifactVO struct {
+	Id             int64  `json:"id"`
+	ProjectId      int64  `json:"projectId"`
+	AppId          int64  `json:"appId"`
+	AppName        string `json:"appName"`
+	ImageUrl       string `json:"imageUrl"`
+	ImageTag       string `json:"imageTag"`
+	ImageDigest    string `json:"imageDigest"`
+	GitBranch      string `json:"gitBranch"`
+	GitCommit      string `json:"gitCommit"`
+	CommitMsg      string `json:"commitMsg"`
+	BuildExecId    int64  `json:"buildExecId"`
+	ImageSizeBytes int64  `json:"imageSizeBytes"`
+	Status         string `json:"status"`
+	CreateTime     string `json:"createTime"`
+	UpdateTime     string `json:"updateTime"`
+}
+
+type ClusterVO struct {
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Env         string `json:"env"`
+	ApiEndpoint string `json:"apiEndpoint"`
+	Status      string `json:"status"`
+	Version     string `json:"version"`
+	Description string `json:"description"`
+	CreatedBy   int64  `json:"createdBy"`
+	CreateTime  string `json:"createTime"`
+	UpdateTime  string `json:"updateTime"`
+}
+
+type CommitDiffItemVO struct {
+	CommitId   string `json:"commitId"`
+	Message    string `json:"message"`
+	Author     string `json:"author"`
+	CommitTime string `json:"commitTime"`
+}
+
 type DashboardSystemStats struct {
 	TotalUsers     int64   `json:"totalUsers"`
 	ActiveTasks    int64   `json:"activeTasks"`
 	CompletedTasks int64   `json:"completedTasks"`
 	SuccessRate    float64 `json:"successRate"`
+}
+
+type EnvAppLiveVO struct {
+	AppId             int64    `json:"appId"`
+	AppName           string   `json:"appName"`
+	DisplayName       string   `json:"displayName"`
+	CurrentArtifactId int64    `json:"currentArtifactId"`
+	ImageTag          string   `json:"imageTag"`
+	ImageUrl          string   `json:"imageUrl"`
+	GitCommit         string   `json:"gitCommit"`
+	ReadyReplicas     int32    `json:"readyReplicas"`
+	TotalReplicas     int32    `json:"totalReplicas"`
+	Status            string   `json:"status"`
+	LastDeployedTime  string   `json:"lastDeployedTime"`
+	Pods              []string `json:"pods"`
+}
+
+type ExecutionVO struct {
+	Id            int64  `json:"id"`
+	PipelineId    int64  `json:"pipelineId"`
+	PipelineName  string `json:"pipelineName"`
+	ExecNo        string `json:"execNo"`
+	TriggerType   string `json:"triggerType"`
+	TriggerBy     int64  `json:"triggerBy"`
+	GitBranch     string `json:"gitBranch"`
+	GitCommit     string `json:"gitCommit"`
+	RuntimeParams string `json:"runtimeParams"`
+	Status        string `json:"status"`
+	WorkflowId    string `json:"workflowId"`
+	StartTime     string `json:"startTime"`
+	EndTime       string `json:"endTime"`
+	DurationMs    int64  `json:"durationMs"`
+	Artifacts     string `json:"artifacts"`
+	CreateTime    string `json:"createTime"`
+	UpdateTime    string `json:"updateTime"`
+}
+
+type IntegrationVO struct {
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Category    string `json:"category"`
+	AuthType    string `json:"authType"`
+	Config      string `json:"config"`
+	Status      int32  `json:"status"`
+	Description string `json:"description"`
+	CreatedBy   int64  `json:"createdBy"`
+	CreateTime  string `json:"createTime"`
+	UpdateTime  string `json:"updateTime"`
+}
+
+type MatrixCellInfoVO struct {
+	EnvId          int64  `json:"envId"`
+	EnvCode        string `json:"envCode"`
+	AppId          int64  `json:"appId"`
+	ArtifactId     int64  `json:"artifactId"`
+	VersionTag     string `json:"versionTag"`
+	GitCommit      string `json:"gitCommit"`
+	GitBranch      string `json:"gitBranch"`
+	DeployStatus   string `json:"deployStatus"`
+	HealthStatus   string `json:"healthStatus"`
+	ReadyReplicas  int32  `json:"readyReplicas"`
+	TotalReplicas  int32  `json:"totalReplicas"`
+	LastDeployedAt string `json:"lastDeployedAt"`
+	DiffStatus     string `json:"diffStatus"`
+}
+
+type MatrixEnvHeaderVO struct {
+	EnvId       int64  `json:"envId"`
+	EnvCode     string `json:"envCode"`
+	EnvName     string `json:"envName"`
+	ClusterName string `json:"clusterName"`
+}
+
+type MatrixServiceRowVO struct {
+	AppId         int64              `json:"appId"`
+	AppName       string             `json:"appName"`
+	DisplayName   string             `json:"displayName"`
+	RepoUrl       string             `json:"repoUrl"`
+	DefaultBranch string             `json:"defaultBranch"`
+	Cells         []MatrixCellInfoVO `json:"cells"`
 }
 
 type NoticeFeedItem struct {
@@ -37,6 +155,27 @@ type OnlineSessionItem struct {
 	IsCurrent     bool   `json:"isCurrent"`
 }
 
+type ReleaseOrderVO struct {
+	Id                int64  `json:"id"`
+	OrderNo           string `json:"orderNo"`
+	ProjectId         int64  `json:"projectId"`
+	Title             string `json:"title"`
+	Description       string `json:"description"`
+	TargetEnv         string `json:"targetEnv"`
+	ServicesJson      string `json:"servicesJson"`
+	Status            string `json:"status"`
+	ItsmProcessInstId int64  `json:"itsmProcessInstId"`
+	ApplicantId       int64  `json:"applicantId"`
+	ApplicantName     string `json:"applicantName"`
+	ApproverId        int64  `json:"approverId"`
+	ApproverName      string `json:"approverName"`
+	ScheduledTime     string `json:"scheduledTime"`
+	StartTime         string `json:"startTime"`
+	EndTime           string `json:"endTime"`
+	CreateTime        string `json:"createTime"`
+	UpdateTime        string `json:"updateTime"`
+}
+
 type SlaPolicyVO struct {
 	Id               int64  `json:"id"`
 	Priority         string `json:"priority"`
@@ -44,6 +183,21 @@ type SlaPolicyVO struct {
 	ResponseLimitMin int32  `json:"responseLimitMin"`
 	ResolveLimitMin  int32  `json:"resolveLimitMin"`
 	WarnThresholdPct int32  `json:"warnThresholdPct"`
+}
+
+type StepExecVO struct {
+	Id         int64  `json:"id"`
+	ExecId     int64  `json:"execId"`
+	StageId    string `json:"stageId"`
+	StepId     string `json:"stepId"`
+	StepName   string `json:"stepName"`
+	StepType   string `json:"stepType"`
+	Status     string `json:"status"`
+	LogPath    string `json:"logPath"`
+	ErrorMsg   string `json:"errorMsg"`
+	StartTime  string `json:"startTime"`
+	EndTime    string `json:"endTime"`
+	DurationMs int64  `json:"durationMs"`
 }
 
 type SysApiItem struct {

@@ -1,0 +1,34 @@
+{
+  "name": "@zero/titan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:mock": "vite --mode mock",
+    "dev:test": "vite --mode test",
+    "dev:pre": "vite --mode pre",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/charts": "^2.6.7",
+    "@ant-design/icons": "^6.3.4",
+    "@ant-design/pro-components": "^2.8.10",
+    "@zero/api": "workspace:*",
+    "@zero/shared": "workspace:*",
+    "ahooks": "^3.10.0",
+    "antd": "6.6.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.1"
+  }
+}

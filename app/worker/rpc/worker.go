@@ -8,9 +8,9 @@ import (
 	workerServer "go-zero-boilerplate/app/worker/rpc/internal/server/worker"
 	"go-zero-boilerplate/app/worker/rpc/internal/svc"
 	"go-zero-boilerplate/app/worker/rpc/pb"
+	"go-zero-boilerplate/pkg/confx"
 	"go-zero-boilerplate/pkg/nacosx"
 
-	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -24,7 +24,7 @@ func main() {
 	flag.Parse()
 
 	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	confx.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {

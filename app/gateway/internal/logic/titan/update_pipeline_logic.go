@@ -1,0 +1,41 @@
+package titan
+
+import (
+	"context"
+
+	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/app/gateway/internal/svc"
+	"go-zero-boilerplate/app/gateway/internal/types"
+
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+type UpdatePipelineLogic struct {
+	logx.Logger
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
+
+func NewUpdatePipelineLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdatePipelineLogic {
+	return &UpdatePipelineLogic{
+		Logger: logx.WithContext(ctx),
+		ctx:    ctx,
+		svcCtx: svcCtx,
+	}
+}
+
+func (l *UpdatePipelineLogic) UpdatePipeline(req *types.UpdatePipelineReqVO) error {
+	_, err := l.svcCtx.TitanRpc.UpdatePipeline(l.ctx, &titan.UpdatePipelineReq{
+		Id:          req.Id,
+		DisplayName: req.DisplayName,
+		Category:    req.Category,
+		GitRepo:     req.GitRepo,
+		GitBranch:   req.GitBranch,
+		Stages:      req.Stages,
+		Params:      req.Params,
+		Triggers:    req.Triggers,
+		Status:      req.Status,
+		Description: req.Description,
+	})
+	return err
+}

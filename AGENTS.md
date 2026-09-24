@@ -49,19 +49,29 @@ go-zero-boilerplate/
 │   │       ├── pb/ & worker.proto
 │   │       └── worker.go          # Worker RPC + Temporal 统一启动入口
 │   │
-│   └── itsm/                      # 【ITSM 流程微服务】纯 gRPC (端口 8084，BPMN 2.0 + SLA 策略中心)
+│   ├── itsm/                      # 【ITSM 流程微服务】纯 gRPC (端口 8084，BPMN 2.0 + SLA 策略中心)
+│   │   ├── rpc/
+│   │   │   ├── client/itsm/       # 供网关调用的 RPC Client
+│   │   │   ├── etc/itsm.yaml
+│   │   │   ├── internal/          # engine (BPMN 2.0 解析), config, logic, server, svc
+│   │   │   ├── pb/ & itsm.proto
+│   │   │   └── itsm.go            # ITSM RPC 统一启动入口
+│   │   └── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
+│   │
+│   └── titan/                     # 【Titan 交付微服务】纯 gRPC (端口 8086，Titan CI/CD 引擎、K8s & Helm 编排)
 │       ├── rpc/
-│       │   ├── client/itsm/       # 供网关调用的 RPC Client
-│       │   ├── etc/itsm.yaml
-│       │   ├── internal/          # engine (BPMN 2.0 解析), config, logic, server, svc
-│       │   ├── pb/ & itsm.proto
-│       │   └── itsm.go            # ITSM RPC 统一启动入口
-│       └── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
+│       │   ├── client/titan/      # 供网关调用的 RPC Client
+│       │   ├── etc/titan.yaml
+│       │   ├── internal/          # jenkins, k8s, config, logic, server, svc
+│       │   ├── pb/ & titan.proto
+│       │   └── titan.go           # Titan RPC 统一启动入口
+│       └── model/                 # Titan 5 张数据表持久层 (integration, cluster, pipeline, pipeline_exec, step_exec)
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
 │   │   ├── admin/                 # 管理后台系统 (Vite + TS，端口 3001)
-│   │   └── portal/                # 官方门户系统 (Vite + TS，端口 3000)
+│   │   ├── portal/                # 官方门户系统 (Vite + TS，端口 3000)
+│   │   └── titan/                 # Titan 独立交付工作台 (Vite + TS，端口 3002)
 │   ├── packages/
 │   │   ├── api/                   # 【共享 API SDK】通过 goctl api ts 自动从网关契约生成 (@zero/api)
 │   │   └── shared/                # 跨前端应用共享的工具与常量 (@zero/shared)
@@ -310,6 +320,69 @@ go-zero-boilerplate/
   * **管理员后台 (`apps/admin`)**：`/itsm/process-defs`（基于 BPMN.js 2.0 的可视化拖拽设计器、生命周期发布与 Schema 绑定）与 `/itsm/tickets`（ProTable 全量大盘、待办认领池、转派员工检索器与工单审批台）。
   * **员工自助服务台 (`apps/portal`)**：`/desk`（面向全体普通员工的一站式服务目录大厅、自适应即时提单抽屉、我的申请进度看板、流转轨迹时间线与主管快捷审批）。
 
+### 3.14 基于 Titan 的云原生研发交付与 CI/CD 自动化编排 (Titan DevOps Engine & Multi-Cluster Delivery)
+* **架构定位与设计哲学**：
+  * **Titan 核心微服务 (`app/titan/rpc`)**：纯 gRPC 微服务（端口 8086），承载凭证纳管（Git/Jenkins/Harbor）、Kubernetes 多集群状态与命名空间发现、流水线模型定义与执行调度。
+  * **数据持久层 (`app/titan/model`)**：承载 `titan_integration`、`titan_cluster`、`titan_pipeline`、`titan_pipeline_exec`、`titan_pipeline_step_exec` 5 张核心数据表。
+  * **AES-GCM 工业级密钥安全 (`pkg/cryptox`)**：所有外部系统 API Token、Jenkins 密码、Kubeconfig 凭据入库均强制通过 SHA-256 派生密钥进行 256 位 GCM 认证加密存储；对外接口与审计日志统一执行星号脱敏防护。
+* **双模部署与发布引擎 (Dual Release Engine: Helm & Server-Side Apply)**：
+  * **Helm 3 Release Engine (`internal/k8s/helm.go`)**：基于官方 Helm Go SDK 动态加载内存级 `RESTClientGetter`，支持 Chart 升级、回滚、Values 字典深度合并（MergeValues）与幂等安装（`UpgradeInstall`）。
+  * **原生 YAML 模板与动态 Apply (`internal/k8s/cluster.go` & `template.go`)**：基于 `text/template` 动态渲染变量占位符，通过 client-go dynamic client 进行 Dry-run 预校验与 Server-Side Apply（`FieldManager = "titan-devops"`），并深度探测 Pod / Deployment 就绪探针状态。
+* **Jenkins 委托调度与实时增量日志流 (`internal/jenkins`)**：
+  * 支持对已有 Jenkins 存量资产的无缝兼容：CrumbIssuer 认证、携带动态参数触发 Job、Queue 队列等待转 Build 编号、轮询构建状态与基于 Byte Offset 的 Progressive 控制台增量日志流拉取。
+* **Temporal 分布式流水线 DAG 与人工质量门禁 (`app/worker/rpc/internal/workflows`)**：
+  * 流水线编排基于 `TitanPipelineWorkflow` 驱动，顺序拓扑调度 Stage 与 Step，遇到 `APPROVAL` 门禁节点时通过 Temporal Signal 信号挂起等待（支持超时自动驳回与快速审批），保障生产发布质量防线。
+* **前端可视化管理与控制台 (`apps/admin`)**：
+  * `/titan/clusters`：Kubernetes 多集群纳管、健康心跳探测与命名空间动态浏览抽屉。
+  * `/titan/integrations`：GitLab/Jenkins/Harbor/SonarQube 凭据纳管与连通性自测。
+  * `/titan/pipelines`：流水线 DAG 可视化设计器（Stages & Steps 增删拖拽）、一键运行（Branch/Commit/Params 参数传递）与全局执行流水大盘。
+  * `/titan/pipelines/exec/:id`：执行拓扑步骤卡片、暗黑实时终端日志流与人工审批卡点决策。
+
+### 3.15 全局 UTF-8 编码铁律与数据安全注入守则 (Global UTF-8 Encoding & Safe Data Injection Guardrails)
+为彻底杜绝中文字符乱码（Mojibake，如 `ç”Ÿäº§é… ç½®ä¸­å¿ƒ`）、保证跨平台（Windows / Linux / macOS）与多端数据流 100% 一致性，全体开发者与 AI Agent 必须无条件遵守以下 UTF-8 编码规范与数据操作铁律：
+
+#### 1. 全链路编码统一（Codebase & Runtime Consistency）
+* **源码与配置文件规范**：所有 Go、TypeScript、SQL、JSON、YAML、Markdown 文件必须且仅能以 **UTF-8 无 BOM (UTF-8 without BOM)** 格式保存。
+* **持久层字符集约束**：
+  * MySQL 数据库实例与所有数据表必须显式指定：
+    ```sql
+    DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    ```
+  * 所有 Go 微服务与网关连接 MySQL 的 DSN 必须携带：
+    ```text
+    charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+    ```
+* **API 与 HTTP 头规范**：网关所有响应必须显式携带 `Content-Type: application/json; charset=utf-8`。
+
+#### 2. Windows 环境下 SQL 导入红线禁令（Strict Prohibition of PowerShell Pipes）
+* ⚠️ **绝对禁止管道重定向导入 SQL**：
+  * **严禁**在 Windows PowerShell 终端中执行如下管道或输入重定向命令：
+    ```powershell
+    # ❌ 严禁操作！PowerShell 输出流编码（ANSI/GBK）会篡改 UTF-8 字节流导致入库不可逆乱码
+    Get-Content <file.sql> | docker exec -i <container> mysql ...
+    cat <file.sql> | mysql ...
+    ```
+* ✅ **标准安全无损导入流程（Golden Standard）**：
+  1. 必须使用 `docker cp` 将原始 UTF-8 SQL 脚本文件原样拷贝入容器内（零转码损耗）：
+     ```bash
+     docker cp manifest/sql/init.sql go-zero-mysql:/tmp/init.sql
+     ```
+  2. 在容器内部调用原生 MySQL 命令执行，并显式指定客户端字符集：
+     ```bash
+     docker exec -i go-zero-mysql mysql -uroot -proot --default-character-set=utf8mb4 -e "source /tmp/init.sql"
+     ```
+  3. 或直接运行项目内置的自动化安全指令：
+     ```bash
+     just db-init
+     ```
+
+#### 3. 缓存与数据联动清理铁律（Cache Invalidation Guardrail）
+* 在修复、刷新或重置数据库数据后，必须立即清空 Redis 实体缓存：
+  ```bash
+  docker exec -i go-zero-redis redis-cli FLUSHALL
+  ```
+  避免后端 Model 的 Cache-Aside 机制命中历史脏缓存，导致前端界面出现与数据库不一致的假性乱码。
+
 ---
 
 ## 4. 常用命令速查 (Cheat Sheet)
@@ -330,6 +403,7 @@ just gen-gateway
 just gen-rpc user
 just gen-rpc worker
 just gen-rpc itsm
+just gen-rpc titan
 
 # 创建新微服务 RPC 模块 (自动应用项目模板并置入 app/<service>/rpc)
 just new-rpc <service>
@@ -350,6 +424,7 @@ just gen-ts
 just run-user-rpc     # 监听 127.0.0.1:8080
 just run-worker-rpc   # 监听 127.0.0.1:8082 (同时启动内置 Temporal Worker)
 just run-itsm-rpc     # 监听 127.0.0.1:8084 (ITSM BPMN 流程引擎)
+just run-titan-rpc    # 监听 127.0.0.1:8086 (Titan CI/CD 研发交付微服务)
 
 # 2. 启动统一网关
 just run-gateway      # 监听 0.0.0.0:8888
@@ -357,6 +432,7 @@ just run-gateway      # 监听 0.0.0.0:8888
 # 3. 启动前端各端
 just run-admin        # 启动管理后台 (http://localhost:3001)
 just run-portal       # 启动官方门户 (http://localhost:3000)
+just run-titan-web    # 启动 Titan 独立研发交付平台 (http://localhost:3002)
 ```
 
 ### 4.3 前端构建与依赖
@@ -431,6 +507,13 @@ just migrate-status
 ```bash
 # 语法：just gen-crud <所属微服务> <数据表名>
 just gen-crud user sys_post
+```
+
+### 4.9 数据库安全初始化与 UTF-8 数据重载 (Database Initialization & Safe UTF-8 Reload)
+一键安全导入 `manifest/sql/init.sql`（采用 `docker cp` 原生注入并刷新 Redis 实体缓存，100% 杜绝 Windows 管道转码造成的任何字符乱码）：
+```bash
+just db-init
+# 或 make db-init
 ```
 
 ---

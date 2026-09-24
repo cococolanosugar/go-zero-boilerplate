@@ -17,6 +17,7 @@ import (
 	sys_post "go-zero-boilerplate/app/gateway/internal/handler/sys_post"
 	system "go-zero-boilerplate/app/gateway/internal/handler/system"
 	systemtask "go-zero-boilerplate/app/gateway/internal/handler/system/task"
+	titan "go-zero-boilerplate/app/gateway/internal/handler/titan"
 	user "go-zero-boilerplate/app/gateway/internal/handler/user"
 	user_notice "go-zero-boilerplate/app/gateway/internal/handler/user_notice"
 	"go-zero-boilerplate/app/gateway/internal/svc"
@@ -569,6 +570,253 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1/system/task"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/clusters",
+				Handler: titan.ListClustersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/clusters",
+				Handler: titan.CreateClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/clusters/:id",
+				Handler: titan.UpdateClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/clusters/:id",
+				Handler: titan.DeleteClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/clusters/:id/namespaces",
+				Handler: titan.ListNamespacesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/clusters/:id/test",
+				Handler: titan.TestClusterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/envs/:id/live",
+				Handler: titan.GetEnvLiveDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/executions",
+				Handler: titan.ListExecutionsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/executions/:id",
+				Handler: titan.GetExecutionDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/executions/:id/cancel",
+				Handler: titan.CancelExecutionHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/integrations",
+				Handler: titan.ListIntegrationsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/integrations",
+				Handler: titan.CreateIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/integrations/:id",
+				Handler: titan.UpdateIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/integrations/:id",
+				Handler: titan.DeleteIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/integrations/:id/test",
+				Handler: titan.TestIntegrationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/matrix",
+				Handler: titan.GetDeliveryMatrixHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/matrix/compare",
+				Handler: titan.CompareMatrixEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/pipelines",
+				Handler: titan.ListPipelinesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/pipelines",
+				Handler: titan.CreatePipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/pipelines/:id",
+				Handler: titan.GetPipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/pipelines/:id",
+				Handler: titan.UpdatePipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/pipelines/:id",
+				Handler: titan.DeletePipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/pipelines/:id/trigger",
+				Handler: titan.TriggerPipelineHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects",
+				Handler: titan.ListProjectsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects",
+				Handler: titan.CreateProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:id",
+				Handler: titan.GetProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/projects/:id",
+				Handler: titan.UpdateProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/projects/:id",
+				Handler: titan.DeleteProjectHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/apps",
+				Handler: titan.ListAppsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/apps",
+				Handler: titan.CreateAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/apps/:id",
+				Handler: titan.GetAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/projects/:projectId/apps/:id",
+				Handler: titan.UpdateAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/projects/:projectId/apps/:id",
+				Handler: titan.DeleteAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/artifacts",
+				Handler: titan.ListArtifactsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/artifacts",
+				Handler: titan.CreateArtifactHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/envs",
+				Handler: titan.ListEnvsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/envs",
+				Handler: titan.CreateEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/projects/:projectId/envs/:id",
+				Handler: titan.GetEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/projects/:projectId/envs/:id",
+				Handler: titan.UpdateEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/projects/:projectId/envs/:id",
+				Handler: titan.DeleteEnvHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/projects/:projectId/envs/:id/deploy",
+				Handler: titan.DeployArtifactHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/release-orders",
+				Handler: titan.ListReleaseOrdersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/release-orders",
+				Handler: titan.CreateReleaseOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/release-orders/:id",
+				Handler: titan.GetReleaseOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/release-orders/:id/audit",
+				Handler: titan.AuditReleaseOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/release-orders/:id/execute",
+				Handler: titan.ExecuteReleaseOrderHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/steps/:id/approve",
+				Handler: titan.ApproveStepHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/steps/:id/log",
+				Handler: titan.GetStepLogHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1/titan"),
 	)
 
 	server.AddRoutes(

@@ -1,0 +1,884 @@
+syntax = "v1"
+
+info (
+	title:   "Titan API"
+	desc:    "Titan 研发交付平台、流水线编排、K8s 集群与 Jenkins 集成接口"
+	author:  "antigravity"
+	version: "v1"
+)
+
+type (
+	// ----------------------
+	// 1. 集成凭证 VO
+	// ----------------------
+	IntegrationVO {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		Category    string `json:"category"`
+		AuthType    string `json:"authType"`
+		Config      string `json:"config"`
+		Status      int32  `json:"status"`
+		Description string `json:"description"`
+		CreatedBy   int64  `json:"createdBy"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListIntegrationsReqVO {
+		Category string `form:"category,optional"`
+		Page     int32  `form:"page,default=1,range=[1:100000]"`
+		PageSize int32  `form:"pageSize,default=20,range=[1:100]"`
+	}
+
+	ListIntegrationsRespVO {
+		Total int64           `json:"total"`
+		List  []IntegrationVO `json:"list"`
+	}
+
+	CreateIntegrationReqVO {
+		Name        string `json:"name"`
+		Category    string `json:"category"`
+		AuthType    string `json:"authType"`
+		Config      string `json:"config"`
+		Description string `json:"description,optional"`
+	}
+
+	CreateIntegrationRespVO {
+		Id int64 `json:"id"`
+	}
+
+	// 可选字段采用指针语义：未提供（nil）表示不更新，显式提供零值才更新
+	UpdateIntegrationReqVO {
+		Id          int64   `path:"id"`
+		Name        *string `json:"name,optional"`
+		AuthType    *string `json:"authType,optional"`
+		Config      *string `json:"config,optional"`
+		Status      *int32  `json:"status,optional"`
+		Description *string `json:"description,optional"`
+	}
+
+	DeleteIntegrationReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestIntegrationReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestIntegrationRespVO {
+		Success bool   `json:"success"`
+		Message string `json:"message"`
+	}
+
+	// ----------------------
+	// 2. K8s 集群 VO
+	// ----------------------
+	ClusterVO {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		Env         string `json:"env"`
+		ApiEndpoint string `json:"apiEndpoint"`
+		Status      string `json:"status"`
+		Version     string `json:"version"`
+		Description string `json:"description"`
+		CreatedBy   int64  `json:"createdBy"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListClustersReqVO {
+		Env      string `form:"env,optional"`
+		Page     int32  `form:"page,default=1,range=[1:100000]"`
+		PageSize int32  `form:"pageSize,default=20,range=[1:100]"`
+	}
+
+	ListClustersRespVO {
+		Total int64       `json:"total"`
+		List  []ClusterVO `json:"list"`
+	}
+
+	CreateClusterReqVO {
+		Name        string `json:"name"`
+		Env         string `json:"env"`
+		ApiEndpoint string `json:"apiEndpoint,optional"`
+		Kubeconfig  string `json:"kubeconfig"`
+		Description string `json:"description,optional"`
+	}
+
+	CreateClusterRespVO {
+		Id int64 `json:"id"`
+	}
+
+	// 可选字段采用指针语义：未提供（nil）表示不更新
+	UpdateClusterReqVO {
+		Id          int64   `path:"id"`
+		Name        *string `json:"name,optional"`
+		Env         *string `json:"env,optional"`
+		ApiEndpoint *string `json:"apiEndpoint,optional"`
+		Kubeconfig  *string `json:"kubeconfig,optional"`
+		Description *string `json:"description,optional"`
+	}
+
+	DeleteClusterReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestClusterReqVO {
+		Id int64 `path:"id"`
+	}
+
+	TestClusterRespVO {
+		Success bool   `json:"success"`
+		Version string `json:"version"`
+		Message string `json:"message"`
+	}
+
+	ListNamespacesReqVO {
+		Id int64 `path:"id"`
+	}
+
+	ListNamespacesRespVO {
+		Namespaces []string `json:"namespaces"`
+	}
+
+	// ----------------------
+	// 3. 流水线定义 VO
+	// ----------------------
+	PipelineVO {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		DisplayName string `json:"displayName"`
+		Category    string `json:"category"`
+		GitRepo     string `json:"gitRepo"`
+		GitBranch   string `json:"gitBranch"`
+		Stages      string `json:"stages"`
+		Params      string `json:"params"`
+		Triggers    string `json:"triggers"`
+		Status      int32  `json:"status"`
+		Description string `json:"description"`
+		CreatedBy   int64  `json:"createdBy"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListPipelinesReqVO {
+		Category string `form:"category,optional"`
+		Keyword  string `form:"keyword,optional"`
+		Page     int32  `form:"page,default=1,range=[1:100000]"`
+		PageSize int32  `form:"pageSize,default=20,range=[1:100]"`
+	}
+
+	ListPipelinesRespVO {
+		Total int64        `json:"total"`
+		List  []PipelineVO `json:"list"`
+	}
+
+	GetPipelineReqVO {
+		Id int64 `path:"id"`
+	}
+
+	CreatePipelineReqVO {
+		Name        string `json:"name"`
+		DisplayName string `json:"displayName"`
+		Category    string `json:"category,optional,default=microservice"`
+		GitRepo     string `json:"gitRepo,optional"`
+		GitBranch   string `json:"gitBranch,optional,default=master"`
+		Stages      string `json:"stages"`
+		Params      string `json:"params,optional,default=[]"`
+		Triggers    string `json:"triggers,optional,default={}"`
+		Description string `json:"description,optional"`
+	}
+
+	CreatePipelineRespVO {
+		Id int64 `json:"id"`
+	}
+
+	// 可选字段采用指针语义：未提供（nil）表示不更新
+	UpdatePipelineReqVO {
+		Id          int64   `path:"id"`
+		DisplayName *string `json:"displayName,optional"`
+		Category    *string `json:"category,optional"`
+		GitRepo     *string `json:"gitRepo,optional"`
+		GitBranch   *string `json:"gitBranch,optional"`
+		Stages      *string `json:"stages,optional"`
+		Params      *string `json:"params,optional"`
+		Triggers    *string `json:"triggers,optional"`
+		Status      *int32  `json:"status,optional"`
+		Description *string `json:"description,optional"`
+	}
+
+	DeletePipelineReqVO {
+		Id int64 `path:"id"`
+	}
+
+	// ----------------------
+	// 4. 执行控制 VO
+	// ----------------------
+	TriggerPipelineReqVO {
+		Id            int64  `path:"id"`
+		TriggerType   string `json:"triggerType,optional,default=MANUAL"`
+		GitBranch     string `json:"gitBranch,optional"`
+		GitCommit     string `json:"gitCommit,optional"`
+		RuntimeParams string `json:"runtimeParams,optional,default={}"`
+	}
+
+	TriggerPipelineRespVO {
+		ExecId int64  `json:"execId"`
+		ExecNo string `json:"execNo"`
+	}
+
+	ExecutionVO {
+		Id            int64  `json:"id"`
+		PipelineId    int64  `json:"pipelineId"`
+		PipelineName  string `json:"pipelineName"`
+		ExecNo        string `json:"execNo"`
+		TriggerType   string `json:"triggerType"`
+		TriggerBy     int64  `json:"triggerBy"`
+		GitBranch     string `json:"gitBranch"`
+		GitCommit     string `json:"gitCommit"`
+		RuntimeParams string `json:"runtimeParams"`
+		Status        string `json:"status"`
+		WorkflowId    string `json:"workflowId"`
+		StartTime     string `json:"startTime"`
+		EndTime       string `json:"endTime"`
+		DurationMs    int64  `json:"durationMs"`
+		Artifacts     string `json:"artifacts"`
+		CreateTime    string `json:"createTime"`
+		UpdateTime    string `json:"updateTime"`
+	}
+
+	StepExecVO {
+		Id         int64  `json:"id"`
+		ExecId     int64  `json:"execId"`
+		StageId    string `json:"stageId"`
+		StepId     string `json:"stepId"`
+		StepName   string `json:"stepName"`
+		StepType   string `json:"stepType"`
+		Status     string `json:"status"`
+		LogPath    string `json:"logPath"`
+		ErrorMsg   string `json:"errorMsg"`
+		StartTime  string `json:"startTime"`
+		EndTime    string `json:"endTime"`
+		DurationMs int64  `json:"durationMs"`
+	}
+
+	ListExecutionsReqVO {
+		PipelineId int64  `form:"pipelineId,optional"`
+		Status     string `form:"status,optional"`
+		Page       int32  `form:"page,default=1,range=[1:100000]"`
+		PageSize   int32  `form:"pageSize,default=20,range=[1:100]"`
+	}
+
+	ListExecutionsRespVO {
+		Total int64         `json:"total"`
+		List  []ExecutionVO `json:"list"`
+	}
+
+	GetExecutionDetailReqVO {
+		Id int64 `path:"id"`
+	}
+
+	ExecutionDetailRespVO {
+		Execution ExecutionVO  `json:"execution"`
+		Steps     []StepExecVO `json:"steps"`
+	}
+
+	GetStepLogReqVO {
+		Id     int64 `path:"id"`
+		Offset int64 `form:"offset,default=0"`
+	}
+
+	GetStepLogRespVO {
+		Content    string `json:"content"`
+		NextOffset int64  `json:"nextOffset"`
+		IsEnd      bool   `json:"isEnd"`
+	}
+
+	ApproveStepReqVO {
+		Id       int64  `path:"id"`
+		Approved bool   `json:"approved"`
+		Comment  string `json:"comment,optional"`
+	}
+
+	CancelExecutionReqVO {
+		Id int64 `path:"id"`
+	}
+
+	// ----------------------
+	// 5. 项目 (Project) VO
+	// ----------------------
+	ProjectVO {
+		Id          int64  `json:"id"`
+		Name        string `json:"name"`
+		DisplayName string `json:"displayName"`
+		Description string `json:"description"`
+		OwnerId     int64  `json:"ownerId"`
+		Status      int32  `json:"status"`
+		AppCount    int32  `json:"appCount"`
+		EnvCount    int32  `json:"envCount"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListProjectsReqVO {
+		Page     int32  `form:"page,default=1,range=[1:100000]"`
+		PageSize int32  `form:"pageSize,default=20,range=[1:100]"`
+		Keyword  string `form:"keyword,optional"`
+	}
+
+	ListProjectsRespVO {
+		Total int64       `json:"total"`
+		List  []ProjectVO `json:"list"`
+	}
+
+	GetProjectReqVO {
+		Id int64 `path:"id"`
+	}
+
+	CreateProjectReqVO {
+		Name        string `json:"name"`
+		DisplayName string `json:"displayName"`
+		Description string `json:"description,optional"`
+		OwnerId     int64  `json:"ownerId,optional"`
+	}
+
+	CreateProjectRespVO {
+		Id int64 `json:"id"`
+	}
+
+	// 可选字段采用指针语义：未提供（nil）表示不更新
+	UpdateProjectReqVO {
+		Id          int64   `path:"id"`
+		DisplayName *string `json:"displayName,optional"`
+		Description *string `json:"description,optional"`
+		OwnerId     *int64  `json:"ownerId,optional"`
+		Status      *int32  `json:"status,optional"`
+	}
+
+	DeleteProjectReqVO {
+		Id int64 `path:"id"`
+	}
+
+	// ----------------------
+	// 6. 应用 (Application) VO
+	// ----------------------
+	AppVO {
+		Id            int64  `json:"id"`
+		ProjectId     int64  `json:"projectId"`
+		Name          string `json:"name"`
+		DisplayName   string `json:"displayName"`
+		Description   string `json:"description"`
+		IntegrationId int64  `json:"integrationId"`
+		RepoUrl       string `json:"repoUrl"`
+		DefaultBranch string `json:"defaultBranch"`
+		BuildConfig   string `json:"buildConfig"`
+		DeploySpec    string `json:"deploySpec"`
+		Status        int32  `json:"status"`
+		CreateTime    string `json:"createTime"`
+		UpdateTime    string `json:"updateTime"`
+	}
+
+	ListAppsReqVO {
+		ProjectId int64 `path:"projectId"`
+		Page      int32 `form:"page,default=1,range=[1:100000]"`
+		PageSize  int32 `form:"pageSize,default=20,range=[1:100]"`
+	}
+
+	ListAppsRespVO {
+		Total int64   `json:"total"`
+		List  []AppVO `json:"list"`
+	}
+
+	GetAppReqVO {
+		ProjectId int64 `path:"projectId"`
+		Id        int64 `path:"id"`
+	}
+
+	CreateAppReqVO {
+		ProjectId     int64  `path:"projectId"`
+		Name          string `json:"name"`
+		DisplayName   string `json:"displayName"`
+		Description   string `json:"description,optional"`
+		IntegrationId int64  `json:"integrationId,optional"`
+		RepoUrl       string `json:"repoUrl,optional"`
+		DefaultBranch string `json:"defaultBranch,default=main"`
+		BuildConfig   string `json:"buildConfig,optional"`
+		DeploySpec    string `json:"deploySpec,optional"`
+	}
+
+	CreateAppRespVO {
+		Id int64 `json:"id"`
+	}
+
+	// 可选字段采用指针语义：未提供（nil）表示不更新
+	UpdateAppReqVO {
+		ProjectId     int64   `path:"projectId"`
+		Id            int64   `path:"id"`
+		Name          *string `json:"name,optional"`
+		DisplayName   *string `json:"displayName,optional"`
+		Description   *string `json:"description,optional"`
+		IntegrationId *int64  `json:"integrationId,optional"`
+		RepoUrl       *string `json:"repoUrl,optional"`
+		DefaultBranch *string `json:"defaultBranch,optional"`
+		BuildConfig   *string `json:"buildConfig,optional"`
+		DeploySpec    *string `json:"deploySpec,optional"`
+		Status        *int32  `json:"status,optional"`
+	}
+
+	DeleteAppReqVO {
+		ProjectId int64 `path:"projectId"`
+		Id        int64 `path:"id"`
+	}
+
+	// ----------------------
+	// 7. 环境 (Environment) VO
+	// ----------------------
+	EnvVO {
+		Id          int64  `json:"id"`
+		ProjectId   int64  `json:"projectId"`
+		EnvCode     string `json:"envCode"`
+		Name        string `json:"name"`
+		ClusterId   int64  `json:"clusterId"`
+		ClusterName string `json:"clusterName"`
+		Namespace   string `json:"namespace"`
+		Status      string `json:"status"`
+		AppCount    int32  `json:"appCount"`
+		CreateTime  string `json:"createTime"`
+		UpdateTime  string `json:"updateTime"`
+	}
+
+	ListEnvsReqVO {
+		ProjectId int64 `path:"projectId"`
+	}
+
+	ListEnvsRespVO {
+		List []EnvVO `json:"list"`
+	}
+
+	GetEnvReqVO {
+		ProjectId int64 `path:"projectId"`
+		Id        int64 `path:"id"`
+	}
+
+	CreateEnvReqVO {
+		ProjectId int64  `path:"projectId"`
+		EnvCode   string `json:"envCode"`
+		Name      string `json:"name"`
+		ClusterId int64  `json:"clusterId"`
+		Namespace string `json:"namespace"`
+	}
+
+	CreateEnvRespVO {
+		Id int64 `json:"id"`
+	}
+
+	// 可选字段采用指针语义：未提供（nil）表示不更新
+	UpdateEnvReqVO {
+		ProjectId int64   `path:"projectId"`
+		Id        int64   `path:"id"`
+		Name      *string `json:"name,optional"`
+		ClusterId *int64  `json:"clusterId,optional"`
+		Namespace *string `json:"namespace,optional"`
+		Status    *string `json:"status,optional"`
+	}
+
+	DeleteEnvReqVO {
+		ProjectId int64 `path:"projectId"`
+		Id        int64 `path:"id"`
+	}
+
+	EnvAppLiveVO {
+		AppId             int64    `json:"appId"`
+		AppName           string   `json:"appName"`
+		DisplayName       string   `json:"displayName"`
+		CurrentArtifactId int64    `json:"currentArtifactId"`
+		ImageTag          string   `json:"imageTag"`
+		ImageUrl          string   `json:"imageUrl"`
+		GitCommit         string   `json:"gitCommit"`
+		ReadyReplicas     int32    `json:"readyReplicas"`
+		TotalReplicas     int32    `json:"totalReplicas"`
+		Status            string   `json:"status"`
+		LastDeployedTime  string   `json:"lastDeployedTime"`
+		Pods              []string `json:"pods"`
+	}
+
+	GetEnvLiveDetailReqVO {
+		Id int64 `path:"id"`
+	}
+
+	GetEnvLiveDetailRespVO {
+		EnvId       int64          `json:"envId"`
+		EnvCode     string         `json:"envCode"`
+		EnvName     string         `json:"envName"`
+		ClusterName string         `json:"clusterName"`
+		Namespace   string         `json:"namespace"`
+		Apps        []EnvAppLiveVO `json:"apps"`
+	}
+
+	// ----------------------
+	// 8. 制品 (Artifact) VO
+	// ----------------------
+	ArtifactVO {
+		Id             int64  `json:"id"`
+		ProjectId      int64  `json:"projectId"`
+		AppId          int64  `json:"appId"`
+		AppName        string `json:"appName"`
+		ImageUrl       string `json:"imageUrl"`
+		ImageTag       string `json:"imageTag"`
+		ImageDigest    string `json:"imageDigest"`
+		GitBranch      string `json:"gitBranch"`
+		GitCommit      string `json:"gitCommit"`
+		CommitMsg      string `json:"commitMsg"`
+		BuildExecId    int64  `json:"buildExecId"`
+		ImageSizeBytes int64  `json:"imageSizeBytes"`
+		Status         string `json:"status"`
+		CreateTime     string `json:"createTime"`
+		UpdateTime     string `json:"updateTime"`
+	}
+
+	ListArtifactsReqVO {
+		ProjectId int64 `path:"projectId"`
+		AppId     int64 `form:"appId,optional"`
+		Page      int32 `form:"page,default=1,range=[1:100000]"`
+		PageSize  int32 `form:"pageSize,default=20,range=[1:100]"`
+	}
+
+	ListArtifactsRespVO {
+		Total int64        `json:"total"`
+		List  []ArtifactVO `json:"list"`
+	}
+
+	CreateArtifactReqVO {
+		ProjectId      int64  `path:"projectId"`
+		AppId          int64  `json:"appId"`
+		ImageUrl       string `json:"imageUrl"`
+		ImageTag       string `json:"imageTag"`
+		ImageDigest    string `json:"imageDigest,optional"`
+		GitBranch      string `json:"gitBranch,optional"`
+		GitCommit      string `json:"gitCommit,optional"`
+		CommitMsg      string `json:"commitMsg,optional"`
+		BuildExecId    int64  `json:"buildExecId,optional"`
+		ImageSizeBytes int64  `json:"imageSizeBytes,optional"`
+	}
+
+	CreateArtifactRespVO {
+		Id int64 `json:"id"`
+	}
+
+	DeployArtifactReqVO {
+		ProjectId  int64 `path:"projectId"`
+		Id         int64 `path:"id"`
+		AppId      int64 `json:"appId"`
+		ArtifactId int64 `json:"artifactId"`
+	}
+
+	// ----------------------
+	// 5. 交付大盘 (Matrix) VO
+	// ----------------------
+	MatrixEnvHeaderVO {
+		EnvId       int64  `json:"envId"`
+		EnvCode     string `json:"envCode"`
+		EnvName     string `json:"envName"`
+		ClusterName string `json:"clusterName"`
+	}
+
+	MatrixCellInfoVO {
+		EnvId          int64  `json:"envId"`
+		EnvCode        string `json:"envCode"`
+		AppId          int64  `json:"appId"`
+		ArtifactId     int64  `json:"artifactId"`
+		VersionTag     string `json:"versionTag"`
+		GitCommit      string `json:"gitCommit"`
+		GitBranch      string `json:"gitBranch"`
+		DeployStatus   string `json:"deployStatus"`
+		HealthStatus   string `json:"healthStatus"`
+		ReadyReplicas  int32  `json:"readyReplicas"`
+		TotalReplicas  int32  `json:"totalReplicas"`
+		LastDeployedAt string `json:"lastDeployedAt"`
+		DiffStatus     string `json:"diffStatus"`
+	}
+
+	MatrixServiceRowVO {
+		AppId         int64              `json:"appId"`
+		AppName       string             `json:"appName"`
+		DisplayName   string             `json:"displayName"`
+		RepoUrl       string             `json:"repoUrl"`
+		DefaultBranch string             `json:"defaultBranch"`
+		Cells         []MatrixCellInfoVO `json:"cells"`
+	}
+
+	GetDeliveryMatrixReqVO {
+		ProjectId int64 `form:"projectId"`
+	}
+
+	GetDeliveryMatrixRespVO {
+		ProjectId   int64                 `json:"projectId"`
+		ProjectName string                `json:"projectName"`
+		Envs        []MatrixEnvHeaderVO   `json:"envs"`
+		Services    []MatrixServiceRowVO `json:"services"`
+	}
+
+	CompareMatrixEnvReqVO {
+		ProjectId int64  `form:"projectId"`
+		AppId     int64  `form:"appId"`
+		SourceEnv string `form:"sourceEnv"`
+		TargetEnv string `form:"targetEnv"`
+	}
+
+	CommitDiffItemVO {
+		CommitId   string `json:"commitId"`
+		Message    string `json:"message"`
+		Author     string `json:"author"`
+		CommitTime string `json:"commitTime"`
+	}
+
+	CompareMatrixEnvRespVO {
+		AppId         int64              `json:"appId"`
+		AppName       string             `json:"appName"`
+		SourceEnv     string             `json:"sourceEnv"`
+		SourceVersion string             `json:"sourceVersion"`
+		SourceCommit  string             `json:"sourceCommit"`
+		TargetEnv     string             `json:"targetEnv"`
+		TargetVersion string             `json:"targetVersion"`
+		TargetCommit  string             `json:"targetCommit"`
+		Commits       []CommitDiffItemVO `json:"commits"`
+		CanPromote    bool               `json:"canPromote"`
+	}
+
+	// ----------------------
+	// 6. 发布单 (Release Order) VO
+	// ----------------------
+	ReleaseOrderVO {
+		Id                int64  `json:"id"`
+		OrderNo           string `json:"orderNo"`
+		ProjectId         int64  `json:"projectId"`
+		Title             string `json:"title"`
+		Description       string `json:"description"`
+		TargetEnv         string `json:"targetEnv"`
+		ServicesJson      string `json:"servicesJson"`
+		Status            string `json:"status"`
+		ItsmProcessInstId int64  `json:"itsmProcessInstId"`
+		ApplicantId       int64  `json:"applicantId"`
+		ApplicantName     string `json:"applicantName"`
+		ApproverId        int64  `json:"approverId"`
+		ApproverName      string `json:"approverName"`
+		ScheduledTime     string `json:"scheduledTime"`
+		StartTime         string `json:"startTime"`
+		EndTime           string `json:"endTime"`
+		CreateTime        string `json:"createTime"`
+		UpdateTime        string `json:"updateTime"`
+	}
+
+	ListReleaseOrdersReqVO {
+		ProjectId int64  `form:"projectId,optional"`
+		TargetEnv string `form:"targetEnv,optional"`
+		Status    string `form:"status,optional"`
+		Keyword   string `form:"keyword,optional"`
+		Page      int32  `form:"page,default=1,range=[1:100000]"`
+		PageSize  int32  `form:"pageSize,default=20,range=[1:100]"`
+	}
+
+	ListReleaseOrdersRespVO {
+		Total int64            `json:"total"`
+		List  []ReleaseOrderVO `json:"list"`
+	}
+
+	GetReleaseOrderReqVO {
+		Id int64 `path:"id"`
+	}
+
+	ReleaseOrderDetailRespVO {
+		Order      ReleaseOrderVO `json:"order"`
+		ItsmStatus string         `json:"itsmStatus"`
+	}
+
+	CreateReleaseOrderReqVO {
+		ProjectId     int64  `json:"projectId"`
+		Title         string `json:"title"`
+		Description   string `json:"description,optional"`
+		TargetEnv     string `json:"targetEnv"`
+		ServicesJson  string `json:"servicesJson"`
+		ScheduledTime string `json:"scheduledTime,optional"`
+	}
+
+	CreateReleaseOrderRespVO {
+		Id                int64  `json:"id"`
+		OrderNo           string `json:"orderNo"`
+		Status            string `json:"status"`
+		ItsmProcessInstId int64  `json:"itsmProcessInstId"`
+	}
+
+	AuditReleaseOrderReqVO {
+		Id       int64  `path:"id"`
+		Approved bool   `json:"approved"`
+		Comment  string `json:"comment,optional"`
+	}
+
+	ExecuteReleaseOrderReqVO {
+		Id int64 `path:"id"`
+	}
+)
+
+@server (
+	jwt:    Auth
+	group:  titan
+	prefix: /api/v1/titan
+)
+service gateway {
+	// 集成管理
+	@handler listIntegrations
+	get /integrations (ListIntegrationsReqVO) returns (ListIntegrationsRespVO)
+
+	@handler createIntegration
+	post /integrations (CreateIntegrationReqVO) returns (CreateIntegrationRespVO)
+
+	@handler updateIntegration
+	put /integrations/:id (UpdateIntegrationReqVO)
+
+	@handler deleteIntegration
+	delete /integrations/:id (DeleteIntegrationReqVO)
+
+	@handler testIntegration
+	post /integrations/:id/test (TestIntegrationReqVO) returns (TestIntegrationRespVO)
+
+	// K8s 集群治理
+	@handler listClusters
+	get /clusters (ListClustersReqVO) returns (ListClustersRespVO)
+
+	@handler createCluster
+	post /clusters (CreateClusterReqVO) returns (CreateClusterRespVO)
+
+	@handler updateCluster
+	put /clusters/:id (UpdateClusterReqVO)
+
+	@handler deleteCluster
+	delete /clusters/:id (DeleteClusterReqVO)
+
+	@handler testCluster
+	post /clusters/:id/test (TestClusterReqVO) returns (TestClusterRespVO)
+
+	@handler listNamespaces
+	get /clusters/:id/namespaces (ListNamespacesReqVO) returns (ListNamespacesRespVO)
+
+	// 流水线模型定义
+	@handler listPipelines
+	get /pipelines (ListPipelinesReqVO) returns (ListPipelinesRespVO)
+
+	@handler getPipeline
+	get /pipelines/:id (GetPipelineReqVO) returns (PipelineVO)
+
+	@handler createPipeline
+	post /pipelines (CreatePipelineReqVO) returns (CreatePipelineRespVO)
+
+	@handler updatePipeline
+	put /pipelines/:id (UpdatePipelineReqVO)
+
+	@handler deletePipeline
+	delete /pipelines/:id (DeletePipelineReqVO)
+
+	// 运行实例与执行控制
+	@handler triggerPipeline
+	post /pipelines/:id/trigger (TriggerPipelineReqVO) returns (TriggerPipelineRespVO)
+
+	@handler listExecutions
+	get /executions (ListExecutionsReqVO) returns (ListExecutionsRespVO)
+
+	@handler getExecutionDetail
+	get /executions/:id (GetExecutionDetailReqVO) returns (ExecutionDetailRespVO)
+
+	@handler getStepLog
+	get /steps/:id/log (GetStepLogReqVO) returns (GetStepLogRespVO)
+
+	@handler approveStep
+	post /steps/:id/approve (ApproveStepReqVO)
+
+	@handler cancelExecution
+	post /executions/:id/cancel (CancelExecutionReqVO)
+
+	// ----------------------
+	// Zadig CI/CD 演进接口
+	// ----------------------
+	// 1. 项目管理
+	@handler listProjects
+	get /projects (ListProjectsReqVO) returns (ListProjectsRespVO)
+
+	@handler getProject
+	get /projects/:id (GetProjectReqVO) returns (ProjectVO)
+
+	@handler createProject
+	post /projects (CreateProjectReqVO) returns (CreateProjectRespVO)
+
+	@handler updateProject
+	put /projects/:id (UpdateProjectReqVO)
+
+	@handler deleteProject
+	delete /projects/:id (DeleteProjectReqVO)
+
+	// 2. 应用管理
+	@handler listApps
+	get /projects/:projectId/apps (ListAppsReqVO) returns (ListAppsRespVO)
+
+	@handler getApp
+	get /projects/:projectId/apps/:id (GetAppReqVO) returns (AppVO)
+
+	@handler createApp
+	post /projects/:projectId/apps (CreateAppReqVO) returns (CreateAppRespVO)
+
+	@handler updateApp
+	put /projects/:projectId/apps/:id (UpdateAppReqVO)
+
+	@handler deleteApp
+	delete /projects/:projectId/apps/:id (DeleteAppReqVO)
+
+	// 3. 项目交付环境与实时大盘
+	@handler listEnvs
+	get /projects/:projectId/envs (ListEnvsReqVO) returns (ListEnvsRespVO)
+
+	@handler getEnv
+	get /projects/:projectId/envs/:id (GetEnvReqVO) returns (EnvVO)
+
+	@handler createEnv
+	post /projects/:projectId/envs (CreateEnvReqVO) returns (CreateEnvRespVO)
+
+	@handler updateEnv
+	put /projects/:projectId/envs/:id (UpdateEnvReqVO)
+
+	@handler deleteEnv
+	delete /projects/:projectId/envs/:id (DeleteEnvReqVO)
+
+	@handler getEnvLiveDetail
+	get /envs/:id/live (GetEnvLiveDetailReqVO) returns (GetEnvLiveDetailRespVO)
+
+	// 4. 制品库与发布部署
+	@handler listArtifacts
+	get /projects/:projectId/artifacts (ListArtifactsReqVO) returns (ListArtifactsRespVO)
+
+	@handler createArtifact
+	post /projects/:projectId/artifacts (CreateArtifactReqVO) returns (CreateArtifactRespVO)
+
+	@handler deployArtifact
+	post /projects/:projectId/envs/:id/deploy (DeployArtifactReqVO)
+
+	// 5. 交付大盘 (Matrix)
+	@handler getDeliveryMatrix
+	get /matrix (GetDeliveryMatrixReqVO) returns (GetDeliveryMatrixRespVO)
+
+	@handler compareMatrixEnv
+	get /matrix/compare (CompareMatrixEnvReqVO) returns (CompareMatrixEnvRespVO)
+
+	// 6. 发布单 (Release Order)
+	@handler listReleaseOrders
+	get /release-orders (ListReleaseOrdersReqVO) returns (ListReleaseOrdersRespVO)
+
+	@handler getReleaseOrder
+	get /release-orders/:id (GetReleaseOrderReqVO) returns (ReleaseOrderDetailRespVO)
+
+	@handler createReleaseOrder
+	post /release-orders (CreateReleaseOrderReqVO) returns (CreateReleaseOrderRespVO)
+
+	@handler auditReleaseOrder
+	post /release-orders/:id/audit (AuditReleaseOrderReqVO)
+
+	@handler executeReleaseOrder
+	post /release-orders/:id/execute (ExecuteReleaseOrderReqVO)
+}

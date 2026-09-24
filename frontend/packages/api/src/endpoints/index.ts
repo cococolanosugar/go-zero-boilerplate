@@ -4,4 +4,5 @@ export * from './itsm/itsm';
 export * from './navigation/navigation';
 export * from './system/system';
 export * from './task/task';
+export * from './titan/titan';
 export * from './user/user';

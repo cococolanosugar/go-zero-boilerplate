@@ -68,6 +68,14 @@ run-worker-rpc:
 run-itsm-rpc:
     cd app/itsm/rpc && go run itsm.go -f etc/itsm.yaml
 
+# 启动 titan-rpc 研发交付微服务 (gRPC 8086，Titan CI/CD 引擎)
+run-titan-rpc:
+    cd app/titan/rpc && go run titan.go -f etc/titan.yaml
+
+# 生成 titan-rpc 代码
+gen-titan-rpc:
+    cd app/titan/rpc && goctl rpc protoc titan.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+
 # 启动前端管理后台 (Vite 3001，默认本地 8888 网关)
 run-admin:
     cd frontend && pnpm dev:admin
@@ -95,6 +103,22 @@ run-portal-mock:
 # 启动前端门户 (连接远程测试环境网关)
 run-portal-test:
     cd frontend && pnpm dev:portal:test
+
+# 启动 Titan 独立交付平台前端 (Vite 3002，默认本地 8888 网关)
+run-titan-web:
+    cd frontend && pnpm dev:titan
+
+# 启动 Titan 独立交付平台前端 (离线 Mock 纯前端开发模式)
+run-titan-web-mock:
+    cd frontend && pnpm dev:titan:mock
+
+# 启动 Titan 独立交付平台前端 (连接远程测试环境网关)
+run-titan-web-test:
+    cd frontend && pnpm dev:titan:test
+
+# 启动 Titan 独立交付平台前端 (连接预发布环境网关)
+run-titan-web-pre:
+    cd frontend && pnpm dev:titan:pre
 
 # 构建全端前端产物
 build-frontend:
@@ -140,6 +164,7 @@ docker-build:
     docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
     docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
     docker build -t go-zero-itsm-rpc:latest -f app/itsm/rpc/Dockerfile .
+    docker build -t go-zero-titan-rpc:latest -f app/titan/rpc/Dockerfile .
     docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
     docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 
@@ -158,6 +183,12 @@ docker-infra-up:
 # 停止本地开发中间件容器
 docker-infra-down:
     docker compose -f manifest/deploy/docker-compose/docker-compose.yml down
+
+# 安全无损初始化数据库（UTF-8 字符集保障，杜绝 Windows 管道乱码）
+db-init:
+    docker cp manifest/sql/init.sql go-zero-mysql:/tmp/init.sql
+    docker exec -i go-zero-mysql mysql -uroot -proot --default-character-set=utf8mb4 -e "source /tmp/init.sql"
+    docker exec -i go-zero-redis redis-cli FLUSHALL
 
 # ================= 数据库版本迁移流水线 (Atlas Migrations) =================
 

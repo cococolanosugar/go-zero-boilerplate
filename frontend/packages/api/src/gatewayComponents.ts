@@ -30,12 +30,53 @@ export interface AdminProfileResp {
 	menus: Array<SysMenuItem>
 }
 
+export interface AppVO {
+	id: number
+	projectId: number
+	name: string
+	displayName: string
+	description: string
+	integrationId: number
+	repoUrl: string
+	defaultBranch: string
+	buildConfig: string
+	deploySpec: string
+	status: number
+	createTime: string
+	updateTime: string
+}
+
+export interface ApproveStepReqVO {
+	approved: boolean
+	comment?: string
+}
+export interface ApproveStepReqVOParams {
+}
+
 export interface ApproveTaskReqVO {
 	taskId: number
 	opinion?: string
 	updatedFormDataJson?: string
 }
 export interface ApproveTaskReqVOParams {
+}
+
+export interface ArtifactVO {
+	id: number
+	projectId: number
+	appId: number
+	appName: string
+	imageUrl: string
+	imageTag: string
+	imageDigest: string
+	gitBranch: string
+	gitCommit: string
+	commitMsg: string
+	buildExecId: number
+	imageSizeBytes: number
+	status: string
+	createTime: string
+	updateTime: string
 }
 
 export interface AssignRolePermReq {
@@ -60,6 +101,18 @@ export interface AsyncTaskItem {
 	updateTime: string
 }
 
+export interface AuditReleaseOrderReqVO {
+	approved: boolean
+	comment?: string
+}
+export interface AuditReleaseOrderReqVOParams {
+}
+
+export interface CancelExecutionReqVO {
+}
+export interface CancelExecutionReqVOParams {
+}
+
 export interface CancelTicketReqVO {
 	reason?: string
 }
@@ -82,6 +135,136 @@ export interface ClaimTaskReqVO {
 export interface ClaimTaskReqVOParams {
 }
 
+export interface ClusterVO {
+	id: number
+	name: string
+	env: string
+	apiEndpoint: string
+	status: string
+	version: string
+	description: string
+	createdBy: number
+	createTime: string
+	updateTime: string
+}
+
+export interface CommitDiffItemVO {
+	commitId: string
+	message: string
+	author: string
+	commitTime: string
+}
+
+export interface CompareMatrixEnvReqVO {
+}
+export interface CompareMatrixEnvReqVOParams {
+	projectId: number
+	appId: number
+	sourceEnv: string
+	targetEnv: string
+}
+
+export interface CompareMatrixEnvRespVO {
+	appId: number
+	appName: string
+	sourceEnv: string
+	sourceVersion: string
+	sourceCommit: string
+	targetEnv: string
+	targetVersion: string
+	targetCommit: string
+	commits: Array<CommitDiffItemVO>
+	canPromote: boolean
+}
+
+export interface CreateAppReqVO {
+	name: string
+	displayName: string
+	description?: string
+	integrationId?: number
+	repoUrl?: string
+	defaultBranch: string
+	buildConfig?: string
+	deploySpec?: string
+}
+export interface CreateAppReqVOParams {
+}
+
+export interface CreateAppRespVO {
+	id: number
+}
+
+export interface CreateArtifactReqVO {
+	appId: number
+	imageUrl: string
+	imageTag: string
+	imageDigest?: string
+	gitBranch?: string
+	gitCommit?: string
+	commitMsg?: string
+	buildExecId?: number
+	imageSizeBytes?: number
+}
+export interface CreateArtifactReqVOParams {
+}
+
+export interface CreateArtifactRespVO {
+	id: number
+}
+
+export interface CreateClusterReqVO {
+	name: string
+	env: string
+	apiEndpoint?: string
+	kubeconfig: string
+	description?: string
+}
+
+export interface CreateClusterRespVO {
+	id: number
+}
+
+export interface CreateEnvReqVO {
+	envCode: string
+	name: string
+	clusterId: number
+	namespace: string
+}
+export interface CreateEnvReqVOParams {
+}
+
+export interface CreateEnvRespVO {
+	id: number
+}
+
+export interface CreateIntegrationReqVO {
+	name: string
+	category: string
+	authType: string
+	config: string
+	description?: string
+}
+
+export interface CreateIntegrationRespVO {
+	id: number
+}
+
+export interface CreatePipelineReqVO {
+	name: string
+	displayName: string
+	category?: string
+	gitRepo?: string
+	gitBranch?: string
+	stages: string
+	params?: string
+	triggers?: string
+	description?: string
+}
+
+export interface CreatePipelineRespVO {
+	id: number
+}
+
 export interface CreateProcessDefReqVO {
 	procCode: string
 	procName: string
@@ -89,6 +272,33 @@ export interface CreateProcessDefReqVO {
 	bpmnXml?: string
 	formSchema?: string
 	description?: string
+}
+
+export interface CreateProjectReqVO {
+	name: string
+	displayName: string
+	description?: string
+	ownerId?: number
+}
+
+export interface CreateProjectRespVO {
+	id: number
+}
+
+export interface CreateReleaseOrderReqVO {
+	projectId: number
+	title: string
+	description?: string
+	targetEnv: string
+	servicesJson: string
+	scheduledTime?: string
+}
+
+export interface CreateReleaseOrderRespVO {
+	id: number
+	orderNo: string
+	status: string
+	itsmProcessInstId: number
 }
 
 export interface CreateSysConfigReq {
@@ -221,6 +431,36 @@ export interface DashboardSystemStats {
 	successRate: number
 }
 
+export interface DeleteAppReqVO {
+}
+export interface DeleteAppReqVOParams {
+}
+
+export interface DeleteClusterReqVO {
+}
+export interface DeleteClusterReqVOParams {
+}
+
+export interface DeleteEnvReqVO {
+}
+export interface DeleteEnvReqVOParams {
+}
+
+export interface DeleteIntegrationReqVO {
+}
+export interface DeleteIntegrationReqVOParams {
+}
+
+export interface DeletePipelineReqVO {
+}
+export interface DeletePipelineReqVOParams {
+}
+
+export interface DeleteProjectReqVO {
+}
+export interface DeleteProjectReqVOParams {
+}
+
 export interface DeleteSysPortalNavReq {
 }
 export interface DeleteSysPortalNavReqParams {
@@ -239,9 +479,75 @@ export interface DeleteTaskResp {
 	success: boolean
 }
 
+export interface DeployArtifactReqVO {
+	appId: number
+	artifactId: number
+}
+export interface DeployArtifactReqVOParams {
+}
+
 export interface DeployProcessDefReqVO {
 }
 export interface DeployProcessDefReqVOParams {
+}
+
+export interface EnvAppLiveVO {
+	appId: number
+	appName: string
+	displayName: string
+	currentArtifactId: number
+	imageTag: string
+	imageUrl: string
+	gitCommit: string
+	readyReplicas: number
+	totalReplicas: number
+	status: string
+	lastDeployedTime: string
+	pods: Array<string>
+}
+
+export interface EnvVO {
+	id: number
+	projectId: number
+	envCode: string
+	name: string
+	clusterId: number
+	clusterName: string
+	namespace: string
+	status: string
+	appCount: number
+	createTime: string
+	updateTime: string
+}
+
+export interface ExecuteReleaseOrderReqVO {
+}
+export interface ExecuteReleaseOrderReqVOParams {
+}
+
+export interface ExecutionDetailRespVO {
+	execution: ExecutionVO
+	steps: Array<StepExecVO>
+}
+
+export interface ExecutionVO {
+	id: number
+	pipelineId: number
+	pipelineName: string
+	execNo: string
+	triggerType: string
+	triggerBy: number
+	gitBranch: string
+	gitCommit: string
+	runtimeParams: string
+	status: string
+	workflowId: string
+	startTime: string
+	endTime: string
+	durationMs: number
+	artifacts: string
+	createTime: string
+	updateTime: string
 }
 
 export interface FileUploadResp {
@@ -258,6 +564,24 @@ export interface ForceLogoutReq {
 export interface ForceLogoutReqParams {
 }
 
+export interface GetAppReqVO {
+}
+export interface GetAppReqVOParams {
+}
+
+export interface GetDeliveryMatrixReqVO {
+}
+export interface GetDeliveryMatrixReqVOParams {
+	projectId: number
+}
+
+export interface GetDeliveryMatrixRespVO {
+	projectId: number
+	projectName: string
+	envs: Array<MatrixEnvHeaderVO>
+	services: Array<MatrixServiceRowVO>
+}
+
 export interface GetDictDataByTypeReq {
 }
 export interface GetDictDataByTypeReqParams {
@@ -265,6 +589,30 @@ export interface GetDictDataByTypeReqParams {
 
 export interface GetDictDataByTypeResp {
 	list: Array<SysDictDataItem>
+}
+
+export interface GetEnvLiveDetailReqVO {
+}
+export interface GetEnvLiveDetailReqVOParams {
+}
+
+export interface GetEnvLiveDetailRespVO {
+	envId: number
+	envCode: string
+	envName: string
+	clusterName: string
+	namespace: string
+	apps: Array<EnvAppLiveVO>
+}
+
+export interface GetEnvReqVO {
+}
+export interface GetEnvReqVOParams {
+}
+
+export interface GetExecutionDetailReqVO {
+}
+export interface GetExecutionDetailReqVOParams {
 }
 
 export interface GetMyNoticeFeedReq {
@@ -276,6 +624,11 @@ export interface GetMyNoticeFeedReqParams {
 export interface GetMyNoticeFeedResp {
 	totalUnread: number
 	list: Array<NoticeFeedItem>
+}
+
+export interface GetPipelineReqVO {
+}
+export interface GetPipelineReqVOParams {
 }
 
 export interface GetPortalNavListReq {
@@ -292,6 +645,28 @@ export interface GetPortalNavListResp {
 export interface GetProcessDefReq {
 }
 export interface GetProcessDefReqParams {
+}
+
+export interface GetProjectReqVO {
+}
+export interface GetProjectReqVOParams {
+}
+
+export interface GetReleaseOrderReqVO {
+}
+export interface GetReleaseOrderReqVOParams {
+}
+
+export interface GetStepLogReqVO {
+}
+export interface GetStepLogReqVOParams {
+	offset: number
+}
+
+export interface GetStepLogRespVO {
+	content: string
+	nextOffset: number
+	isEnd: boolean
 }
 
 export interface GetSysMenuTreeResp {
@@ -318,6 +693,102 @@ export interface GetTicketTrajectoryReqVO {
 export interface GetTicketTrajectoryReqVOParams {
 }
 
+export interface IntegrationVO {
+	id: number
+	name: string
+	category: string
+	authType: string
+	config: string
+	status: number
+	description: string
+	createdBy: number
+	createTime: string
+	updateTime: string
+}
+
+export interface ListAppsReqVO {
+}
+export interface ListAppsReqVOParams {
+	page: number
+	pageSize: number
+}
+
+export interface ListAppsRespVO {
+	total: number
+	list: Array<AppVO>
+}
+
+export interface ListArtifactsReqVO {
+}
+export interface ListArtifactsReqVOParams {
+	appId?: number
+	page: number
+	pageSize: number
+}
+
+export interface ListArtifactsRespVO {
+	total: number
+	list: Array<ArtifactVO>
+}
+
+export interface ListClustersReqVO {
+}
+export interface ListClustersReqVOParams {
+	env?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListClustersRespVO {
+	total: number
+	list: Array<ClusterVO>
+}
+
+export interface ListEnvsReqVO {
+}
+export interface ListEnvsReqVOParams {
+}
+
+export interface ListEnvsRespVO {
+	list: Array<EnvVO>
+}
+
+export interface ListExecutionsReqVO {
+}
+export interface ListExecutionsReqVOParams {
+	pipelineId?: number
+	status?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListExecutionsRespVO {
+	total: number
+	list: Array<ExecutionVO>
+}
+
+export interface ListIntegrationsReqVO {
+}
+export interface ListIntegrationsReqVOParams {
+	category?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListIntegrationsRespVO {
+	total: number
+	list: Array<IntegrationVO>
+}
+
+export interface ListNamespacesReqVO {
+}
+export interface ListNamespacesReqVOParams {
+}
+
+export interface ListNamespacesRespVO {
+	namespaces: Array<string>
+}
+
 export interface ListOnlineSessionsReq {
 }
 export interface ListOnlineSessionsReqParams {
@@ -330,6 +801,20 @@ export interface ListOnlineSessionsReqParams {
 export interface ListOnlineSessionsResp {
 	total: number
 	list: Array<OnlineSessionItem>
+}
+
+export interface ListPipelinesReqVO {
+}
+export interface ListPipelinesReqVOParams {
+	category?: string
+	keyword?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListPipelinesRespVO {
+	total: number
+	list: Array<PipelineVO>
 }
 
 export interface ListProcessDefsReq {
@@ -345,6 +830,35 @@ export interface ListProcessDefsReqParams {
 export interface ListProcessDefsResp {
 	total: number
 	list: Array<ProcessDefVO>
+}
+
+export interface ListProjectsReqVO {
+}
+export interface ListProjectsReqVOParams {
+	page: number
+	pageSize: number
+	keyword?: string
+}
+
+export interface ListProjectsRespVO {
+	total: number
+	list: Array<ProjectVO>
+}
+
+export interface ListReleaseOrdersReqVO {
+}
+export interface ListReleaseOrdersReqVOParams {
+	projectId?: number
+	targetEnv?: string
+	status?: string
+	keyword?: string
+	page: number
+	pageSize: number
+}
+
+export interface ListReleaseOrdersRespVO {
+	total: number
+	list: Array<ReleaseOrderVO>
 }
 
 export interface ListSlaPoliciesRespVO {
@@ -558,6 +1072,38 @@ export interface MarkNoticeReadReq {
 	noticeId: number
 }
 
+export interface MatrixCellInfoVO {
+	envId: number
+	envCode: string
+	appId: number
+	artifactId: number
+	versionTag: string
+	gitCommit: string
+	gitBranch: string
+	deployStatus: string
+	healthStatus: string
+	readyReplicas: number
+	totalReplicas: number
+	lastDeployedAt: string
+	diffStatus: string
+}
+
+export interface MatrixEnvHeaderVO {
+	envId: number
+	envCode: string
+	envName: string
+	clusterName: string
+}
+
+export interface MatrixServiceRowVO {
+	appId: number
+	appName: string
+	displayName: string
+	repoUrl: string
+	defaultBranch: string
+	cells: Array<MatrixCellInfoVO>
+}
+
 export interface NoticeFeedItem {
 	id: number
 	noticeTitle: string
@@ -583,6 +1129,23 @@ export interface OnlineSessionItem {
 	os: string
 	loginTime: string
 	isCurrent: boolean
+}
+
+export interface PipelineVO {
+	id: number
+	name: string
+	displayName: string
+	category: string
+	gitRepo: string
+	gitBranch: string
+	stages: string
+	params: string
+	triggers: string
+	status: number
+	description: string
+	createdBy: number
+	createTime: string
+	updateTime: string
 }
 
 export interface PortalNavDTO {
@@ -615,6 +1178,19 @@ export interface ProcessDefVO {
 	updateTime: string
 }
 
+export interface ProjectVO {
+	id: number
+	name: string
+	displayName: string
+	description: string
+	ownerId: number
+	status: number
+	appCount: number
+	envCount: number
+	createTime: string
+	updateTime: string
+}
+
 export interface RegisterReq {
 	username?: string
 	mobile: string
@@ -630,6 +1206,32 @@ export interface RejectTaskReqVO {
 	opinion?: string
 }
 export interface RejectTaskReqVOParams {
+}
+
+export interface ReleaseOrderDetailRespVO {
+	order: ReleaseOrderVO
+	itsmStatus: string
+}
+
+export interface ReleaseOrderVO {
+	id: number
+	orderNo: string
+	projectId: number
+	title: string
+	description: string
+	targetEnv: string
+	servicesJson: string
+	status: string
+	itsmProcessInstId: number
+	applicantId: number
+	applicantName: string
+	approverId: number
+	approverName: string
+	scheduledTime: string
+	startTime: string
+	endTime: string
+	createTime: string
+	updateTime: string
 }
 
 export interface RunTaskOnceReq {
@@ -651,6 +1253,21 @@ export interface SlaPolicyVO {
 	responseLimitMin: number
 	resolveLimitMin: number
 	warnThresholdPct: number
+}
+
+export interface StepExecVO {
+	id: number
+	execId: number
+	stageId: string
+	stepId: string
+	stepName: string
+	stepType: string
+	status: string
+	logPath: string
+	errorMsg: string
+	startTime: string
+	endTime: string
+	durationMs: number
 }
 
 export interface SysApiItem {
@@ -836,6 +1453,27 @@ export interface TaskVO {
 	createTime: string
 }
 
+export interface TestClusterReqVO {
+}
+export interface TestClusterReqVOParams {
+}
+
+export interface TestClusterRespVO {
+	success: boolean
+	version: string
+	message: string
+}
+
+export interface TestIntegrationReqVO {
+}
+export interface TestIntegrationReqVOParams {
+}
+
+export interface TestIntegrationRespVO {
+	success: boolean
+	message: string
+}
+
 export interface TicketDetailRespVO {
 	ticket: TicketVO
 	formDataJson: string
@@ -889,11 +1527,82 @@ export interface TransferTaskReqVO {
 export interface TransferTaskReqVOParams {
 }
 
+export interface TriggerPipelineReqVO {
+	triggerType?: string
+	gitBranch?: string
+	gitCommit?: string
+	runtimeParams?: string
+}
+export interface TriggerPipelineReqVOParams {
+}
+
+export interface TriggerPipelineRespVO {
+	execId: number
+	execNo: string
+}
+
+export interface UpdateAppReqVO {
+	name?: string
+	displayName?: string
+	description?: string
+	integrationId?: number
+	repoUrl?: string
+	defaultBranch?: string
+	buildConfig?: string
+	deploySpec?: string
+	status?: number
+}
+export interface UpdateAppReqVOParams {
+}
+
+export interface UpdateClusterReqVO {
+	name?: string
+	env?: string
+	apiEndpoint?: string
+	kubeconfig?: string
+	description?: string
+}
+export interface UpdateClusterReqVOParams {
+}
+
+export interface UpdateEnvReqVO {
+	name?: string
+	clusterId?: number
+	namespace?: string
+	status?: string
+}
+export interface UpdateEnvReqVOParams {
+}
+
+export interface UpdateIntegrationReqVO {
+	name?: string
+	authType?: string
+	config?: string
+	status?: number
+	description?: string
+}
+export interface UpdateIntegrationReqVOParams {
+}
+
 export interface UpdatePersonalProfileReq {
 	realName: string
 	mobile?: string
 	email?: string
 	avatar?: string
+}
+
+export interface UpdatePipelineReqVO {
+	displayName?: string
+	category?: string
+	gitRepo?: string
+	gitBranch?: string
+	stages?: string
+	params?: string
+	triggers?: string
+	status?: number
+	description?: string
+}
+export interface UpdatePipelineReqVOParams {
 }
 
 export interface UpdateProcessDefReqVO {
@@ -905,6 +1614,15 @@ export interface UpdateProcessDefReqVO {
 	status?: number
 }
 export interface UpdateProcessDefReqVOParams {
+}
+
+export interface UpdateProjectReqVO {
+	displayName?: string
+	description?: string
+	ownerId?: number
+	status?: number
+}
+export interface UpdateProjectReqVOParams {
 }
 
 export interface UpdateSlaPolicyReqVO {

@@ -648,6 +648,403 @@ export function toggleTaskStatus(params: components.ToggleTaskStatusReqParams, r
 }
 
 /**
+ * @description 
+ * @param params
+ */
+export function listClusters(params: components.ListClustersReqVOParams) {
+	return webapi.get<components.ListClustersRespVO>(`/api/v1/titan/clusters`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createCluster(req: components.CreateClusterReqVO) {
+	return webapi.post<components.CreateClusterRespVO>(`/api/v1/titan/clusters`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateCluster(params: components.UpdateClusterReqVOParams, req: components.UpdateClusterReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/titan/clusters/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deleteCluster(params: components.DeleteClusterReqVOParams, id: number) {
+	return webapi.delete<null>(`/api/v1/titan/clusters/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listNamespaces(params: components.ListNamespacesReqVOParams, id: number) {
+	return webapi.get<components.ListNamespacesRespVO>(`/api/v1/titan/clusters/${id}/namespaces`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function testCluster(params: components.TestClusterReqVOParams, id: number) {
+	return webapi.post<components.TestClusterRespVO>(`/api/v1/titan/clusters/${id}/test`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getEnvLiveDetail(params: components.GetEnvLiveDetailReqVOParams, id: number) {
+	return webapi.get<components.GetEnvLiveDetailRespVO>(`/api/v1/titan/envs/${id}/live`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listExecutions(params: components.ListExecutionsReqVOParams) {
+	return webapi.get<components.ListExecutionsRespVO>(`/api/v1/titan/executions`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getExecutionDetail(params: components.GetExecutionDetailReqVOParams, id: number) {
+	return webapi.get<components.ExecutionDetailRespVO>(`/api/v1/titan/executions/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function cancelExecution(params: components.CancelExecutionReqVOParams, id: number) {
+	return webapi.post<null>(`/api/v1/titan/executions/${id}/cancel`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listIntegrations(params: components.ListIntegrationsReqVOParams) {
+	return webapi.get<components.ListIntegrationsRespVO>(`/api/v1/titan/integrations`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createIntegration(req: components.CreateIntegrationReqVO) {
+	return webapi.post<components.CreateIntegrationRespVO>(`/api/v1/titan/integrations`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateIntegration(params: components.UpdateIntegrationReqVOParams, req: components.UpdateIntegrationReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/titan/integrations/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deleteIntegration(params: components.DeleteIntegrationReqVOParams, id: number) {
+	return webapi.delete<null>(`/api/v1/titan/integrations/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function testIntegration(params: components.TestIntegrationReqVOParams, id: number) {
+	return webapi.post<components.TestIntegrationRespVO>(`/api/v1/titan/integrations/${id}/test`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getDeliveryMatrix(params: components.GetDeliveryMatrixReqVOParams) {
+	return webapi.get<components.GetDeliveryMatrixRespVO>(`/api/v1/titan/matrix`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function compareMatrixEnv(params: components.CompareMatrixEnvReqVOParams) {
+	return webapi.get<components.CompareMatrixEnvRespVO>(`/api/v1/titan/matrix/compare`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listPipelines(params: components.ListPipelinesReqVOParams) {
+	return webapi.get<components.ListPipelinesRespVO>(`/api/v1/titan/pipelines`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createPipeline(req: components.CreatePipelineReqVO) {
+	return webapi.post<components.CreatePipelineRespVO>(`/api/v1/titan/pipelines`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getPipeline(params: components.GetPipelineReqVOParams, id: number) {
+	return webapi.get<components.PipelineVO>(`/api/v1/titan/pipelines/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updatePipeline(params: components.UpdatePipelineReqVOParams, req: components.UpdatePipelineReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/titan/pipelines/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deletePipeline(params: components.DeletePipelineReqVOParams, id: number) {
+	return webapi.delete<null>(`/api/v1/titan/pipelines/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function triggerPipeline(params: components.TriggerPipelineReqVOParams, req: components.TriggerPipelineReqVO, id: number) {
+	return webapi.post<components.TriggerPipelineRespVO>(`/api/v1/titan/pipelines/${id}/trigger`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listProjects(params: components.ListProjectsReqVOParams) {
+	return webapi.get<components.ListProjectsRespVO>(`/api/v1/titan/projects`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createProject(req: components.CreateProjectReqVO) {
+	return webapi.post<components.CreateProjectRespVO>(`/api/v1/titan/projects`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getProject(params: components.GetProjectReqVOParams, id: number) {
+	return webapi.get<components.ProjectVO>(`/api/v1/titan/projects/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateProject(params: components.UpdateProjectReqVOParams, req: components.UpdateProjectReqVO, id: number) {
+	return webapi.put<null>(`/api/v1/titan/projects/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deleteProject(params: components.DeleteProjectReqVOParams, id: number) {
+	return webapi.delete<null>(`/api/v1/titan/projects/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listApps(params: components.ListAppsReqVOParams, projectId: number) {
+	return webapi.get<components.ListAppsRespVO>(`/api/v1/titan/projects/${projectId}/apps`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function createApp(params: components.CreateAppReqVOParams, req: components.CreateAppReqVO, projectId: number) {
+	return webapi.post<components.CreateAppRespVO>(`/api/v1/titan/projects/${projectId}/apps`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getApp(params: components.GetAppReqVOParams, projectId: number, id: number) {
+	return webapi.get<components.AppVO>(`/api/v1/titan/projects/${projectId}/apps/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateApp(params: components.UpdateAppReqVOParams, req: components.UpdateAppReqVO, projectId: number, id: number) {
+	return webapi.put<null>(`/api/v1/titan/projects/${projectId}/apps/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deleteApp(params: components.DeleteAppReqVOParams, projectId: number, id: number) {
+	return webapi.delete<null>(`/api/v1/titan/projects/${projectId}/apps/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listArtifacts(params: components.ListArtifactsReqVOParams, projectId: number) {
+	return webapi.get<components.ListArtifactsRespVO>(`/api/v1/titan/projects/${projectId}/artifacts`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function createArtifact(params: components.CreateArtifactReqVOParams, req: components.CreateArtifactReqVO, projectId: number) {
+	return webapi.post<components.CreateArtifactRespVO>(`/api/v1/titan/projects/${projectId}/artifacts`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listEnvs(params: components.ListEnvsReqVOParams, projectId: number) {
+	return webapi.get<components.ListEnvsRespVO>(`/api/v1/titan/projects/${projectId}/envs`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function createEnv(params: components.CreateEnvReqVOParams, req: components.CreateEnvReqVO, projectId: number) {
+	return webapi.post<components.CreateEnvRespVO>(`/api/v1/titan/projects/${projectId}/envs`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getEnv(params: components.GetEnvReqVOParams, projectId: number, id: number) {
+	return webapi.get<components.EnvVO>(`/api/v1/titan/projects/${projectId}/envs/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function updateEnv(params: components.UpdateEnvReqVOParams, req: components.UpdateEnvReqVO, projectId: number, id: number) {
+	return webapi.put<null>(`/api/v1/titan/projects/${projectId}/envs/${id}`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function deleteEnv(params: components.DeleteEnvReqVOParams, projectId: number, id: number) {
+	return webapi.delete<null>(`/api/v1/titan/projects/${projectId}/envs/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function deployArtifact(params: components.DeployArtifactReqVOParams, req: components.DeployArtifactReqVO, projectId: number, id: number) {
+	return webapi.post<null>(`/api/v1/titan/projects/${projectId}/envs/${id}/deploy`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function listReleaseOrders(params: components.ListReleaseOrdersReqVOParams) {
+	return webapi.get<components.ListReleaseOrdersRespVO>(`/api/v1/titan/release-orders`, params)
+}
+
+/**
+ * @description 
+ * @param req
+ */
+export function createReleaseOrder(req: components.CreateReleaseOrderReqVO) {
+	return webapi.post<components.CreateReleaseOrderRespVO>(`/api/v1/titan/release-orders`, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getReleaseOrder(params: components.GetReleaseOrderReqVOParams, id: number) {
+	return webapi.get<components.ReleaseOrderDetailRespVO>(`/api/v1/titan/release-orders/${id}`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function auditReleaseOrder(params: components.AuditReleaseOrderReqVOParams, req: components.AuditReleaseOrderReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/titan/release-orders/${id}/audit`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function executeReleaseOrder(params: components.ExecuteReleaseOrderReqVOParams, id: number) {
+	return webapi.post<null>(`/api/v1/titan/release-orders/${id}/execute`, params)
+}
+
+/**
+ * @description 
+ * @param params
+ * @param req
+ */
+export function approveStep(params: components.ApproveStepReqVOParams, req: components.ApproveStepReqVO, id: number) {
+	return webapi.post<null>(`/api/v1/titan/steps/${id}/approve`, params, req)
+}
+
+/**
+ * @description 
+ * @param params
+ */
+export function getStepLog(params: components.GetStepLogReqVOParams, id: number) {
+	return webapi.get<components.GetStepLogRespVO>(`/api/v1/titan/steps/${id}/log`, params)
+}
+
+/**
  * @description "用户登录"
  * @param req
  */

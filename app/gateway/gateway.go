@@ -18,7 +18,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/zeromicro/go-zero/core/conf"
+	"go-zero-boilerplate/pkg/confx"
+
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 
@@ -31,7 +32,7 @@ func main() {
 	flag.Parse()
 
 	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	confx.MustLoad(*configFile, &c)
 	openApiSpecBytes, err := os.ReadFile(c.OpenApi.FilePath)
 	if err != nil {
 		if fallbackBytes, fallbackErr := os.ReadFile("manifest/openapi/openapi.json"); fallbackErr == nil {
