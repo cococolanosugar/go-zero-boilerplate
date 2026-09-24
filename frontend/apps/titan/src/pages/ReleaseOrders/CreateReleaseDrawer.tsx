@@ -11,6 +11,7 @@ import {
   Card,
   Typography,
   App,
+  Grid,
 } from "antd";
 import { PlusOutlined, DeleteOutlined, RocketOutlined } from "@ant-design/icons";
 import { useProject } from "../../contexts/ProjectContext";
@@ -37,6 +38,8 @@ export const CreateReleaseDrawer: React.FC<CreateReleaseDrawerProps> = ({
   const [form] = Form.useForm();
   const { currentProjectId } = useProject();
   const { message } = App.useApp();
+  const screens = Grid.useBreakpoint();
+  const isMobile = typeof screens.md !== "undefined" ? !screens.md : false;
   const [loading, setLoading] = useState(false);
   const [apps, setApps] = useState<TitanListApps200ListItem[]>([]);
   const targetEnv = Form.useWatch("targetEnv", form);
@@ -96,14 +99,20 @@ export const CreateReleaseDrawer: React.FC<CreateReleaseDrawerProps> = ({
     <Drawer
       title="新建发布单与变更申请"
       placement="right"
-      size={640}
+      size={isMobile ? "100%" : 640}
       open={open}
       onClose={onClose}
+      styles={{
+        body: {
+          padding: isMobile ? 16 : 24,
+          paddingBottom: isMobile ? "calc(env(safe-area-inset-bottom, 20px) + 24px)" : 24,
+        },
+      }}
       extra={
         <Space>
           <Button onClick={onClose}>取消</Button>
           <Button type="primary" icon={<RocketOutlined />} loading={loading} onClick={handleSubmit}>
-            提交发布单
+            {isMobile ? "提交" : "提交发布单"}
           </Button>
         </Space>
       }
@@ -170,49 +179,106 @@ export const CreateReleaseDrawer: React.FC<CreateReleaseDrawerProps> = ({
                   key={key}
                   size="small"
                   style={{ marginBottom: 12, backgroundColor: "#fafafa" }}
+                  title={
+                    isMobile ? (
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Text strong style={{ fontSize: 13 }}>微服务 #{name + 1}</Text>
+                        {fields.length > 1 && (
+                          <Button
+                            type="text"
+                            danger
+                            size="small"
+                            icon={<DeleteOutlined />}
+                            onClick={() => remove(name)}
+                          >
+                            删除
+                          </Button>
+                        )}
+                      </div>
+                    ) : undefined
+                  }
                 >
-                  <Space align="baseline" style={{ display: "flex", width: "100%" }}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "appId"]}
-                      rules={[{ required: true, message: "选择微服务" }]}
-                      style={{ width: 220, marginBottom: 0 }}
-                    >
-                      <Select
-                        placeholder="选择微服务"
-                        options={apps.map((a) => ({
-                          label: a.displayName || a.name,
-                          value: a.id,
-                        }))}
-                      />
-                    </Form.Item>
+                  {isMobile ? (
+                    <div>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "appId"]}
+                        label="微服务"
+                        rules={[{ required: true, message: "选择微服务" }]}
+                        style={{ marginBottom: 10 }}
+                      >
+                        <Select
+                          placeholder="选择微服务"
+                          options={apps.map((a) => ({
+                            label: a.displayName || a.name,
+                            value: a.id,
+                          }))}
+                        />
+                      </Form.Item>
+                      <div style={{ display: "flex", gap: 10 }}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "version"]}
+                          label="版本 Tag"
+                          rules={[{ required: true, message: "版本Tag" }]}
+                          style={{ flex: 1, marginBottom: 0 }}
+                        >
+                          <Input placeholder="如 v2.1.0" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "gitCommit"]}
+                          label="Commit/分支"
+                          style={{ flex: 1, marginBottom: 0 }}
+                        >
+                          <Input placeholder="Commit/分支" />
+                        </Form.Item>
+                      </div>
+                    </div>
+                  ) : (
+                    <Space align="baseline" style={{ display: "flex", width: "100%" }}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "appId"]}
+                        rules={[{ required: true, message: "选择微服务" }]}
+                        style={{ width: 220, marginBottom: 0 }}
+                      >
+                        <Select
+                          placeholder="选择微服务"
+                          options={apps.map((a) => ({
+                            label: a.displayName || a.name,
+                            value: a.id,
+                          }))}
+                        />
+                      </Form.Item>
 
-                    <Form.Item
-                      {...restField}
-                      name={[name, "version"]}
-                      rules={[{ required: true, message: "版本Tag" }]}
-                      style={{ width: 160, marginBottom: 0 }}
-                    >
-                      <Input placeholder="版本号 (如 v2.1.0)" />
-                    </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "version"]}
+                        rules={[{ required: true, message: "版本Tag" }]}
+                        style={{ width: 160, marginBottom: 0 }}
+                      >
+                        <Input placeholder="版本号 (如 v2.1.0)" />
+                      </Form.Item>
 
-                    <Form.Item
-                      {...restField}
-                      name={[name, "gitCommit"]}
-                      style={{ width: 140, marginBottom: 0 }}
-                    >
-                      <Input placeholder="Commit/分支" />
-                    </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "gitCommit"]}
+                        style={{ width: 140, marginBottom: 0 }}
+                      >
+                        <Input placeholder="Commit/分支" />
+                      </Form.Item>
 
-                    {fields.length > 1 && (
-                      <Button
-                        type="text"
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={() => remove(name)}
-                      />
-                    )}
-                  </Space>
+                      {fields.length > 1 && (
+                        <Button
+                          type="text"
+                          danger
+                          icon={<DeleteOutlined />}
+                          onClick={() => remove(name)}
+                        />
+                      )}
+                    </Space>
+                  )}
                 </Card>
               ))}
 

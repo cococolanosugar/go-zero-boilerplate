@@ -12,6 +12,7 @@ import {
   Steps,
   Popconfirm,
   Input,
+  Grid,
 } from "antd";
 import {
   SyncOutlined,
@@ -48,6 +49,8 @@ export const ExecutionDetailDrawer: React.FC<ExecutionDetailDrawerProps> = ({
 }) => {
   const { message } = AntdApp.useApp();
   const { formatMessage: t } = useIntl();
+  const screens = Grid.useBreakpoint();
+  const isMobile = typeof screens.md !== "undefined" ? !screens.md : false;
   const [loading, setLoading] = useState(false);
   const [execution, setExecution] = useState<TitanGetExecutionDetail200Execution | null>(null);
   const [steps, setSteps] = useState<TitanGetExecutionDetail200StepsItem[]>([]);
@@ -148,9 +151,15 @@ export const ExecutionDetailDrawer: React.FC<ExecutionDetailDrawerProps> = ({
         </Space>
       }
       placement="right"
-      size={760}
+      size={isMobile ? "100%" : 760}
       open={open}
       onClose={onClose}
+      styles={{
+        body: {
+          padding: isMobile ? 16 : 24,
+          paddingBottom: isMobile ? "calc(env(safe-area-inset-bottom, 20px) + 24px)" : 24,
+        },
+      }}
       extra={
         <Space>
           <Button icon={<SyncOutlined />} onClick={loadDetail} loading={loading}>
@@ -175,7 +184,7 @@ export const ExecutionDetailDrawer: React.FC<ExecutionDetailDrawerProps> = ({
         {execution && (
           <Space orientation="vertical" size={16} style={{ width: "100%" }}>
             {/* 基本元数据 */}
-            <Descriptions bordered size="small" column={2}>
+            <Descriptions bordered size="small" column={isMobile ? 1 : 2}>
               <Descriptions.Item label="流水线名称" span={2}>
                 {execution.pipelineName}
               </Descriptions.Item>

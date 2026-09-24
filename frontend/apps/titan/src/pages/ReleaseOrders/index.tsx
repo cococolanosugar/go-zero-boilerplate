@@ -13,6 +13,7 @@ import {
   Row,
   Col,
   Statistic,
+  Grid,
 } from "antd";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { ProTable } from "@ant-design/pro-components";
@@ -41,6 +42,8 @@ const { Text, Paragraph } = Typography;
 export const ReleaseOrdersPage: React.FC = () => {
   const { currentProjectId } = useProject();
   const { message, modal } = App.useApp();
+  const screens = Grid.useBreakpoint();
+  const isMobile = typeof screens.md !== "undefined" ? !screens.md : false;
   const actionRef = useRef<ActionType>(null);
   const [createDrawerOpen, setCreateDrawerOpen] = useState(false);
   const [detailDrawerState, setDetailDrawerState] = useState<{
@@ -235,13 +238,14 @@ export const ReleaseOrdersPage: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: "16px 20px" }}>
+    <div style={{ padding: isMobile ? "12px 12px" : "16px 20px" }}>
       <ProTable<ReleaseOrderVO>
         actionRef={actionRef}
         headerTitle="发布单与合规卡点中心"
         rowKey="id"
         size="small"
         search={{ labelWidth: "auto" }}
+        scroll={{ x: 1000 }}
         toolBarRender={() => [
           <Button
             key="create"
@@ -289,13 +293,19 @@ export const ReleaseOrdersPage: React.FC = () => {
           </Space>
         }
         placement="right"
-        size={720}
+        size={isMobile ? "100%" : 720}
         open={detailDrawerState.open}
         onClose={() => setDetailDrawerState({ open: false, order: null })}
+        styles={{
+          body: {
+            padding: isMobile ? 16 : 24,
+            paddingBottom: isMobile ? "calc(env(safe-area-inset-bottom, 20px) + 24px)" : 24,
+          },
+        }}
       >
         {detailDrawerState.order && (
           <Space orientation="vertical" size={16} style={{ width: "100%" }}>
-            <Descriptions bordered size="small" column={2}>
+            <Descriptions bordered size="small" column={isMobile ? 1 : 2}>
               <Descriptions.Item label="发布单号" span={2}>
                 <code>{detailDrawerState.order.orderNo}</code>
               </Descriptions.Item>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Drawer, Input, Tag, Space, Typography, Button, Empty } from "antd";
+import { Drawer, Input, Tag, Space, Typography, Button, Empty, Grid } from "antd";
 import {
   SearchOutlined,
   ProjectOutlined,
@@ -24,6 +24,8 @@ export const ProjectSwitcherDrawer: React.FC<ProjectSwitcherDrawerProps> = ({
 }) => {
   const { projects, currentProjectId, setCurrentProjectId } = useProject();
   const [keyword, setKeyword] = useState("");
+  const screens = Grid.useBreakpoint();
+  const isMobile = typeof screens.md !== "undefined" ? !screens.md : false;
   const [recentIds, setRecentIds] = useState<number[]>(() => {
     try {
       const saved = localStorage.getItem(RECENT_PROJECTS_KEY);
@@ -84,16 +86,23 @@ export const ProjectSwitcherDrawer: React.FC<ProjectSwitcherDrawerProps> = ({
         <Space orientation="horizontal" size={8}>
           <ProjectOutlined style={{ color: "#1890ff" }} />
           <span>切换项目空间</span>
-          <Tag color="default" style={{ fontSize: 11, marginLeft: 8 }}>
-            Ctrl+K
-          </Tag>
+          {!isMobile && (
+            <Tag color="default" style={{ fontSize: 11, marginLeft: 8 }}>
+              Ctrl+K
+            </Tag>
+          )}
         </Space>
       }
-      placement="left"
-      size={400}
+      placement={isMobile ? "bottom" : "left"}
+      size={isMobile ? "85vh" : 400}
       open={open}
       onClose={onClose}
-      styles={{ body: { padding: "16px 20px" } }}
+      styles={{
+        body: {
+          padding: isMobile ? "16px 16px 36px 16px" : "16px 20px",
+          paddingBottom: isMobile ? "calc(env(safe-area-inset-bottom, 20px) + 20px)" : 16,
+        },
+      }}
     >
       <div style={{ marginBottom: 16 }}>
         <Input

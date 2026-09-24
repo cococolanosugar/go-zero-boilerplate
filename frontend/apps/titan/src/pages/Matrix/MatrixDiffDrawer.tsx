@@ -12,6 +12,7 @@ import {
   App,
   Card,
   Divider,
+  Grid,
 } from "antd";
 import {
   RocketOutlined,
@@ -50,6 +51,8 @@ export const MatrixDiffDrawer: React.FC<MatrixDiffDrawerProps> = ({
   onPromoteSuccess,
 }) => {
   const { message } = App.useApp();
+  const screens = Grid.useBreakpoint();
+  const isMobile = typeof screens.md !== "undefined" ? !screens.md : false;
   const [loading, setLoading] = useState(false);
   const [diffData, setDiffData] = useState<CompareMatrixEnvRespVO | null>(null);
   const [promoting, setPromoting] = useState(false);
@@ -124,10 +127,15 @@ export const MatrixDiffDrawer: React.FC<MatrixDiffDrawerProps> = ({
         </Space>
       }
       placement="right"
-      size={720}
+      size={isMobile ? "100%" : 720}
       open={open}
       onClose={onClose}
-      styles={{ body: { padding: 24 } }}
+      styles={{
+        body: {
+          padding: isMobile ? 16 : 24,
+          paddingBottom: isMobile ? "calc(env(safe-area-inset-bottom, 20px) + 24px)" : 24,
+        },
+      }}
       extra={
         <Button
           type="primary"
@@ -136,7 +144,7 @@ export const MatrixDiffDrawer: React.FC<MatrixDiffDrawerProps> = ({
           loading={promoting}
           onClick={handlePromote}
         >
-          一键晋级至 {targetEnv.toUpperCase()}
+          {isMobile ? `晋级到 ${targetEnv.toUpperCase()}` : `一键晋级至 ${targetEnv.toUpperCase()}`}
         </Button>
       }
     >
@@ -145,8 +153,16 @@ export const MatrixDiffDrawer: React.FC<MatrixDiffDrawerProps> = ({
           <Space orientation="vertical" size={20} style={{ width: "100%" }}>
             {/* 环境版本对比看板 */}
             <Card size="small" style={{ backgroundColor: "#fafafa" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>
-                <div style={{ textAlign: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: isMobile ? "column" : "row",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                  gap: isMobile ? 12 : 0,
+                }}
+              >
+                <div style={{ textAlign: "center", width: isMobile ? "100%" : "auto" }}>
                   <Tag color="blue" style={{ fontSize: 13, padding: "2px 10px" }}>
                     源环境: {diffData.sourceEnv?.toUpperCase()}
                   </Tag>
@@ -159,7 +175,13 @@ export const MatrixDiffDrawer: React.FC<MatrixDiffDrawerProps> = ({
                 </div>
 
                 <div style={{ textAlign: "center" }}>
-                  <SwapRightOutlined style={{ fontSize: 24, color: "#1890ff" }} />
+                  <SwapRightOutlined
+                    style={{
+                      fontSize: 24,
+                      color: "#1890ff",
+                      transform: isMobile ? "rotate(90deg)" : "none",
+                    }}
+                  />
                   <div style={{ fontSize: 11, color: "#8c8c8c", marginTop: 4 }}>
                     {diffData.canPromote ? (
                       <Tag color="warning">待晋级 (BEHIND)</Tag>
@@ -169,7 +191,7 @@ export const MatrixDiffDrawer: React.FC<MatrixDiffDrawerProps> = ({
                   </div>
                 </div>
 
-                <div style={{ textAlign: "center" }}>
+                <div style={{ textAlign: "center", width: isMobile ? "100%" : "auto" }}>
                   <Tag color="purple" style={{ fontSize: 13, padding: "2px 10px" }}>
                     目标环境: {diffData.targetEnv?.toUpperCase()}
                   </Tag>

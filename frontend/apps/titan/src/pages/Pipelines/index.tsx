@@ -14,6 +14,7 @@ import {
   Typography,
   Divider,
   Tabs,
+  Grid,
 } from 'antd';
 import {
   PlusOutlined,
@@ -66,6 +67,8 @@ export const PipelinesPage: React.FC = () => {
   const { message, notification } = AntdApp.useApp();
   const navigate = useNavigate();
   const { formatMessage: t } = useIntl();
+  const screens = Grid.useBreakpoint();
+  const isMobile = typeof screens.md !== "undefined" ? !screens.md : false;
   const actionRef = useRef<ActionType>(null);
 
   // 分类过滤
@@ -482,12 +485,19 @@ export const PipelinesPage: React.FC = () => {
         }
         open={historyDrawerOpen}
         onClose={() => setHistoryDrawerOpen(false)}
-        size={880}
+        size={isMobile ? '100%' : 880}
+        styles={{
+          body: {
+            padding: isMobile ? 12 : 24,
+            paddingBottom: isMobile ? 'calc(env(safe-area-inset-bottom, 20px) + 20px)' : 24,
+          },
+        }}
       >
         <ProTable<TitanListExecutions200ListItem>
           actionRef={historyActionRef}
           rowKey="id"
           search={false}
+          scroll={{ x: 650 }}
           headerTitle={
             historyPipelineId
               ? t({ id: 'titan.pipelines.historyTitle', defaultMessage: '流水线 #{id} 执行历史' }, { id: historyPipelineId })

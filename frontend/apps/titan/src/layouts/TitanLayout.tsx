@@ -8,7 +8,9 @@ import {
   Tag,
   Tooltip,
   Button,
+  Grid,
 } from "antd";
+import type { MenuProps } from "antd";
 import {
   UserOutlined,
   LogoutOutlined,
@@ -30,7 +32,6 @@ import {
   ApiOutlined,
   AuditOutlined,
 } from "@ant-design/icons";
-import { Select } from "antd";
 import { ProLayout } from "@ant-design/pro-components";
 import { useAuth } from "../contexts/AuthContext";
 import { useProject } from "../contexts/ProjectContext";
@@ -39,7 +40,6 @@ import { useLayoutSettings } from "../contexts/LayoutSettingsContext";
 import { LOCALES, type LocaleKey } from "../locales";
 import { routes as routeConfig } from "../config/routes";
 import type { AppRouteItem } from "../config/routes.types";
-import { defaultSettings } from "../config/defaultSettings";
 import { ProjectSwitcherDrawer } from "../components/ProjectSwitcherDrawer";
 import { WorkspaceTabs } from "../components/WorkspaceTabs";
 
@@ -70,11 +70,14 @@ export const TitanLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, logout } = useAuth();
-  const { projects, currentProjectId, currentProject, setCurrentProjectId, loading: projectLoading } = useProject();
+  const { currentProject } = useProject();
   const [projectDrawerOpen, setProjectDrawerOpen] = useState(false);
   const { locale, setLocale } = useLocale();
   const { formatMessage: t } = useIntl();
   const { isDark, setIsDark } = useLayoutSettings();
+
+  const screens = Grid.useBreakpoint();
+  const isMobile = typeof screens.md !== "undefined" ? !screens.md : false;
 
   const handleLogout = () => {
     logout();
@@ -97,6 +100,49 @@ export const TitanLayout: React.FC = () => {
   const menuData = buildMenuItems(layoutRoot?.routes);
 
   const host = typeof window !== "undefined" ? window.location.hostname : "localhost";
+
+  const avatarMenuItems: MenuProps["items"] = [
+    {
+      key: "user-info",
+      disabled: true,
+      label: (
+        <Space>
+          <Avatar size="small" icon={<UserOutlined />} />
+          <div>
+            <div>{profile?.realName || profile?.username || t({ id: "titan.header.defaultRole", defaultMessage: "开发工程师" })}</div>
+            <Tag color="blue" style={{ marginTop: 4 }}>
+              {profile?.roles?.[0] || "DEVELOPER"}
+            </Tag>
+          </div>
+        </Space>
+      ),
+    },
+    ...(isMobile
+      ? [
+          { type: "divider" as const },
+          {
+            key: "portal",
+            icon: <HomeOutlined />,
+            label: t({ id: "titan.header.portal", defaultMessage: "技术门户 (:3000)" }),
+            onClick: () => window.open(`http://${host}:3000`, "_blank"),
+          },
+          {
+            key: "admin",
+            icon: <SettingOutlined />,
+            label: t({ id: "titan.header.admin", defaultMessage: "管理后台 (:3001)" }),
+            onClick: () => window.open(`http://${host}:3001`, "_blank"),
+          },
+        ]
+      : []),
+    { type: "divider" as const },
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      danger: true,
+      label: t({ id: "titan.header.logout", defaultMessage: "退出登录" }),
+      onClick: handleLogout,
+    },
+  ];
 
   return (
     <div style={{ minHeight: "100vh" }}>
@@ -126,107 +172,105 @@ export const TitanLayout: React.FC = () => {
           </div>
         )}
         menuDataRender={() => menuData}
-        actionsRender={() => [
-          <Button
-            key="projectSwitcherBtn"
-            type="dashed"
-            icon={<ProjectOutlined style={{ color: "#1890ff" }} />}
-            onClick={() => setProjectDrawerOpen(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              borderRadius: 6,
-              height: 32,
-              padding: "0 12px",
-            }}
-          >
-            <span style={{ fontWeight: 500, maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {currentProject?.displayName || currentProject?.name || t({ id: "titan.header.selectProject", defaultMessage: "选择交付项目" })}
-            </span>
-            <Tag color="blue" style={{ fontSize: 10, margin: 0, padding: "0 4px", lineHeight: "16px" }}>
-              切换
-            </Tag>
-          </Button>,
-          <Tooltip key="portal" title={t({ id: "titan.header.portalTooltip", defaultMessage: "返回官方技术门户 (:3000)" })}>
-            <Button
-              type="text"
-              icon={<HomeOutlined />}
-              onClick={() => window.open(`http://${host}:3000`, "_blank")}
+        actionsRender={() => {
+          const actions: React.ReactNode[] = [
+            <Tooltip
+              key="projectSwitcherBtn"
+              title={currentProject?.displayName || currentProject?.name || t({ id: "titan.header.selectProject", defaultMessage: "选择交付项目" })}
             >
-              {t({ id: "titan.header.portal", defaultMessage: "技术门户" })}
-            </Button>
-          </Tooltip>,
-          <Tooltip key="admin" title={t({ id: "titan.header.adminTooltip", defaultMessage: "前往企业管理后台 (:3001)" })}>
-            <Button
-              type="text"
-              icon={<SettingOutlined />}
-              onClick={() => window.open(`http://${host}:3001`, "_blank")}
+              <Button
+                type="dashed"
+                icon={<ProjectOutlined style={{ color: "#1890ff" }} />}
+                onClick={() => setProjectDrawerOpen(true)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: isMobile ? 0 : 6,
+                  borderRadius: 6,
+                  height: 32,
+                  padding: isMobile ? "0 8px" : "0 12px",
+                }}
+              >
+                {!isMobile && (
+                  <>
+                    <span style={{ fontWeight: 500, maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {currentProject?.displayName || currentProject?.name || t({ id: "titan.header.selectProject", defaultMessage: "选择交付项目" })}
+                    </span>
+                    <Tag color="blue" style={{ fontSize: 10, margin: 0, padding: "0 4px", lineHeight: "16px" }}>
+                      切换
+                    </Tag>
+                  </>
+                )}
+              </Button>
+            </Tooltip>,
+          ];
+
+          if (!isMobile) {
+            actions.push(
+              <Tooltip key="portal" title={t({ id: "titan.header.portalTooltip", defaultMessage: "返回官方技术门户 (:3000)" })}>
+                <Button
+                  type="text"
+                  icon={<HomeOutlined />}
+                  onClick={() => window.open(`http://${host}:3000`, "_blank")}
+                >
+                  {t({ id: "titan.header.portal", defaultMessage: "技术门户" })}
+                </Button>
+              </Tooltip>,
+              <Tooltip key="admin" title={t({ id: "titan.header.adminTooltip", defaultMessage: "前往企业管理后台 (:3001)" })}>
+                <Button
+                  type="text"
+                  icon={<SettingOutlined />}
+                  onClick={() => window.open(`http://${host}:3001`, "_blank")}
+                >
+                  {t({ id: "titan.header.admin", defaultMessage: "管理后台" })}
+                </Button>
+              </Tooltip>,
+            );
+          }
+
+          actions.push(
+            <Tooltip
+              key="theme"
+              title={
+                isDark
+                  ? t({ id: "titan.header.themeLight", defaultMessage: "切换为浅色" })
+                  : t({ id: "titan.header.themeDark", defaultMessage: "切换为暗黑" })
+              }
             >
-              {t({ id: "titan.header.admin", defaultMessage: "管理后台" })}
-            </Button>
-          </Tooltip>,
-          <Tooltip key="theme" title={isDark
-            ? t({ id: "titan.header.themeLight", defaultMessage: "切换为浅色" })
-            : t({ id: "titan.header.themeDark", defaultMessage: "切换为暗黑" })}
-          >
-            <Button
-              type="text"
-              icon={isDark ? <SunOutlined /> : <MoonOutlined />}
-              onClick={() => setIsDark(!isDark)}
-            />
-          </Tooltip>,
-          <Dropdown
-            key="locale"
-            menu={{
-              selectedKeys: [locale],
-              items: Object.values(LOCALES).map((loc) => ({
-                key: loc.key,
-                label: `${loc.icon} ${loc.label}`,
-              })),
-              onClick: ({ key }) => setLocale(key as LocaleKey),
-            }}
-          >
-            <Button type="text" icon={<GlobalOutlined />}>
-              {LOCALES[locale]?.label || t({ id: "titan.header.language", defaultMessage: "语言" })}
-            </Button>
-          </Dropdown>,
-        ]}
+              <Button
+                type="text"
+                icon={isDark ? <SunOutlined /> : <MoonOutlined />}
+                onClick={() => setIsDark(!isDark)}
+              />
+            </Tooltip>,
+            <Dropdown
+              key="locale"
+              menu={{
+                selectedKeys: [locale],
+                items: Object.values(LOCALES).map((loc) => ({
+                  key: loc.key,
+                  label: `${loc.icon} ${loc.label}`,
+                })),
+                onClick: ({ key }) => setLocale(key as LocaleKey),
+              }}
+            >
+              <Tooltip title={LOCALES[locale]?.label || t({ id: "titan.header.language", defaultMessage: "语言" })}>
+                <Button type="text" icon={<GlobalOutlined />}>
+                  {!isMobile && (LOCALES[locale]?.label || t({ id: "titan.header.language", defaultMessage: "语言" }))}
+                </Button>
+              </Tooltip>
+            </Dropdown>,
+          );
+
+          return actions;
+        }}
         avatarProps={{
           icon: <UserOutlined />,
           title: profile?.realName || profile?.username || t({ id: "titan.header.defaultRole", defaultMessage: "开发工程师" }),
           size: "small",
           render: (_props, dom) => {
             return (
-              <Dropdown
-                menu={{
-                  items: [
-                    {
-                      key: "user-info",
-                      disabled: true,
-                      label: (
-                        <Space>
-                          <Avatar size="small" icon={<UserOutlined />} />
-                          <div>
-                            <div>{profile?.realName || profile?.username || t({ id: "titan.header.defaultRole", defaultMessage: "开发工程师" })}</div>
-                            <Tag color="blue" style={{ marginTop: 4 }}>
-                              {profile?.roles?.[0] || "DEVELOPER"}
-                            </Tag>
-                          </div>
-                        </Space>
-                      ),
-                    },
-                    { type: "divider" },
-                    {
-                      key: "logout",
-                      icon: <LogoutOutlined />,
-                      danger: true,
-                      label: t({ id: "titan.header.logout", defaultMessage: "退出登录" }),
-                      onClick: handleLogout,
-                    },
-                  ],
-                }}
-              >
+              <Dropdown menu={{ items: avatarMenuItems }}>
                 <div style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>
                   {dom}
                 </div>
@@ -240,7 +284,7 @@ export const TitanLayout: React.FC = () => {
           </a>,
         ]}
       >
-        <WorkspaceTabs />
+        {!isMobile && <WorkspaceTabs />}
         <Outlet />
         <ProjectSwitcherDrawer
           open={projectDrawerOpen}
