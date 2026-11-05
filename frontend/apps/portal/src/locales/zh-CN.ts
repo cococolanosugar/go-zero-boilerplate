@@ -5,6 +5,8 @@ export default {
   'menu.titan': '研发交付',
   'menu.desk': '服务台',
   'menu.services': '微服务治理',
+  'menu.apiHub': 'API 契约集市',
+  'menu.docs': '技术文档',
   'menu.workbench': '联调工作台',
   'nav.title': '企业网址导航',
   'nav.subTitle': '汇聚企业内部治理中心、任务引擎、开发文档与核心中后台系统的统一快捷导航工作台',

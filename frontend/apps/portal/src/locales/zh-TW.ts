@@ -4,6 +4,8 @@ export default {
   'menu.navigation': '網址導航',
   'menu.desk': '服務台',
   'menu.services': '微服務治理',
+  'menu.apiHub': 'API 契約集市',
+  'menu.docs': '技術文檔',
   'menu.workbench': '聯調工作台',
   'nav.title': '企業網址導航',
   'nav.subTitle': '匯聚企業內部治理中心、任務引擎、開發文檔與核心中後台系統的統一快捷導航工作台',

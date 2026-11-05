@@ -167,7 +167,7 @@ export const RequestDetailDrawer: React.FC<RequestDetailDrawerProps> = ({
       }
       open={open}
       onClose={onClose}
-      width={680}
+      size={680}
       extra={
         canRevoke && (
           <Button

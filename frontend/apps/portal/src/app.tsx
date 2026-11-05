@@ -12,6 +12,7 @@ import {
   CompassOutlined,
   CustomerServiceOutlined,
   DeploymentUnitOutlined,
+  ReadOutlined,
 } from "@ant-design/icons";
 import {
   setErrorHandler,
@@ -58,6 +59,8 @@ const getIcon = (iconName?: React.ReactNode | string) => {
       return <CustomerServiceOutlined />;
     case "DeploymentUnitOutlined":
       return <DeploymentUnitOutlined />;
+    case "ReadOutlined":
+      return <ReadOutlined />;
     default:
       return null;
   }

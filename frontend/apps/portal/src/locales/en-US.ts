@@ -5,6 +5,8 @@ export default {
   'menu.titan': 'Titan Delivery',
   'menu.desk': 'Service Desk',
   'menu.services': 'Services Governance',
+  'menu.apiHub': 'API Hub & Sandbox',
+  'menu.docs': 'Tech Docs',
   'menu.workbench': 'API Workbench',
   'nav.title': 'Enterprise Navigation Hub',
   'nav.subTitle': 'Unified portal to access internal governance centers, workflow engines, documentation, and core systems',
