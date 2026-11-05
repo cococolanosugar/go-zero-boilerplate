@@ -1,9 +1,9 @@
-package titan
+﻿package titan
 
 import (
 	"context"
 
-	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/app/titan/titan"
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
 

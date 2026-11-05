@@ -1,4 +1,4 @@
-package middleware
+﻿package middleware
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
-	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	userClient "go-zero-boilerplate/app/user/client/user"
 
 	"github.com/golang-jwt/jwt/v4"
 )

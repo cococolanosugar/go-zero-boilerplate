@@ -7,11 +7,10 @@ $ErrorActionPreference = "Stop"
 
 $root = (Resolve-Path "$PSScriptRoot/../..").Path
 $targetDir = "$root/app/$Service"
-$rpcDir = "$targetDir/rpc"
 $templateDir = "$root/hack/template"
 
-if (Test-Path $rpcDir) {
-    Write-Error "RPC service already exists at $rpcDir"
+if ((Test-Path "$targetDir/$Service.go") -or (Test-Path "$targetDir/$Service.proto")) {
+    Write-Error "Service already exists at $targetDir"
     exit 1
 }
 
@@ -26,7 +25,7 @@ if (-not (Test-Path $targetDir)) {
     New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
 }
 
-Write-Host "Creating new RPC service '$Service' in app/$Service..." -ForegroundColor Cyan
+Write-Host "Creating new microservice '$Service' in app/$Service..." -ForegroundColor Cyan
 
 Push-Location $targetDir
 try {
@@ -39,20 +38,23 @@ try {
         exit 1
     }
 
-    # 将生成目录重命名为 rpc
-    Rename-Item -Path $generatedDir -NewName "rpc"
+    # 将生成的文件扁平化移至 app/$Service
+    Get-ChildItem -Path $generatedDir | ForEach-Object {
+        Move-Item -Path $_.FullName -Destination $targetDir -Force
+    }
+    Remove-Item -Path $generatedDir -Force -Recurse
 
-    # 自动修正 goctl 相对生成导入路径: app/$Service/$Service -> app/$Service/rpc
-    $goFiles = Get-ChildItem -Path $rpcDir -Filter "*.go" -Recurse
+    # 自动修正 goctl 相对生成导入路径: app/$Service/$Service -> app/$Service
+    $goFiles = Get-ChildItem -Path $targetDir -Filter "*.go" -Recurse
     foreach ($file in $goFiles) {
         $content = Get-Content $file.FullName -Raw
         if ($content -match "app/$Service/$Service") {
-            $content = $content.Replace("app/$Service/$Service", "app/$Service/rpc")
+            $content = $content.Replace("app/$Service/$Service", "app/$Service")
             Set-Content -Path $file.FullName -Value $content -NoNewline
         }
     }
 
-    Write-Host "Done! RPC service '$Service' created successfully at app/$Service/rpc" -ForegroundColor Green
+    Write-Host "Done! Microservice '$Service' created successfully at app/$Service" -ForegroundColor Green
 } finally {
     Pop-Location
 }

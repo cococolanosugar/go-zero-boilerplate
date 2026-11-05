@@ -93,7 +93,7 @@ services:
   user-rpc:
     build:
       context: ../../../
-      dockerfile: app/user/rpc/Dockerfile
+      dockerfile: app/user/Dockerfile
     container_name: go-zero-user-rpc
     environment:
       USER_RPC_LISTEN_ON: "0.0.0.0:8080"
@@ -114,7 +114,7 @@ services:
   worker-rpc:
     build:
       context: ../../../
-      dockerfile: app/worker/rpc/Dockerfile
+      dockerfile: app/worker/Dockerfile
     container_name: go-zero-worker-rpc
     environment:
       WORKER_RPC_LISTEN_ON: "0.0.0.0:8082"
@@ -136,7 +136,7 @@ services:
   itsm-rpc:
     build:
       context: ../../../
-      dockerfile: app/itsm/rpc/Dockerfile
+      dockerfile: app/itsm/Dockerfile
     container_name: go-zero-itsm-rpc
     environment:
       ITSM_RPC_LISTEN_ON: "0.0.0.0:8084"
@@ -155,7 +155,7 @@ services:
   titan-rpc:
     build:
       context: ../../../
-      dockerfile: app/titan/rpc/Dockerfile
+      dockerfile: app/titan/Dockerfile
     container_name: go-zero-titan-rpc
     environment:
       TITAN_RPC_LISTEN_ON: "0.0.0.0:8086"

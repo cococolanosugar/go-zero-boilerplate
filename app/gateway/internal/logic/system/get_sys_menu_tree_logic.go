@@ -1,11 +1,11 @@
-package system
+﻿package system
 
 import (
 	"context"
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	userClient "go-zero-boilerplate/app/user/client/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

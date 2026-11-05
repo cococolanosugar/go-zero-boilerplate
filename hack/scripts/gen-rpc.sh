@@ -2,7 +2,7 @@
 set -e
 
 SERVICE=${1:-user}
-RPC_DIR="app/${SERVICE}/rpc"
+RPC_DIR="app/${SERVICE}"
 PROTO_FILE="${SERVICE}.proto"
 
 if [ ! -f "${RPC_DIR}/${PROTO_FILE}" ]; then

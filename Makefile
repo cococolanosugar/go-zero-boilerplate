@@ -24,19 +24,19 @@ gen-gateway:
 
 # 生成指定服务 RPC 代码 (例如: make gen-rpc SERVICE=user)
 gen-rpc:
-	cd app/$(SERVICE)/rpc && goctl rpc protoc $(SERVICE).proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+	cd app/$(SERVICE) && goctl rpc protoc $(SERVICE).proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 生成 user-rpc 代码
 gen-user-rpc:
-	cd app/user/rpc && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+	cd app/user && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 生成 worker-rpc 代码
 gen-worker-rpc:
-	cd app/worker/rpc && goctl rpc protoc worker.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+	cd app/worker && goctl rpc protoc worker.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 生成 itsm-rpc 代码
 gen-itsm-rpc:
-	cd app/itsm/rpc && goctl rpc protoc itsm.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+	cd app/itsm && goctl rpc protoc itsm.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 创建新微服务 RPC 模块 (例如: make new-rpc SERVICE=order)
 new-rpc:
@@ -71,23 +71,23 @@ run-gateway:
 
 # 启动 user-rpc 服务 (gRPC 8080)
 run-user-rpc:
-	cd app/user/rpc && go run user.go -f etc/user.yaml
+	cd app/user && go run user.go -f etc/user.yaml
 
 # 启动 worker-rpc 异步任务微服务 (gRPC 8082，内置 Temporal Worker)
 run-worker-rpc:
-	cd app/worker/rpc && go run worker.go -f etc/worker.yaml
+	cd app/worker && go run worker.go -f etc/worker.yaml
 
 # 启动 itsm-rpc 服务 (gRPC 8084，BPMN 2.0 + SLA)
 run-itsm-rpc:
-	cd app/itsm/rpc && go run itsm.go -f etc/itsm.yaml
+	cd app/itsm && go run itsm.go -f etc/itsm.yaml
 
 # 启动 titan-rpc 服务 (gRPC 8086，Titan CI/CD 引擎)
 run-titan-rpc:
-	cd app/titan/rpc && go run titan.go -f etc/titan.yaml
+	cd app/titan && go run titan.go -f etc/titan.yaml
 
 # 生成 titan-rpc 代码
 gen-titan-rpc:
-	cd app/titan/rpc && goctl rpc protoc titan.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+	cd app/titan && goctl rpc protoc titan.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 启动前端管理后台 (Vite 3001)
 run-admin:
@@ -171,10 +171,10 @@ ai-index:
 
 # 构建全栈所有 Docker 镜像
 docker-build:
-	docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
-	docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
-	docker build -t go-zero-itsm-rpc:latest -f app/itsm/rpc/Dockerfile .
-	docker build -t go-zero-titan-rpc:latest -f app/titan/rpc/Dockerfile .
+	docker build -t go-zero-user-rpc:latest -f app/user/Dockerfile .
+	docker build -t go-zero-worker-rpc:latest -f app/worker/Dockerfile .
+	docker build -t go-zero-itsm-rpc:latest -f app/itsm/Dockerfile .
+	docker build -t go-zero-titan-rpc:latest -f app/titan/Dockerfile .
 	docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
 	docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 

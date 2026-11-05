@@ -11,13 +11,15 @@ RUN go env -w GOPROXY="https://goproxy.cn,direct" && go mod download
 
 # 复制全局库与网关相关代码
 COPY pkg/ pkg/
-COPY app/user/rpc/client/ app/user/rpc/client/
-COPY app/user/rpc/pb/ app/user/rpc/pb/
-COPY app/worker/rpc/client/ app/worker/rpc/client/
-COPY app/worker/rpc/pb/ app/worker/rpc/pb/
+COPY app/user/client/ app/user/client/
+COPY app/user/pb/ app/user/pb/
+COPY app/worker/client/ app/worker/client/
+COPY app/worker/pb/ app/worker/pb/
 COPY app/worker/contract/ app/worker/contract/
-COPY app/itsm/rpc/client/ app/itsm/rpc/client/
-COPY app/itsm/rpc/itsm/ app/itsm/rpc/itsm/
+COPY app/itsm/client/ app/itsm/client/
+COPY app/itsm/itsm/ app/itsm/itsm/
+COPY app/titan/client/ app/titan/client/
+COPY app/titan/titan/ app/titan/titan/
 COPY app/gateway/ app/gateway/
 
 # 静态交叉编译 Linux 二进制产物

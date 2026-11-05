@@ -8,7 +8,7 @@ gen-gateway:
 
 # 生成指定服务 RPC 代码 (例如: just gen-rpc user / just gen-rpc order)
 gen-rpc service="user":
-    cd app/{{service}}/rpc && goctl rpc protoc {{service}}.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+    cd app/{{service}} && goctl rpc protoc {{service}}.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 生成指定微服务 Model 持久层代码 (例如: just gen-model all / just gen-model user)
 [windows]
@@ -58,23 +58,23 @@ run-gateway:
 
 # 启动 user-rpc 服务 (gRPC 8080)
 run-user-rpc:
-    cd app/user/rpc && go run user.go -f etc/user.yaml
+    cd app/user && go run user.go -f etc/user.yaml
 
 # 启动 worker-rpc 异步任务微服务 (gRPC 8082，内置 Temporal Worker)
 run-worker-rpc:
-    cd app/worker/rpc && go run worker.go -f etc/worker.yaml
+    cd app/worker && go run worker.go -f etc/worker.yaml
 
 # 启动 itsm-rpc 工单引擎微服务 (gRPC 8084，BPMN 2.0 + SLA)
 run-itsm-rpc:
-    cd app/itsm/rpc && go run itsm.go -f etc/itsm.yaml
+    cd app/itsm && go run itsm.go -f etc/itsm.yaml
 
 # 启动 titan-rpc 研发交付微服务 (gRPC 8086，Titan CI/CD 引擎)
 run-titan-rpc:
-    cd app/titan/rpc && go run titan.go -f etc/titan.yaml
+    cd app/titan && go run titan.go -f etc/titan.yaml
 
 # 生成 titan-rpc 代码
 gen-titan-rpc:
-    cd app/titan/rpc && goctl rpc protoc titan.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
+    cd app/titan && goctl rpc protoc titan.proto --go_out=. --go-grpc_out=. --zrpc_out=. -m
 
 # 启动前端管理后台 (Vite 3001，默认本地 8888 网关)
 run-admin:
@@ -161,10 +161,10 @@ ai-index:
 
 # 构建全栈所有 Docker 镜像
 docker-build:
-    docker build -t go-zero-user-rpc:latest -f app/user/rpc/Dockerfile .
-    docker build -t go-zero-worker-rpc:latest -f app/worker/rpc/Dockerfile .
-    docker build -t go-zero-itsm-rpc:latest -f app/itsm/rpc/Dockerfile .
-    docker build -t go-zero-titan-rpc:latest -f app/titan/rpc/Dockerfile .
+    docker build -t go-zero-user-rpc:latest -f app/user/Dockerfile .
+    docker build -t go-zero-worker-rpc:latest -f app/worker/Dockerfile .
+    docker build -t go-zero-itsm-rpc:latest -f app/itsm/Dockerfile .
+    docker build -t go-zero-titan-rpc:latest -f app/titan/Dockerfile .
     docker build -t go-zero-gateway:latest -f app/gateway/Dockerfile .
     docker build -t go-zero-frontend:latest -f frontend/Dockerfile .
 

@@ -1,11 +1,11 @@
-package titan
+﻿package titan
 
 import (
 	"context"
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/app/titan/titan"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

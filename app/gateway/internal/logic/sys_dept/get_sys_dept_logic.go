@@ -1,11 +1,11 @@
-package sys_dept
+﻿package sys_dept
 
 import (
 	"context"
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	"go-zero-boilerplate/app/user/rpc/client/user"
+	"go-zero-boilerplate/app/user/client/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

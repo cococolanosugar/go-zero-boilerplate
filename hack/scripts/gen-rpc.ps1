@@ -3,7 +3,7 @@ param (
 )
 
 $protoFile = "$Service.proto"
-$rpcDir = "app/$Service/rpc"
+$rpcDir = "app/$Service"
 
 if (-not (Test-Path "$rpcDir/$protoFile")) {
     Write-Error "Proto file not found: $rpcDir/$protoFile"

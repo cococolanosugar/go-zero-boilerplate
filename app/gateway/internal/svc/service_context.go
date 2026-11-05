@@ -1,11 +1,11 @@
-package svc
+﻿package svc
 
 import (
 	"go-zero-boilerplate/app/gateway/internal/config"
-	itsmClient "go-zero-boilerplate/app/itsm/rpc/client/itsm"
-	titanClient "go-zero-boilerplate/app/titan/rpc/client/titan"
-	userClient "go-zero-boilerplate/app/user/rpc/client/user"
-	workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
+	itsmClient "go-zero-boilerplate/app/itsm/client/itsm"
+	titanClient "go-zero-boilerplate/app/titan/client/titan"
+	userClient "go-zero-boilerplate/app/user/client/user"
+	workerClient "go-zero-boilerplate/app/worker/client/worker"
 	"go-zero-boilerplate/pkg/session"
 	"go-zero-boilerplate/pkg/storage"
 

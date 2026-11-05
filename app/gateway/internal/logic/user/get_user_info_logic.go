@@ -1,4 +1,4 @@
-package user
+﻿package user
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	userClient "go-zero-boilerplate/app/user/rpc/client/user"
+	userClient "go-zero-boilerplate/app/user/client/user"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"

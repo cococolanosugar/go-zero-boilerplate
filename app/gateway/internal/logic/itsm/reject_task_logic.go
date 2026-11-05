@@ -1,11 +1,11 @@
-package itsm
+﻿package itsm
 
 import (
 	"context"
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	"go-zero-boilerplate/app/itsm/rpc/itsm"
+	"go-zero-boilerplate/app/itsm/itsm"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
