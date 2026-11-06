@@ -1559,6 +1559,66 @@
         ]
       }
     },
+    "/api/v1/system/auth/permissions": {
+      "get": {
+        "operationId": "systemGetPermissionTree",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "list": {
+                      "items": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "permissions": {
+                            "items": {
+                              "properties": {
+                                "code": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "code",
+                                "name"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "title",
+                          "permissions"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "获取系统全量功能权限树",
+        "tags": [
+          "system"
+        ]
+      }
+    },
     "/api/v1/system/dict/data": {
       "get": {
         "operationId": "dictListSysDictData",
@@ -9931,7 +9991,7 @@
       }
     }
   },
-  "x-date": "2026-09-19 23:12:01",
+  "x-date": "2026-11-06 21:50:49",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

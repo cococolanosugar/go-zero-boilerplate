@@ -10,6 +10,7 @@ import {
   Tree,
   Card,
   Spin,
+  Tabs,
 } from "antd";
 import {
   PlusOutlined,
@@ -50,6 +51,7 @@ export const RolesPage: React.FC = () => {
   const [currentRole, setCurrentRole] = useState<SysRoleItem | null>(null);
   const [treeLoading, setTreeLoading] = useState(false);
   const [menuTreeData, setMenuTreeData] = useState<any[]>([]);
+  const [codePermTreeData, setCodePermTreeData] = useState<any[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [assignLoading, setAssignLoading] = useState(false);
 
@@ -90,8 +92,33 @@ export const RolesPage: React.FC = () => {
     setTreeLoading(true);
 
     try {
-      const res = await systemMenusApi.getTree();
-      setMenuTreeData(formatTreeData(res.list || []));
+      const [menuRes, permRes] = await Promise.all([
+        systemMenusApi.getTree(),
+        systemMenusApi.getPermissionTree().catch(() => ({ list: [] })),
+      ]);
+      setMenuTreeData(formatTreeData(menuRes.list || []));
+
+      const formattedCodeTree = ((permRes as any).list || []).map((group: any) => ({
+        title: (
+          <Space>
+            <Tag color="blue">{group.key}</Tag>
+            <span style={{ fontWeight: 500 }}>{group.title}</span>
+          </Space>
+        ),
+        key: `group_${group.key}`,
+        children: (group.permissions || []).map((p: any) => ({
+          title: (
+            <Space>
+              <span>{p.name}</span>
+              <Tag color="cyan" style={{ fontSize: 11 }}>
+                {p.code}
+              </Tag>
+            </Space>
+          ),
+          key: p.code,
+        })),
+      }));
+      setCodePermTreeData(formattedCodeTree);
     } finally {
       setTreeLoading(false);
     }
@@ -412,18 +439,49 @@ export const RolesPage: React.FC = () => {
             <Spin description="正在加载权限树..." />
           </div>
         ) : (
-          <Tree
-            checkable
-            defaultExpandAll
-            checkedKeys={checkedKeys}
-            onCheck={(keys) => {
-              if (Array.isArray(keys)) {
-                setCheckedKeys(keys);
-              } else {
-                setCheckedKeys(keys.checked);
-              }
-            }}
-            treeData={menuTreeData}
+          <Tabs
+            defaultActiveKey="menu"
+            items={[
+              {
+                key: "menu",
+                label: "菜单与导航权限",
+                children: (
+                  <Tree
+                    checkable
+                    defaultExpandAll
+                    checkedKeys={checkedKeys}
+                    onCheck={(keys) => {
+                      if (Array.isArray(keys)) {
+                        setCheckedKeys(keys);
+                      } else {
+                        setCheckedKeys(keys.checked);
+                      }
+                    }}
+                    treeData={menuTreeData}
+                  />
+                ),
+              },
+              {
+                key: "code",
+                label: `代码驱动权限点 (${codePermTreeData.reduce((acc, g) => acc + (g.children?.length || 0), 0)})`,
+                children: (
+                  <>
+                    <Card
+                      variant="borderless"
+                      style={{ background: "#f0f5ff", marginBottom: 12 }}
+                    >
+                      <div style={{ fontSize: 12, color: "#1d39c4" }}>
+                        以下权限点由后端 Go 常量自注册驱动（GET /api/v1/system/auth/permissions），与前端代码 100% 强类型同构。
+                      </div>
+                    </Card>
+                    <Tree
+                      defaultExpandAll
+                      treeData={codePermTreeData}
+                    />
+                  </>
+                ),
+              },
+            ]}
           />
         )}
       </Drawer>

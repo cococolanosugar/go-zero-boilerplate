@@ -626,6 +626,10 @@ export interface GetMyNoticeFeedResp {
 	list: Array<NoticeFeedItem>
 }
 
+export interface GetPermissionTreeResp {
+	list: Array<PermissionGroup>
+}
+
 export interface GetPipelineReqVO {
 }
 export interface GetPipelineReqVOParams {
@@ -1129,6 +1133,17 @@ export interface OnlineSessionItem {
 	os: string
 	loginTime: string
 	isCurrent: boolean
+}
+
+export interface PermissionGroup {
+	key: string
+	title: string
+	permissions: Array<PermissionItem>
+}
+
+export interface PermissionItem {
+	code: string
+	name: string
 }
 
 export interface PipelineVO {

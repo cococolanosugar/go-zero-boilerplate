@@ -4,7 +4,7 @@ default:
 
 # 生成网关 API 代码
 gen-gateway:
-    goctl api go -api app/gateway/desc/gateway.api -dir app/gateway -style go_zero --type-group
+    goctl api go -api app/gateway/desc/gateway.api -dir app/gateway -style go_zero --type-group --home hack/template
 
 # 生成指定服务 RPC 代码 (例如: just gen-rpc user / just gen-rpc order)
 gen-rpc service="user":

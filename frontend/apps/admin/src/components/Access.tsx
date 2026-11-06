@@ -7,6 +7,10 @@ export interface AccessProps {
   accessible?: boolean;
   /** 单个权限标识或权限标识列表，如 'system:user:add' */
   permission?: string | string[];
+  /** 必须全部满足的复合权限标识列表 (AND) */
+  all?: string[];
+  /** 满足任一即可的复合权限标识列表 (OR) */
+  any?: string[];
   /** 单个角色标识或角色标识列表，如 'ROLE_ADMIN' */
   role?: string | string[];
   /** 多权限或多角色匹配模式：one (满足其一即可，默认) | all (必须全部满足) */
@@ -22,11 +26,13 @@ export interface AccessProps {
 
 /**
  * 细粒度声明式权限控制组件（对标 Ant Design Pro Access 规范）
- * 支持依据权限码、角色标识或动态布尔值控制子组件渲染与优雅降级
+ * 支持依据权限码、复合多权限 (AND/OR)、角色标识或动态布尔值控制子组件渲染与优雅降级
  */
 export const Access: React.FC<AccessProps> = ({
   accessible,
   permission,
+  all,
+  any,
   role,
   mode = "one",
   fallbackMode = "hide",
@@ -34,7 +40,7 @@ export const Access: React.FC<AccessProps> = ({
   fallback = null,
   children,
 }) => {
-  const { hasPermission, hasRole } = useAccess();
+  const { hasPermission, hasAll, hasAny, hasRole } = useAccess();
 
   let isAllowed = true;
 
@@ -43,6 +49,12 @@ export const Access: React.FC<AccessProps> = ({
   } else {
     if (permission) {
       isAllowed = isAllowed && hasPermission(permission, mode);
+    }
+    if (all && all.length > 0) {
+      isAllowed = isAllowed && hasAll(...all);
+    }
+    if (any && any.length > 0) {
+      isAllowed = isAllowed && hasAny(...any);
     }
     if (role) {
       isAllowed = isAllowed && hasRole(role, mode);

@@ -4,6 +4,8 @@ import { getAccess, type AccessResult } from "../access";
 
 export interface UseAccessResult extends AccessResult {
   hasPermission: (perm: string | string[], mode?: "all" | "one") => boolean;
+  hasAll: (...perms: string[]) => boolean;
+  hasAny: (...perms: string[]) => boolean;
   hasRole: (role: string | string[], mode?: "all" | "one") => boolean;
   isSuperAdmin: boolean;
   roles: string[];
@@ -45,6 +47,20 @@ export function useAccess(): UseAccessResult {
     [isSuperAdmin, permissions]
   );
 
+  const hasAll = useCallback(
+    (...perms: string[]): boolean => {
+      return hasPermission(perms, "all");
+    },
+    [hasPermission]
+  );
+
+  const hasAny = useCallback(
+    (...perms: string[]): boolean => {
+      return hasPermission(perms, "one");
+    },
+    [hasPermission]
+  );
+
   const hasRole = useCallback(
     (role: string | string[], mode: "all" | "one" = "one"): boolean => {
       if (isSuperAdmin) return true;
@@ -64,6 +80,8 @@ export function useAccess(): UseAccessResult {
   return {
     ...access,
     hasPermission,
+    hasAll,
+    hasAny,
     hasRole,
     isSuperAdmin,
     roles,

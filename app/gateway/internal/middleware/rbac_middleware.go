@@ -1,6 +1,7 @@
-﻿package middleware
+package middleware
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strings"
@@ -28,6 +29,11 @@ func (m *RbacMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		path := r.URL.Path
+
+		// 上下文注入路由与方法，供下游 Check 兜底校验
+		reqCtx := context.WithValue(r.Context(), "requestPath", path)
+		reqCtx = context.WithValue(reqCtx, "requestMethod", r.Method)
+		r = r.WithContext(reqCtx)
 
 		// 2. 检查是否为无需鉴权的公开接口
 		if isPublicRoute(path) {

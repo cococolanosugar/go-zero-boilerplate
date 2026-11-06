@@ -1,7 +1,8 @@
-﻿package svc
+package svc
 
 import (
 	"go-zero-boilerplate/app/gateway/internal/config"
+	"go-zero-boilerplate/app/gateway/internal/perm"
 	itsmClient "go-zero-boilerplate/app/itsm/client/itsm"
 	titanClient "go-zero-boilerplate/app/titan/client/titan"
 	userClient "go-zero-boilerplate/app/user/client/user"
@@ -23,6 +24,7 @@ type ServiceContext struct {
 	RedisClient      *redis.Redis
 	SessionMgr       *session.Manager
 	OpenApiSpecBytes []byte
+	RbacService      *perm.RbacService
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -33,15 +35,18 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	redisClient := redis.MustNewRedis(c.Redis)
 	sessionMgr := session.NewManager(redisClient)
+	userRpc := userClient.NewUser(zrpc.MustNewClient(c.UserRpc))
+	rbacService := perm.NewRbacService(userRpc, redisClient)
 
 	return &ServiceContext{
 		Config:      c,
-		UserRpc:     userClient.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		UserRpc:     userRpc,
 		WorkerRpc:   workerClient.NewWorker(zrpc.MustNewClient(c.WorkerRpc)),
 		ItsmRpc:     itsmClient.NewItsm(zrpc.MustNewClient(c.ItsmRpc)),
 		TitanRpc:    titanClient.NewTitan(zrpc.MustNewClient(c.TitanRpc)),
 		Storage:     storageDriver,
 		RedisClient: redisClient,
 		SessionMgr:  sessionMgr,
+		RbacService: rbacService,
 	}
 }

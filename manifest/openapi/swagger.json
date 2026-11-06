@@ -1557,6 +1557,65 @@
         }
       }
     },
+    "/api/v1/system/auth/permissions": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "获取系统全量功能权限树",
+        "operationId": "systemGetPermissionTree",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "key",
+                      "title",
+                      "permissions"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "permissions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "code",
+                            "name"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/system/dict/data": {
       "get": {
         "produces": [
@@ -9795,7 +9854,7 @@
       }
     }
   },
-  "x-date": "2026-09-19 23:12:01",
+  "x-date": "2026-11-06 21:50:49",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

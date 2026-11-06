@@ -78,6 +78,10 @@ type ForceLogoutReq struct {
 	SessionId string `path:"sessionId"`
 }
 
+type GetPermissionTreeResp struct {
+	List []*PermissionGroup `json:"list"`
+}
+
 type GetSysMenuTreeResp struct {
 	List []*SysMenuItem `json:"list"`
 }

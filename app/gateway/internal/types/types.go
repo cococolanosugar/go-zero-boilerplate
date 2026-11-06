@@ -155,6 +155,17 @@ type OnlineSessionItem struct {
 	IsCurrent     bool   `json:"isCurrent"`
 }
 
+type PermissionGroup struct {
+	Key         string            `json:"key"`
+	Title       string            `json:"title"`
+	Permissions []*PermissionItem `json:"permissions"`
+}
+
+type PermissionItem struct {
+	Code string `json:"code"`
+	Name string `json:"name"`
+}
+
 type ReleaseOrderVO struct {
 	Id                int64  `json:"id"`
 	OrderNo           string `json:"orderNo"`

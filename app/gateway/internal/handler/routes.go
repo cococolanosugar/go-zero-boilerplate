@@ -411,6 +411,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: system.ListSysApisHandler(serverCtx),
 			},
 			{
+				// 获取系统全量功能权限树
+				Method:  http.MethodGet,
+				Path:    "/auth/permissions",
+				Handler: system.GetPermissionTreeHandler(serverCtx),
+			},
+			{
 				// 通用文件上传
 				Method:  http.MethodPost,
 				Path:    "/file/upload",
