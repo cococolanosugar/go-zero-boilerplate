@@ -1,12 +1,12 @@
-package itsm
+﻿package itsm
 
 import (
 	"context"
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	"go-zero-boilerplate/app/itsm/rpc/itsm"
-	workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
+	"go-zero-boilerplate/app/itsm/itsm"
+	workerClient "go-zero-boilerplate/app/worker/client/worker"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

@@ -12,6 +12,7 @@ import {
   LineChartOutlined,
   CustomerServiceOutlined,
   DeploymentUnitOutlined,
+  ReadOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard, StatisticCard } from "@ant-design/pro-components";
 import { useOutletContext, useNavigate } from "react-router-dom";
@@ -116,6 +117,29 @@ export const HomePage: React.FC = () => {
                 {formatMessage({
                   id: "menu.desk",
                   defaultMessage: "IT 自助服务台",
+                })}
+              </Button>
+              <Button
+                size="large"
+                shape="round"
+                icon={<ApiOutlined />}
+                onClick={() => navigate("/api-hub")}
+              >
+                {formatMessage({
+                  id: "menu.apiHub",
+                  defaultMessage: "API 契约集市",
+                })}
+              </Button>
+              <Button
+                size="large"
+                shape="round"
+                icon={<ReadOutlined />}
+                onClick={() => navigate("/docs")}
+                style={{ background: "#2f54eb", borderColor: "#2f54eb", color: "#fff" }}
+              >
+                {formatMessage({
+                  id: "menu.docs",
+                  defaultMessage: "技术文档",
                 })}
               </Button>
               {!isLoggedIn && (

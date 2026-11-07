@@ -98,39 +98,66 @@ type (
 	jwt:    Auth
 )
 service gateway {
-	@doc "获取字典类型列表"
+	@doc (
+		summary:    "获取字典类型列表"
+		permission: "DictTypeList"
+	)
 	@handler ListSysDictTypes
 	get /types (ListSysDictTypesReq) returns (ListSysDictTypesResp)
 
-	@doc "创建字典类型"
+	@doc (
+		summary:    "创建字典类型"
+		permission: "DictTypeCreate"
+	)
 	@handler CreateSysDictType
 	post /types (CreateSysDictTypeReq) returns (SysIdResp)
 
-	@doc "更新字典类型"
+	@doc (
+		summary:    "更新字典类型"
+		permission: "DictTypeUpdate"
+	)
 	@handler UpdateSysDictType
 	put /types (UpdateSysDictTypeReq) returns (SysEmptyResp)
 
-	@doc "删除字典类型"
+	@doc (
+		summary:    "删除字典类型"
+		permission: "DictTypeDelete"
+	)
 	@handler DeleteSysDictType
 	delete /types/:id (SysIdReq) returns (SysEmptyResp)
 
-	@doc "获取字典数据项列表"
+	@doc (
+		summary:    "获取字典数据项列表"
+		permission: "DictDataList"
+	)
 	@handler ListSysDictData
 	get /data (ListSysDictDataReq) returns (ListSysDictDataResp)
 
-	@doc "创建字典数据项"
+	@doc (
+		summary:    "创建字典数据项"
+		permission: "DictDataCreate"
+	)
 	@handler CreateSysDictData
 	post /data (CreateSysDictDataReq) returns (SysIdResp)
 
-	@doc "更新字典数据项"
+	@doc (
+		summary:    "更新字典数据项"
+		permission: "DictDataUpdate"
+	)
 	@handler UpdateSysDictData
 	put /data (UpdateSysDictDataReq) returns (SysEmptyResp)
 
-	@doc "删除字典数据项"
+	@doc (
+		summary:    "删除字典数据项"
+		permission: "DictDataDelete"
+	)
 	@handler DeleteSysDictData
 	delete /data/:id (SysIdReq) returns (SysEmptyResp)
 
-	@doc "根据字典类型查询数据项列表"
+	@doc (
+		summary:    "根据字典类型查询数据项列表"
+		permission: "PublicAuthenticated"
+	)
 	@handler GetDictDataByType
 	get /data/type/:dictType (GetDictDataByTypeReq) returns (GetDictDataByTypeResp)
 }

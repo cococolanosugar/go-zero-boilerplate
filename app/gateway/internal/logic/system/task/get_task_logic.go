@@ -1,11 +1,11 @@
-package task
+﻿package task
 
 import (
 	"context"
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
+	workerClient "go-zero-boilerplate/app/worker/client/worker"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

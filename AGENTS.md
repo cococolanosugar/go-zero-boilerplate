@@ -32,40 +32,37 @@ go-zero-boilerplate/
 │   │   └── gateway.go             # 网关启动 main 入口
 │   │
 │   ├── user/                      # 【用户微服务】纯 gRPC (端口 8080)
-│   │   ├── rpc/
-│   │   │   ├── client/user/       # 供网关调用的 RPC Client
-│   │   │   ├── etc/user.yaml
-│   │   │   ├── internal/
-│   │   │   ├── pb/ & user.proto
-│   │   │   └── user.go
-│   │   └── model/
+│   │   ├── client/user/           # 供网关调用的 RPC Client
+│   │   ├── etc/user.yaml
+│   │   ├── internal/              # logic, server, svc, config
+│   │   ├── model/                 # 18+ 张数据表持久层
+│   │   ├── pb/ & user.proto       # IDL 契约与生成的桩代码
+│   │   └── user.go                # 用户微服务启动 main 入口
 │   │
 │   ├── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
+│   │   ├── client/worker/         # 供网关调用的 RPC Client
 │   │   ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
-│   │   └── rpc/
-│   │       ├── client/worker/     # 供网关调用的 RPC Client
-│   │       ├── etc/worker.yaml
-│   │       ├── internal/          # activities, workflows, config, logic, server, svc
-│   │       ├── pb/ & worker.proto
-│   │       └── worker.go          # Worker RPC + Temporal 统一启动入口
+│   │   ├── etc/worker.yaml
+│   │   ├── internal/              # activities, workflows, config, logic, server, svc
+│   │   ├── model/                 # 异步任务持久层
+│   │   ├── pb/ & worker.proto     # IDL 契约与生成的桩代码
+│   │   └── worker.go              # Worker RPC + Temporal 统一启动入口
 │   │
 │   ├── itsm/                      # 【ITSM 流程微服务】纯 gRPC (端口 8084，BPMN 2.0 + SLA 策略中心)
-│   │   ├── rpc/
-│   │   │   ├── client/itsm/       # 供网关调用的 RPC Client
-│   │   │   ├── etc/itsm.yaml
-│   │   │   ├── internal/          # engine (BPMN 2.0 解析), config, logic, server, svc
-│   │   │   ├── pb/ & itsm.proto
-│   │   │   └── itsm.go            # ITSM RPC 统一启动入口
-│   │   └── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
+│   │   ├── client/itsm/           # 供网关调用的 RPC Client
+│   │   ├── etc/itsm.yaml
+│   │   ├── internal/              # engine (BPMN 2.0 解析), config, logic, server, svc
+│   │   ├── itsm/ & itsm.proto     # IDL 契约与生成的桩代码
+│   │   ├── model/                 # ITSM 6 张数据表持久层 (process_def, inst, task, log, data, sla)
+│   │   └── itsm.go                # ITSM RPC 统一启动入口
 │   │
 │   └── titan/                     # 【Titan 交付微服务】纯 gRPC (端口 8086，Titan CI/CD 引擎、K8s & Helm 编排)
-│       ├── rpc/
-│       │   ├── client/titan/      # 供网关调用的 RPC Client
-│       │   ├── etc/titan.yaml
-│       │   ├── internal/          # jenkins, k8s, config, logic, server, svc
-│       │   ├── pb/ & titan.proto
-│       │   └── titan.go           # Titan RPC 统一启动入口
-│       └── model/                 # Titan 5 张数据表持久层 (integration, cluster, pipeline, pipeline_exec, step_exec)
+│       ├── client/titan/          # 供网关调用的 RPC Client
+│       ├── etc/titan.yaml
+│       ├── internal/              # jenkins, k8s, config, logic, server, svc
+│       ├── model/                 # Titan 10 张数据表持久层
+│       ├── titan/ & titan.proto   # IDL 契约与生成的桩代码
+│       └── titan.go               # Titan RPC 统一启动入口
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -118,7 +115,7 @@ go-zero-boilerplate/
   3. 执行 `just gen-gateway` 生成后端网关桩代码。
   4. 执行 `just gen-ts` **自动生成前端 `@zero/api` SDK**，前端即可直接享用强类型的调用函数。
 * **新增/修改微服务 RPC 接口**：
-  1. 在 `app/<service>/rpc/<service>.proto` 中增删 RPC 方法。
+  1. 在 `app/<service>/<service>.proto` 中增删 RPC 方法。
   2. 执行 `just gen-rpc <service>`。
 
 ### 3.4 后端业务 Logic 与持久层 Model 编码深度规范 (基于 ai-context & zero-skills)
@@ -330,7 +327,7 @@ go-zero-boilerplate/
   * **原生 YAML 模板与动态 Apply (`internal/k8s/cluster.go` & `template.go`)**：基于 `text/template` 动态渲染变量占位符，通过 client-go dynamic client 进行 Dry-run 预校验与 Server-Side Apply（`FieldManager = "titan-devops"`），并深度探测 Pod / Deployment 就绪探针状态。
 * **Jenkins 委托调度与实时增量日志流 (`internal/jenkins`)**：
   * 支持对已有 Jenkins 存量资产的无缝兼容：CrumbIssuer 认证、携带动态参数触发 Job、Queue 队列等待转 Build 编号、轮询构建状态与基于 Byte Offset 的 Progressive 控制台增量日志流拉取。
-* **Temporal 分布式流水线 DAG 与人工质量门禁 (`app/worker/rpc/internal/workflows`)**：
+* **Temporal 分布式流水线 DAG 与人工质量门禁 (`app/worker/internal/workflows`)**：
   * 流水线编排基于 `TitanPipelineWorkflow` 驱动，顺序拓扑调度 Stage 与 Step，遇到 `APPROVAL` 门禁节点时通过 Temporal Signal 信号挂起等待（支持超时自动驳回与快速审批），保障生产发布质量防线。
 * **前端可视化管理与控制台 (`apps/admin`)**：
   * `/titan/clusters`：Kubernetes 多集群纳管、健康心跳探测与命名空间动态浏览抽屉。

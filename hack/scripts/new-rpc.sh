@@ -10,11 +10,10 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 TARGET_DIR="${ROOT}/app/${SERVICE}"
-RPC_DIR="${TARGET_DIR}/rpc"
 TEMPLATE_DIR="${ROOT}/hack/template"
 
-if [ -d "${RPC_DIR}" ]; then
-    echo "Error: RPC service already exists at ${RPC_DIR}"
+if [ -f "${TARGET_DIR}/${SERVICE}.go" ] || [ -f "${TARGET_DIR}/${SERVICE}.proto" ]; then
+    echo "Error: Service already exists at ${TARGET_DIR}"
     exit 1
 fi
 
@@ -27,7 +26,7 @@ fi
 # 确保 app/${SERVICE} 目录存在
 mkdir -p "${TARGET_DIR}"
 
-echo "Creating new RPC service '${SERVICE}' in app/${SERVICE}..."
+echo "Creating new microservice '${SERVICE}' in app/${SERVICE}..."
 cd "${TARGET_DIR}"
 
 # 进入 app/${SERVICE} 执行 goctl rpc new
@@ -39,10 +38,11 @@ if [ ! -d "${GENERATED_DIR}" ]; then
     exit 1
 fi
 
-# 将生成目录重命名为 rpc
-mv "${GENERATED_DIR}" "${RPC_DIR}"
+# 将生成的文件扁平化移至 app/${SERVICE}
+cp -r "${GENERATED_DIR}/"* "${TARGET_DIR}/"
+rm -rf "${GENERATED_DIR}"
 
-# 自动修正 goctl 相对生成导入路径: app/${SERVICE}/${SERVICE} -> app/${SERVICE}/rpc
+# 自动修正 goctl 相对生成导入路径: app/${SERVICE}/${SERVICE} -> app/${SERVICE}
 if command -v node >/dev/null 2>&1; then
     node -e "
     const fs = require('fs');
@@ -54,13 +54,13 @@ if command -v node >/dev/null 2>&1; then
             else if (file.name.endsWith('.go')) {
                 const c = fs.readFileSync(full, 'utf8');
                 if (c.includes('app/${SERVICE}/${SERVICE}')) {
-                    fs.writeFileSync(full, c.split('app/${SERVICE}/${SERVICE}').join('app/${SERVICE}/rpc'), 'utf8');
+                    fs.writeFileSync(full, c.split('app/${SERVICE}/${SERVICE}').join('app/${SERVICE}'), 'utf8');
                 }
             }
         }
     }
-    walk('rpc');
+    walk('${TARGET_DIR}');
     "
 fi
 
-echo "Done! RPC service '${SERVICE}' created successfully at app/${SERVICE}/rpc"
+echo "Done! Microservice '${SERVICE}' created successfully at app/${SERVICE}"

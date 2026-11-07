@@ -1,231 +1,336 @@
-import React from "react";
-import { Typography, Row, Col, Tag, Space, Collapse } from "antd";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
-  SafetyCertificateOutlined,
-  ApiOutlined,
+  Row,
+  Col,
+  Card,
+  Typography,
+  Tag,
+  Space,
+  Button,
+  theme,
+  Badge,
+  Spin,
+  Alert,
+  Tooltip,
+} from "antd";
+import {
   ClusterOutlined,
+  ApiOutlined,
   CloudServerOutlined,
-  DatabaseOutlined,
-  ToolOutlined,
   AuditOutlined,
   DeploymentUnitOutlined,
+  ReloadOutlined,
+  CheckCircleOutlined,
+  ArrowRightOutlined,
+  ThunderboltOutlined,
+  PartitionOutlined,
 } from "@ant-design/icons";
-import { PageContainer, ProCard } from "@ant-design/pro-components";
-import { useIntl } from "../../contexts/LocaleContext";
+import { PageContainer, StatisticCard } from "@ant-design/pro-components";
+import { useNavigate } from "react-router-dom";
+import {
+  MICROSERVICES_CATALOG,
+  INFRA_CATALOG,
+  ServiceItemVO,
+} from "./components/catalogData";
+import {
+  probeAllServicesHealth,
+  ServiceHealthVO,
+} from "./components/probes";
+import { TopologyGraph } from "./components/TopologyGraph";
+import { ServiceDetailDrawer } from "./components/ServiceDetailDrawer";
+import { InfraCatalog } from "./components/InfraCatalog";
 
-const { Paragraph, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 export const ServicesPage: React.FC = () => {
-  const { formatMessage } = useIntl();
+  const { token } = theme.useToken();
+  const navigate = useNavigate();
 
-  const serviceDetails = [
-    {
-      title: formatMessage({
-        id: "services.item.gateway.title",
-        defaultMessage: "统一网关 BFF (Gateway)",
-      }),
-      icon: <ApiOutlined style={{ fontSize: 24, color: "#722ed1" }} />,
-      desc: formatMessage({
-        id: "services.item.gateway.desc",
-        defaultMessage:
-          "作为大仓唯一对外暴露的 HTTP 流量入口（端口 8888），承载统一路由、JWT Auth 身份解析、参数校验、跨微服务数据聚合与统一响应封装。",
-      }),
-      tags: ["HTTP 8888", "RESTful", "JWT Auth", "mr.Finish 聚合"],
-    },
-    {
-      title: formatMessage({
-        id: "services.item.user.title",
-        defaultMessage: "用户中心微服务 (User RPC)",
-      }),
-      icon: <ClusterOutlined style={{ fontSize: 24, color: "#1677ff" }} />,
-      desc: formatMessage({
-        id: "services.item.user.desc",
-        defaultMessage:
-          "纯 gRPC 业务微服务（端口 8080），承载企业员工账号、角色管理、组织架构部门树、动态菜单树与按钮权限下发，以及角色权限一石二鸟事务闭环。",
-      }),
-      tags: ["gRPC 8080", "RBAC 权限树", "Bcrypt 加密", "事务原子同步"],
-    },
-    {
-      title: formatMessage({
-        id: "services.item.worker.title",
-        defaultMessage: "异步任务调度微服务 (Worker RPC)",
-      }),
-      icon: <CloudServerOutlined style={{ fontSize: 24, color: "#52c41a" }} />,
-      desc: formatMessage({
-        id: "services.item.worker.desc",
-        defaultMessage:
-          "纯 gRPC 异步任务微服务（端口 8082），集成 Temporal 分布式任务引擎，承载多步骤长耗时工作流、定时调度（Cron Schedule）与状态追踪闭环。",
-      }),
-      tags: ["gRPC 8082", "Temporal 引擎", "分布式工作流", "定时任务"],
-    },
-    {
-      title: "ITSM 流程与服务引擎 (ITSM RPC)",
-      icon: <AuditOutlined style={{ fontSize: 24, color: "#fa8c16" }} />,
-      desc: "纯 gRPC 流程与服务管理微服务（端口 8084），内置 BPMN 2.0 工业级流程引擎、多节点流转状态机与 Temporal 分布式 SLA 履约超时监控。",
-      tags: ["gRPC 8084", "BPMN 2.0 引擎", "Temporal SLA", "动态表单"],
-    },
-    {
-      title: "Titan 研发交付微服务 (Titan RPC)",
-      icon: <DeploymentUnitOutlined style={{ fontSize: 24, color: "#722ed1" }} />,
-      desc: "纯 gRPC 交付微服务（端口 8086），承载云原生流水线编排、Kubernetes Helm/YAML SSA 自动化发布、Jenkins 调度与多集群纳管。",
-      tags: ["gRPC 8086", "CI/CD 交付", "K8s & Helm", "Jenkins 集成", "AES-GCM 加密"],
-    },
-    {
-      title: formatMessage({
-        id: "services.item.model.title",
-        defaultMessage: "持久层与强一致缓存 (Model & Redis)",
-      }),
-      icon: <DatabaseOutlined style={{ fontSize: 24, color: "#fa8c16" }} />,
-      desc: formatMessage({
-        id: "services.item.model.desc",
-        defaultMessage:
-          "由 goctl model 从 MySQL DDL 逆向生成的带 Cache-Aside 机制 Go Model。单条记录走 Redis 缓存，更新与删除精准淘汰，多表变更严格由 TransactCtx 事务保证原子性。",
-      }),
-      tags: ["MySQL 8.0", "Redis 缓存", "Cache-Aside", "TransactCtx"],
-    },
-    {
-      title: formatMessage({
-        id: "services.item.nacos.title",
-        defaultMessage: "服务注册与发现 (Nacos / Etcd)",
-      }),
-      icon: <SafetyCertificateOutlined style={{ fontSize: 24, color: "#eb2f96" }} />,
-      desc: formatMessage({
-        id: "services.item.nacos.desc",
-        defaultMessage:
-          "原生支持 Nacos（默认）、Etcd 以及本地直连（Endpoints）三种寻址与治理模式，零代码改动，通过 YAML 配置文件一键无缝切换。",
-      }),
-      tags: ["Nacos 2.x", "Etcd 3.5", "平滑寻址", "零代码切换"],
-    },
-    {
-      title: formatMessage({
-        id: "services.item.toolchain.title",
-        defaultMessage: "现代化工具链与规范 (Toolchain)",
-      }),
-      icon: <ToolOutlined style={{ fontSize: 24, color: "#13c2c2" }} />,
-      desc: formatMessage({
-        id: "services.item.toolchain.desc",
-        defaultMessage:
-          "由 mise 统一锁定 Go、Node、pnpm、goctl、protoc、just、antd-cli 版本；搭配 antd lint 静态诊断与代码知识图谱引擎，保障工程持续高可靠。",
-      }),
-      tags: ["mise", "justfile", "antd-cli", "pnpm workspace"],
-    },
-  ];
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [healthMap, setHealthMap] = useState<Record<string, ServiceHealthVO>>({});
+  const [probing, setProbing] = useState(false);
+
+  // 批量触发服务探针
+  const handleProbe = useCallback(async () => {
+    setProbing(true);
+    try {
+      const allIds = [
+        ...MICROSERVICES_CATALOG.map((s) => s.id),
+        ...INFRA_CATALOG.map((i) => i.id),
+      ];
+      const res = await probeAllServicesHealth(allIds);
+      setHealthMap(res);
+    } finally {
+      setProbing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    handleProbe();
+  }, [handleProbe]);
+
+  // 当前选中的微服务对象
+  const selectedService = useMemo(() => {
+    if (!selectedServiceId) return null;
+    return MICROSERVICES_CATALOG.find((s) => s.id === selectedServiceId) || null;
+  }, [selectedServiceId]);
+
+  // 处理拓扑图节点点击
+  const handleSelectNode = (nodeId: string) => {
+    const isService = MICROSERVICES_CATALOG.some((s) => s.id === nodeId);
+    if (isService) {
+      setSelectedServiceId(nodeId);
+      setDrawerOpen(true);
+    } else {
+      setSelectedServiceId(nodeId);
+    }
+  };
+
+  // 跳转至 API Hub 调试
+  const handleJumpToApiHub = (tagKey: string) => {
+    navigate("/api-hub");
+  };
+
+  // 统计健康服务数
+  const healthyCount = useMemo(() => {
+    const services = MICROSERVICES_CATALOG;
+    return services.filter((s) => {
+      const h = healthMap[s.id];
+      return h ? h.status === "healthy" : true;
+    }).length;
+  }, [healthMap]);
 
   return (
     <PageContainer
       header={{
-        title: formatMessage({
-          id: "services.page.title",
-          defaultMessage: "微服务集群与技术治理体系",
-        }),
-        subTitle: formatMessage({
-          id: "services.page.desc",
-          defaultMessage:
-            "探索 go-zero-boilerplate 的内部微服务编排、服务注册寻址、数据一致性保障与企业级规范防护。",
-        }),
+        title: "微服务软件目录与全景拓扑 (Service Catalog & Topology)",
+        subTitle: "全栈 Monorepo 微服务资产目录、三层架构调用依赖拓扑与实时健康探针监控",
+        extra: [
+          <Button
+            key="probe"
+            icon={<ReloadOutlined spin={probing} />}
+            onClick={handleProbe}
+            loading={probing}
+          >
+            刷新健康探针
+          </Button>,
+          <Button
+            key="apihub"
+            type="primary"
+            icon={<ThunderboltOutlined />}
+            onClick={() => navigate("/api-hub")}
+          >
+            前往 API 契约集市
+          </Button>,
+        ],
       }}
     >
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <Row gutter={[20, 20]} style={{ marginBottom: 32 }}>
-          {serviceDetails.map((s, idx) => (
-            <Col xs={24} md={12} key={idx}>
-              <ProCard
-                title={
-                  <Space>
-                    {s.icon}
-                    <span style={{ fontWeight: 600 }}>{s.title}</span>
-                  </Space>
-                }
-                headerBordered
-                style={{ height: "100%" }}
-              >
-                <Paragraph style={{ minHeight: 48, color: "#595959" }}>{s.desc}</Paragraph>
-                <Space wrap size={[4, 8]}>
-                  {s.tags.map((t, i) => (
-                    <Tag key={i} color="purple">
-                      {t}
-                    </Tag>
-                  ))}
-                </Space>
-              </ProCard>
-            </Col>
-          ))}
-        </Row>
-
-        <ProCard
-          title={formatMessage({
-            id: "services.faq.title",
-            defaultMessage: "深度架构规范问答 (Architecture FAQ)",
-          })}
-          headerBordered
-        >
-          <Collapse
-            ghost
-            defaultActiveKey={["1", "2"]}
-            items={[
-              {
-                key: "1",
-                label: (
-                  <Text strong>
-                    {formatMessage({
-                      id: "services.faq.q1.title",
-                      defaultMessage: "为什么网关 Logic 严禁直连持久层数据库？",
-                    })}
-                  </Text>
-                ),
-                children: (
-                  <Paragraph type="secondary">
-                    {formatMessage({
-                      id: "services.faq.q1.desc",
-                      defaultMessage:
-                        "网关作为 BFF（Backend For Frontend）层，核心职责是路由分发、参数校验、JWT 鉴权与跨微服务调用编排（mr.Finish）。直接持有数据库连接会破坏微服务领域边界，导致业务逻辑与持久层严重耦合，无法独立伸缩与治理。",
-                    })}
-                  </Paragraph>
-                ),
-              },
-              {
-                key: "2",
-                label: (
-                  <Text strong>
-                    {formatMessage({
-                      id: "services.faq.q2.title",
-                      defaultMessage: "角色分配权限时，如何做到页面按钮与底层 API 的一石二鸟事务联动？",
-                    })}
-                  </Text>
-                ),
-                children: (
-                  <Paragraph type="secondary">
-                    {formatMessage({
-                      id: "services.faq.q2.desc",
-                      defaultMessage:
-                        "在用户微服务中，我们维护了 sys_menu_api 字典。当管理员在界面上为角色勾选菜单与按钮权限点时，后端在原子事务中写入 sys_role_menu 的同时，自动反查已勾选节点绑定的底层 API 资源，级联写入 sys_role_api，避免了前后端权限双重配置的不一致风险。",
-                    })}
-                  </Paragraph>
-                ),
-              },
-              {
-                key: "3",
-                label: (
-                  <Text strong>
-                    {formatMessage({
-                      id: "services.faq.q3.title",
-                      defaultMessage: "前端如何实现毫秒级强类型调用微服务？",
-                    })}
-                  </Text>
-                ),
-                children: (
-                  <Paragraph type="secondary">
-                    {formatMessage({
-                      id: "services.faq.q3.desc",
-                      defaultMessage:
-                        "通过执行 just gen-ts，goctl 会解析网关的 .api 契约，自动在 @zero/api 共享包中输出完整的 TypeScript 请求函数与参数定义。前端应用引入后即可享有 IDE 的自动补全与类型检查，免去手写 API 接口的繁琐。",
-                    })}
-                  </Paragraph>
-                ),
-              },
-            ]}
+      <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+        {/* 顶部运行态指标与健康卡片 */}
+        <StatisticCard.Group direction="row" style={{ marginBottom: 24 }}>
+          <StatisticCard
+            statistic={{
+              title: "纳管核心微服务",
+              value: MICROSERVICES_CATALOG.length,
+              suffix: "个服务",
+              description: <Text type="secondary">1 网关 BFF + 4 gRPC 业务微服务</Text>,
+              icon: <ClusterOutlined style={{ color: "#722ed1", fontSize: 32 }} />,
+            }}
           />
-        </ProCard>
+          <StatisticCard.Divider />
+          <StatisticCard
+            statistic={{
+              title: "实时运行健康度",
+              value: `${healthyCount}/${MICROSERVICES_CATALOG.length}`,
+              suffix: "在线",
+              status: healthyCount === MICROSERVICES_CATALOG.length ? "success" : "warning",
+              description: <Text type="secondary">Nacos 租约心跳 & 端口探针正常</Text>,
+              icon: <CheckCircleOutlined style={{ color: "#52c41a", fontSize: 32 }} />,
+            }}
+          />
+          <StatisticCard.Divider />
+          <StatisticCard
+            statistic={{
+              title: "调用协议矩阵",
+              value: "2",
+              suffix: "类协议",
+              description: <Text type="secondary">HTTP RESTful (:8888) + gRPC Protobuf</Text>,
+              icon: <ApiOutlined style={{ color: "#1677ff", fontSize: 32 }} />,
+            }}
+          />
+          <StatisticCard.Divider />
+          <StatisticCard
+            statistic={{
+              title: "基础设施组件",
+              value: INFRA_CATALOG.length,
+              suffix: "大持久层/引擎",
+              description: <Text type="secondary">MySQL + Redis + Temporal + Nacos</Text>,
+              icon: <PartitionOutlined style={{ color: "#fa8c16", fontSize: 32 }} />,
+            }}
+          />
+        </StatisticCard.Group>
+
+        {/* 核心分层架构拓扑图 */}
+        <div style={{ marginBottom: 28 }}>
+          <TopologyGraph
+            selectedNodeId={selectedServiceId}
+            onSelectNode={handleSelectNode}
+            healthMap={healthMap}
+            refreshing={probing}
+          />
+        </div>
+
+        {/* 微服务资产矩阵卡片集 */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ marginBottom: 16 }}>
+            <Space align="center" size={8}>
+              <Title level={4} style={{ margin: 0 }}>
+                微服务软件资产目录 (Microservices Catalog)
+              </Title>
+              <Tag color="purple">5 个核心服务</Tag>
+            </Space>
+            <div>
+              <Text type="secondary" style={{ fontSize: 13 }}>
+                严格遵守边界隔离：仅网关对外暴露 HTTP，内部微服务纯 gRPC 运行，核心领域规则 RPC 闭环
+              </Text>
+            </div>
+          </div>
+
+          <Row gutter={[16, 16]}>
+            {MICROSERVICES_CATALOG.map((service) => {
+              const health = healthMap[service.id];
+              const isHealthy = health ? health.status === "healthy" : true;
+
+              return (
+                <Col xs={24} md={12} lg={8} key={service.id}>
+                  <Card
+                    hoverable
+                    variant="outlined"
+                    onClick={() => {
+                      setSelectedServiceId(service.id);
+                      setDrawerOpen(true);
+                    }}
+                    style={{
+                      height: "100%",
+                      borderRadius: token.borderRadiusLG,
+                      borderLeft: `4px solid ${service.color}`,
+                    }}
+                    styles={{
+                      body: {
+                        padding: 20,
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                      },
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                      <Space size={8}>
+                        <div
+                          style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 6,
+                            background: service.color,
+                            color: "#fff",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: 16,
+                          }}
+                        >
+                          {service.type === "gateway" ? <ApiOutlined /> : <ClusterOutlined />}
+                        </div>
+                        <div>
+                          <Text strong style={{ fontSize: 14 }}>
+                            {service.name}
+                          </Text>
+                          <div style={{ fontSize: 11, color: "#8c8c8c", fontFamily: "Consolas, monospace" }}>
+                            {service.code}
+                          </div>
+                        </div>
+                      </Space>
+
+                      <Badge
+                        status={isHealthy ? "success" : "error"}
+                        text={
+                          <Text style={{ fontSize: 11, color: isHealthy ? "#52c41a" : "#ff4d4f" }}>
+                            {isHealthy ? "在线" : "离线"}
+                          </Text>
+                        }
+                      />
+                    </div>
+
+                    <Paragraph
+                      type="secondary"
+                      ellipsis={{ rows: 2 }}
+                      style={{ fontSize: 12, minHeight: 36, marginBottom: 12 }}
+                    >
+                      {service.domain}
+                    </Paragraph>
+
+                    <div style={{ marginBottom: 12 }}>
+                      <Space size={6} wrap>
+                        <Tag color={service.type === "gateway" ? "purple" : "blue"} style={{ margin: 0, fontSize: 11 }}>
+                          {service.protocol}
+                        </Tag>
+                        <Tag color="cyan" style={{ margin: 0, fontSize: 11 }}>
+                          端口: {service.port}
+                        </Tag>
+                        <Tag color="default" style={{ margin: 0, fontSize: 11 }}>
+                          {service.owner}
+                        </Tag>
+                      </Space>
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "auto",
+                        borderTop: `1px dashed ${token.colorBorderSecondary}`,
+                        paddingTop: 10,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text type="secondary" style={{ fontSize: 11 }}>
+                        上游: {service.upstreamIds.length} | 下游: {service.downstreamIds.length}
+                      </Text>
+
+                      <Button
+                        type="link"
+                        size="small"
+                        icon={<ArrowRightOutlined />}
+                        style={{ padding: 0, fontSize: 12 }}
+                      >
+                        资产详情
+                      </Button>
+                    </div>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        </div>
+
+        {/* 基础设施与持久层资产目录 */}
+        <div style={{ marginBottom: 28 }}>
+          <InfraCatalog
+            onSelectInfra={(id) => {
+              setSelectedServiceId(id);
+            }}
+          />
+        </div>
+
+        {/* 微服务元数据抽屉 */}
+        <ServiceDetailDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          service={selectedService}
+          health={selectedService ? healthMap[selectedService.id] : undefined}
+          onJumpToApiHub={handleJumpToApiHub}
+        />
       </div>
     </PageContainer>
   );

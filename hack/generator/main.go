@@ -112,7 +112,7 @@ func main() {
 	fmt.Printf("\n✨ 全栈 CRUD 代码生成大功告成！\n")
 	fmt.Printf("----------------------------------------------------------------\n")
 	fmt.Printf("📦 持久层 Model  : app/%s/model/%s_model.go\n", config.Service, config.Table)
-	fmt.Printf("🔌 微服务 RPC    : app/%s/rpc/%s.proto\n", config.Service, config.Service)
+	fmt.Printf("🔌 微服务 RPC    : app/%s/%s.proto\n", config.Service, config.Service)
 	fmt.Printf("🌐 统一网关 API  : app/gateway/desc/%s.api\n", config.Service)
 	fmt.Printf("🖥️ 前端页面组件  : frontend/apps/admin/src/pages/%s/index.tsx\n", ctx.EntityName)
 	fmt.Printf("----------------------------------------------------------------\n")
@@ -200,7 +200,7 @@ func generateModel(config GeneratorConfig, ctx *TemplateContext) error {
 	_ = os.Remove(filepath.Join(modelDir, fmt.Sprintf("%s_model_custom.go", config.Table)))
 
 	// 注入到微服务 servicecontext.go
-	svcContextFile := filepath.Join(config.OutputDir, "app", config.Service, "rpc", "internal", "svc", "servicecontext.go")
+	svcContextFile := filepath.Join(config.OutputDir, "app", config.Service, "internal", "svc", "servicecontext.go")
 	if data, err := os.ReadFile(svcContextFile); err == nil {
 		content := string(data)
 		modelField := fmt.Sprintf("%sModel", ctx.EntityName)
@@ -226,7 +226,7 @@ func generateModel(config GeneratorConfig, ctx *TemplateContext) error {
 
 func updateProtoAndGenRpc(config GeneratorConfig, ctx *TemplateContext) error {
 	fmt.Println("  [2/5] 追加微服务 Proto 契约与 RPC 桩代码...")
-	protoPath := filepath.Join(config.OutputDir, "app", config.Service, "rpc", fmt.Sprintf("%s.proto", config.Service))
+	protoPath := filepath.Join(config.OutputDir, "app", config.Service, fmt.Sprintf("%s.proto", config.Service))
 	contentBytes, err := os.ReadFile(protoPath)
 	if err != nil {
 		return fmt.Errorf("read proto file: %w", err)
@@ -296,7 +296,7 @@ func updateProtoAndGenRpc(config GeneratorConfig, ctx *TemplateContext) error {
 }
 
 func writeRpcLogicFiles(config GeneratorConfig, ctx *TemplateContext) {
-	logicDir := filepath.Join(config.OutputDir, "app", config.Service, "rpc", "internal", "logic", strings.ToLower(config.Service))
+	logicDir := filepath.Join(config.OutputDir, "app", config.Service, "internal", "logic", strings.ToLower(config.Service))
 	svcLower := strings.ToLower(config.Service)
 
 	// 1. List
@@ -315,8 +315,8 @@ func writeRpcLogicFiles(config GeneratorConfig, ctx *TemplateContext) {
 import (
 	"context"
 
-	"go-zero-boilerplate/app/{{Service}}/rpc/internal/svc"
-	"go-zero-boilerplate/app/{{Service}}/rpc/pb"
+	"go-zero-boilerplate/app/{{Service}}/internal/svc"
+	"go-zero-boilerplate/app/{{Service}}/pb"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -382,8 +382,8 @@ func (l *List{{EntityName}}sLogic) List{{EntityName}}s(in *pb.List{{EntityName}}
 import (
 	"context"
 
-	"go-zero-boilerplate/app/{{Service}}/rpc/internal/svc"
-	"go-zero-boilerplate/app/{{Service}}/rpc/pb"
+	"go-zero-boilerplate/app/{{Service}}/internal/svc"
+	"go-zero-boilerplate/app/{{Service}}/pb"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -436,8 +436,8 @@ import (
 	"context"
 
 	"go-zero-boilerplate/app/{{Service}}/model"
-	"go-zero-boilerplate/app/{{Service}}/rpc/internal/svc"
-	"go-zero-boilerplate/app/{{Service}}/rpc/pb"
+	"go-zero-boilerplate/app/{{Service}}/internal/svc"
+	"go-zero-boilerplate/app/{{Service}}/pb"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -494,8 +494,8 @@ func (l *Create{{EntityName}}Logic) Create{{EntityName}}(in *pb.Create{{EntityNa
 import (
 	"context"
 
-	"go-zero-boilerplate/app/{{Service}}/rpc/internal/svc"
-	"go-zero-boilerplate/app/{{Service}}/rpc/pb"
+	"go-zero-boilerplate/app/{{Service}}/internal/svc"
+	"go-zero-boilerplate/app/{{Service}}/pb"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -548,8 +548,8 @@ func (l *Update{{EntityName}}Logic) Update{{EntityName}}(in *pb.Update{{EntityNa
 import (
 	"context"
 
-	"go-zero-boilerplate/app/{{Service}}/rpc/internal/svc"
-	"go-zero-boilerplate/app/{{Service}}/rpc/pb"
+	"go-zero-boilerplate/app/{{Service}}/internal/svc"
+	"go-zero-boilerplate/app/{{Service}}/pb"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -688,7 +688,7 @@ func writeGatewayLogicFiles(config GeneratorConfig, ctx *TemplateContext) {
 	pkgName := filepath.Base(logicDir)
 	rpcClientName := meta.ToPascalCase(config.Service) + "Rpc"
 	clientPkg := fmt.Sprintf("%sClient", strings.ToLower(config.Service))
-	clientImport := fmt.Sprintf("go-zero-boilerplate/app/%s/rpc/client/%s", config.Service, strings.ToLower(config.Service))
+	clientImport := fmt.Sprintf("go-zero-boilerplate/app/%s/client/%s", config.Service, strings.ToLower(config.Service))
 
 	// 1. List
 	var toTypeFields []string

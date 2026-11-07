@@ -13,7 +13,7 @@ import {
   DeploymentUnitOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import {
   getDashboardOverview,
   getUserProfile,
@@ -27,6 +27,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useIntl } from "../../contexts/LocaleContext";
 
 export const WorkbenchPage: React.FC = () => {
+  const navigate = useNavigate();
   const { onOpenLogin } = useOutletContext<{ onOpenLogin: () => void }>();
   const { message } = AntdApp.useApp();
   const { isLoggedIn, profile } = useAuth();
@@ -93,6 +94,20 @@ export const WorkbenchPage: React.FC = () => {
       }}
     >
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <Alert
+          type="info"
+          showIcon
+          title="接口调试工作台已全面升级为全新三栏交互「API 契约集市与沙箱」"
+          description={
+            <Space>
+              <span>支持全量微服务契约目录检索、动态参数表单、4 种编程语言实时生成与真实沙箱调试。</span>
+              <Button type="primary" size="small" onClick={() => navigate("/api-hub")}>
+                前往全新 API 契约集市
+              </Button>
+            </Space>
+          }
+          style={{ marginBottom: 20 }}
+        />
         {!isLoggedIn && (
           <Alert
             title={formatMessage({

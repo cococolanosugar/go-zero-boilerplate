@@ -269,6 +269,20 @@ type (
 	ForceLogoutReq {
 		SessionId string `path:"sessionId"`
 	}
+
+	// 权限点元数据
+	PermissionItem {
+		Code string `json:"code"`
+		Name string `json:"name"`
+	}
+	PermissionGroup {
+		Key         string            `json:"key"`
+		Title       string            `json:"title"`
+		Permissions []*PermissionItem `json:"permissions"`
+	}
+	GetPermissionTreeResp {
+		List []*PermissionGroup `json:"list"`
+	}
 )
 
 @server (
@@ -291,55 +305,101 @@ service gateway {
 	jwt:    Auth
 )
 service gateway {
-	@doc "获取当前登录员工画像与权限"
+	@doc (
+		summary:    "获取当前登录员工画像与权限"
+		permission: "PublicAuthenticated"
+	)
 	@handler GetAdminProfile
 	get /personal/profile returns (AdminProfileResp)
 
-	@doc "修改当前登录员工个人资料"
+	@doc (
+		summary:    "获取系统全量功能权限树"
+		permission: "PublicAuthenticated"
+	)
+	@handler GetPermissionTree
+	get /auth/permissions returns (GetPermissionTreeResp)
+
+	@doc (
+		summary:    "修改当前登录员工个人资料"
+		permission: "PublicAuthenticated"
+	)
 	@handler UpdatePersonalProfile
 	put /personal/profile (UpdatePersonalProfileReq) returns (SysEmptyResp)
 
-	@doc "修改当前登录员工密码"
+	@doc (
+		summary:    "修改当前登录员工密码"
+		permission: "PublicAuthenticated"
+	)
 	@handler ChangePersonalPassword
 	put /personal/password (ChangePersonalPasswordReq) returns (SysEmptyResp)
 
-	@doc "获取员工列表"
+	@doc (
+		summary:    "获取员工列表"
+		permission: "UserList"
+	)
 	@handler ListSysUsers
 	get /users (ListSysUsersReq) returns (ListSysUsersResp)
 
-	@doc "创建新员工"
+	@doc (
+		summary:    "创建新员工"
+		permission: "UserCreate"
+	)
 	@handler CreateSysUser
 	post /users (CreateSysUserReq) returns (SysIdResp)
 
-	@doc "更新员工信息"
+	@doc (
+		summary:    "更新员工信息"
+		permission: "UserUpdate"
+	)
 	@handler UpdateSysUser
 	put /users (UpdateSysUserReq) returns (SysEmptyResp)
 
-	@doc "删除员工"
+	@doc (
+		summary:    "删除员工"
+		permission: "UserDelete"
+	)
 	@handler DeleteSysUser
 	delete /users/:id (SysIdReq) returns (SysEmptyResp)
 
-	@doc "获取角色列表"
+	@doc (
+		summary:    "获取角色列表"
+		permission: "RoleList"
+	)
 	@handler ListSysRoles
 	get /roles (ListSysRolesReq) returns (ListSysRolesResp)
 
-	@doc "创建角色"
+	@doc (
+		summary:    "创建角色"
+		permission: "RoleCreate"
+	)
 	@handler CreateSysRole
 	post /roles (CreateSysRoleReq) returns (SysIdResp)
 
-	@doc "更新角色"
+	@doc (
+		summary:    "更新角色"
+		permission: "RoleUpdate"
+	)
 	@handler UpdateSysRole
 	put /roles (UpdateSysRoleReq) returns (SysEmptyResp)
 
-	@doc "删除角色"
+	@doc (
+		summary:    "删除角色"
+		permission: "RoleDelete"
+	)
 	@handler DeleteSysRole
 	delete /roles/:id (SysIdReq) returns (SysEmptyResp)
 
-	@doc "分配角色菜单与按钮权限"
+	@doc (
+		summary:    "分配角色菜单与按钮权限"
+		permission: "RoleSetPermissions"
+	)
 	@handler AssignRolePermissions
 	post /roles/permissions (AssignRolePermReq) returns (SysEmptyResp)
 
-	@doc "获取全量菜单与按钮树"
+	@doc (
+		summary:    "获取全量菜单与按钮树"
+		permission: "MenuList"
+	)
 	@handler GetSysMenuTree
 	get /menus/tree returns (GetSysMenuTreeResp)
 

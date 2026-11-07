@@ -5,15 +5,19 @@ export type EnvType = "dev" | "test" | "pre";
 export const proxyConfig: Record<EnvType, Record<string, ProxyOptions>> = {
   // 1. 本地单机开发模式 (默认连接本地 Go 网关 HTTP 8888)
   dev: {
-    "/api": {
+    "^/api/": {
       target: "http://127.0.0.1:8888",
       changeOrigin: true,
       ws: true,
     },
+    "/openapi": {
+      target: "http://127.0.0.1:8888",
+      changeOrigin: true,
+    },
   },
   // 2. 远程联调 / 测试环境 (无需拉起本地 Go 微服务)
   test: {
-    "/api": {
+    "^/api/": {
       target: "https://test-api.go-zero-boilerplate.dev",
       changeOrigin: true,
       secure: false,
@@ -22,7 +26,7 @@ export const proxyConfig: Record<EnvType, Record<string, ProxyOptions>> = {
   },
   // 3. 预发布验证环境
   pre: {
-    "/api": {
+    "^/api/": {
       target: "https://pre-api.go-zero-boilerplate.dev",
       changeOrigin: true,
       secure: true,
@@ -44,8 +48,12 @@ export function getProxyConfig(appEnv?: string, customTarget?: string): Record<s
     resolved[prefix] = { ...options };
   }
 
-  if (customTarget && resolved["/api"]) {
-    resolved["/api"].target = customTarget;
+  if (customTarget) {
+    Object.keys(resolved).forEach((k) => {
+      if (k.includes("/api")) {
+        resolved[k].target = customTarget;
+      }
+    });
   }
 
   return resolved;

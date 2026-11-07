@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"go-zero-boilerplate/app/gateway/internal/logic/dict"
+	"go-zero-boilerplate/app/gateway/internal/perm"
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
 	"go-zero-boilerplate/pkg/result"
@@ -14,6 +15,15 @@ import (
 // 创建字典数据项
 func CreateSysDictDataHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if svcCtx.RbacService != nil {
+			if err := svcCtx.RbacService.Check(r.Context(), perm.PermissionRequired{
+				Permission: perm.DictDataCreate,
+			}); err != nil {
+				result.HttpResult(r, w, nil, err)
+				return
+			}
+		}
+
 		var req types.CreateSysDictDataReq
 		if err := httpx.Parse(r, &req); err != nil {
 			result.ParamErrorResult(r, w, err)

@@ -55,11 +55,23 @@ export const routes: AppRouteItem[] = [
         component: lazy(() => import("../pages/Services")),
       },
       {
-        path: "/workbench",
-        name: "menu.workbench",
-        locale: "menu.workbench",
+        path: "/api-hub",
+        name: "menu.apiHub",
+        locale: "menu.apiHub",
         icon: "ApiOutlined",
-        component: lazy(() => import("../pages/Workbench")),
+        component: lazy(() => import("../pages/ApiHub")),
+      },
+      {
+        path: "/docs",
+        name: "menu.docs",
+        locale: "menu.docs",
+        icon: "ReadOutlined",
+        component: lazy(() => import("../pages/TechDocs")),
+      },
+      {
+        path: "/workbench",
+        redirect: "/api-hub",
+        hideInMenu: true,
       },
       {
         path: "/403",

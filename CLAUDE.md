@@ -56,22 +56,37 @@ go-zero-boilerplate/
 │   │   └── gateway.go             # 网关启动 main 入口
 │   │
 │   ├── user/                      # 【用户微服务】纯 gRPC (端口 8080)
-│   │   ├── rpc/
-│   │   │   ├── client/user/       # 供网关调用的 RPC Client
-│   │   │   ├── etc/user.yaml
-│   │   │   ├── internal/
-│   │   │   ├── pb/ & user.proto
-│   │   │   └── user.go
-│   │   └── model/
+│   │   ├── client/user/           # 供网关调用的 RPC Client
+│   │   ├── etc/user.yaml
+│   │   ├── internal/              # logic, server, svc, config
+│   │   ├── model/                 # 数据表持久层
+│   │   ├── pb/ & user.proto       # IDL 契约与生成的桩代码
+│   │   └── user.go                # 用户微服务启动 main 入口
 │   │
-│   └── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
-│       ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
-│       └── rpc/
-│           ├── client/worker/     # 供网关调用的 RPC Client
-│           ├── etc/worker.yaml
-│           ├── internal/          # activities, workflows, config, logic, server, svc
-│           ├── pb/ & worker.proto
-│           └── worker.go          # Worker RPC + Temporal 统一启动入口
+│   ├── worker/                    # 【异步任务微服务】纯 gRPC (端口 8082，内置 Temporal Worker)
+│   │   ├── client/worker/         # 供网关调用的 RPC Client
+│   │   ├── contract/              # 跨服务公共工作流契约（任务队列、信号、状态结构）
+│   │   ├── etc/worker.yaml
+│   │   ├── internal/              # activities, workflows, config, logic, server, svc
+│   │   ├── model/                 # 异步任务持久层
+│   │   ├── pb/ & worker.proto     # IDL 契约与生成的桩代码
+│   │   └── worker.go              # Worker RPC + Temporal 统一启动入口
+│   │
+│   ├── itsm/                      # 【ITSM 流程微服务】纯 gRPC (端口 8084)
+│   │   ├── client/itsm/           # 供网关调用的 RPC Client
+│   │   ├── etc/itsm.yaml
+│   │   ├── internal/              # engine (BPMN 2.0 解析), config, logic, server, svc
+│   │   ├── itsm/ & itsm.proto     # IDL 契约与生成的桩代码
+│   │   ├── model/                 # ITSM 6 张数据表持久层
+│   │   └── itsm.go                # ITSM RPC 统一启动入口
+│   │
+│   └── titan/                     # 【Titan 交付微服务】纯 gRPC (端口 8086)
+│       ├── client/titan/          # 供网关调用的 RPC Client
+│       ├── etc/titan.yaml
+│       ├── internal/              # jenkins, k8s, config, logic, server, svc
+│       ├── model/                 # Titan 10 张数据表持久层
+│       ├── titan/ & titan.proto   # IDL 契约与生成的桩代码
+│       └── titan.go               # Titan RPC 统一启动入口
 │
 ├── frontend/                      # 【前端多端工程体系】pnpm workspace
 │   ├── apps/
@@ -111,8 +126,8 @@ go-zero-boilerplate/
 * **Go `internal` 机制防护**：任何服务不得绕过 RPC 直接 import 另一个模块的 `internal/` 或 `model/`。
 * **服务间 RPC 调用模式**：跨服务调用必须 import 目标服务的自动生成客户端：
   ```go
-  import userClient "go-zero-boilerplate/app/user/rpc/client/user"
-  import workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
+  import userClient "go-zero-boilerplate/app/user/client/user"
+  import workerClient "go-zero-boilerplate/app/worker/client/worker"
   ```
 * **网关核心职责**：仅负责“路由分发、参数校验、JWT 鉴权、跨 RPC 数据聚合”。**严禁在网关 Logic 中直连数据库或编写核心业务规则**，核心业务必须在各自微服务的 RPC Logic 中闭环。
 
@@ -133,7 +148,7 @@ go-zero-boilerplate/
   3. 执行 `just gen-gateway` 生成后端网关桩代码。
   4. 执行 `just gen-ts` **自动生成前端 `@zero/api` SDK**，前端即可直接享用强类型的调用函数。
 * **新增/修改微服务 RPC 接口**：
-  1. 在 `app/<service>/rpc/<service>.proto` 中增删 RPC 方法。
+  1. 在 `app/<service>/<service>.proto` 中增删 RPC 方法。
   2. 执行 `just gen-rpc <service>`（或 `make gen-<service>-rpc`）。
 
 ### 4.4 依赖注入 (DI)

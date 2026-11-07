@@ -21,6 +21,7 @@ import type {
   SystemDeleteSysUser200,
   SystemForceLogoutOnlineSession200,
   SystemGetAdminProfile200,
+  SystemGetPermissionTree200,
   SystemGetSysMenuTree200,
   SystemListOnlineSessions200,
   SystemListOnlineSessionsParams,
@@ -82,6 +83,17 @@ export const systemAdminLogin = (
       {url: `/api/v1/system/auth/login`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: systemAdminLoginBody
+    },
+      options);
+    }
+  /**
+ * @summary 获取系统全量功能权限树
+ */
+export const systemGetPermissionTree = (
+
+ options?: SecondParameter<typeof customInstance<SystemGetPermissionTree200>>,) => {
+      return customInstance<SystemGetPermissionTree200>(
+      {url: `/api/v1/system/auth/permissions`, method: 'GET'
     },
       options);
     }
@@ -310,6 +322,7 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 export type SystemListSysApisResult = NonNullable<Awaited<ReturnType<typeof systemListSysApis>>>
 export type SystemCasdoorLoginResult = NonNullable<Awaited<ReturnType<typeof systemCasdoorLogin>>>
 export type SystemAdminLoginResult = NonNullable<Awaited<ReturnType<typeof systemAdminLogin>>>
+export type SystemGetPermissionTreeResult = NonNullable<Awaited<ReturnType<typeof systemGetPermissionTree>>>
 export type SystemUploadFileResult = NonNullable<Awaited<ReturnType<typeof systemUploadFile>>>
 export type SystemListSysLoginLogsResult = NonNullable<Awaited<ReturnType<typeof systemListSysLoginLogs>>>
 export type SystemListSysOperLogsResult = NonNullable<Awaited<ReturnType<typeof systemListSysOperLogs>>>

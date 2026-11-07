@@ -1,4 +1,4 @@
-package dashboard
+﻿package dashboard
 
 import (
 	"context"
@@ -7,8 +7,8 @@ import (
 
 	"go-zero-boilerplate/app/gateway/internal/svc"
 	"go-zero-boilerplate/app/gateway/internal/types"
-	userClient "go-zero-boilerplate/app/user/rpc/client/user"
-	workerClient "go-zero-boilerplate/app/worker/rpc/client/worker"
+	userClient "go-zero-boilerplate/app/user/client/user"
+	workerClient "go-zero-boilerplate/app/worker/client/worker"
 	"go-zero-boilerplate/pkg/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"

@@ -1,11 +1,11 @@
-package titan
+﻿package titan
 
 import (
 	"context"
 	"encoding/json"
 	"testing"
 
-	"go-zero-boilerplate/app/titan/rpc/titan"
+	"go-zero-boilerplate/app/titan/titan"
 
 	"github.com/stretchr/testify/assert"
 )

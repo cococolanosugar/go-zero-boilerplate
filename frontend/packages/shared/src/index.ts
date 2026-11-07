@@ -1,3 +1,5 @@
+import { PERMISSIONS as GROUPED_PERMISSIONS } from './constants/permissions';
+
 export const APP_NAME = "Go-Zero Boilerplate";
 
 export function formatPrice(amount: number): string {
@@ -9,7 +11,9 @@ export function formatDate(timestamp: number): string {
 }
 
 export const PERMISSIONS = {
-  // 员工管理
+  ...GROUPED_PERMISSIONS,
+
+  // 员工管理 (兼容旧版标识)
   USER_QUERY: 'system:user:query',
   USER_ADD: 'system:user:add',
   USER_EDIT: 'system:user:edit',
@@ -70,6 +74,7 @@ export const PERMISSIONS = {
   NAV_DELETE: 'system:navigation:delete',
 } as const;
 
+export * from "./constants/permissions";
 export * from "./sessionSync";
 export * from "./utils/masking";
 export * from "./utils/clipboard";

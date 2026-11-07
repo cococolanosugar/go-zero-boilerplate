@@ -163,4 +163,32 @@ describe("Declarative <Access> & useAccess Test Suite", () => {
     expect(await screen.findByTestId("one-match")).toBeInTheDocument();
     expect(screen.queryByTestId("all-match")).toBeNull();
   });
+
+  it("<Access> supports all and any multi-permission props", async () => {
+    const getInitialState = createMockInitialState({
+      permissions: ["p1", "p2"],
+    });
+
+    render(
+      <InitialStateProvider getInitialState={getInitialState}>
+        <Access all={["p1", "p2"]}>
+          <span data-testid="prop-all-pass">All Passed</span>
+        </Access>
+        <Access all={["p1", "p3"]}>
+          <span data-testid="prop-all-fail">All Failed</span>
+        </Access>
+        <Access any={["p3", "p1"]}>
+          <span data-testid="prop-any-pass">Any Passed</span>
+        </Access>
+        <Access any={["p3", "p4"]}>
+          <span data-testid="prop-any-fail">Any Failed</span>
+        </Access>
+      </InitialStateProvider>
+    );
+
+    expect(await screen.findByTestId("prop-all-pass")).toBeInTheDocument();
+    expect(screen.queryByTestId("prop-all-fail")).toBeNull();
+    expect(screen.getByTestId("prop-any-pass")).toBeInTheDocument();
+    expect(screen.queryByTestId("prop-any-fail")).toBeNull();
+  });
 });

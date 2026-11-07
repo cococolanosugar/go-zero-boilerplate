@@ -11,7 +11,7 @@ export function getDashboardOverview(params: components.DashboardReqParams) {
 }
 
 /**
- * @description "获取字典数据项列表"
+ * @description 获取字典数据项列表
  * @param params
  */
 export function listSysDictData(params: components.ListSysDictDataReqParams) {
@@ -19,7 +19,7 @@ export function listSysDictData(params: components.ListSysDictDataReqParams) {
 }
 
 /**
- * @description "创建字典数据项"
+ * @description 创建字典数据项
  * @param req
  */
 export function createSysDictData(req: components.CreateSysDictDataReq) {
@@ -27,7 +27,7 @@ export function createSysDictData(req: components.CreateSysDictDataReq) {
 }
 
 /**
- * @description "更新字典数据项"
+ * @description 更新字典数据项
  * @param req
  */
 export function updateSysDictData(req: components.UpdateSysDictDataReq) {
@@ -35,7 +35,7 @@ export function updateSysDictData(req: components.UpdateSysDictDataReq) {
 }
 
 /**
- * @description "删除字典数据项"
+ * @description 删除字典数据项
  * @param params
  */
 export function deleteSysDictData(params: components.SysIdReqParams, id: number) {
@@ -43,7 +43,7 @@ export function deleteSysDictData(params: components.SysIdReqParams, id: number)
 }
 
 /**
- * @description "根据字典类型查询数据项列表"
+ * @description 根据字典类型查询数据项列表
  * @param params
  */
 export function getDictDataByType(params: components.GetDictDataByTypeReqParams, dictType: string) {
@@ -51,7 +51,7 @@ export function getDictDataByType(params: components.GetDictDataByTypeReqParams,
 }
 
 /**
- * @description "获取字典类型列表"
+ * @description 获取字典类型列表
  * @param params
  */
 export function listSysDictTypes(params: components.ListSysDictTypesReqParams) {
@@ -59,7 +59,7 @@ export function listSysDictTypes(params: components.ListSysDictTypesReqParams) {
 }
 
 /**
- * @description "创建字典类型"
+ * @description 创建字典类型
  * @param req
  */
 export function createSysDictType(req: components.CreateSysDictTypeReq) {
@@ -67,7 +67,7 @@ export function createSysDictType(req: components.CreateSysDictTypeReq) {
 }
 
 /**
- * @description "更新字典类型"
+ * @description 更新字典类型
  * @param req
  */
 export function updateSysDictType(req: components.UpdateSysDictTypeReq) {
@@ -75,7 +75,7 @@ export function updateSysDictType(req: components.UpdateSysDictTypeReq) {
 }
 
 /**
- * @description "删除字典类型"
+ * @description 删除字典类型
  * @param params
  */
 export function deleteSysDictType(params: components.SysIdReqParams, id: number) {
@@ -449,6 +449,13 @@ export function listSysApis() {
 }
 
 /**
+ * @description 获取系统全量功能权限树
+ */
+export function getPermissionTree() {
+	return webapi.get<components.GetPermissionTreeResp>(`/api/v1/system/auth/permissions`)
+}
+
+/**
  * @description "通用文件上传"
  */
 export function uploadFile() {
@@ -472,7 +479,7 @@ export function listSysOperLogs(params: components.ListSysOperLogsReqParams) {
 }
 
 /**
- * @description "获取全量菜单与按钮树"
+ * @description 获取全量菜单与按钮树
  */
 export function getSysMenuTree() {
 	return webapi.get<components.GetSysMenuTreeResp>(`/api/v1/system/menus/tree`)
@@ -495,7 +502,7 @@ export function forceLogoutOnlineSession(params: components.ForceLogoutReqParams
 }
 
 /**
- * @description "修改当前登录员工密码"
+ * @description 修改当前登录员工密码
  * @param req
  */
 export function changePersonalPassword(req: components.ChangePersonalPasswordReq) {
@@ -503,14 +510,14 @@ export function changePersonalPassword(req: components.ChangePersonalPasswordReq
 }
 
 /**
- * @description "获取当前登录员工画像与权限"
+ * @description 获取当前登录员工画像与权限
  */
 export function getAdminProfile() {
 	return webapi.get<components.AdminProfileResp>(`/api/v1/system/personal/profile`)
 }
 
 /**
- * @description "修改当前登录员工个人资料"
+ * @description 修改当前登录员工个人资料
  * @param req
  */
 export function updatePersonalProfile(req: components.UpdatePersonalProfileReq) {
@@ -518,7 +525,7 @@ export function updatePersonalProfile(req: components.UpdatePersonalProfileReq) 
 }
 
 /**
- * @description "获取角色列表"
+ * @description 获取角色列表
  * @param params
  */
 export function listSysRoles(params: components.ListSysRolesReqParams) {
@@ -526,7 +533,7 @@ export function listSysRoles(params: components.ListSysRolesReqParams) {
 }
 
 /**
- * @description "创建角色"
+ * @description 创建角色
  * @param req
  */
 export function createSysRole(req: components.CreateSysRoleReq) {
@@ -534,7 +541,7 @@ export function createSysRole(req: components.CreateSysRoleReq) {
 }
 
 /**
- * @description "更新角色"
+ * @description 更新角色
  * @param req
  */
 export function updateSysRole(req: components.UpdateSysRoleReq) {
@@ -542,7 +549,7 @@ export function updateSysRole(req: components.UpdateSysRoleReq) {
 }
 
 /**
- * @description "删除角色"
+ * @description 删除角色
  * @param params
  */
 export function deleteSysRole(params: components.SysIdReqParams, id: number) {
@@ -550,7 +557,7 @@ export function deleteSysRole(params: components.SysIdReqParams, id: number) {
 }
 
 /**
- * @description "分配角色菜单与按钮权限"
+ * @description 分配角色菜单与按钮权限
  * @param req
  */
 export function assignRolePermissions(req: components.AssignRolePermReq) {
@@ -558,7 +565,7 @@ export function assignRolePermissions(req: components.AssignRolePermReq) {
 }
 
 /**
- * @description "获取员工列表"
+ * @description 获取员工列表
  * @param params
  */
 export function listSysUsers(params: components.ListSysUsersReqParams) {
@@ -566,7 +573,7 @@ export function listSysUsers(params: components.ListSysUsersReqParams) {
 }
 
 /**
- * @description "创建新员工"
+ * @description 创建新员工
  * @param req
  */
 export function createSysUser(req: components.CreateSysUserReq) {
@@ -574,7 +581,7 @@ export function createSysUser(req: components.CreateSysUserReq) {
 }
 
 /**
- * @description "更新员工信息"
+ * @description 更新员工信息
  * @param req
  */
 export function updateSysUser(req: components.UpdateSysUserReq) {
@@ -582,7 +589,7 @@ export function updateSysUser(req: components.UpdateSysUserReq) {
 }
 
 /**
- * @description "删除员工"
+ * @description 删除员工
  * @param params
  */
 export function deleteSysUser(params: components.SysIdReqParams, id: number) {
